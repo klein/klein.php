@@ -27,13 +27,11 @@ function request($route, Closure $callback, $cache = false) {
 function respond($method, $route, Closure $callback, $cache = false) {
     global $__routes;
     $negate = false;
-
     //Routes that start with ! are negative matches
     if ($route[0] === '!') {
         $negate = true;
         $route = substr($route, 1);
     }
-
     if ($route !== '*' && $route[0] !== '@') {
         //Find the longest substring in the route that doesn't use regex
         for ($i = 0, $l = strlen($route); $i < $l; $i++) {
@@ -50,7 +48,6 @@ function respond($method, $route, Closure $callback, $cache = false) {
             $substr = $route;
         }
     }
-
     //Add the route and return the callback
     $__routes[] = array($method, $route, $negate, $substr, $cache, $callback);
     return $callback;
@@ -59,10 +56,10 @@ function respond($method, $route, Closure $callback, $cache = false) {
 //Use APC internally (if it's available)
 if (function_exists('apc_store')) {
     function cache_set($key, $value, $ttl = 0) {
-        return apc_store ("klein.$key", $value, $ttl);
+        return apc_store("klein.$key", $value, $ttl);
     }
     function cache_get($key) {
-        return apc_fetch ("klein.$key");
+        return apc_fetch("klein.$key");
     }
 } else {
     function cache_set() {
@@ -75,12 +72,12 @@ if (function_exists('apc_store')) {
 
 //Compiles a route string to a regular expression. This is expensive, so avoid it where possible
 function compile_route($route) {
-    if (0 && false !== ($regex = cache_get($route))) {
+    if (false !== ($regex = cache_get($route))) {
         return $regex;
     }
     $regex = $route;
     if ($route[0] === '@') {
-        //The @ operator is used to match any part of the request uri
+        //The @ operator is used to match any part of the request uri (or use custom regex)
         return "`" . substr($route, 1) . "`";
     }
     if (preg_match_all('`(/?\.?)\[([^:]*+)(?::([^:\]]++))?\](\?)?`', $route, $matches, PREG_SET_ORDER)) {

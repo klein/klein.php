@@ -187,6 +187,19 @@ negate a route, use the `!` operator
     //Match all requests that do not end in .xml
     get('!@\.xml$', ...
 
+## Sharing scope between route callbacks
+
+Each callback receives a third parameter - an instance of `StdClass` -
+that can be used to share scope
+
+    get('*', function ($request, $response, $app) {
+        $app->db = new Pdo(/* pdo config */);
+    });
+
+    get('/login', function ($request, $response, $app) {
+        $app->db->query("SELECT * FROM .."); //etc.
+    }
+
 ## Micro-templates
 
 Set the third param of `render()` or `partial()` to true to use the optional template tags
