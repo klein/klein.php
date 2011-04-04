@@ -69,7 +69,7 @@ Setup some form of front controller [URL rewriting](https://gist.github.com/8740
         redirect($url, $code = 302)                                 //Redirect to the specified URL
         refresh()                                                   //Redirect to the current URL
         back()                                                      //Redirect to the referer
-        render($view, $data = array(), $compile = false)            //Renders a view, set $compile to true to use micro-template tags
+        render($view, $data = array(), $compile = false)            //Renders a view, set $compile to use micro tags
         onError($callback)                                          //$callback takes ($err_msg, $exception_type = null)
         data($key, $value = null)                                   //Add data to the view
         data($arr)                                                  //Add an array of data to the view
@@ -95,12 +95,13 @@ Setup some form of front controller [URL rewriting](https://gist.github.com/8740
         <Validator>()                       //Alias for is<Validator>()
 
     $view->
-        partial($view, $data = array(), $compile = false)   //Render a partial view, the current views' data is also sent to the partial
+        partial($view, $data = array(), $compile = false)   //Render a partial view
         flash($type = 'error')                              //Retrieves and clears all flash messages of $type
         param($param, $default = null)                      //Gets an escaped request parameter
-        query($key, $value = null)                          //Returns the uri+query_string with the specified key/value pair changed
-        query($arr)                                         //Set multiple query string keys at once and return a string
-        <helper>($args)                                     //Calls the specified view helper
+        query($key, $value = null)                          //Modify the current query string
+        query($arr)
+        <helper>($args, ...)                                //Calls the specified view helper
+        <property>                                          //Gets a variable from the response data
 
     Misc:
         request($route, $cache = null, $callback = null)            //Match all request methods
@@ -112,17 +113,17 @@ Setup some form of front controller [URL rewriting](https://gist.github.com/8740
 
 ## Validators
 
-To add a custom validator use `addValidator($method, $callback)`.
+To add a custom validator use `addValidator($method, $callback)`
 
     addValidator('hex', function ($str) {
         return preg_match('/^[0-9a-f]++$/i', $str);
     });
 
-Then you can validate parameters using is<$method>() or not<$method>(), e.g.
+Then you can validate parameters using `is<$method>()` or `not<$method>()`, e.g.
 
     $request->validate('key')->isHex();
 
-Validation methods are chainable, and a custom exception message can be specified if validation fails
+Validation methods are chainable, and a custom exception message can be specified for if validation fails
 
     $request->validate('key', 'The key was invalid')->isHex()->isLen(32);
 
@@ -166,7 +167,7 @@ Some more complicated examples
 
 **Note** - *all* routes that match the request URI are called - this
 allows you to incorporate complex conditional logic such as user
-authentication or view layouts. E.g. as a basic example, the following
+authentication or view layouts. e.g. as a basic example, the following
 code will wrap other routes with a header and footer
 
     get('*', function ($request, $response) { $response->render('header.phtml'; });
@@ -188,7 +189,7 @@ negate a route, use the `!` operator
 
 ## Micro-templates
 
-Set the third param of `render()` or `partial()` to true to use the optional micro-templating tags
+Set the third param of `render()` or `partial()` to true to use the optional template tags
 
     $people = array('Chris','Jeff','Carla');
     $response->render('myview.tpl', array('people'=>$people), true);
