@@ -575,7 +575,8 @@ addValidator('null', function ($str) {
 
 //$str must be either equal to $min, or between $min and $max
 addValidator('len', function ($str, $min, $max = null) {
-    $len = strlen($str); return null === $max ? $len === $min : $len >= $min && $len <= $max;
+    $len = strlen($str);
+    return null === $max ? $len === $min : $len >= $min && $len <= $max;
 });
 
 //$str must be an integer

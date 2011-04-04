@@ -1,4 +1,6 @@
-**klein.php** is a full-featured micro router for PHP5.3+ In ~600 lines you get:
+**klein.php** is a full-featured micro router for PHP5.3+ 
+
+In ~600 lines you get:
 
 * Sinatra-like routing w/ auto dispatch
 * Views, view helpers, caching and partials + optional template tags
@@ -162,14 +164,10 @@ Some more complicated examples
     /output.[xml|json:format]? //Matches "/output", "output.xml", "output.json"
     /[:controller]?/[:action]? //Matches the typical /controller/action format
 
-Routes compile to regular expressions so you can mix and match
-
-    /posts/[^0-9]++(?<id>[0-9]++)  //Matches "/posts/this-is-a-title-123"
-
 **Note** - *all* routes that match the request URI are called - this
 allows you to incorporate complex conditional logic such as user
 authentication or view layouts. E.g. as a basic example, the following
-code will always output a header and footer
+code will wrap other routes with a header and footer
 
     get('*', function ($request, $response) { $response->render('header.phtml'; });
     //other routes
@@ -182,7 +180,7 @@ negate a route, use the `!` operator
     //Match all requests containing 'json' or 'csv'
     get('@json|csv', ...
 
-    //Match all requests that DO NOT start with /admin
+    //Match all requests that _don't_ start with /admin
     get('!/admin/[*]', ...
 
     //Match all requests that do not end in .xml
