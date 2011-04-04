@@ -78,7 +78,7 @@ function compile_route($route) {
     $regex = $route;
     if ($route[0] === '@') {
         //The @ operator is used to match any part of the request uri (or use custom regex)
-        return "`" . substr($route, 1) . "`";
+        return '`' . substr($route, 1) . '`';
     }
     if (preg_match_all('`(/?\.?)\[([^:]*+)(?::([^:\]]++))?\](\?)?`', $route, $matches, PREG_SET_ORDER)) {
         $match_types = array(
@@ -86,7 +86,7 @@ function compile_route($route) {
             'a'  => '[0-9A-Za-z]++',
             'h'  => '[0-9A-Fa-f]++',
             '*'  => '.+?',
-            '**' => '.++', //possessive
+            '**' => '.++',
             ''   => '[^/]++'
         );
         foreach ($matches as $match) {
@@ -126,19 +126,20 @@ function dispatch($request_uri = null) {
     $response = new _Response;
     $holder = new StdClass;
     $matched = false;
-
-    //Start the global output buffer
     ob_start();
 
     foreach ($__routes as $route => $handler) {
         list($method, $route, $negate, $substr, $cache_ttl, $callback) = $handler;
 
-        //Check the method and then the non-regex substr against the request uri
+        //Check the method and then the non-regex substr against the request URI
         if (null !== $method && $request_method !== $method) continue;
         if ($substr && strpos($request_uri, $substr) !== 0) continue;
 
         //Match the route to the request uri
-        $match = $route === '*' || $substr === $request_uri || preg_match(compile_route($route), $request_uri, $params);
+        $match = $route === '*' || $substr === $request_uri;
+        if (!$match && $substr !== $route) {
+            preg_match(compile_route($route), $request_uri, $params);
+        }
 
         if ($match ^ $negate) {
             $matched = true;
@@ -158,11 +159,8 @@ function dispatch($request_uri = null) {
                     //Catch exceptions and send them to the response error handler
                     $response->error($e);
                 }
-                //Cache the callback output?
                 if ($cache_ttl) {
                     cache_set($cache_key, ob_get_flush(), $cache_ttl === true ? 0 : $cache_ttl);
-                } else {
-                    @ ob_end_flush();
                 }
             }
         }
@@ -432,18 +430,14 @@ class _View {
     protected $_data = array();
 
     //Renders a view
-    public function __construct($view, $data = array(), $compile = false) {
+    public function __construct($view, array $data = array(), $compile = false) {
         if (!file_exists($view) || !is_readable($view)) {
             throw new ViewException("Cannot render $view");
         }
         if ($this->_compiled = $compile) {
             //$compile enables basic micro-templating tags
             $contents = file_get_contents($view);
-            $tags = array(
-                '{{=' => '<?php echo ',
-                '{{'  => '<?php ',
-                '}}'  => '?'.'>'
-            );
+            $tags = array('{{=' => '<?php echo ', '{{'  => '<?php ', '}}'  => '?'.'>');
             $compiled = str_replace(array_keys($tags), array_values($tags), $contents, $replaced);
             if ($replaced) {
                 $view = tempnam(sys_get_temp_dir(), mt_rand());
@@ -455,7 +449,7 @@ class _View {
     }
 
     //Renders a partial view
-    public function partial($view, $data = array(), $compile = false) {
+    public function partial($view, array $data = array(), $compile = false) {
         $partial = new self($view, (array)$this->_data + $data, $this->_compiled || $compile);
     }
 
@@ -482,7 +476,7 @@ class _View {
         return array();
     }
 
-    //Gets a view property
+    //Gets a view var
     public function __get($property) {
         if (!isset($this->_data[$property])) {
             return null;
