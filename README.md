@@ -1,6 +1,4 @@
-**klein.php** is a full-featured micro router for PHP5.3+ 
-
-In ~600 lines you get:
+**klein.php** is a full-featured micro router for PHP5.3+. In ~600 lines you get:
 
 * Sinatra-like routing w/ auto dispatch
 * Views, view helpers, caching and partials + optional template tags
@@ -161,7 +159,7 @@ Some examples
 
 Some more complicated examples
 
-    /posts/[*?:title][i:id]    //Matches "/posts/this-is-a-title-123"
+    /posts/[*:title][i:id]    //Matches "/posts/this-is-a-title-123"
     /output.[xml|json:format]? //Matches "/output", "output.xml", "output.json"
     /[:controller]?/[:action]? //Matches the typical /controller/action format
 
@@ -182,15 +180,12 @@ negate a route, use the `!` operator
     get('@json|csv', ...
 
     //Match all requests that _don't_ start with /admin
-    get('!/admin/[*]', ...
-
-    //Match all requests that do not end in .xml
-    get('!@\.xml$', ...
+    get('!@^/admin/', ...
 
 ## Sharing scope between routes
 
 Each callback receives a third parameter - an instance of `StdClass` -
-that can be used to share scope
+that can be used to share scope, e.g.
 
     get('*', function ($request, $response, $app) {
         $app->db = new Pdo(/* pdo config */);
@@ -202,7 +197,7 @@ that can be used to share scope
 
 ## Micro-templates
 
-Set the third param of `render()` or `partial()` to true to use the optional template tags
+Set the third param of `render()` or `partial()` to `true` to use the optional template tags
 
     $people = array('Chris','Jeff','Carla');
     $response->render('myview.tpl', array('people'=>$people), true);
