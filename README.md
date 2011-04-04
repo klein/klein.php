@@ -104,7 +104,7 @@ Setup some form of front controller [URL rewriting](https://gist.github.com/8740
         <property>                                          //Gets a variable from the response data
 
     Misc:
-        request($route, $cache = null, $callback = null)            //Match all request methods
+        request($route, $cache = null, $callback = null)    //Match all request methods
         get($route, $cache = null, $callback = null)
         put($route, $cache = null, $callback = null)
         post($route, $cache = null, $callback = null)
@@ -187,7 +187,7 @@ negate a route, use the `!` operator
     //Match all requests that do not end in .xml
     get('!@\.xml$', ...
 
-## Sharing scope between route callbacks
+## Sharing scope between routes
 
 Each callback receives a third parameter - an instance of `StdClass` -
 that can be used to share scope
