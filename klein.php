@@ -1,85 +1,146 @@
-<?php # github.com/chriso/klein.php © (MIT) Chris O'Hara <cohara87@gmail.com>
+<?php
+# © Chris O'Hara <cohara87@gmail.com> (MIT License)
+# http://github.com/chriso/klein.php
 
 $__routes = array();
 $__params = $_REQUEST;
 
 //REST aliases
-function get($route, Closure $callback, $cache = false) {
-    return respond('GET', $route, $callback, $cache);
+function get($route, Closure $callback) {
+    return respond('GET', $route, $callback);
 }
-function post($route, Closure $callback, $cache = false) {
-    return respond('POST', $route, $callback, $cache);
+function post($route, Closure $callback) {
+    return respond('POST', $route, $callback);
 }
-function put($route, Closure $callback, $cache = false) {
-    return respond('PUT', $route, $callback, $cache);
+function put($route, Closure $callback) {
+    return respond('PUT', $route, $callback);
 }
-function delete($route, Closure $callback, $cache = false) {
-    return respond('DELETE', $route, $callback, $cache);
+function delete($route, Closure $callback) {
+    return respond('DELETE', $route, $callback);
 }
-function options($route, Closure $callback, $cache = false) {
-    return respond('OPTIONS', $route, $callback, $cache);
+function options($route, Closure $callback) {
+    return respond('OPTIONS', $route, $callback);
 }
-function request($route, Closure $callback, $cache = false) {
-    return respond(null, $route, $callback, $cache); //Match all
+function request($route, Closure $callback) {
+    return respond(null, $route, $callback);
 }
 
 //Binds a callback to the specified method/route
-function respond($method, $route, Closure $callback, $cache = false) {
+function respond($method, $route, Closure $callback) {
     global $__routes;
-    $negate = false;
+
     //Routes that start with ! are negative matches
     if ($route[0] === '!') {
         $negate = true;
-        $route = substr($route, 1);
+        $i = 1;
+    } else {
+        $i = 0;
     }
+
+    //We need to find the longest substring in the route that doesn't use regex
+    $_route = null;
     if ($route !== '*' && $route[0] !== '@') {
-        //Find the longest substring in the route that doesn't use regex
-        for ($i = 0, $l = strlen($route); $i < $l; $i++) {
-            if ($route[$i] === '[' || $route[$i] === '(' || $route[$i] === '.') {
-                $substr = substr($route, 0, $i);
-                break;
-            } elseif ($route[$i] === '?' || $route[$i] === '+' || $route[$i] === '*' || $route[$i] === '{') {
-                $substr = substr($route, 0, $i - 1);
+        while (true) {
+            if ($route[$i] === '') {
                 break;
             }
+            if (null === $substr) {
+                if ($route[$i] === '[' || $route[$i] === '(' || $route[$i] === '.') {
+                    $substr = $_route;
+                } elseif ($route[$i] === '?' || $route[$i] === '+' || $route[$i] === '*' || $route[$i] === '{') {
+                    $substr = substr($_route, 0, $i - 1);
+                }
+            }
+            $_route .= $route[$i];
+            $i++;
         }
-        //No regular expression chars found?
-        if ($i === $l) {
-            $substr = $route;
+        if (null === $substr) {
+            $substr = $_route;
         }
+    } else {
+        $_route = $route;
     }
+
     //Add the route and return the callback
-    $__routes[] = array($method, $route, $negate, $substr, $cache, $callback);
+    $__routes[] = array($method, $_route, $negate, $substr, $callback);
     return $callback;
 }
 
-//Use APC internally (if it's available)
-if (function_exists('apc_store')) {
-    function cache_set($key, $value, $ttl = 0) {
-        return apc_store("klein.$key", $value, $ttl);
+//Dispatch the request to the approriate routes
+function dispatch($request_uri = null, $request_method = null, array $params = null, $capture = false) {
+    global $__routes;
+    global $__params;
+
+    //Get the request method and URI
+    if (null === $request_uri) {
+        $request_uri = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '/';
     }
-    function cache_get($key) {
-        return apc_fetch("klein.$key");
+    if (null === $request_method) {
+        $request_method = isset($_SERVER['REQUEST_METHOD']) ? strtoupper($_SERVER['REQUEST_METHOD']) : 'GET';
     }
-} else {
-    function cache_set() {
-        return false;
+    if (null !== $params) {
+        $__params = array_merge($__params, $params);
     }
-    function cache_get() {
-        return false;
+
+    //Pass three parameters to each callback, $request, $response, and a blank object for sharing scope
+    $request  = new _Request;
+    $response = new _Response;
+    $app      = new StdClass;
+
+    ob_start();
+    $matched = false;
+
+    $apc = function_exists('apc_fetch');
+
+    foreach ($__routes as $handler) {
+        list($method, $route, $negate, $substr, $callback) = $handler;
+
+        //Check the method and then the non-regex substr against the request URI
+        if (null !== $method && $request_method !== $method) continue;
+        if (null !== $substr && strpos($request_uri, $substr) !== 0) continue;
+
+        //Try and match the route to the request URI
+        $match = $route === '*' || $substr === $request_uri;
+        if (false === $match && $substr !== $route) {
+            //Check for a cached regex string
+            if (false !== $apc) {
+                $regex = apc_fetch("route:$route");
+                if (false === $regex) {
+                    $regex = compile_route($route);
+                    apc_store("route:$route", $regex);
+                }
+            } else {
+                $regex = compile_route($route);
+            }
+            $match = preg_match($regex, $request_uri, $params);
+        }
+
+        if ($match ^ $negate) {
+            $matched = true;
+            //Merge named parameters
+            if (null !== $params) {
+                $__params = array_merge($__params, $params);
+            }
+            try {
+                $callback($request, $response, $app);
+            } catch (Exception $e) {
+                $response->error($e);
+            }
+        }
     }
+    if (false === $matched) {
+        $response->code(404);
+    }
+    return false !== $capture ? ob_get_contents() : ob_end_flush();
 }
 
-//Compiles a route string to a regular expression. This is expensive, so avoid it where possible
+//Compiles a route string to a regular expression
 function compile_route($route) {
-    if (false !== ($regex = cache_get($route))) {
-        return $regex;
-    }
-    $regex = $route;
+    //The @ operator is for custom regex
     if ($route[0] === '@') {
-        //The @ operator is used to match any part of the request uri (or use custom regex)
         return '`' . substr($route, 1) . '`';
     }
+    $regex = $route;
     if (preg_match_all('`(/?\.?)\[([^:]*+)(?::([^:\]]++))?\](\?)?`', $route, $matches, PREG_SET_ORDER)) {
         $match_types = array(
             'i'  => '[0-9]++',
@@ -100,91 +161,23 @@ function compile_route($route) {
 
             $regex = str_replace($block, $pattern, $regex);
         }
-        $regex = "`^/$regex/?$`";
+        $regex = "/$regex/?";
     }
-    //Cache the regex string
-    cache_set($route, $regex);
-    return $regex;
+    return "`^$regex$`";
 }
-
-//Dispatch the request to the approriate routes (and auto call on shutdown)
-function dispatch($request_uri = null) {
-    global $__routes;
-    global $__params;
-
-    if (empty($__routes)) return;
-
-    //Get the request method and URI
-    if (null === $request_uri) {
-        $request_uri = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '/';
-    }
-    $request_method = isset($_SERVER['REQUEST_METHOD']) ? strtoupper($_SERVER['REQUEST_METHOD']) : 'GET';
-
-    //Pass three parameters to each callback, $request, $response, and an
-    //instance of StdClass for sharing scope
-    $request = new _Request;
-    $response = new _Response;
-    $holder = new StdClass;
-    $matched = false;
-    ob_start();
-
-    foreach ($__routes as $route => $handler) {
-        list($method, $route, $negate, $substr, $cache_ttl, $callback) = $handler;
-
-        //Check the method and then the non-regex substr against the request URI
-        if (null !== $method && $request_method !== $method) continue;
-        if ($substr && strpos($request_uri, $substr) !== 0) continue;
-
-        //Match the route to the request uri
-        $match = $route === '*' || $substr === $request_uri;
-        if (!$match && $substr !== $route) {
-            preg_match(compile_route($route), $request_uri, $params);
-        }
-
-        if ($match ^ $negate) {
-            $matched = true;
-            if ($params) {
-                //Merge named parameters
-                $__params = array_merge($__params, $params);
-            }
-            $cache_key = "$route _output";
-            if ($cache_ttl && false !== ($output = cache_get($cache_key))) {
-                //Output if we have a cache hit
-                echo $output;
-            } else {
-                ob_start();
-                try {
-                    $callback($request, $response, $holder);
-                } catch (Exception $e) {
-                    //Catch exceptions and send them to the response error handler
-                    $response->error($e);
-                }
-                if ($cache_ttl) {
-                    cache_set($cache_key, ob_get_flush(), $cache_ttl === true ? 0 : $cache_ttl);
-                }
-            }
-        }
-    }
-    if (!$matched) {
-        $response->code(404);
-    }
-    $response->flush();
-    $__routes = array(); //Only dispatch once
-}
-register_shutdown_function('dispatch');
 
 class _Request {
 
     //Returns all parameters (GET, POST, named) that match the mask array
     public function params($mask = null) {
         global $__params;
+        $params = $__params;
         if (null !== $mask) {
-            if (!is_array($mask)) {
+            if (false === is_array($mask)) {
                 $mask = func_get_args();
             }
             $mask = array_flip($mask);
-            $params = array_intersect_key($__params, $mask);
-            $params = array_merge($mask, $params); //Ensure each key is present
+            $params = array_merge($mask, array_intersect_key($params, $mask));
         }
         return $params;
     }
@@ -198,7 +191,7 @@ class _Request {
     //Is the request secure? If $required then redirect to the secure version of the URL
     public function secure($required = false) {
         $secure = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'];
-        if (!$secure && $required) {
+        if (false === $secure && false !== $required) {
             $url = 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
             header('Location: ' . $url);
         }
@@ -231,8 +224,8 @@ class _Request {
     }
 
     //Gets a unique ID for the request
-    public function id($entropy = null) {
-        return sha1(mt_rand() . microtime(true) . mt_rand() . $entropy);
+    public function id() {
+        return sha1(mt_rand() . microtime(true) . mt_rand());
     }
 
     //Gets a session variable associated with the request
@@ -252,10 +245,9 @@ class _Request {
     }
 }
 
-class _Response {
+class _Response extends StdClass {
 
     protected $_errorCallbacks = array();
-    protected $_data = array();
 
     //Sets a response header
     public function header($header, $key = '') {
@@ -283,7 +275,8 @@ class _Response {
     //Sends an object or file
     public function send($object, $type = 'json', $filename = null) {
         $this->discard();
-        set_time_limit(600);
+        set_time_limit(1200);
+        header("Pragma: no-cache");
         header('Cache-Control: no-store, no-cache');
         switch ($type) {
         case 'json':
@@ -301,7 +294,7 @@ class _Response {
             $escape = function ($value) { return str_replace('"', '\"', $value); };
             foreach ($object as $row) {
                 $row = (array)$row;
-                if (!$columns && !isset($row[0])) {
+                if (false === $columns && !isset($row[0])) {
                     echo '"' . implode('","', array_keys($row)) . '"' . "\n";
                     $columns = true;
                 }
@@ -352,12 +345,14 @@ class _Response {
         $this->refresh();
     }
 
-    //Sets view data
-    public function data($data, $value = null) {
-        if (!is_array($data)) {
-            return $this->_data[$data] = $value;
+    //Sets response properties/helpers
+    public function set($key, $value = null) {
+        if (!is_array($key)) {
+            return $this->$key = $value;
         }
-        return $this->_data += $data;
+        foreach ($key as $k => $value) {
+            $this->$k = $value;
+        }
     }
 
     //Adds to / modifies the current query string
@@ -374,8 +369,24 @@ class _Response {
     }
 
     //Renders a view
-    public function render($view, $data = array(), $compile = false) {
-        $view = new _View($view, $this->_data + $data, $compile);
+    public function render($view, array $data = array(), $compile = false) {
+        if (!file_exists($view) || !is_readable($view)) {
+            throw new ErrorException("Cannot render $view");
+        }
+        if (!empty($data)) {
+            $this->set($data);
+        }
+        if (false !== $compile) {
+            //$compile enables basic micro-templating tags
+            $contents = file_get_contents($view);
+            $tags = array('{{=' => '<?php echo ', '{{'  => '<?php ', '}}'  => '?'.'>');
+            $compiled = str_replace(array_keys($tags), array_values($tags), $contents, $replaced);
+            if ($replaced) {
+                $view = tempnam(sys_get_temp_dir(), mt_rand());
+                file_put_contents($view, $compiled);
+            }
+        }
+        require $view;
     }
 
     //Sets a session variable
@@ -385,7 +396,7 @@ class _Response {
     }
 
     //Adds an error callback to the stack of error handlers
-    public function onError($callback) {
+    public function onError(Closure $callback) {
         $this->_errorCallbacks[] = $callback;
     }
 
@@ -397,7 +408,7 @@ class _Response {
         if (count($this->_errorCallbacks) > 0) {
             foreach (array_reverse($this->_errorCallbacks) as $callback) {
                 if (is_callable($callback)) {
-                    if($callback($msg, $type)) {
+                    if($callback($this, $msg, $type)) {
                         return;
                     }
                 } else {
@@ -407,63 +418,19 @@ class _Response {
             }
         } else {
             $this->code(500);
-            trigger_error($err, E_USER_ERROR);
+            throw new ErrorException($err);
         }
-    }
-
-    //Discards the current output buffer(s)
-    public function discard() {
-        while(@ ob_end_clean());
-    }
-
-    //Flushes the current output buffer(s)
-    public function flush() {
-        while(@ ob_end_flush());
-    }
-}
-
-class ViewException extends Exception {}
-
-class _View {
-
-    protected $_compiled = false;
-    protected $_data = array();
-
-    //Renders a view
-    public function __construct($view, array $data = array(), $compile = false) {
-        if (!file_exists($view) || !is_readable($view)) {
-            throw new ViewException("Cannot render $view");
-        }
-        if ($this->_compiled = $compile) {
-            //$compile enables basic micro-templating tags
-            $contents = file_get_contents($view);
-            $tags = array('{{=' => '<?php echo ', '{{'  => '<?php ', '}}'  => '?'.'>');
-            $compiled = str_replace(array_keys($tags), array_values($tags), $contents, $replaced);
-            if ($replaced) {
-                $view = tempnam(sys_get_temp_dir(), mt_rand());
-                file_put_contents($view, $compiled);
-            }
-        }
-        $this->_data = $data;
-        require $view;
-    }
-
-    //Renders a partial view
-    public function partial($view, array $data = array(), $compile = false) {
-        $partial = new self($view, (array)$this->_data + $data, $this->_compiled || $compile);
     }
 
     //Returns an escaped request paramater
     public function param($param, $default = null) {
         global $__params;
-        if (!isset($__params[$param])) {
-            return null;
-        }
+        if (!isset($__params[$param])) return null;
         return htmlentities($__params[$param], ENT_QUOTES, 'UTF-8');
     }
 
     //Returns (and clears) all flashes of $type
-    public function flash($type = 'error') {
+    public function getFlashes($type = 'error') {
         @ session_start();
         if (isset($_SESSION['__flash_' . $type])) {
             $flashes = $_SESSION['__flash_' . $type];
@@ -476,35 +443,46 @@ class _View {
         return array();
     }
 
-    //Gets a view var
-    public function __get($property) {
-        if (!isset($this->_data[$property])) {
-            return null;
-        }
-        return htmlentities($this->_data[$property], ENT_QUOTES, 'UTF-8');
+    //Escapes a string
+    public function escape($str) {
+        return htmlentities($str, ENT_QUOTES, 'UTF-8');
     }
 
-    //Calls a view helper
+    //Discards the current output buffer(s)
+    public function discard() {
+        while (@ ob_end_clean());
+    }
+
+    //Flushes the current output buffer(s)
+    public function flush() {
+        while (@ ob_end_flush());
+    }
+
+    //Allow callbacks to be assigned as properties and called like normal methods
     public function __call($method, $args) {
-        if (!isset($this->_data[$method]) || !is_callable($this->_data[$method])) {
-            throw new ViewException("Call to undefined view helper $method()");
+        if (!isset($this->$method) || !is_callable($this->$method)) {
+            throw new ErrorException("Unknown method $method()");
         }
-        $helper = $this->_data[$method];
+        $callback = $this->$method;
         switch (count($args)) {
-            case 0: return $helper();
-            case 1: return $helper($args[0]);
-            case 2: return $helper($args[0], $args[1]);
-            case 3: return $helper($args[0], $args[1], $args[2]);
-            default: return call_user_func_array($helper, $args);
+            case 1:  return $callback($args[0]);
+            case 2:  return $callback($args[0], $args[1]);
+            case 3:  return $callback($args[0], $args[1], $args[2]);
+            case 4:  return $callback($args[0], $args[1], $args[2], $args[3]);
+            default: return call_user_func_array($callback, $args);
         }
     }
 }
 
-class ValidatorException extends Exception {}
+//Add a new validator
+function addValidator($method, Closure $callback) {
+    _Validator::$_methods[strtolower($method)] = $callback;
+}
 
 class _Validator {
 
-    public static $methods = array();
+    protected static $_defaultAdded = false;
+    public static $_methods = array();
 
     protected $_str = null;
     protected $_err = null;
@@ -513,31 +491,74 @@ class _Validator {
     public function __construct($str, $err = null) {
         $this->_str = $str;
         $this->_err = $err;
+        if (false === static::$_defaultAdded) {
+            static::addDefault();
+            static::$_defaultAdded = true;
+        }
     }
 
-    //Calls a validator, is<Validator>() or not<Validator>()
+    //Adds default validators on first use. See README for usage details
+    public static function addDefault() {
+        static::$_methods['null'] = function($str) {
+            return $str === null || $str === '';
+        };
+        static::$_methods['len'] = function($str, $min, $max = null) {
+            $len = strlen($str);
+            return null === $max ? $len === $min : $len >= $min && $len <= $max;
+        };
+        static::$_methods['int'] = function($str) {
+            return (string)$str === ((string)(int)$str);
+        };
+        static::$_methods['float'] = function($str) {
+            return (string)$str === ((string)(float)$str);
+        };
+        static::$_methods['email'] = function($str) {
+            return filter_var($str, FILTER_VALIDATE_EMAIL);
+        };
+        static::$_methods['url'] = function($str) {
+            return filter_var($str, FILTER_VALIDATE_URL);
+        };
+        static::$_methods['ip'] = function($str) {
+            return filter_var($str, FILTER_VALIDATE_IP);
+        };
+        static::$_methods['alnum'] = function($str) {
+            return ctype_alnum($str);
+        };
+        static::$_methods['alpha'] = function($str) {
+            return ctype_alpha($str);
+        };
+        static::$_methods['contains'] = function($str, $needle) {
+            return strpos($str, $needle) !== false;
+        };
+        static::$_methods['regex'] = function($str, $pattern) {
+            return preg_match($pattern, $str);
+        };
+        static::$_methods['chars'] = function($str, $chars) {
+            return preg_match("`^[$chars]++$`i", $str);
+        };
+    }
+
     public function __call($method, $args) {
         switch (substr($method, 0, 2)) {
-        case 'is':
+        case 'is': //is<$validator>()
             $validator = substr($method, 2);
             break;
-        case 'no': //not
+        case 'no': //not<$validator>()
             $reverse = true;
             $validator = substr($method, 3);
             break;
-        default:
+        default:   //<$validator>()
             $validator = $method;
             break;
         }
         $validator = strtolower($validator);
 
-        if (!$validator || !isset(static::$methods[$validator])) {
-            throw new ValidatorException("Unknown method $method()");
+        if (!$validator || !isset(static::$_methods[$validator])) {
+            throw new ErrorException("Unknown method $method()");
         }
-        $validator = static::$methods[$validator];
+        $validator = static::$_methods[$validator];
         array_unshift($args, $this->_str);
 
-        //Try and avoid using the slow call_user_func_array
         switch (count($args)) {
             case 1:  $result = $validator($args[0]); break;
             case 2:  $result = $validator($args[0], $args[1]); break;
@@ -548,74 +569,8 @@ class _Validator {
 
         //Throw an exception on failed validation
         if (false === (bool)$result ^ (bool)$reverse) {
-            throw new ValidatorException($this->_err);
+            throw new Exception($this->_err);
         }
         return $this;
     }
 }
-
-//Add a new validator
-function addValidator($method, Closure $callback) {
-    _Validator::$methods[strtolower($method)] = $callback;
-}
-
-//$str must be not null
-addValidator('null', function ($str) {
-    return $str === null || $str === '';
-});
-
-//$str must be either equal to $min, or between $min and $max
-addValidator('len', function ($str, $min, $max = null) {
-    $len = strlen($str);
-    return null === $max ? $len === $min : $len >= $min && $len <= $max;
-});
-
-//$str must be an integer
-addValidator('int', function ($str) {
-    return (string)$str === ((string)(int)$str);
-});
-
-//$str must be a float
-addValidator('float', function ($str) {
-    return (string)$str === ((string)(float)$str);
-});
-
-//$str must be a valid email
-addValidator('email', function ($str) {
-    return filter_var($str, FILTER_VALIDATE_EMAIL);
-});
-
-//$str must be a valid URL
-addValidator('url', function ($str) {
-    return filter_var($str, FILTER_VALIDATE_URL);
-});
-
-//$str must be a valid IP
-addValidator('ip', function ($str) {
-    return filter_var($str, FILTER_VALIDATE_IP);
-});
-
-//$str must be alphanumeric
-addValidator('alnum', function ($str) {
-    return ctype_alnum($str);
-});
-
-//$str must be a-z
-addValidator('alpha', function ($str) {
-    return ctype_alpha($str);
-});
-
-//$str must contain $needle
-addValidator('contains', function ($str, $needle) {
-    return strpos($str, $needle) !== false;
-});
-
-//$str must match $pattern
-addValidator('regex', function ($str, $pattern) {
-    return preg_match($pattern, $str);
-});
-
-//$str must be made up of $chars
-addValidator('chars', function ($str, $chars) {
-    return preg_match("`^[$chars]++$`i", $str);
-});
