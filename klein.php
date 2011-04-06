@@ -37,7 +37,7 @@ function respond($method, $route, Closure $callback) {
         $i = 0;
     }
 
-    //We need to find the longest substring in the route that doesn't use regex
+    //Find the longest substring in $route that doesn't use regex
     $_route = null;
     if ($route !== '*' && $route[0] !== '@') {
         while (true) {
@@ -61,12 +61,11 @@ function respond($method, $route, Closure $callback) {
         $_route = $route;
     }
 
-    //Add the route and return the callback
     $__routes[] = array($method, $_route, $negate, $substr, $callback);
     return $callback;
 }
 
-//Dispatch the request to the approriate routes
+//Dispatch the request to the approriate route(s)
 function dispatch($request_uri = null, $request_method = null, array $params = null, $capture = false) {
     global $__routes;
     global $__params;
@@ -121,6 +120,7 @@ function dispatch($request_uri = null, $request_method = null, array $params = n
             if (null !== $params) {
                 $__params = array_merge($__params, $params);
             }
+            //Call the callback
             try {
                 $callback($request, $response, $app);
             } catch (Exception $e) {
@@ -173,7 +173,7 @@ class _Request {
         global $__params;
         $params = $__params;
         if (null !== $mask) {
-            if (false === is_array($mask)) {
+            if (!is_array($mask)) {
                 $mask = func_get_args();
             }
             $mask = array_flip($mask);
@@ -191,7 +191,7 @@ class _Request {
     //Is the request secure? If $required then redirect to the secure version of the URL
     public function secure($required = false) {
         $secure = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'];
-        if (false === $secure && false !== $required) {
+        if (!$secure && $required) {
             $url = 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
             header('Location: ' . $url);
         }
@@ -294,7 +294,7 @@ class _Response extends StdClass {
             $escape = function ($value) { return str_replace('"', '\"', $value); };
             foreach ($object as $row) {
                 $row = (array)$row;
-                if (false === $columns && !isset($row[0])) {
+                if (!$columns && !isset($row[0])) {
                     echo '"' . implode('","', array_keys($row)) . '"' . "\n";
                     $columns = true;
                 }
@@ -474,7 +474,6 @@ class _Response extends StdClass {
     }
 }
 
-//Add a new validator
 function addValidator($method, Closure $callback) {
     _Validator::$_methods[strtolower($method)] = $callback;
 }
