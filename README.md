@@ -1,17 +1,20 @@
-**klein.php** is a full-featured micro router for PHP5.3+. In ~600 lines you get:
+**klein.php** is a full-featured micro router for PHP 5.3+. In < 600 lines you get
 
-* Sinatra-like routing w/ auto dispatch
-* Views, view helpers, caching and partials + optional template tags
-* Helpers for working with sessions, cookies, redirects, response codes, etc. etc.
-* As much speed as you can possibly squeeze from PHP ([2000 requests/second +](https://gist.github.com/878833))
+* Sinatra-like routing and a small but powerful set of of methods for rapidly building web apps
+* *Very* low overhead => as much speed as you can possibly squeeze from PHP ([2000 requests/second+](https://gist.github.com/878833) on a 2yr old laptop).
+
+## Getting started
+
+1. PHP 5.3+ is required.
+2. Setup some form of [front controller URL rewriting](https://gist.github.com/874000)
+3. Add `<?php require 'klein.php';` as your first line and `dispatch();` as your last
+4. (Optional) Throw in some [APC](http://pecl.php.net/package/APC) for good measure
 
 ## Example
 
-Setup some form of front controller [URL rewriting](https://gist.github.com/874000), add `<?php require 'klein.php';` and you're ready.
+*Example 1*
 
-*Example 1* - That's it?
-
-    get('/', function () {
+    get('*', function ($request, $response) {
         echo 'Hello World!';
     });
 
@@ -24,20 +27,45 @@ Setup some form of front controller [URL rewriting](https://gist.github.com/8740
 
 *Example 3* - [So RESTful](http://bit.ly/g93B1s)
 
-       get('/posts',       function ($request, $response) {/* ... */});
-      post('/post/create', function ($request, $response) {/* ... */});
-       put('/post/[i:id]', function ($request, $response) {/* ... */});
-    delete('/post/[i:id]', function ($request, $response) {/* ... */});
+    get('/posts', $callback);
+    post('/post/create', $callback);
+    put('/post/[i:id]', $callback);
+    delete('/post/[i:id]', $callback);
 
-*Example 4* - Parameter validation
+    //..or to match all requests
+    request('*', $callback);
 
-    put('/users/[i:id]/edit', function ($request, $response) {
-        $request->onError(function ($msg) use ($response) {
-            $response->flash($err);
-            $response->back(); //Redir to the referer
+*Example 4* - All together
+
+    request('*', function ($reguest, $response, $app) {
+        //By default, on error/exception, flash the message and redirect to the referrer
+        $response->onError(function ($response, $err_msg) {
+            $response->flash($err_msg);
+            $response->back();
         });
-        $request->validate('username', 'Please enter a valid username')->isLen(5, 64)->isChars('a-zA-Z0-9-');
+
+        //The third parameter can be used to share scope
+        $app->db = new PDO(/* .. */);
     });
+
+    post('/users/[i:id]/edit', function ($request, $response) {
+        //Quickly validate input parameters
+        $request->validate('username', 'Please enter a valid username')->isLen(5, 64)->isChars('a-zA-Z0-9-');
+        $request->validate('password')->notNull();
+
+        $app->db->query(/*..*/);
+
+        //Add view properties and helpers
+        $response->title = 'foo';
+        $response->escape = function ($str) {
+            return htmlentities($str); //Assign view helpers
+        };
+
+        $response->render('myview.phtml');
+    });
+
+    //myview.phtml:
+    <title><?php echo $this->escape($this->title) ?></title>
 
 ## API
 
@@ -45,7 +73,7 @@ Setup some form of front controller [URL rewriting](https://gist.github.com/8740
         header($key)                    //Gets a request header
         cookie($key)                    //Gets a cookie from the request
         session($key)                   //Gets a session variable
-        param($key)                     //Gets a request parameter (get, post, named)
+        param($key, $default = null)    //Gets a request parameter (get, post, named)
         params()                        //Return all parameters
         params($mask = null)            //Return all parameters that match the mask array
         validate($param, $err = null)   //Starts a validator chain
@@ -53,7 +81,7 @@ Setup some form of front controller [URL rewriting](https://gist.github.com/8740
         method($method)                 //Checks if the request method is $method, i.e. method('post') => true
         secure()                        //https?
         secure(true)                    //Redirect non-secure requests to the secure version
-        id($entropy = null)             //Gets a unique ID for the request
+        id()                            //Gets a unique ID for the request
         ip()
         userAgent()
 
@@ -68,14 +96,21 @@ Setup some form of front controller [URL rewriting](https://gist.github.com/8740
         refresh()                                                   //Redirect to the current URL
         back()                                                      //Redirect to the referer
         render($view, $data = array(), $compile = false)            //Renders a view, set $compile to use micro tags
-        onError($callback)                                          //$callback takes ($err_msg, $exception_type = null)
-        data($key, $value = null)                                   //Add data to the view
-        data($arr)                                                  //Add an array of data to the view
+        onError($callback)                                          //$callback takes ($response, $msg, $err_type = null)
+        set($key, $value = null)                                    //Set a view property or helper
+        set($arr)
+        escape($str)                                                //Escapes a string
+        query($key, $value = null)                                  //Modify the current query string
+        query($arr)
+        param($param, $default = null)                              //Gets an escaped request parameter
+        getFlashes($type = 'error')                                 //Retrieves and clears all flashes of $type
         flush()                                                     //Flush all open output buffers
         discard()                                                   //Discard all open output buffers
+        <callback>($arg1, ...)                                      //Calls a user-defined helper
+        <property>                                                  //Gets a user-defined property
 
     $validator->
-        isLen($length)
+        isLen($length)                      //The string must be the exact length
         isLen($min, $max)                   //The string must be between $min and $max length (inclusive)
         notNull()                           //The string must not be null
         isInt()                             //Checks for a valid integer
@@ -88,26 +123,51 @@ Setup some form of front controller [URL rewriting](https://gist.github.com/8740
         contains($needle)                   //Checks if the string contains $needle
         isChars($chars)                     //Validates against a character list
         isRegex($pattern, $modifiers = '')  //Validates against a regular expression
+        notRegex($pattern, $modifiers ='')
         is<Validator>()                     //Validate against a custom validator
         not<Validator>()                    //The validator can't match
         <Validator>()                       //Alias for is<Validator>()
 
-    $view->
-        partial($view, $data = array(), $compile = false)   //Render a partial view
-        flash($type = 'error')                              //Retrieves and clears all flash messages of $type
-        param($param, $default = null)                      //Gets an escaped request parameter
-        query($key, $value = null)                          //Modify the current query string
-        query($arr)
-        <helper>($args, ...)                                //Calls the specified view helper
-        <property>                                          //Gets a variable from the response data
-
     Misc:
-        request($route, $cache = null, $callback = null)    //Match all request methods
-        get($route, $cache = null, $callback = null)
-        put($route, $cache = null, $callback = null)
-        post($route, $cache = null, $callback = null)
-        delete($route, $cache = null, $callback = null)
-        options($route, $cache = null, $callback = null)
+        request($route, $callback)  //Respond to any request method
+            get($route, $callback)  //Respond to GET requests
+            put($route, $callback)  //Respond to PUT requests
+           post($route, $callback)  //Respond to POST requests
+         delete($route, $callback)  //Response to DELETE requests
+        options($route, $callback)  //Respond to OPTIONS requests
+        request('*',    $callback)  //Respond to *all* requests
+
+## Views
+
+You can send properties or helper methods to the view with the second param of `$response->render()` call, or just by assigning a property to the $response object
+
+    $response->escape = function ($str) {
+        return htmlentities($str);
+    };
+
+    $response->render('myview.phtml', array('title' => 'My View'));
+
+*myview.phtml*
+
+    <title><?php echo $this->escape($this->title) ?></title>
+
+Views are compiled and run in the scope of `$response`
+
+    $this->render('partial.html')  //Render partials
+    $this->param('myvar')          //Access request parameters
+
+Set the third param of `render()` to `true` to use the optional template tags
+
+    $people = array('Chris','Jeff','Carla');
+    $response->render('myview.tpl', array('people' => $people), true);
+
+*myview.tpl*
+
+    <ul id="people">
+    {{foreach($people as $person):}}
+        <li>Hi, my name is {{=$person->name}}</li>
+    {{endforeach}}
+    </ul>
 
 ## Validators
 
@@ -124,20 +184,6 @@ Then you can validate parameters using `is<$method>()` or `not<$method>()`, e.g.
 Validation methods are chainable, and a custom exception message can be specified for if validation fails
 
     $request->validate('key', 'The key was invalid')->isHex()->isLen(32);
-
-## Views
-
-You can send data or helper methods to the view using `$response->data()` or the second param of `$response->render()` call
-
-    $response->data('escape', function ($str) {
-        return htmlentities($str);
-    });
-
-    $response->render('myview.phtml', array('title' => 'My View'));
-
-*myview.phtml*
-
-    <title><?php echo $this->escape($this->title) ?></title>
 
 ## Routing
 
@@ -173,7 +219,7 @@ code will wrap other routes with a header and footer
     get('*', function ($request, $response) { $response->render('footer.phtml'; });
 
 Routes automatically match the entire request URI. If you need to match
-only a part of the request URI, use the `@` operator. If you need to
+only a part of the request URI or use a custom regular expression, use the `@` operator. If you need to
 negate a route, use the `!` operator
 
     //Match all requests containing 'json' or 'csv'
@@ -181,34 +227,6 @@ negate a route, use the `!` operator
 
     //Match all requests that _don't_ start with /admin
     get('!@^/admin/', ...
-
-## Sharing scope between routes
-
-Each callback receives a third parameter - an instance of `StdClass` -
-that can be used to share scope, e.g.
-
-    get('*', function ($request, $response, $app) {
-        $app->db = new Pdo(/* pdo config */);
-    });
-
-    get('/login', function ($request, $response, $app) {
-        $app->db->query("SELECT * FROM .."); //etc.
-    }
-
-## Micro-templates
-
-Set the third param of `render()` or `partial()` to `true` to use the optional template tags
-
-    $people = array('Chris','Jeff','Carla');
-    $response->render('myview.tpl', array('people'=>$people), true);
-
-*myview.tpl*
-
-    <ul id="people">
-    {{foreach($people as $person):}}
-        <li>Hi, my name is {{=$person->name}}</li>
-    {{endforeach}}
-    </ul>
 
 ## License
 
