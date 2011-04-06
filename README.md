@@ -1,11 +1,11 @@
 **klein.php** is a full-featured micro router for PHP 5.3+. In < 600 lines you get
 
 * Sinatra-like routing and a small but powerful set of of methods for rapidly building web apps
-* *Very* low overhead => as much speed as you can possibly squeeze from PHP ([2000 requests/second+](https://gist.github.com/878833) on a 2yr old laptop).
+* *Very* low overhead => as much speed as you can possibly squeeze from PHP ([2000 requests/second+](https://gist.github.com/878833))
 
 ## Getting started
 
-1. PHP 5.3+ is required.
+1. PHP 5.3+ is required
 2. Setup some form of [front controller URL rewriting](https://gist.github.com/874000)
 3. Add `<?php require 'klein.php';` as your first line and `dispatch();` as your last
 4. (Optional) Throw in some [APC](http://pecl.php.net/package/APC) for good measure
