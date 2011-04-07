@@ -64,6 +64,7 @@ function dispatch($uri = null, $req_method = null, array $params = null, $captur
             $i = 1;
         } else {
             $i = 0;
+            $negate = false;
         }
 
         //Check for a hard match
