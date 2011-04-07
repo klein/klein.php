@@ -12,7 +12,7 @@
 
 ## Example
 
-*Example 1*
+*Example 1* - Respond to all requests
 
     respond('*', function ($request, $response) {
         echo 'Hello World!';
@@ -35,19 +35,16 @@
     //To match multiple request methods:
     respond(array('POST','GET'), $route, $callback);
 
-    //To match all request methods:
-    respond($route, $callback);
-
 *Example 4* - All together
 
     respond('*', function ($reguest, $response, $app) {
-        //By default, on error/exception, flash the message and redirect to the referrer
+        //Handle exceptions => flash the message and redirect to the referrer
         $response->onError(function ($response, $err_msg) {
             $response->flash($err_msg);
             $response->back();
         });
 
-        //The third parameter can be used to share scope
+        //The third parameter can be used to share scope and global objects
         $app->db = new PDO(/* .. */);
     });
 
@@ -73,45 +70,45 @@
 ## API
 
     $request->
-        header($key)                    //Gets a request header
-        cookie($key)                    //Gets a cookie from the request
-        session($key)                   //Gets a session variable
-        param($key, $default = null)    //Gets a request parameter (get, post, named)
-        params()                        //Return all parameters
-        params($mask = null)            //Return all parameters that match the mask array
-        validate($param, $err = null)   //Starts a validator chain
-        method()                        //Gets the request method
-        method($method)                 //Checks if the request method is $method, i.e. method('post') => true
-        secure()                        //https?
-        secure(true)                    //Redirect non-secure requests to the secure version
-        id()                            //Gets a unique ID for the request
-        ip()                            //Get the request IP
-        userAgent()                     //Get the request user agent
-        uri()                           //Get the request URI
+        header($key)                        //Gets a request header
+        cookie($key)                        //Gets a cookie from the request
+        session($key)                       //Gets a session variable
+        param($key, $default = null)        //Gets a request parameter (get, post, named)
+        params()                            //Return all parameters
+        params($mask = null)                //Return all parameters that match the mask array
+        validate($param, $err_msg = null)   //Starts a validator chain
+        method()                            //Gets the request method
+        method($method)                     //Checks if the request method is $method, i.e. method('post') => true
+        secure()                            //https?
+        secure(true)                        //Redirect non-secure requests to the secure version
+        id()                                //Gets a unique ID for the request
+        ip()                                //Get the request IP
+        userAgent()                         //Get the request user agent
+        uri()                               //Get the request URI
 
     $response->
-        header($key, $value = null)                                 //Sets a response header
-        cookie($key, $value = null, $expiry = null, $path = '/')    //Sets a cookie
-        cookie($key, '')                                            //Removes a cookie
-        flash($msg, $type = 'error')                                //Sets a flash message
-        send($object, $type = 'json', $filename = null)             //$type can be 'csv', 'json', or 'file'
-        code($code)                                                 //Sends an HTTP response code
-        redirect($url, $code = 302)                                 //Redirect to the specified URL
-        refresh()                                                   //Redirect to the current URL
-        back()                                                      //Redirect to the referer
-        render($view, $data = array())                              //Renders a view or partial
-        onError($callback)                                          //$callback takes ($response, $msg, $err_type = null)
-        set($key, $value = null)                                    //Set a view property or helper
+        header($key, $value = null)                     //Sets a response header
+        cookie($key, $value = null, $expiry = null)     //Sets a cookie
+        cookie($key, null)                              //Removes a cookie
+        flash($msg, $type = 'error')                    //Sets a flash message
+        send($object, $type = 'json', $filename = null) //$type can be 'csv', 'json', or 'file'
+        code($code)                                     //Sends an HTTP response code
+        redirect($url, $code = 302)                     //Redirect to the specified URL
+        refresh()                                       //Redirect to the current URL
+        back()                                          //Redirect to the referer
+        render($view, $data = array())                  //Renders a view or partial
+        onError($callback)                              //$callback takes ($response, $msg, $err_type = null)
+        set($key, $value = null)                        //Set a view property or helper
         set($arr)
-        escape($str)                                                //Escapes a string
-        query($key, $value = null)                                  //Modify the current query string
+        escape($str)                                    //Escapes a string
+        query($key, $value = null)                      //Modify the current query string
         query($arr)
-        param($param, $default = null)                              //Gets an escaped request parameter
-        getFlashes($type = 'error')                                 //Retrieves and clears all flashes of $type
-        flush()                                                     //Flush all open output buffers
-        discard()                                                   //Discard all open output buffers
-        <callback>($arg1, ...)                                      //Calls a user-defined helper
-        <property>                                                  //Gets a user-defined property
+        param($param, $default = null)                  //Gets an escaped request parameter
+        getFlashes($type = 'error')                     //Retrieves and clears all flashes of $type
+        flush()                                         //Flush all open output buffers
+        discard()                                       //Discard all open output buffers
+        <callback>($arg1, ...)                          //Calls a user-defined helper
+        <property>                                      //Gets a user-defined property
 
     $validator->
         notNull()                           //The string must not be null
@@ -122,7 +119,7 @@
         isEmail()                           //Checks for a valid email
         isUrl()                             //Checks for a valid URL
         isIp()                              //Checks for a valid IP
-        isAlpha()                           //Checks for a-z
+        isAlpha()                           //Checks for a-z (case insensitive)
         isAlnum()                           //Checks for alphanumeric characters
         contains($needle)                   //Checks if the string contains $needle
         isChars($chars)                     //Validates against a character list
@@ -134,7 +131,7 @@
 
 ## Views
 
-You can send properties or helper methods to the view with the second param of `$response->render()` call, or just by assigning a property to the $response object
+You can send properties or helper methods to the view by assigning them to the $response object, or by using the second param of `$response->render()`
 
     $response->escape = function ($str) {
         return htmlentities($str);
@@ -146,10 +143,11 @@ You can send properties or helper methods to the view with the second param of `
 
     <title><?php echo $this->escape($this->title) ?></title>
 
-Views are compiled and run in the scope of `$response`
+Views are compiled and run in the scope of `$response` so all response methods can be accessed with `$this`
 
-    $this->render('partial.html')  //Render partials
-    $this->param('myvar')          //Access request parameters
+    $this->render('partial.html')           //Render partials
+    $this->param('myvar')                   //Access request parameters
+    echo $this->query(array('page' => 2))   //Modify the current query string
 
 ## Validators
 
@@ -159,11 +157,11 @@ To add a custom validator use `addValidator($method, $callback)`
         return preg_match('/^[0-9a-f]++$/i', $str);
     });
 
-Then you can validate parameters using `is<$method>()` or `not<$method>()`, e.g.
+You can validate parameters using `is<$method>()` or `not<$method>()`, e.g.
 
     $request->validate('key')->isHex();
 
-Validation methods are chainable, and a custom exception message can be specified for if validation fails
+Validation methods are chainable, and a custom exception message can be specified for if/when validation fails
 
     $request->validate('key', 'The key was invalid')->isHex()->isLen(32);
 
@@ -204,7 +202,7 @@ Routes automatically match the entire request URI. If you need to match
 only a part of the request URI or use a custom regular expression, use the `@` operator. If you need to
 negate a route, use the `!` operator
 
-    //Match all requests that end with 'json' or 'csv'
+    //Match all requests that end with '.json' or '.csv'
     respond('@\.(json|csv)$', ...
 
     //Match all requests that _don't_ start with /admin
