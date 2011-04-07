@@ -4,7 +4,6 @@
 
 $__routes = array();
 $__params = $_REQUEST;
-$__flashes = array();
 
 //Define a route handler
 function respond($methods, $route, Closure $callback = null) {
