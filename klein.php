@@ -266,10 +266,10 @@ class _Response extends StdClass {
     //Stores a flash message of $type
     public function flash($msg, $type = 'error') {
         @ session_start();
-        if (!isset($_SESSION['__flash' . $type])) {
-            $_SESSION['__flash_' . $type] = array();
+        if (!isset($_SESSION["__flash_$type"])) {
+            $_SESSION["__flash_$type"] = array();
         }
-        $_SESSION['__flash_' . $type][] = $msg;
+        $_SESSION["__flash_$type"][] = $msg;
     }
 
     //Sends an object or file
@@ -432,12 +432,12 @@ class _Response extends StdClass {
     //Returns (and clears) all flashes of $type
     public function getFlashes($type = 'error') {
         @ session_start();
-        if (isset($_SESSION['__flash_' . $type])) {
-            $flashes = $_SESSION['__flash_' . $type];
+        if (isset($_SESSION["__flash_$type"])) {
+            $flashes = $_SESSION["__flash_$type"];
             foreach ($flashes as $k => $flash) {
                 $flashes[$k] = htmlentities($flash, ENT_QUOTES, 'UTF-8');
             }
-            unset($_SESSION['__flash_' . $type]);
+            unset($_SESSION["__flash_$type"]);
             return $flashes;
         }
         return array();
