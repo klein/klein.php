@@ -66,6 +66,7 @@ function dispatch($request_uri = null, $request_method = null, array $params = n
             $i = 0;
         }
 
+        //Check for a hard match
         if ($_route === $request_uri || $_route === '*') {
             $match = true;
         } else {
@@ -82,7 +83,8 @@ function dispatch($request_uri = null, $request_method = null, array $params = n
                     } elseif (null === $substr) {
                         $c = $_route[$i];
                         $n = $_route[$i + 1];
-                        if ($c === '[' || $c === '(' || $c === '.' || $n === '?' || $n === '+' || $n === '*' || $n === '{') {
+                        if ($c === '[' || $c === '(' || $c === '.' ||
+                            $n === '?' || $n === '+' || $n === '*' || $n === '{') {
                             $substr = $route;
                         }
                     }
@@ -109,13 +111,14 @@ function dispatch($request_uri = null, $request_method = null, array $params = n
             $match = preg_match($regex, $request_uri, $params);
         }
 
-        //Handle a match
         if ($match ^ $negate) {
             $matched = true;
+
             //Merge named parameters
             if (null !== $params) {
                 $__params = array_merge($__params, $params);
             }
+
             try {
                 //Ignore callbacks that return false
                 if (false === $callback($request, $response, $app)) {
@@ -138,6 +141,7 @@ function compile_route($route) {
         return '`' . substr($route, 1) . '`';
     }
     $regex = $route;
+
     if (preg_match_all('`(/?\.?)\[([^:]*+)(?::([^:\]]++))?\](\?)?`', $route, $matches, PREG_SET_ORDER)) {
         $match_types = array(
             'i'  => '[0-9]++',
@@ -149,6 +153,7 @@ function compile_route($route) {
         );
         foreach ($matches as $match) {
             list($block, $pre, $type, $param, $optional) = $match;
+
             if (isset($match_types[$type])) {
                 $type = $match_types[$type];
             }
@@ -174,6 +179,7 @@ class _Request {
                 $mask = func_get_args();
             }
             $params = array_intersect_key($params, array_flip($mask));
+            //Make sure each key in $mask has at least a null value
             foreach ($mask as $key) {
                 if (!isset($params[$key])) $params[$key] = null;
             }
@@ -284,8 +290,10 @@ class _Response extends StdClass {
     public function send($object, $type = 'json', $filename = null) {
         $this->discard();
         set_time_limit(1200);
+
         header("Pragma: no-cache");
         header('Cache-Control: no-store, no-cache');
+
         switch ($type) {
         case 'json':
             $json = json_encode($object);
@@ -374,6 +382,7 @@ class _Response extends StdClass {
         } else {
             $query[$new] = $value;
         }
+
         $request_uri = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '/';
         if (strpos($request_uri, '?') !== false) {
             $request_uri = strstr($request_uri, '?', true);
@@ -411,7 +420,7 @@ class _Response extends StdClass {
         if (count($this->_errorCallbacks) > 0) {
             foreach (array_reverse($this->_errorCallbacks) as $callback) {
                 if (is_callable($callback)) {
-                    if($callback($this, $msg, $type)) {
+                    if ($callback($this, $msg, $type)) {
                         return;
                     }
                 } else {
@@ -428,7 +437,9 @@ class _Response extends StdClass {
     //Returns an escaped request paramater
     public function param($param, $default = null) {
         global $__params;
-        if (!isset($__params[$param])) return null;
+        if (!isset($__params[$param])) {
+            return null;
+        }
         return htmlentities($__params[$param], ENT_QUOTES, 'UTF-8');
     }
 
