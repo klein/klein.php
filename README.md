@@ -46,7 +46,7 @@
         });
 
         //The third parameter can be used to share scope and global objects
-        $app->db = new PDO(/* .. */);
+        $app->db = new PDO(...);
     });
 
     respond('POST', '/users/[i:id]/edit', function ($request, $response) {
@@ -54,9 +54,9 @@
         $request->validate('username', 'Please enter a valid username')->isLen(5, 64)->isChars('a-zA-Z0-9-');
         $request->validate('password')->notNull();
 
-        $app->db->query(/*..*/);
+        $app->db->query(...); //etc.
 
-        //Add view properties and helpers
+        //Add view properties and helper methods
         $response->title = 'foo';
         $response->escape = function ($str) {
             return htmlentities($str); //Assign view helpers
@@ -76,7 +76,7 @@
         session($key)                       //Gets a session variable
         param($key, $default = null)        //Gets a request parameter (get, post, named)
         params()                            //Return all parameters
-        params($mask = null)                //Return all parameters that match the mask array
+        params($mask = null)                //Return all parameters that match the mask array - extract() friendly
         validate($param, $err_msg = null)   //Starts a validator chain
         method()                            //Gets the request method
         method($method)                     //Checks if the request method is $method, i.e. method('post') => true
@@ -149,6 +149,7 @@ Views are compiled and run in the scope of `$response` so all response methods c
     $this->render('partial.html')           //Render partials
     $this->param('myvar')                   //Access request parameters
     echo $this->query(array('page' => 2))   //Modify the current query string
+
 
 ## Validators
 
