@@ -68,6 +68,86 @@
     //myview.phtml:
     <title><?php echo $this->escape($this->title) ?></title>
 
+## Validators
+
+To add a custom validator use `addValidator($method, $callback)`
+
+    addValidator('hex', function ($str) {
+        return preg_match('/^[0-9a-f]++$/i', $str);
+    });
+
+You can validate parameters using `is<$method>()` or `not<$method>()`, e.g.
+
+    $request->validate('key')->isHex();
+
+Validation methods are chainable, and a custom exception message can be specified for if/when validation fails
+
+    $request->validate('key', 'The key was invalid')->isHex()->isLen(32);
+
+## Routing
+
+**[** *match_type* **:** *param_name* **]**
+
+Some examples
+
+    *                    //Match all request URIs
+    [i]                  //Match an integer
+    [i:id]               //Match an integer as 'id'
+    [a:action]           //Match alphanumeric characters as 'action'
+    [h:key]              //Match hexadecimal characters as 'key'
+    [:action]            //Match anything up to the next / or end of the URI as 'action'
+    [create|edit:action] //Match either 'create' or 'edit' as 'action'
+    [*]                  //Catch all (lazy)
+    [*:trailing]         //Catch all as 'trailing' (lazy)
+    [**:trailing]        //Catch all (possessive - will match the rest of the URI)
+    .[:format]?          //Matches an optional parameter 'format'. A / or . character before the block is also optional
+
+Some more complicated examples
+
+    /posts/[*:title][i:id]    //Matches "/posts/this-is-a-title-123"
+    /output.[xml|json:format]? //Matches "/output", "output.xml", "output.json"
+    /[:controller]?/[:action]? //Matches the typical /controller/action format
+
+**Note** - *all* routes that match the request URI are called - this
+allows you to incorporate complex conditional logic such as user
+authentication or view layouts. e.g. as a basic example, the following
+code will wrap other routes with a header and footer
+
+    respond('*', function ($request, $response) { $response->render('header.phtml'; });
+    //other routes
+    respond('*', function ($request, $response) { $response->render('footer.phtml'; });
+
+Routes automatically match the entire request URI. If you need to match
+only a part of the request URI or use a custom regular expression, use the `@` operator. If you need to
+negate a route, use the `!` operator
+
+    //Match all requests that end with '.json' or '.csv'
+    respond('@\.(json|csv)$', ...
+
+    //Match all requests that _don't_ start with /admin
+    respond('!@^/admin/', ...
+
+## Views
+
+You can send properties or helpers to the view by assigning them
+to the `$response` object, or by using the second arg of `$response->render()`
+
+    $response->escape = function ($str) {
+        return htmlentities($str);
+    };
+
+    $response->render('myview.phtml', array('title' => 'My View'));
+
+*myview.phtml*
+
+    <title><?php echo $this->escape($this->title) ?></title>
+
+Views are compiled and run in the scope of `$response` so all response methods can be accessed with `$this`
+
+    $this->render('partial.html')           //Render partials
+    $this->param('myvar')                   //Access request parameters
+    echo $this->query(array('page' => 2))   //Modify the current query string
+
 ## API
 
     $request->
@@ -129,87 +209,6 @@
         is<Validator>()                     //Validate against a custom validator
         not<Validator>()                    //The validator can't match
         <Validator>()                       //Alias for is<Validator>()
-
-## Views
-
-You can send properties or helpers to the view by assigning them
-to the `$response` object, or by using the second arg of `$response->render()`
-
-    $response->escape = function ($str) {
-        return htmlentities($str);
-    };
-
-    $response->render('myview.phtml', array('title' => 'My View'));
-
-*myview.phtml*
-
-    <title><?php echo $this->escape($this->title) ?></title>
-
-Views are compiled and run in the scope of `$response` so all response methods can be accessed with `$this`
-
-    $this->render('partial.html')           //Render partials
-    $this->param('myvar')                   //Access request parameters
-    echo $this->query(array('page' => 2))   //Modify the current query string
-
-
-## Validators
-
-To add a custom validator use `addValidator($method, $callback)`
-
-    addValidator('hex', function ($str) {
-        return preg_match('/^[0-9a-f]++$/i', $str);
-    });
-
-You can validate parameters using `is<$method>()` or `not<$method>()`, e.g.
-
-    $request->validate('key')->isHex();
-
-Validation methods are chainable, and a custom exception message can be specified for if/when validation fails
-
-    $request->validate('key', 'The key was invalid')->isHex()->isLen(32);
-
-## Routing
-
-**[** *match_type* **:** *param_name* **]**
-
-Some examples
-
-    *                    //Match all request URIs
-    [i]                  //Match an integer
-    [i:id]               //Match an integer as 'id'
-    [a:action]           //Match alphanumeric characters as 'action'
-    [h:key]              //Match hexadecimal characters as 'key'
-    [:action]            //Match anything up to the next / or end of the URI as 'action'
-    [create|edit:action] //Match either 'create' or 'edit' as 'action'
-    [*]                  //Catch all (lazy)
-    [*:trailing]         //Catch all as 'trailing' (lazy)
-    [**:trailing]        //Catch all (possessive - will match the rest of the URI)
-    .[:format]?          //Matches an optional parameter 'format'. A / or . character before the block is also optional
-
-Some more complicated examples
-
-    /posts/[*:title][i:id]    //Matches "/posts/this-is-a-title-123"
-    /output.[xml|json:format]? //Matches "/output", "output.xml", "output.json"
-    /[:controller]?/[:action]? //Matches the typical /controller/action format
-
-**Note** - *all* routes that match the request URI are called - this
-allows you to incorporate complex conditional logic such as user
-authentication or view layouts. e.g. as a basic example, the following
-code will wrap other routes with a header and footer
-
-    respond('*', function ($request, $response) { $response->render('header.phtml'; });
-    //other routes
-    respond('*', function ($request, $response) { $response->render('footer.phtml'; });
-
-Routes automatically match the entire request URI. If you need to match
-only a part of the request URI or use a custom regular expression, use the `@` operator. If you need to
-negate a route, use the `!` operator
-
-    //Match all requests that end with '.json' or '.csv'
-    respond('@\.(json|csv)$', ...
-
-    //Match all requests that _don't_ start with /admin
-    respond('!@^/admin/', ...
 
 ## License
 
