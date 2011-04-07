@@ -2,7 +2,7 @@
 
 * Sinatra-like routing
 * Almost no overhead = as much speed as you can possibly squeeze from PHP ([2200 requests/second+](https://gist.github.com/878833))
-* A small but powerful set of of methods for rapidly building web apps
+* A set of boilerplate methods for rapidly building web apps
 
 ## Getting started
 
