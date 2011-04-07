@@ -58,7 +58,7 @@ function dispatch($uri = null, $req_method = null, array $params = null, $captur
             continue;
         }
 
-        //! is a negative match
+        //! is used to negate a match
         if ($_route[0] === '!') {
             $negate = true;
             $i = 1;
@@ -240,11 +240,7 @@ class _Request {
 
     //Gets the request URI
     public function uri() {
-        $request_uri = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '/';
-        if (strpos($request_uri, '?') !== false) {
-            $request_uri = strstr($request_uri, '?', true);
-        }
-        return $request_uri;
+        return isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '/';
     }
 }
 
@@ -270,7 +266,7 @@ class _Response extends StdClass {
     //Stores a flash message of $type
     public function flash($msg, $type = 'error') {
         @ session_start();
-        if (!isset($_SESSION['__flash_' . $type])) {
+        if (!isset($_SESSION['__flash' . $type])) {
             $_SESSION['__flash_' . $type] = array();
         }
         $_SESSION['__flash_' . $type][] = $msg;
