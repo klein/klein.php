@@ -132,7 +132,8 @@
 
 ## Views
 
-You can send properties or helper methods to the view by assigning them to the $response object, or by using the second param of `$response->render()`
+You can send properties or helpers to the view by assigning them
+to the `$response` object, or by using the second arg of `$response->render()`
 
     $response->escape = function ($str) {
         return htmlentities($str);
