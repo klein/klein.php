@@ -15,7 +15,7 @@ function respond($methods, $route, Closure $callback = null) {
 }
 
 //Dispatch the request to the approriate route(s)
-function dispatch($request_uri = null, $request_method = null, array $params = null, $capture = false) {
+function dispatch($uri = null, $req_method = null, array $params = null, $capture = false) {
     global $__routes;
     global $__params;
 
@@ -25,18 +25,18 @@ function dispatch($request_uri = null, $request_method = null, array $params = n
     $app      = new StdClass;
 
     //Get the request method and URI
-    if (null === $request_uri) {
+    if (null === $uri) {
         if (isset($_SERVER['REQUEST_URI'])) {
-            $request_uri = $_SERVER['REQUEST_URI'];
-            if (strpos($request_uri, '?') !== false) {
-                $request_uri = strstr($request_uri, '?', true);
+            $uri = $_SERVER['REQUEST_URI'];
+            if (strpos($uri, '?') !== false) {
+                $uri = strstr($uri, '?', true);
             }
         } else {
-            $request_uri = '/';
+            $uri = '/';
         }
     }
-    if (null === $request_method) {
-        $request_method = isset($_SERVER['REQUEST_METHOD']) ? $_SERVER['REQUEST_METHOD'] : 'GET';
+    if (null === $method) {
+        $req_method = isset($_SERVER['REQUEST_METHOD']) ? $_SERVER['REQUEST_METHOD'] : 'GET';
     }
     if (null !== $params) {
         $__params = array_merge($__params, $params);
@@ -54,7 +54,7 @@ function dispatch($request_uri = null, $request_method = null, array $params = n
         if (is_callable($_route)) {
             $callback = $_route;
             $_route = $method;
-        } elseif (strcasecmp($request_method, $method) !== 0) {
+        } elseif (strcasecmp($req_method, $method) !== 0) {
             continue;
         }
 
@@ -67,35 +67,32 @@ function dispatch($request_uri = null, $request_method = null, array $params = n
         }
 
         //Check for a hard match
-        if ($_route === $request_uri || $_route === '*') {
+        if ($_route === $uri || $_route === '*') {
             $match = true;
+
+        //@ is used to specify custom regex
+        } elseif ($_route[$i] === '@') {
+            $match = preg_match('`' . substr($_route, $i + 1) . '`', $uri, $params);
+
+        //Compiling and matching regular expressions is (relatively)
+        //expensive, so try and match by a substring first
         } else {
-
-            //@ is used for custom regex
-            if ($_route[0] !== '@') {
-
-                //Compiling and matching regular expressions is (relatively)
-                //expensive, so try and match by a substring first
-                $route = $substr = null;
-                while (true) {
-                    if ($_route[$i] === '') {
-                        break;
-                    } elseif (null === $substr) {
-                        $c = $_route[$i];
-                        $n = $_route[$i + 1];
-                        if ($c === '[' || $c === '(' || $c === '.' ||
-                            $n === '?' || $n === '+' || $n === '*' || $n === '{') {
-                            $substr = $route;
-                        }
+            $route = $substr = null;
+            while (true) {
+                if ($_route[$i] === '') {
+                    break;
+                } elseif (null === $substr) {
+                    $c = $_route[$i];
+                    $n = $_route[$i + 1];
+                    if ($c === '[' || $c === '(' || $c === '.' ||
+                        $n === '?' || $n === '+' || $n === '*' || $n === '{') {
+                        $substr = $route;
                     }
-                    $route .= $_route[$i++];
                 }
-                if (null === $substr || strpos($request_uri, $substr) !== 0) {
-                    continue;
-                }
-
-            } else {
-                $route = $_route;
+                $route .= $_route[$i++];
+            }
+            if (null === $substr || strpos($uri, $substr) !== 0) {
+                continue;
             }
 
             //Check if there's a cached regex string
@@ -108,7 +105,8 @@ function dispatch($request_uri = null, $request_method = null, array $params = n
             } else {
                 $regex = compile_route($route);
             }
-            $match = preg_match($regex, $request_uri, $params);
+
+            $match = preg_match($regex, $uri, $params);
         }
 
         if ($match ^ $negate) {
@@ -118,12 +116,8 @@ function dispatch($request_uri = null, $request_method = null, array $params = n
             if (null !== $params) {
                 $__params = array_merge($__params, $params);
             }
-
             try {
-                //Ignore callbacks that return false
-                if (false === $callback($request, $response, $app)) {
-                    $matched = false;
-                }
+                $callback($request, $response, $app);
             } catch (Exception $e) {
                 $response->error($e);
             }
@@ -137,11 +131,6 @@ function dispatch($request_uri = null, $request_method = null, array $params = n
 
 //Compiles a route string to a regular expression
 function compile_route($route) {
-    if ($route[0] === '@') {
-        return '`' . substr($route, 1) . '`';
-    }
-    $regex = $route;
-
     if (preg_match_all('`(/?\.?)\[([^:]*+)(?::([^:\]]++))?\](\?)?`', $route, $matches, PREG_SET_ORDER)) {
         $match_types = array(
             'i'  => '[0-9]++',
@@ -157,15 +146,15 @@ function compile_route($route) {
             if (isset($match_types[$type])) {
                 $type = $match_types[$type];
             }
-            $pattern = '(?:' . ($pre !== '' && strpos($regex, $block) !== 0 ? $pre : null)
+            $pattern = '(?:' . ($pre !== '' && strpos($route, $block) !== 0 ? $pre : null)
                      . '(' . ($param !== '' ? "?<$param>" : null) . $type . '))'
                      . ($optional !== null ? '?' : null);
 
-            $regex = str_replace($block, $pattern, $regex);
+            $route = str_replace($block, $pattern, $route);
         }
-        $regex = "/$regex/?";
+        $route = "/$route/?";
     }
-    return "`^$regex$`";
+    return "`^$route$`";
 }
 
 class _Request {
@@ -270,7 +259,8 @@ class _Response extends StdClass {
     }
 
     //Sets a response cookie
-    public function cookie($key, $value = '', $expiry = null, $path = '/', $domain = null, $secure = false, $httponly = false) {
+    public function cookie($key, $value = '', $expiry = null, $path = '/',
+            $domain = null, $secure = false, $httponly = false) {
         if (null === $expiry) {
             $expiry = time() + (3600 * 24 * 30);
         }
