@@ -35,7 +35,7 @@ function dispatch($uri = null, $req_method = null, array $params = null, $captur
             $uri = '/';
         }
     }
-    if (null === $method) {
+    if (null === $req_method) {
         $req_method = isset($_SERVER['REQUEST_METHOD']) ? $_SERVER['REQUEST_METHOD'] : 'GET';
     }
     if (null !== $params) {
@@ -79,7 +79,7 @@ function dispatch($uri = null, $req_method = null, array $params = null, $captur
         } else {
             $route = $substr = null;
             while (true) {
-                if ($_route[$i] === '') {
+                if (!isset($_route[$i])) {
                     break;
                 } elseif (null === $substr) {
                     $c = $_route[$i];
