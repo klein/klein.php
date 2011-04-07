@@ -1,7 +1,7 @@
 **klein.php** is a full-featured micro router for PHP 5.3+. In < 600 lines you get
 
 * Sinatra-like routing and a small but powerful set of of methods for rapidly building web apps
-* *Very* low overhead => as much speed as you can possibly squeeze from PHP ([2000 requests/second+](https://gist.github.com/878833))
+* Almost no overhead => as much speed as you can possibly squeeze from PHP ([2200 requests/second+](https://gist.github.com/878833))
 
 ## Getting started
 
@@ -14,30 +14,33 @@
 
 *Example 1*
 
-    get('*', function ($request, $response) {
+    respond('*', function ($request, $response) {
         echo 'Hello World!';
     });
 
 *Example 2* - Named parameters
 
-    get('/[:name]?', function ($request, $response) {
+    respond('GET', '/[:name]?', function ($request, $response) {
         $name = $request->param('name', 'world');
         echo "Hello $name!";
     });
 
 *Example 3* - [So RESTful](http://bit.ly/g93B1s)
 
-    get('/posts', $callback);
-    post('/post/create', $callback);
-    put('/post/[i:id]', $callback);
-    delete('/post/[i:id]', $callback);
+    respond('GET',    '/posts',       $callback);
+    respond('POST',   '/post/create', $callback);
+    respond('PUT',    '/post/[i:id]', $callback);
+    respond('DELETE', '/post/[i:id]', $callback);
 
-    //..or to match all requests
-    request('*', $callback);
+    //To match multiple request methods:
+    respond(array('POST','GET'), $route, $callback);
+
+    //To match all request methods:
+    respond($route, $callback);
 
 *Example 4* - All together
 
-    request('*', function ($reguest, $response, $app) {
+    respond('*', function ($reguest, $response, $app) {
         //By default, on error/exception, flash the message and redirect to the referrer
         $response->onError(function ($response, $err_msg) {
             $response->flash($err_msg);
@@ -48,7 +51,7 @@
         $app->db = new PDO(/* .. */);
     });
 
-    post('/users/[i:id]/edit', function ($request, $response) {
+    respond('POST', '/users/[i:id]/edit', function ($request, $response) {
         //Quickly validate input parameters
         $request->validate('username', 'Please enter a valid username')->isLen(5, 64)->isChars('a-zA-Z0-9-');
         $request->validate('password')->notNull();
@@ -82,8 +85,9 @@
         secure()                        //https?
         secure(true)                    //Redirect non-secure requests to the secure version
         id()                            //Gets a unique ID for the request
-        ip()
-        userAgent()
+        ip()                            //Get the request IP
+        userAgent()                     //Get the request user agent
+        uri()                           //Get the request URI
 
     $response->
         header($key, $value = null)                                 //Sets a response header
@@ -95,7 +99,7 @@
         redirect($url, $code = 302)                                 //Redirect to the specified URL
         refresh()                                                   //Redirect to the current URL
         back()                                                      //Redirect to the referer
-        render($view, $data = array(), $compile = false)            //Renders a view, set $compile to use micro tags
+        render($view, $data = array())                              //Renders a view or partial
         onError($callback)                                          //$callback takes ($response, $msg, $err_type = null)
         set($key, $value = null)                                    //Set a view property or helper
         set($arr)
@@ -110,9 +114,9 @@
         <property>                                                  //Gets a user-defined property
 
     $validator->
+        notNull()                           //The string must not be null
         isLen($length)                      //The string must be the exact length
         isLen($min, $max)                   //The string must be between $min and $max length (inclusive)
-        notNull()                           //The string must not be null
         isInt()                             //Checks for a valid integer
         isFloat()                           //Checks for a valid float/decimal
         isEmail()                           //Checks for a valid email
@@ -127,15 +131,6 @@
         is<Validator>()                     //Validate against a custom validator
         not<Validator>()                    //The validator can't match
         <Validator>()                       //Alias for is<Validator>()
-
-    Misc:
-        request($route, $callback)  //Respond to any request method
-            get($route, $callback)  //Respond to GET requests
-            put($route, $callback)  //Respond to PUT requests
-           post($route, $callback)  //Respond to POST requests
-         delete($route, $callback)  //Response to DELETE requests
-        options($route, $callback)  //Respond to OPTIONS requests
-        request('*',    $callback)  //Respond to *all* requests
 
 ## Views
 
@@ -155,19 +150,6 @@ Views are compiled and run in the scope of `$response`
 
     $this->render('partial.html')  //Render partials
     $this->param('myvar')          //Access request parameters
-
-Set the third param of `render()` to `true` to use the optional template tags
-
-    $people = array('Chris','Jeff','Carla');
-    $response->render('myview.tpl', array('people' => $people), true);
-
-*myview.tpl*
-
-    <ul id="people">
-    {{foreach($people as $person):}}
-        <li>Hi, my name is {{=$person->name}}</li>
-    {{endforeach}}
-    </ul>
 
 ## Validators
 
@@ -214,19 +196,19 @@ allows you to incorporate complex conditional logic such as user
 authentication or view layouts. e.g. as a basic example, the following
 code will wrap other routes with a header and footer
 
-    get('*', function ($request, $response) { $response->render('header.phtml'; });
+    respond('*', function ($request, $response) { $response->render('header.phtml'; });
     //other routes
-    get('*', function ($request, $response) { $response->render('footer.phtml'; });
+    respond('*', function ($request, $response) { $response->render('footer.phtml'; });
 
 Routes automatically match the entire request URI. If you need to match
 only a part of the request URI or use a custom regular expression, use the `@` operator. If you need to
 negate a route, use the `!` operator
 
-    //Match all requests containing 'json' or 'csv'
-    get('@json|csv', ...
+    //Match all requests that end with 'json' or 'csv'
+    respond('@\.(json|csv)$', ...
 
     //Match all requests that _don't_ start with /admin
-    get('!@^/admin/', ...
+    respond('!@^/admin/', ...
 
 ## License
 
