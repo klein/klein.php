@@ -36,7 +36,24 @@
     //To match multiple request methods:
     respond(array('POST','GET'), $route, $callback);
 
-*Example 4* - All together
+    //Or you might want to just handle them all in the same place
+    respond('/posts?/[create|edit:action]?/[i:id]?', function ($request, $response) {
+        extract($request->params('action', 'id'));
+        switch ($action) ...
+    });
+
+*Example 4* - Sending objects / files
+
+    respond('/report.[csv|json:format]?', function ($reqest, $response)
+        $format = $request->param('format', 'json');
+        $response->send($object, $format); //Headers and encoding is automatic
+    });
+
+    respond('/report/latest', function ($request, $response) {
+        $response->send('/tmp/cached_report.zip', 'file');
+    });
+
+*Example 5* - All together
 
     respond('*', function ($reguest, $response, $app) {
         //Handle exceptions => flash the message and redirect to the referrer
