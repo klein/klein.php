@@ -4,64 +4,14 @@
 
 $__routes = array();
 $__params = $_REQUEST;
+$__flashes = array();
 
-//REST aliases
-function get($route, Closure $callback) {
-    return respond('GET', $route, $callback);
-}
-function post($route, Closure $callback) {
-    return respond('POST', $route, $callback);
-}
-function put($route, Closure $callback) {
-    return respond('PUT', $route, $callback);
-}
-function delete($route, Closure $callback) {
-    return respond('DELETE', $route, $callback);
-}
-function options($route, Closure $callback) {
-    return respond('OPTIONS', $route, $callback);
-}
-function request($route, Closure $callback) {
-    return respond(null, $route, $callback);
-}
-
-//Binds a callback to the specified method/route
-function respond($method, $route, Closure $callback) {
+//Define a route handler
+function respond($methods, $route, Closure $callback = null) {
     global $__routes;
-
-    //Routes that start with ! are negative matches
-    if ($route[0] === '!') {
-        $negate = true;
-        $i = 1;
-    } else {
-        $i = 0;
+    foreach ((array)$methods as $method) { //Allow an array of methods
+        $__routes[] = array($method, $route, $callback);
     }
-
-    //Find the longest substring in $route that doesn't use regex
-    $_route = null;
-    if ($route !== '*' && $route[0] !== '@') {
-        while (true) {
-            if ($route[$i] === '') {
-                break;
-            }
-            if (null === $substr) {
-                if ($route[$i] === '[' || $route[$i] === '(' || $route[$i] === '.') {
-                    $substr = $_route;
-                } elseif ($route[$i] === '?' || $route[$i] === '+' || $route[$i] === '*' || $route[$i] === '{') {
-                    $substr = substr($_route, 0, $i - 1);
-                }
-            }
-            $_route .= $route[$i];
-            $i++;
-        }
-        if (null === $substr) {
-            $substr = $_route;
-        }
-    } else {
-        $_route = $route;
-    }
-
-    $__routes[] = array($method, $_route, $negate, $substr, $callback);
     return $callback;
 }
 
@@ -70,38 +20,84 @@ function dispatch($request_uri = null, $request_method = null, array $params = n
     global $__routes;
     global $__params;
 
-    //Get the request method and URI
-    if (null === $request_uri) {
-        $request_uri = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '/';
-    }
-    if (null === $request_method) {
-        $request_method = isset($_SERVER['REQUEST_METHOD']) ? strtoupper($_SERVER['REQUEST_METHOD']) : 'GET';
-    }
-    if (null !== $params) {
-        $__params = array_merge($__params, $params);
-    }
-
     //Pass three parameters to each callback, $request, $response, and a blank object for sharing scope
     $request  = new _Request;
     $response = new _Response;
     $app      = new StdClass;
 
-    ob_start();
-    $matched = false;
+    //Get the request method and URI
+    if (null === $request_uri) {
+        if (isset($_SERVER['REQUEST_URI'])) {
+            $request_uri = $_SERVER['REQUEST_URI'];
+            if (strpos($request_uri, '?') !== false) {
+                $request_uri = strstr($request_uri, '?', true);
+            }
+        } else {
+            $request_uri = '/';
+        }
+    }
+    if (null === $request_method) {
+        $request_method = isset($_SERVER['REQUEST_METHOD']) ? $_SERVER['REQUEST_METHOD'] : 'GET';
+    }
+    if (null !== $params) {
+        $__params = array_merge($__params, $params);
+    }
 
+    $matched = false;
     $apc = function_exists('apc_fetch');
 
+    ob_start();
+
     foreach ($__routes as $handler) {
-        list($method, $route, $negate, $substr, $callback) = $handler;
+        list($method, $_route, $callback) = $handler;
 
-        //Check the method and then the non-regex substr against the request URI
-        if (null !== $method && $request_method !== $method) continue;
-        if (null !== $substr && strpos($request_uri, $substr) !== 0) continue;
+        //Was a method specified? If so, check it against the current request method
+        if (is_callable($_route)) {
+            $callback = $_route;
+            $_route = $method;
+        } elseif (strcasecmp($request_method, $method) !== 0) {
+            continue;
+        }
 
-        //Try and match the route to the request URI
-        $match = $route === '*' || $substr === $request_uri;
-        if (false === $match && $substr !== $route) {
-            //Check for a cached regex string
+        //! is a negative match
+        if ($_route[0] === '!') {
+            $negate = true;
+            $i = 1;
+        } else {
+            $i = 0;
+        }
+
+        if ($_route === $request_uri || $_route === '*') {
+            $match = true;
+        } else {
+
+            //@ is used for custom regex
+            if ($_route[0] !== '@') {
+
+                //Compiling and matching regular expressions is (relatively)
+                //expensive, so try and match by a substring first
+                $route = $substr = null;
+                while (true) {
+                    if ($_route[$i] === '') {
+                        break;
+                    } elseif (null === $substr) {
+                        $c = $_route[$i];
+                        $n = $_route[$i + 1];
+                        if ($c === '[' || $c === '(' || $c === '.' || $n === '?' || $n === '+' || $n === '*' || $n === '{') {
+                            $substr = $route;
+                        }
+                    }
+                    $route .= $_route[$i++];
+                }
+                if (null === $substr || strpos($request_uri, $substr) !== 0) {
+                    continue;
+                }
+
+            } else {
+                $route = $_route;
+            }
+
+            //Check if there's a cached regex string
             if (false !== $apc) {
                 $regex = apc_fetch("route:$route");
                 if (false === $regex) {
@@ -114,15 +110,18 @@ function dispatch($request_uri = null, $request_method = null, array $params = n
             $match = preg_match($regex, $request_uri, $params);
         }
 
+        //Handle a match
         if ($match ^ $negate) {
             $matched = true;
             //Merge named parameters
             if (null !== $params) {
                 $__params = array_merge($__params, $params);
             }
-            //Call the callback
             try {
-                $callback($request, $response, $app);
+                //Ignore callbacks that return false
+                if (false === $callback($request, $response, $app)) {
+                    $matched = false;
+                }
             } catch (Exception $e) {
                 $response->error($e);
             }
@@ -136,7 +135,6 @@ function dispatch($request_uri = null, $request_method = null, array $params = n
 
 //Compiles a route string to a regular expression
 function compile_route($route) {
-    //The @ operator is for custom regex
     if ($route[0] === '@') {
         return '`' . substr($route, 1) . '`';
     }
@@ -168,7 +166,7 @@ function compile_route($route) {
 
 class _Request {
 
-    //Returns all parameters (GET, POST, named) that match the mask array
+    //Returns all parameters (GET, POST, named) that match the mask
     public function params($mask = null) {
         global $__params;
         $params = $__params;
@@ -176,8 +174,10 @@ class _Request {
             if (!is_array($mask)) {
                 $mask = func_get_args();
             }
-            $mask = array_flip($mask);
-            $params = array_merge($mask, array_intersect_key($params, $mask));
+            $params = array_intersect_key($params, array_flip($mask));
+            foreach ($mask as $key) {
+                if (!isset($params[$key])) $params[$key] = null;
+            }
         }
         return $params;
     }
@@ -185,7 +185,7 @@ class _Request {
     //Return a request parameter, or $default if it doesn't exist
     public function param($param, $default = null) {
         global $__params;
-        return isset($__params[$param]) ? trim($__params[$param]) : $default;
+        return isset($__params[$param]) ? $__params[$param] : $default;
     }
 
     //Is the request secure? If $required then redirect to the secure version of the URL
@@ -236,12 +236,21 @@ class _Request {
 
     //Gets the request IP address
     public function ip() {
-        return isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : false;
+        return isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : null;
     }
 
     //Gets the request user agent
     public function userAgent() {
-        return isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : false;
+        return isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : null;
+    }
+
+    //Gets the request URI
+    public function uri() {
+        $request_uri = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '/';
+        if (strpos($request_uri, '?') !== false) {
+            $request_uri = strstr($request_uri, '?', true);
+        }
+        return $request_uri;
     }
 }
 
@@ -250,7 +259,7 @@ class _Response extends StdClass {
     protected $_errorCallbacks = array();
 
     //Sets a response header
-    public function header($header, $key = '') {
+    public function header($key, $value = '') {
         $key = str_replace(' ', '-', ucwords(str_replace('-', ' ', $key)));
         header("$key: $value");
     }
@@ -289,7 +298,7 @@ class _Response extends StdClass {
             if (null === $filename) {
                 $filename = 'output.csv';
             }
-            header("Content-Disposition: attachment; filename='$filename'");
+            header('Content-Disposition: attachment; filename="'.$filename.'"');
             $columns = false;
             $escape = function ($value) { return str_replace('"', '\"', $value); };
             foreach ($object as $row) {
@@ -308,7 +317,7 @@ class _Response extends StdClass {
             if (null === $filename) {
                 $filename = basename($object);
             }
-            header("Content-Disposition: attachment; filename='$filename'");
+            header('Content-Disposition: attachment; filename="'.$filename.'"');
             fpassthru($object);
             finfo_close($finfo);
             exit;
@@ -357,34 +366,29 @@ class _Response extends StdClass {
 
     //Adds to / modifies the current query string
     public function query($new, $value = null) {
-        $query = isset($_SERVER['QUERY_STRING']) ? parse_str($_SERVER['QUERY_STRING']) : array();
+        $query = array();
+        if (isset($_SERVER['QUERY_STRING'])) {
+            parse_str($_SERVER['QUERY_STRING'], $query);
+        }
         if (is_array($new)) {
-            $query += $new;
+            $query = array_merge($query, $new);
         } else {
             $query[$new] = $value;
         }
-        $url = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '';
-        if (empty($query)) return $url;
-        return $url . '?' . http_build_query($query);
+        $request_uri = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '/';
+        if (strpos($request_uri, '?') !== false) {
+            $request_uri = strstr($request_uri, '?', true);
+        }
+        return $request_uri . (!empty($query) ? '?' . http_build_query($query) : null);
     }
 
     //Renders a view
-    public function render($view, array $data = array(), $compile = false) {
+    public function render($view, array $data = array()) {
         if (!file_exists($view) || !is_readable($view)) {
             throw new ErrorException("Cannot render $view");
         }
         if (!empty($data)) {
             $this->set($data);
-        }
-        if (false !== $compile) {
-            //$compile enables basic micro-templating tags
-            $contents = file_get_contents($view);
-            $tags = array('{{=' => '<?php echo ', '{{'  => '<?php ', '}}'  => '?'.'>');
-            $compiled = str_replace(array_keys($tags), array_values($tags), $contents, $replaced);
-            if ($replaced) {
-                $view = tempnam(sys_get_temp_dir(), mt_rand());
-                file_put_contents($view, $compiled);
-            }
         }
         require $view;
     }
