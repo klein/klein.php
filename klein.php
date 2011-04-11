@@ -1,45 +1,41 @@
 <?php
-# © Chris O'Hara <cohara87@gmail.com> (MIT License)
+# (c) Chris O'Hara <cohara87@gmail.com> (MIT License)
 # http://github.com/chriso/klein.php
 
 $__routes = array();
-$__params = $_REQUEST;
 
-//Define a route handler
-function respond($methods, $route, Closure $callback = null) {
+//Add a route callback
+function respond($method, $route, $callback = null) {
     global $__routes;
-    foreach ((array)$methods as $method) { //Allow an array of methods
-        $__routes[] = array($method, $route, $callback);
-    }
+    $__routes[] = array($method, $route, $callback);
     return $callback;
 }
 
 //Dispatch the request to the approriate route(s)
 function dispatch($uri = null, $req_method = null, array $params = null, $capture = false) {
     global $__routes;
-    global $__params;
 
     //Pass three parameters to each callback, $request, $response, and a blank object for sharing scope
     $request  = new _Request;
     $response = new _Response;
     $app      = new StdClass;
 
-    //Get the request method and URI
+    //Get/parse the request URI and method
     if (null === $uri) {
         if (isset($_SERVER['REQUEST_URI'])) {
             $uri = $_SERVER['REQUEST_URI'];
-            if (strpos($uri, '?') !== false) {
-                $uri = strstr($uri, '?', true);
-            }
         } else {
             $uri = '/';
         }
+    }
+    if (false !== strpos($uri, '?')) {
+        $uri = strstr($uri, '?', true);
     }
     if (null === $req_method) {
         $req_method = isset($_SERVER['REQUEST_METHOD']) ? $_SERVER['REQUEST_METHOD'] : 'GET';
     }
     if (null !== $params) {
-        $__params = array_merge($__params, $params);
+        $_REQUEST = array_merge($_REQUEST, $params);
     }
 
     $matched = false;
@@ -54,6 +50,17 @@ function dispatch($uri = null, $req_method = null, array $params = null, $captur
         if (is_callable($_route)) {
             $callback = $_route;
             $_route = $method;
+        } elseif (is_array($method)) {
+            $method_match = false;
+            foreach ($method as $test) {
+                if (strcasecmp($req_method, $test) === 0) {
+                    $method_match = true;
+                    continue;
+                }
+            }
+            if (false === $method_match) {
+                continue;
+            }
         } elseif (strcasecmp($req_method, $method) !== 0) {
             continue;
         }
@@ -63,37 +70,42 @@ function dispatch($uri = null, $req_method = null, array $params = null, $captur
             $negate = true;
             $i = 1;
         } else {
-            $i = 0;
             $negate = false;
+            $i = 0;
         }
 
-        //Check for a hard match
-        if ($_route === $uri || $_route === '*') {
+        //Check for a wildcard (match all)
+        if ($_route === '*') {
             $match = true;
 
         //@ is used to specify custom regex
         } elseif ($_route[$i] === '@') {
             $match = preg_match('`' . substr($_route, $i + 1) . '`', $uri, $params);
 
-        //Compiling and matching regular expressions is (relatively)
+        //Compiling and matching regular expressions is relatively
         //expensive, so try and match by a substring first
         } else {
-            $route = $substr = null;
+            $route = null;
+            $regex = false;
+            $j = 0;
+            $n = isset($_route[$i]) ? $_route[$i] : null;
+
+            //Find the longest non-regex substring and match it against the URI
             while (true) {
                 if (!isset($_route[$i])) {
                     break;
-                } elseif (null === $substr) {
-                    $c = $_route[$i];
-                    $n = $_route[$i + 1];
-                    if ($c === '[' || $c === '(' || $c === '.' ||
-                        $n === '?' || $n === '+' || $n === '*' || $n === '{') {
-                        $substr = $route;
+                } elseif (false === $regex) {
+                    $c = $n;
+                    $regex = $c === '[' || $c === '(' || $c === '.';
+                    if (false === $regex && false !== isset($_route[$i+1])) {
+                        $n = $_route[$i + 1];
+                        $regex = $n === '?' || $n === '+' || $n === '*' || $n === '{';
+                    }
+                    if (false === $regex && isset($uri[$j]) && $c !== $uri[$j++]) {
+                        continue 2;
                     }
                 }
                 $route .= $_route[$i++];
-            }
-            if (null === $substr || strpos($uri, $substr) !== 0) {
-                continue;
             }
 
             //Check if there's a cached regex string
@@ -111,23 +123,27 @@ function dispatch($uri = null, $req_method = null, array $params = null, $captur
         }
 
         if ($match ^ $negate) {
-            $matched = true;
-
             //Merge named parameters
             if (null !== $params) {
-                $__params = array_merge($__params, $params);
+                $_REQUEST = array_merge($_REQUEST, $params);
             }
             try {
-                $callback($request, $response, $app);
+                $callback($request, $response, $app, $matched);
             } catch (Exception $e) {
                 $response->error($e);
             }
+            $matched = true;
         }
     }
     if (false === $matched) {
         $response->code(404);
     }
-    return false !== $capture ? ob_get_contents() : ob_end_flush();
+    if (false === $capture) {
+        return ob_end_flush();
+    }
+    $capture = ob_get_contents();
+    ob_end_clean();
+    return $capture;
 }
 
 //Compiles a route string to a regular expression
@@ -147,8 +163,12 @@ function compile_route($route) {
             if (isset($match_types[$type])) {
                 $type = $match_types[$type];
             }
-            $pattern = '(?:' . ($pre !== '' && strpos($route, $block) !== 0 ? $pre : null)
-                     . '(' . ($param !== '' ? "?<$param>" : null) . $type . '))'
+            $pattern = '(?:'
+                     . ($pre !== '' && strpos($route, $block) !== 0 ? $pre : null)
+                     . '('
+                     . ($param !== '' ? "?<$param>" : null)
+                     . $type
+                     . '))'
                      . ($optional !== null ? '?' : null);
 
             $route = str_replace($block, $pattern, $route);
@@ -162,8 +182,7 @@ class _Request {
 
     //Returns all parameters (GET, POST, named) that match the mask
     public function params($mask = null) {
-        global $__params;
-        $params = $__params;
+        $params = $_REQUEST;
         if (null !== $mask) {
             if (!is_array($mask)) {
                 $mask = func_get_args();
@@ -171,7 +190,9 @@ class _Request {
             $params = array_intersect_key($params, array_flip($mask));
             //Make sure each key in $mask has at least a null value
             foreach ($mask as $key) {
-                if (!isset($params[$key])) $params[$key] = null;
+                if (!isset($params[$key])) {
+                    $params[$key] = null;
+                }
             }
         }
         return $params;
@@ -179,8 +200,7 @@ class _Request {
 
     //Return a request parameter, or $default if it doesn't exist
     public function param($param, $default = null) {
-        global $__params;
-        return isset($__params[$param]) ? $__params[$param] : $default;
+        return isset($_REQUEST[$param]) ? $_REQUEST[$param] : $default;
     }
 
     //Is the request secure? If $required then redirect to the secure version of the URL
@@ -194,9 +214,9 @@ class _Request {
     }
 
     //Gets a request header
-    public function header($key) {
+    public function header($key, $default = null) {
         $key = 'HTTP_' . strtoupper(str_replace('-','_', $key));
-        return isset($_SERVER[$key]) ? $_SERVER[$key] : null;
+        return isset($_SERVER[$key]) ? $_SERVER[$key] : $default;
     }
 
     //Gets a request cookie
@@ -305,15 +325,13 @@ class _Response extends StdClass {
             }
             exit;
         case 'file':
-            $finfo = finfo_open(FILEINFO_MIME_TYPE);
-            header('Content-type: ' . finfo_file($finfo, $object));
+            header('Content-type: ' . finfo_file(finfo_open(FILEINFO_MIME_TYPE), $object));
             header('Content-length: ' . filesize($object));
             if (null === $filename) {
                 $filename = basename($object);
             }
             header('Content-Disposition: attachment; filename="'.$filename.'"');
             fpassthru($object);
-            finfo_close($finfo);
             exit;
         }
     }
@@ -333,11 +351,7 @@ class _Response extends StdClass {
 
     //Redirects the request to the current URL
     public function refresh() {
-        $redirect = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '/';
-        if (isset($_SERVER['QUERY_STRING']) && $_SERVER['QUERY_STRING']) {
-            $redirect .= '?' . $_SERVER['QUERY_STRING'];
-        }
-        $this->redirect($redirect);
+        $this->redirect(isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '/');
     }
 
     //Redirects the request back to the referrer
@@ -358,7 +372,7 @@ class _Response extends StdClass {
         }
     }
 
-    //Adds to / modifies the current query string
+    //Adds to or modifies the current query string
     public function query($new, $value = null) {
         $query = array();
         if (isset($_SERVER['QUERY_STRING'])) {
@@ -395,7 +409,7 @@ class _Response extends StdClass {
     }
 
     //Adds an error callback to the stack of error handlers
-    public function onError(Closure $callback) {
+    public function onError($callback) {
         $this->_errorCallbacks[] = $callback;
     }
 
@@ -423,11 +437,7 @@ class _Response extends StdClass {
 
     //Returns an escaped request paramater
     public function param($param, $default = null) {
-        global $__params;
-        if (!isset($__params[$param])) {
-            return null;
-        }
-        return htmlentities($__params[$param], ENT_QUOTES, 'UTF-8');
+    return isset($_REQUEST[$param]) ?  htmlentities($_REQUEST[$param], ENT_QUOTES) : $default;
     }
 
     //Returns (and clears) all flashes of $type
@@ -436,7 +446,7 @@ class _Response extends StdClass {
         if (isset($_SESSION["__flash_$type"])) {
             $flashes = $_SESSION["__flash_$type"];
             foreach ($flashes as $k => $flash) {
-                $flashes[$k] = htmlentities($flash, ENT_QUOTES, 'UTF-8');
+                $flashes[$k] = htmlentities($flash, ENT_QUOTES);
             }
             unset($_SESSION["__flash_$type"]);
             return $flashes;
@@ -446,7 +456,7 @@ class _Response extends StdClass {
 
     //Escapes a string
     public function escape($str) {
-        return htmlentities($str, ENT_QUOTES, 'UTF-8');
+        return htmlentities($str, ENT_QUOTES);
     }
 
     //Discards the current output buffer(s)
@@ -475,13 +485,12 @@ class _Response extends StdClass {
     }
 }
 
-function addValidator($method, Closure $callback) {
+function addValidator($method, $callback) {
     _Validator::$_methods[strtolower($method)] = $callback;
 }
 
 class _Validator {
 
-    protected static $_defaultAdded = false;
     public static $_methods = array();
 
     protected $_str = null;
@@ -491,9 +500,8 @@ class _Validator {
     public function __construct($str, $err = null) {
         $this->_str = $str;
         $this->_err = $err;
-        if (false === static::$_defaultAdded) {
+        if (empty(static::$_defaultAdded)) {
             static::addDefault();
-            static::$_defaultAdded = true;
         }
     }
 
@@ -539,6 +547,7 @@ class _Validator {
     }
 
     public function __call($method, $args) {
+        $reverse = false;
         switch (substr($method, 0, 2)) {
         case 'is': //is<$validator>()
             $validator = substr($method, 2);
@@ -568,7 +577,7 @@ class _Validator {
         }
 
         //Throw an exception on failed validation
-        if (false === (bool)$result ^ (bool)$reverse) {
+        if (false === (bool)$result ^ $reverse) {
             throw new Exception($this->_err);
         }
         return $this;
