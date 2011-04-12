@@ -101,9 +101,10 @@ function dispatch($uri = null, $req_method = null, array $params = null, $captur
                         $n = $_route[$i + 1];
                         $regex = $n === '?' || $n === '+' || $n === '*' || $n === '{';
                     }
-                    if (false === $regex && isset($uri[$j]) && $c !== $uri[$j++]) {
+                    if (false === $regex && $c !== '/' && (!isset($uri[$j]) || $c !== $uri[$j])) {
                         continue 2;
                     }
+                    $j++;
                 }
                 $route .= $_route[$i++];
             }
