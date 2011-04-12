@@ -149,7 +149,7 @@ function dispatch($uri = null, $req_method = null, array $params = null, $captur
 
 //Compiles a route string to a regular expression
 function compile_route($route) {
-    if (preg_match_all('`(/?\.?)\[([^:]*+)(?::([^:\]]++))?\](\?)?`', $route, $matches, PREG_SET_ORDER)) {
+    if (preg_match_all('`(/|\.|)\[([^:\]]*+)(?::([^:\]]*+))?\](\?|)`', $route, $matches, PREG_SET_ORDER)) {
         $match_types = array(
             'i'  => '[0-9]++',
             'a'  => '[0-9A-Za-z]++',
@@ -164,17 +164,20 @@ function compile_route($route) {
             if (isset($match_types[$type])) {
                 $type = $match_types[$type];
             }
+            if ($pre === '.') {
+                $pre = '\.';
+            }
             $pattern = '(?:'
-                     . ($pre !== '' && strpos($route, $block) !== 0 ? $pre : null)
+                     . ($pre !== '' ? $pre : null)
                      . '('
                      . ($param !== '' ? "?<$param>" : null)
                      . $type
                      . '))'
-                     . ($optional !== null ? '?' : null);
+                     . ($optional !== '' ? '?' : null);
 
             $route = str_replace($block, $pattern, $route);
         }
-        $route = "/$route/?";
+        $route = "$route/?";
     }
     return "`^$route$`";
 }
