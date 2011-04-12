@@ -1,7 +1,7 @@
 **klein.php** is a lightning fast router for PHP 5.3+. In < 600 lines you get
 
 * Sinatra-like routing
-* Almost no overhead = as much speed as you can possibly squeeze from PHP ([2500+ requests/second](https://gist.github.com/878833))
+* Almost no overhead => [2500+ requests/second](https://gist.github.com/878833)
 * A set of [boilerplate methods](https://github.com/chriso/klein.php/wiki/API) for rapidly building web apps
 
 ## Getting started
