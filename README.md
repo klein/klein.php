@@ -1,13 +1,13 @@
 **klein.php** is a lightning fast router for PHP 5.3+. In < 600 lines you get
 
-* Sinatra-like routing
-* Almost no overhead => [2500+ requests/second](https://gist.github.com/878833)
+* Flexible regular expression routing (inspired by [Sinatra](http://www.sinatrarb.com/))
 * A set of [boilerplate methods](https://github.com/chriso/klein.php/wiki/API) for rapidly building web apps
+* Almost no overhead => [2500+ requests/second](https://gist.github.com/878833)
 
 ## Getting started
 
-1. PHP 5.3+ is required
-2. Setup some form of [front controller URL rewriting](https://gist.github.com/874000)
+1. PHP 5.3.x is required
+2. Setup [URL rewriting](https://gist.github.com/874000) so that all requests are handled by **index.php**
 3. Add `<?php require 'klein.php';` as your first line and `dispatch();` as your last
 4. (Optional) Throw in some [APC](http://pecl.php.net/package/APC) for good measure
 
@@ -21,7 +21,7 @@
 
 *Example 2* - Named parameters
 
-    respond('GET', '/[:name]?', function ($request, $response) {
+    respond('/[:name]?', function ($request, $response) {
         $name = $request->param('name', 'world');
         echo "Hello $name!";
     });
@@ -36,7 +36,7 @@
     //To match multiple request methods:
     respond(array('POST','GET'), $route, $callback);
 
-    //Or you might want to just handle them all in the same place
+    //Or you might want the requests in the same place
     respond('/posts?/[create|edit:action]?/[i:id]?', function ($request, $response) {
         extract($request->params('action', 'id'));
         switch ($action) ...
@@ -45,8 +45,8 @@
 *Example 4* - Sending objects / files
 
     respond('/report.[csv|json:format]?', function ($reqest, $response)
-        $format = $request->param('format', 'json');
-        $response->send($object, $format); //Headers and encoding is automatic
+        $format = $request->param('format');
+        $response->send($object, $format);
     });
 
     respond('/report/latest', function ($request, $response) {
