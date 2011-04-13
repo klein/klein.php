@@ -586,7 +586,7 @@ class _Validator {
 
         //if $err is false just return the result as a bool
         if (false === $this->_err) {
-            return $result
+            return $result;
         }
 
         //Throw an exception on failed validation
