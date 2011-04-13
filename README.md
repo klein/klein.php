@@ -36,7 +36,7 @@
     //To match multiple request methods:
     respond(array('POST','GET'), $route, $callback);
 
-    //Or you might want the requests in the same place
+    //Or you might want to handle the requests in the same place
     respond('/posts?/[create|edit:action]?/[i:id]?', function ($request, $response) {
         extract($request->params('action', 'id'));
         switch ($action) ...
@@ -44,7 +44,7 @@
 
 *Example 4* - Sending objects / files
 
-    respond('/report.[csv|json:format]?', function ($reqest, $response)
+    respond('/report.[csv|json:format]?', function ($reqest, $response) {
         $format = $request->param('format');
         $response->send($object, $format);
     });
@@ -154,6 +154,8 @@ to the `$response` object, or by using the second arg of `$response->render()`
     };
 
     $response->render('myview.phtml', array('title' => 'My View'));
+
+    //Or just: $response->title = 'My View';
 
 *myview.phtml*
 
