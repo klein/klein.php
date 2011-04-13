@@ -493,6 +493,8 @@ function addValidator($method, $callback) {
     _Validator::$_methods[strtolower($method)] = $callback;
 }
 
+class ValidatorException extends Exception {}
+
 class _Validator {
 
     public static $_methods = array();
@@ -580,9 +582,16 @@ class _Validator {
             default: $result = call_user_func_array($validator, $args); break;
         }
 
+        $result = (bool)$result ^ $reverse;
+
+        //if $err is false just return the result as a bool
+        if (false === $this->_err) {
+            return $result
+        }
+
         //Throw an exception on failed validation
-        if (false === (bool)$result ^ $reverse) {
-            throw new Exception($this->_err);
+        if (false === $result) {
+            throw new ValidatorException($this->_err);
         }
         return $this;
     }
