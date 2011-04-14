@@ -15,10 +15,6 @@ function respond($method, $route, $callback = null) {
 function dispatch($uri = null, $req_method = null, array $params = null, $capture = false) {
     global $__routes;
 
-    //Force request_order to be GP
-    //http://www.mail-archive.com/internals@lists.php.net/msg33119.html
-    $_REQUEST = array_merge($_GET, $_POST);
-
     //Pass three parameters to each callback, $request, $response, and a blank object for sharing scope
     $request  = new _Request;
     $response = new _Response;
@@ -26,11 +22,7 @@ function dispatch($uri = null, $req_method = null, array $params = null, $captur
 
     //Get/parse the request URI and method
     if (null === $uri) {
-        if (isset($_SERVER['REQUEST_URI'])) {
-            $uri = $_SERVER['REQUEST_URI'];
-        } else {
-            $uri = '/';
-        }
+        $uri = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : $uri = '/';
     }
     if (false !== strpos($uri, '?')) {
         $uri = strstr($uri, '?', true);
@@ -38,6 +30,10 @@ function dispatch($uri = null, $req_method = null, array $params = null, $captur
     if (null === $req_method) {
         $req_method = isset($_SERVER['REQUEST_METHOD']) ? $_SERVER['REQUEST_METHOD'] : 'GET';
     }
+
+    //Force request_order to be GP
+    //http://www.mail-archive.com/internals@lists.php.net/msg33119.html
+    $_REQUEST = array_merge($_GET, $_POST);
     if (null !== $params) {
         $_REQUEST = array_merge($_REQUEST, $params);
     }
@@ -128,7 +124,6 @@ function dispatch($uri = null, $req_method = null, array $params = null, $captur
         }
 
         if ($match ^ $negate) {
-            //Merge named parameters
             if (null !== $params) {
                 $_REQUEST = array_merge($_REQUEST, $params);
             }
