@@ -15,6 +15,9 @@ function respond($method, $route, $callback = null) {
 function dispatch($uri = null, $req_method = null, array $params = null, $capture = false) {
     global $__routes;
 
+    //Force request_order to be GP
+    $_REQUEST = array_merge($_GET, $_POST);
+
     //Pass three parameters to each callback, $request, $response, and a blank object for sharing scope
     $request  = new _Request;
     $response = new _Response;
@@ -601,13 +604,9 @@ class _Validator {
 
         $result = (bool)$result ^ $reverse;
 
-        //if $err is false just return the result as a bool
         if (false === $this->_err) {
             return $result;
-        }
-
-        //Throw an exception on failed validation
-        if (false === $result) {
+        } elseif (false === $result) {
             throw new ValidatorException($this->_err);
         }
         return $this;
