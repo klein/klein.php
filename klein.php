@@ -16,6 +16,7 @@ function dispatch($uri = null, $req_method = null, array $params = null, $captur
     global $__routes;
 
     //Force request_order to be GP
+    //http://stackoverflow.com/questions/2142497/whats-wrong-with-using-request#answers
     $_REQUEST = array_merge($_GET, $_POST);
 
     //Pass three parameters to each callback, $request, $response, and a blank object for sharing scope
