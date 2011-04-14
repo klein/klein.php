@@ -1,4 +1,4 @@
-**klein.php** is a lightning fast router for PHP 5.3+. In < 600 lines you get
+**klein.php** is a lightning fast router for PHP 5.3+. In ~600 lines you get
 
 * Flexible regular expression routing (inspired by [Sinatra](http://www.sinatrarb.com/))
 * A set of [boilerplate methods](https://github.com/chriso/klein.php/wiki/API) for rapidly building web apps
