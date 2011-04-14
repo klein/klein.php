@@ -139,12 +139,7 @@ function dispatch($uri = null, $req_method = null, array $params = null, $captur
     if (false === $matched) {
         $response->code(404);
     }
-    if (false === $capture) {
-        return ob_end_flush();
-    }
-    $capture = ob_get_contents();
-    ob_end_clean();
-    return $capture;
+    return $capture ? ob_get_clean() : ob_end_flush();
 }
 
 //Compiles a route string to a regular expression
@@ -249,7 +244,9 @@ class _Request {
 
     //Gets a session variable associated with the request
     public function session($key, $default = null) {
-        @ session_start();
+        if (session_id() === '') {
+            session_start();
+        }
         return isset($_SESSION[$key]) ? $key : $default;
     }
 
@@ -290,7 +287,9 @@ class _Response extends StdClass {
 
     //Stores a flash message of $type
     public function flash($msg, $type = 'error') {
-        @ session_start();
+        if (session_id() === '') {
+            session_start();
+        }
         if (!isset($_SESSION["__flash_$type"])) {
             $_SESSION["__flash_$type"] = array();
         }
@@ -408,7 +407,9 @@ class _Response extends StdClass {
 
     //Sets a session variable
     public function session($key, $value = null) {
-        @ session_start();
+        if (session_id() === '') {
+            session_start();
+        }
         return $_SESSION[$key] = $value;
     }
 
@@ -441,12 +442,14 @@ class _Response extends StdClass {
 
     //Returns an escaped request paramater
     public function param($param, $default = null) {
-    return isset($_REQUEST[$param]) ?  htmlentities($_REQUEST[$param], ENT_QUOTES) : $default;
+        return isset($_REQUEST[$param]) ?  htmlentities($_REQUEST[$param], ENT_QUOTES) : $default;
     }
 
     //Returns (and clears) all flashes of $type
     public function getFlashes($type = 'error') {
-        @ session_start();
+        if (session_id() === '') {
+            session_start();
+        }
         if (isset($_SESSION["__flash_$type"])) {
             $flashes = $_SESSION["__flash_$type"];
             foreach ($flashes as $k => $flash) {
@@ -463,14 +466,28 @@ class _Response extends StdClass {
         return htmlentities($str, ENT_QUOTES);
     }
 
-    //Discards the current output buffer(s)
+    //Discards the current output buffer
     public function discard() {
-        while (@ ob_end_clean());
+        ob_end_clean();
     }
 
-    //Flushes the current output buffer(s)
+    //Flushes the current output buffer
     public function flush() {
-        while (@ ob_end_flush());
+        ob_end_flush();
+    }
+
+    //Return the current otuput buffer as a string (and optionally discard)
+    public function outputBuffer($discard = false) {
+        return $discard ? ob_get_clean() : ob_get_contents();
+    }
+
+    //Dump a variable
+    public function dump($obj) {
+        if (is_array($obj) || is_object($obj)) {
+            $obj = print_r($obj, true);
+        }
+        $obj = htmlentities($obj, ENT_QUOTES);
+        echo "<pre>$obj</pre><br />\n";
     }
 
     //Allow callbacks to be assigned as properties and called like normal methods
