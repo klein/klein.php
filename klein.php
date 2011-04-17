@@ -161,10 +161,11 @@ function compile_route($route) {
             if ($pre === '.') {
                 $pre = '\.';
             }
+            //Older versions of PCRE require the 'P' in (?P<named>)
             $pattern = '(?:'
                      . ($pre !== '' ? $pre : null)
                      . '('
-                     . ($param !== '' ? "?<$param>" : null)
+                     . ($param !== '' ? "?P<$param>" : null)
                      . $type
                      . '))'
                      . ($optional !== '' ? '?' : null);
