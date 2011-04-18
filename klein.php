@@ -22,7 +22,7 @@ function dispatch($uri = null, $req_method = null, array $params = null, $captur
 
     //Get/parse the request URI and method
     if (null === $uri) {
-        $uri = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : $uri = '/';
+        $uri = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '/';
     }
     if (false !== strpos($uri, '?')) {
         $uri = strstr($uri, '?', true);
