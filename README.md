@@ -179,8 +179,7 @@ Views are compiled and run in the scope of `$response` so all response methods c
         validate($param, $err_msg = null)   //Starts a validator chain
         method()                            //Gets the request method
         method($method)                     //Checks if the request method is $method, i.e. method('post') => true
-        secure()                            //https?
-        secure(true)                        //Redirect non-secure requests to the secure version
+        isSecure($required = false)         //https? Redirect if $required is true and the request is not secure
         id()                                //Gets a unique ID for the request
         ip()                                //Get the request IP
         userAgent()                         //Get the request user agent
@@ -207,6 +206,8 @@ Views are compiled and run in the scope of `$response` so all response methods c
         getFlashes($type = 'error')                     //Retrieves and clears all flashes of $type
         flush()                                         //Flush all open output buffers
         discard()                                       //Discard all open output buffers
+        outputBuffer($discard = false)                  //Return the contents of the output buffer as a string
+        dump($obj)                                      //Dump an object
         <callback>($arg1, ...)                          //Calls a user-defined helper
         <property>                                      //Gets a user-defined property
 

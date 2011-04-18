@@ -203,7 +203,7 @@ class _Request {
     }
 
     //Is the request secure? If $required then redirect to the secure version of the URL
-    public function secure($required = false) {
+    public function isSecure($required = false) {
         $secure = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'];
         if (!$secure && $required) {
             $url = 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
