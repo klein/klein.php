@@ -599,7 +599,7 @@ class _Validator {
             default: $result = call_user_func_array($validator, $args); break;
         }
 
-        $result = (bool)$result ^ $reverse;
+        $result = (bool)($result ^ $reverse);
 
         if (false === $this->_err) {
             return $result;
