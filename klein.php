@@ -281,12 +281,13 @@ class _Response extends StdClass {
         if (null !== $str) {
             printf("%x\r\n", strlen($str));
             echo "$str\r\n";
+            flush();
         } elseif (($ob_length = ob_get_length()) > 0) {
-            printf("%x\r\n", ob_get_length());
+            printf("%x\r\n", $ob_length);
             ob_flush();
             echo "\r\n";
+            flush();
         }
-        flush();
     }
 
     //Sets a response header
