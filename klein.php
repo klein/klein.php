@@ -138,7 +138,13 @@ function dispatch($uri = null, $req_method = null, array $params = null, $captur
     if (false === $matched) {
         $response->code(404);
     }
-    return $capture ? ob_get_clean() : ob_end_flush();
+    if ($capture) {
+        return ob_get_clean();
+    } elseif ($response->isChunked()) {
+        $response->chunk();
+    } else {
+        ob_end_flush();
+    }
 }
 
 //Compiles a route string to a regular expression
@@ -288,6 +294,10 @@ class _Response extends StdClass {
             echo "\r\n";
             flush();
         }
+    }
+
+    public function isChunked() {
+        return $this->_chunked;
     }
 
     //Sets a response header
