@@ -207,6 +207,7 @@ Views are compiled and run in the scope of `$response` so all response methods c
         flush()                                         //Flush all open output buffers
         discard()                                       //Discard all open output buffers
         outputBuffer($discard = false)                  //Return the contents of the output buffer as a string
+        chunk($str = null)                              //Enable response chunking (see the wiki)
         dump($obj)                                      //Dump an object
         <callback>($arg1, ...)                          //Calls a user-defined helper
         <property>                                      //Gets a user-defined property

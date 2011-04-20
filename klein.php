@@ -199,7 +199,7 @@ class _Request {
 
     //Return a request parameter, or $default if it doesn't exist
     public function param($param, $default = null) {
-        return isset($_REQUEST[$param]) ? $_REQUEST[$param] : $default;
+        return isset($_REQUEST[$param]) && $_REQUEST[$param] !== '' ? $_REQUEST[$param] : $default;
     }
 
     //Is the request secure? If $required then redirect to the secure version of the URL
@@ -268,7 +268,26 @@ class _Request {
 
 class _Response extends StdClass {
 
+    protected $_chunked = false;
     protected $_errorCallbacks = array();
+
+    //Enable response chunking. See: http://bit.ly/hg3gHb
+    public function chunk($str = null) {
+        if (false === $this->_chunked) {
+            $this->_chunked = true;
+            header('Transfer-encoding: chunked');
+            flush();
+        }
+        if (null !== $str) {
+            printf("%x\r\n", strlen($str));
+            echo "$str\r\n";
+        } elseif (($ob_length = ob_get_length()) > 0) {
+            printf("%x\r\n", ob_get_length());
+            ob_flush();
+            echo "\r\n";
+        }
+        flush();
+    }
 
     //Sets a response header
     public function header($key, $value = '') {
@@ -300,7 +319,6 @@ class _Response extends StdClass {
     public function send($object, $type = 'json', $filename = null) {
         $this->discard();
         set_time_limit(1200);
-
         header("Pragma: no-cache");
         header('Cache-Control: no-store, no-cache');
 
@@ -317,7 +335,7 @@ class _Response extends StdClass {
             }
             header('Content-Disposition: attachment; filename="'.$filename.'"');
             $columns = false;
-            $escape = function ($value) { return str_replace('"', '\"', $value); };
+            $escape = function ($value) { return str_replace('"', '""', $value); };
             foreach ($object as $row) {
                 $row = (array)$row;
                 if (!$columns && !isset($row[0])) {
@@ -395,7 +413,7 @@ class _Response extends StdClass {
     }
 
     //Renders a view
-    public function render($view, array $data = array()) {
+    public function render($view, array $data = array(), $chunk = false) {
         if (!file_exists($view) || !is_readable($view)) {
             throw new ErrorException("Cannot render $view");
         }
@@ -403,6 +421,9 @@ class _Response extends StdClass {
             $this->set($data);
         }
         require $view;
+        if (false !== $chunk) {
+            $this->chunk();
+        }
     }
 
     //Sets a session variable
@@ -544,13 +565,13 @@ class _Validator {
             return (string)$str === ((string)(float)$str);
         };
         static::$_methods['email'] = function($str) {
-            return filter_var($str, FILTER_VALIDATE_EMAIL);
+            return filter_var($str, FILTER_VALIDATE_EMAIL) !== false;
         };
         static::$_methods['url'] = function($str) {
-            return filter_var($str, FILTER_VALIDATE_URL);
+            return filter_var($str, FILTER_VALIDATE_URL) !== false;
         };
         static::$_methods['ip'] = function($str) {
-            return filter_var($str, FILTER_VALIDATE_IP);
+            return filter_var($str, FILTER_VALIDATE_IP) !== false;
         };
         static::$_methods['alnum'] = function($str) {
             return ctype_alnum($str);
@@ -571,17 +592,14 @@ class _Validator {
 
     public function __call($method, $args) {
         $reverse = false;
-        switch (substr($method, 0, 2)) {
-        case 'is': //is<$validator>()
+        $validator = $method;
+        $method_substr = substr($method, 0, 2);
+
+        if ($method_substr === 'is') {       //is<$validator>()
             $validator = substr($method, 2);
-            break;
-        case 'no': //not<$validator>()
-            $reverse = true;
+        } elseif ($method_substr === 'no') { //not<$validator>()
             $validator = substr($method, 3);
-            break;
-        default:   //<$validator>()
-            $validator = $method;
-            break;
+            $reverse = true;
         }
         $validator = strtolower($validator);
 
@@ -600,7 +618,6 @@ class _Validator {
         }
 
         $result = (bool)($result ^ $reverse);
-
         if (false === $this->_err) {
             return $result;
         } elseif (false === $result) {
