@@ -208,6 +208,22 @@ class _Request {
         return isset($_REQUEST[$param]) && $_REQUEST[$param] !== '' ? $_REQUEST[$param] : $default;
     }
 
+    public function __isset($param) {
+        return isset($_REQUEST[$param]);
+    }
+
+    public function __get($param) {
+        return isset($_REQUEST[$param]) ? $_REQUEST[$param] : null;
+    }
+
+    public function __set($param, $value) {
+        $_REQUEST[$param] = $value;
+    }
+
+    public function __unset($param) {
+        unset($_REQUEST[$param]);
+    }
+
     //Is the request secure? If $required then redirect to the secure version of the URL
     public function isSecure($required = false) {
         $secure = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'];

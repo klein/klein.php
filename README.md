@@ -45,8 +45,7 @@
 *Example 4* - Sending objects / files
 
     respond('/report.[csv|json:format]?', function ($reqest, $response) {
-        $format = $request->param('format');
-        $response->send($object, $format);
+        $response->send($object, $request->format);
     });
 
     respond('/report/latest', function ($request, $response) {
@@ -184,6 +183,7 @@ Views are compiled and run in the scope of `$response` so all response methods c
         ip()                                //Get the request IP
         userAgent()                         //Get the request user agent
         uri()                               //Get the request URI
+        <param>                             //Gets a request parameter
 
     $response->
         header($key, $value = null)                     //Sets a response header
