@@ -38,8 +38,9 @@
 
     //Or you might want to handle the requests in the same place
     respond('/posts?/[create|edit:action]?/[i:id]?', function ($request, $response) {
-        extract($request->params('action', 'id'));
-        switch ($action) ...
+        switch ($request->action) {
+            //
+        }
     });
 
 *Example 4* - Sending objects / files
@@ -116,7 +117,7 @@ Some examples
     [*]                  //Catch all (lazy)
     [*:trailing]         //Catch all as 'trailing' (lazy)
     [**:trailing]        //Catch all (possessive - will match the rest of the URI)
-    .[:format]?          //Matches an optional parameter 'format'. A / or . character before the block is also optional
+    .[:format]?          //Matches an optional parameter 'format' - a / or . before the block is also optional
 
 Some more complicated examples
 

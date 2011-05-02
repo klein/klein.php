@@ -332,14 +332,36 @@ class _Response extends StdClass {
     }
 
     //Stores a flash message of $type
-    public function flash($msg, $type = 'error') {
+    public function flash($msg, $type = 'error', $params = null) {
         if (session_id() === '') {
             session_start();
+        }
+        if (is_array($type)) {
+            $params = $type;
+            $type = 'error';
         }
         if (!isset($_SESSION["__flash_$type"])) {
             $_SESSION["__flash_$type"] = array();
         }
-        $_SESSION["__flash_$type"][] = $msg;
+        $_SESSION["__flash_$type"][] = $this->markdown($msg, $params);
+    }
+
+    //Support basic markdown syntax
+    public function markdown($str/*, $arg1, $arg2, ...*/) {
+        $args = func_get_args();
+        $md = array(
+            '/\[([^\]]++)\]\(([^\)]++)\)/' => '<a href="$2">$1</a>',
+            '/\*\*([^\*]++)\*\*/'          => '<strong>$1</strong>',
+            '/\*([^\*]++)\*/'              => '<em>$1</em>'
+        );
+        $str = array_shift($args);
+        if (is_array($args[0])) {
+            $args = $args[0];
+        }
+        foreach ($args as &$arg) {
+            $arg = htmlentities($arg, ENT_QUOTES);
+        }
+        return vsprintf(preg_replace(array_keys($md), $md, $str), $args);
     }
 
     //Sends an object or file
