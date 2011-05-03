@@ -374,11 +374,11 @@ class _Response extends StdClass {
         switch ($type) {
         case 'json':
             $json = json_encode($object);
-            header('Content-Type: text/javascript; charset=utf8');
+            header('Content-Type: text/javascript; charset=utf-8');
             echo $json;
             exit;
         case 'csv':
-            header('Content-type: text/csv; charset=utf8');
+            header('Content-type: text/csv; charset=utf-8');
             if (null === $filename) {
                 $filename = 'output.csv';
             }
