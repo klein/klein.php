@@ -3,12 +3,30 @@
 # http://github.com/chriso/klein.php
 
 $__routes = array();
+$__namespace = null;
 
 //Add a route callback
 function respond($method, $route, $callback = null) {
-    global $__routes;
-    $__routes[] = array($method, $route, $callback);
+    global $__routes, $__namespace;
+    if (is_callable($route)) {
+        $callback = $route;
+        $route = $method;
+        $method = null;
+    }
+    $__routes[] = array($method, $namespace . $route, $callback);
     return $callback;
+}
+
+//Each route defined inside $routes will be in the namespace
+function with($namespace, $routes) {
+    global $__namespace;
+    $__namespace .= $namespace;
+    if (is_callback($routes)) {
+        $routes();
+    } else {
+        require_once $routes;
+    }
+    $__namespace = null;
 }
 
 //Dispatch the request to the approriate route(s)
@@ -47,10 +65,7 @@ function dispatch($uri = null, $req_method = null, array $params = null, $captur
         list($method, $_route, $callback) = $handler;
 
         //Was a method specified? If so, check it against the current request method
-        if (is_callable($_route)) {
-            $callback = $_route;
-            $_route = $method;
-        } elseif (is_array($method)) {
+        if (is_array($method)) {
             $method_match = false;
             foreach ($method as $test) {
                 if (strcasecmp($req_method, $test) === 0) {
@@ -61,7 +76,7 @@ function dispatch($uri = null, $req_method = null, array $params = null, $captur
             if (false === $method_match) {
                 continue;
             }
-        } elseif (strcasecmp($req_method, $method) !== 0) {
+        } elseif (null !== $method && strcasecmp($req_method, $method) !== 0) {
             continue;
         }
 
@@ -140,7 +155,7 @@ function dispatch($uri = null, $req_method = null, array $params = null, $captur
     }
     if ($capture) {
         return ob_get_clean();
-    } elseif ($response->isChunked()) {
+    } elseif ($response->chunked) {
         $response->chunk();
     } else {
         ob_end_flush();
@@ -178,7 +193,6 @@ function compile_route($route) {
 
             $route = str_replace($block, $pattern, $route);
         }
-        $route = "$route/?";
     }
     return "`^$route$`";
 }
@@ -290,13 +304,13 @@ class _Request {
 
 class _Response extends StdClass {
 
-    protected $_chunked = false;
+    public $chunked = false;
     protected $_errorCallbacks = array();
 
     //Enable response chunking. See: http://bit.ly/hg3gHb
     public function chunk($str = null) {
-        if (false === $this->_chunked) {
-            $this->_chunked = true;
+        if (false === $this->chunked) {
+            $this->chunked = true;
             header('Transfer-encoding: chunked');
             flush();
         }
@@ -310,10 +324,6 @@ class _Response extends StdClass {
             echo "\r\n";
             flush();
         }
-    }
-
-    public function isChunked() {
-        return $this->_chunked;
     }
 
     //Sets a response header
@@ -347,7 +357,7 @@ class _Response extends StdClass {
     }
 
     //Support basic markdown syntax
-    public function markdown($str/*, $arg1, $arg2, ...*/) {
+    public function markdown($str, $args = null) {
         $args = func_get_args();
         $md = array(
             '/\[([^\]]++)\]\(([^\)]++)\)/' => '<a href="$2">$1</a>',
@@ -364,46 +374,62 @@ class _Response extends StdClass {
         return vsprintf(preg_replace(array_keys($md), $md, $str), $args);
     }
 
-    //Sends an object or file
-    public function send($object, $type = 'json', $filename = null) {
-        $this->discard();
-        set_time_limit(1200);
+    //Tell the browser not to cache the response
+    public function noCache() {
         header("Pragma: no-cache");
         header('Cache-Control: no-store, no-cache');
+    }
 
-        switch ($type) {
-        case 'json':
-            $json = json_encode($object);
-            header('Content-Type: text/javascript; charset=utf-8');
-            echo $json;
-            exit;
-        case 'csv':
-            header('Content-type: text/csv; charset=utf-8');
-            if (null === $filename) {
-                $filename = 'output.csv';
+    //Sends an object as CSV
+    public function csv($object, $filename = 'output.csv', $delim = ',',
+            $quote = '"', $escape = '\\', $newline = "\n") {
+        $this->discard();
+        $this->noCache();
+        set_time_limit(1200);
+        header('Content-type: text/csv; charset=utf-8');
+        header('Content-Disposition: attachment; filename="'.$filename.'"');
+        $columns = false;
+        $escape = function ($value) { return str_replace($quote, $escape.$quote, $value); };
+        foreach ($object as $row) {
+            $row = (array)$row;
+            if (!$columns && !isset($row[0])) {
+                echo $quote . implode($quote.$delim.$quote, array_keys($row)) . $quote . $newline;
+                $columns = true;
             }
-            header('Content-Disposition: attachment; filename="'.$filename.'"');
-            $columns = false;
-            $escape = function ($value) { return str_replace('"', '""', $value); };
-            foreach ($object as $row) {
-                $row = (array)$row;
-                if (!$columns && !isset($row[0])) {
-                    echo '"' . implode('","', array_keys($row)) . '"' . "\n";
-                    $columns = true;
-                }
-                echo '"' . implode('","', array_map($escape, array_values($row))) . '"' . "\n";
-            }
-            exit;
-        case 'file':
-            header('Content-type: ' . finfo_file(finfo_open(FILEINFO_MIME_TYPE), $object));
-            header('Content-length: ' . filesize($object));
-            if (null === $filename) {
-                $filename = basename($object);
-            }
-            header('Content-Disposition: attachment; filename="'.$filename.'"');
-            fpassthru($object);
-            exit;
+            echo $quote . implode($quote.$delim.$quote,
+                array_map($escape, array_values($row))) . $quote . $newline;
         }
+        exit;
+    }
+
+    //Sends a file
+    public function file($path, $filename = null) {
+        $this->discard();
+        $this->noCache();
+        set_time_limit(1200);
+        header('Content-type: ' . finfo_file(finfo_open(FILEINFO_MIME_TYPE), $file));
+        header('Content-length: ' . filesize($file));
+        if (null === $filename) {
+            $filename = basename($file);
+        }
+        header('Content-Disposition: attachment; filename="'.$filename.'"');
+        fpassthru($file);
+        exit;
+    }
+
+    //Sends an object as json
+    public function json($object, $jsonpFn = null) {
+        $this->discard();
+        $this->noCache();
+        set_time_limit(1200);
+        $json = json_encode($object);
+
+        if (null !== $callback) {
+            echo "$callback($json)";
+        } else {
+            echo $json;
+        }
+        exit;
     }
 
     //Sends a HTTP response code
@@ -462,7 +488,7 @@ class _Response extends StdClass {
     }
 
     //Renders a view
-    public function render($view, array $data = array(), $chunk = false) {
+    public function render($view, array $data = array()) {
         if (!file_exists($view) || !is_readable($view)) {
             throw new ErrorException("Cannot render $view");
         }
@@ -470,7 +496,7 @@ class _Response extends StdClass {
             $this->set($data);
         }
         require $view;
-        if (false !== $chunk) {
+        if (false !== $this->chunked) {
             $this->chunk();
         }
     }
@@ -516,7 +542,7 @@ class _Response extends StdClass {
     }
 
     //Returns (and clears) all flashes of $type
-    public function getFlashes($type = 'error') {
+    public function flashes($type = 'error') {
         if (session_id() === '') {
             session_start();
         }
