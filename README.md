@@ -16,7 +16,7 @@
 *Example 1* - Respond to all requests
 
 ```php
-respond('*', function ($request, $response) {
+respond('*', function () {
     echo 'Hello World!';
 });
 ```
@@ -24,9 +24,8 @@ respond('*', function ($request, $response) {
 *Example 2* - Named parameters
 
 ```php
-respond('/[:name]?', function ($request, $response) {
-    $name = $request->param('name', 'world');
-    echo "Hello $name!";
+respond('/[:name]', function ($request) {
+    echo 'Hello ' . $request->name;
 });
 ```
 
@@ -53,11 +52,12 @@ respond('/posts?/[create|edit:action]?/[i:id]?', function ($request, $response) 
 
 ```php
 respond('/report.[csv|json:format]?', function ($reqest, $response) {
-    $response->send($object, $request->format);
+    $send = $request->param('format', 'json'); //Get the format, or fallback to JSON as the default
+    $response->$send($report);
 });
 
 respond('/report/latest', function ($request, $response) {
-    $response->send('/tmp/cached_report.zip', 'file');
+    $response->file('/tmp/cached_report.zip');
 });
 ```
 
@@ -93,6 +93,28 @@ respond('POST', '/users/[i:id]/edit', function ($request, $response) {
 
 //myview.phtml:
 <title><?php echo $this->escape($this->title) ?></title>
+```
+
+## Route namespaces
+
+```php
+with('/users', function () {
+
+    //Show all users
+    respond('/?', function ($request, $response) {
+        //
+    });
+
+    //Show a single user
+    respond('/[:id]/?', function ($request, $response) {
+        //
+    });
+
+});
+
+foreach(array('projects', 'posts') as $controller) {
+    with("/$controller", "controllers/$controller.php");
+}
 ```
 
 ## Validators
@@ -217,8 +239,10 @@ $response->
     header($key, $value = null)                     //Sets a response header
     cookie($key, $value = null, $expiry = null)     //Sets a cookie
     cookie($key, null)                              //Removes a cookie
-    flash($msg, $type = 'error')                    //Sets a flash message
-    send($object, $type = 'json', $filename = null) //$type can be 'csv', 'json', or 'file'
+    flash($msg, $type = 'error', $params = array()  //Sets a flash message
+    file($file, $filename = null)                   //Send a file
+    json($object, $callback = null)                 //Send an object as JSON(p)
+    csv($object, $filename = 'output.csv', ...)     //Send an object as CSV
     code($code)                                     //Sends an HTTP response code
     redirect($url, $code = 302)                     //Redirect to the specified URL
     refresh()                                       //Redirect to the current URL
@@ -231,7 +255,7 @@ $response->
     query($key, $value = null)                      //Modify the current query string
     query($arr)
     param($param, $default = null)                  //Gets an escaped request parameter
-    getFlashes($type = 'error')                     //Retrieves and clears all flashes of $type
+    flashes($type = 'error')                        //Retrieves and clears all flashes of $type
     flush()                                         //Flush all open output buffers
     discard()                                       //Discard all open output buffers
     outputBuffer($discard = false)                  //Return the contents of the output buffer as a string
