@@ -306,6 +306,8 @@ class _Response extends StdClass {
 
     public $chunked = false;
     protected $_errorCallbacks = array();
+    protected $_layout = null;
+    protected $_view = null;
 
     //Enable response chunking. See: http://bit.ly/hg3gHb
     public function chunk($str = null) {
@@ -487,15 +489,25 @@ class _Response extends StdClass {
         return $request_uri . (!empty($query) ? '?' . http_build_query($query) : null);
     }
 
-    //Renders a view
+    //Set the view layout
+    public function layout($layout) {
+        $this->_layout = $layout;
+    }
+
+    //Renders the current view
+    public function yield() {
+        require $this->_view;
+    }
+
+    //Renders a view + optional layout
     public function render($view, array $data = array()) {
-        if (!file_exists($view) || !is_readable($view)) {
-            throw new ErrorException("Cannot render $view");
-        }
         if (!empty($data)) {
             $this->set($data);
         }
-        require $view;
+        $this->_view = $view;
+        if (null === $this->_layout) {
+            $this->yield();
+        }
         if (false !== $this->chunked) {
             $this->chunk();
         }
@@ -582,8 +594,7 @@ class _Response extends StdClass {
         if (is_array($obj) || is_object($obj)) {
             $obj = print_r($obj, true);
         }
-        $obj = htmlentities($obj, ENT_QUOTES);
-        echo "<pre>$obj</pre><br />\n";
+        echo '<pre>' .  htmlentities($obj, ENT_QUOTES) . "</pre><br />\n";
     }
 
     //Allow callbacks to be assigned as properties and called like normal methods
