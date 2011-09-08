@@ -36,15 +36,15 @@ respond('/[:name]', function ($request) {
 ```php
 <?php
 get('/posts', $callback);
-post('/post/create', $callback);
-put('/post/[i:id]', $callback);
-del('/post/[i:id]', $callback);
+post('/posts/create', $callback);
+put('/posts/[i:id]', $callback);
+del('/posts/[i:id]', $callback);
 
 //To match multiple request methods:
 respond(array('POST','GET'), $route, $callback);
 
 //Or you might want to handle the requests in the same place
-respond('/posts?/[create|edit:action]?/[i:id]?', function ($request, $response) {
+respond('/posts/[create|edit:action]?/[i:id]?', function ($request, $response) {
     switch ($request->action) {
         //
     }
@@ -116,14 +116,12 @@ post('/users/[i:id]/edit', function ($request, $response) {
 <?php
 with('/users', function () {
 
-    //Show all users
     get('/?', function ($request, $response) {
-        //
+        //Show all users
     });
 
-    //Show a single user
     get('/[:id]', function ($request, $response) {
-        //
+        //Show a single user
     });
 
 });
