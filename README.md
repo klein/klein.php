@@ -242,7 +242,6 @@ $response->
     flash($msg, $type = 'error', $params = array()  //Sets a flash message
     file($file, $filename = null)                   //Send a file
     json($object, $callback = null)                 //Send an object as JSON(p)
-    csv($object, $filename = 'output.csv', ...)     //Send an object as CSV
     code($code)                                     //Sends an HTTP response code
     redirect($url, $code = 302)                     //Redirect to the specified URL
     refresh()                                       //Redirect to the current URL

@@ -5,21 +5,13 @@
 $__routes = array();
 $__namespace = null;
 
-funtion get($route, $callback = null) {
-    return respond('GET', $route, $callback;
-}
-
-funtion post($route, $callback = null) {
-    return respond('POST', $route, $callback;
-}
-
 //Add a route callback
 function respond($method, $route, $callback = null) {
     global $__routes, $__namespace;
     $count_match = true;
     if (is_callback($method)) {
         $callback = $method;
-        $route = null;
+        $route = '*';
         $method = null;
         $count_match = false;
     } elseif (is_callable($route)) {
@@ -41,6 +33,14 @@ function with($namespace, $routes) {
         require_once $routes;
     }
     $__namespace = null;
+}
+
+function get($route, $callback = null) {
+    return respond('GET', $route, $callback);
+}
+
+function post($route, $callback = null) {
+    return respond('POST', $route, $callback);
 }
 
 //Dispatch the request to the approriate route(s)
@@ -396,28 +396,6 @@ class _Response extends StdClass {
         header('Cache-Control: no-store, no-cache');
     }
 
-    //Sends an object as CSV
-    public function csv($object, $filename = 'output.csv', $delim = ',',
-            $quote = '"', $escape = '\\', $newline = "\n") {
-        $this->discard();
-        $this->noCache();
-        set_time_limit(1200);
-        header('Content-type: text/csv; charset=utf-8');
-        header('Content-Disposition: attachment; filename="'.$filename.'"');
-        $columns = false;
-        $escape = function ($value) { return str_replace($quote, $escape.$quote, $value); };
-        foreach ($object as $row) {
-            $row = (array)$row;
-            if (!$columns && !isset($row[0])) {
-                echo $quote . implode($quote.$delim.$quote, array_keys($row)) . $quote . $newline;
-                $columns = true;
-            }
-            echo $quote . implode($quote.$delim.$quote,
-                array_map($escape, array_values($row))) . $quote . $newline;
-        }
-        exit;
-    }
-
     //Sends a file
     public function file($path, $filename = null) {
         $this->discard();
@@ -434,12 +412,11 @@ class _Response extends StdClass {
     }
 
     //Sends an object as json
-    public function json($object, $jsonpFn = null) {
+    public function json($object, $callback = null) {
         $this->discard();
         $this->noCache();
         set_time_limit(1200);
         $json = json_encode($object);
-
         if (null !== $callback) {
             echo "$callback($json)";
         } else {
