@@ -502,6 +502,8 @@ class _Response extends StdClass {
         $this->_view = $view;
         if (null === $this->_layout) {
             $this->yield();
+        } else {
+            require $this->_layout;
         }
         if (false !== $this->chunked) {
             $this->chunk();
