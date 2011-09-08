@@ -260,6 +260,7 @@ $response->
     flash($msg, $type = 'info', $params = array()   //Sets a flash message
     file($file, $filename = null)                   //Send a file
     json($object, $callback = null)                 //Send an object as JSON(p)
+    markdown($str, $args, ...)                      //Return a string formatted with markdown
     code($code)                                     //Sends an HTTP response code
     redirect($url, $code = 302)                     //Redirect to the specified URL
     refresh()                                       //Redirect to the current URL
@@ -277,7 +278,7 @@ $response->
     flashes($type = null)                           //Retrieves and clears all flashes of $type
     flush()                                         //Flush all open output buffers
     discard()                                       //Discard all open output buffers
-    outputBuffer($discard = false)                  //Return the contents of the output buffer as a string
+    buffer()                                        //Return the contents of the output buffer as a string
     chunk($str = null)                              //Enable response chunking (see the wiki)
     dump($obj)                                      //Dump an object
     <callback>($arg1, ...)                          //Calls a user-defined helper
