@@ -5,15 +5,29 @@
 $__routes = array();
 $__namespace = null;
 
+funtion get($route, $callback = null) {
+    return respond('GET', $route, $callback;
+}
+
+funtion post($route, $callback = null) {
+    return respond('POST', $route, $callback;
+}
+
 //Add a route callback
 function respond($method, $route, $callback = null) {
     global $__routes, $__namespace;
-    if (is_callable($route)) {
+    $count_match = true;
+    if (is_callback($method)) {
+        $callback = $method;
+        $route = null;
+        $method = null;
+        $count_match = false;
+    } elseif (is_callable($route)) {
         $callback = $route;
         $route = $method;
         $method = null;
     }
-    $__routes[] = array($method, $namespace . $route, $callback);
+    $__routes[] = array($method, $namespace . $route, $callback, $count_match);
     return $callback;
 }
 
@@ -62,7 +76,7 @@ function dispatch($uri = null, $req_method = null, array $params = null, $captur
     ob_start();
 
     foreach ($__routes as $handler) {
-        list($method, $_route, $callback) = $handler;
+        list($method, $_route, $callback, $count_match) = $handler;
 
         //Was a method specified? If so, check it against the current request method
         if (is_array($method)) {
@@ -147,10 +161,10 @@ function dispatch($uri = null, $req_method = null, array $params = null, $captur
             } catch (Exception $e) {
                 $response->error($e);
             }
-            ++$matched;
+            $count_match && ++$matched;
         }
     }
-    if (false === $matched) {
+    if (!$matched) {
         $response->code(404);
     }
     if ($capture) {
