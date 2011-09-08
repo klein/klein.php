@@ -6,12 +6,11 @@ $__routes = array();
 $__namespace = null;
 
 //Add a route callback
-function respond($method, $route, $callback = null) {
+function respond($method, $route = '*', $callback = null) {
     global $__routes, $__namespace;
     $count_match = true;
     if (is_callback($method)) {
         $callback = $method;
-        $route = '*';
         $method = null;
         $count_match = false;
     } elseif (is_callable($route)) {
@@ -35,19 +34,17 @@ function with($namespace, $routes) {
     $__namespace = null;
 }
 
-function get($route, $callback = null) {
-    return respond('GET', $route, $callback);
-}
-
-function post($route, $callback = null) {
-    return respond('POST', $route, $callback);
-}
+//Some aliases
+function get  ($route, $callback = null) { return respond('GET',    $route, $callback); }
+function post ($route, $callback = null) { return respond('POST',   $route, $callback); }
+function put  ($route, $callback = null) { return respond('PUT',    $route, $callback); }
+function del  ($route, $callback = null) { return respond('DELETE', $route, $callback); }
 
 //Dispatch the request to the approriate route(s)
 function dispatch($uri = null, $req_method = null, array $params = null, $capture = false) {
     global $__routes;
 
-    //Pass three parameters to each callback, $request, $response, and a blank object for sharing scope
+    //Pass $request, $response, and a blank object for sharing scope through each callback
     $request  = new _Request;
     $response = new _Response;
     $app      = new StdClass;
