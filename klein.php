@@ -107,7 +107,7 @@ function dispatch($uri = null, $req_method = null, array $params = null, $captur
         //Easily handle 404's
         } elseif ($_route === '404' && !$matched) {
             $callback();
-            exit;
+            ++$matched;
 
         //@ is used to specify custom regex
         } elseif ($_route[$i] === '@') {
@@ -410,7 +410,6 @@ class _Response extends StdClass {
         }
         header('Content-Disposition: attachment; filename="'.$filename.'"');
         fpassthru($file);
-        exit;
     }
 
     //Sends an object as json
@@ -424,7 +423,6 @@ class _Response extends StdClass {
         } else {
             echo $json;
         }
-        exit;
     }
 
     //Sends a HTTP response code
