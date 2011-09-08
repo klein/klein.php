@@ -56,7 +56,7 @@ function dispatch($uri = null, $req_method = null, array $params = null, $captur
         $_REQUEST = array_merge($_REQUEST, $params);
     }
 
-    $matched = false;
+    $matched = 0;
     $apc = function_exists('apc_fetch');
 
     ob_start();
@@ -147,7 +147,7 @@ function dispatch($uri = null, $req_method = null, array $params = null, $captur
             } catch (Exception $e) {
                 $response->error($e);
             }
-            $matched = true;
+            ++$matched;
         }
     }
     if (false === $matched) {
