@@ -9,7 +9,7 @@ $__namespace = null;
 function respond($method, $route = '*', $callback = null) {
     global $__routes, $__namespace;
     $count_match = true;
-    if (is_callback($method)) {
+    if (is_callable($method)) {
         $callback = $method;
         $method = null;
         $count_match = false;
@@ -27,7 +27,7 @@ function with($namespace, $routes) {
     global $__namespace;
     $previous = $__namespace;
     $__namespace .= $namespace;
-    if (is_callback($routes)) {
+    if (is_callable($routes)) {
         $routes();
     } else {
         require_once $routes;
