@@ -16,7 +16,8 @@
 *Example 1* - Respond to all requests
 
 ```php
-respond('*', function () {
+<?php
+respond(function () {
     echo 'Hello World!';
 });
 ```
@@ -24,6 +25,7 @@ respond('*', function () {
 *Example 2* - Named parameters
 
 ```php
+<?php
 respond('/[:name]', function ($request) {
     echo 'Hello ' . $request->name;
 });
@@ -32,10 +34,11 @@ respond('/[:name]', function ($request) {
 *Example 3* - [So RESTful](http://bit.ly/g93B1s)
 
 ```php
-respond('GET',    '/posts',       $callback);
-respond('POST',   '/post/create', $callback);
-respond('PUT',    '/post/[i:id]', $callback);
-respond('DELETE', '/post/[i:id]', $callback);
+<?php
+get('/posts', $callback);
+post('/post/create', $callback);
+put('/post/[i:id]', $callback);
+del('/post/[i:id]', $callback);
 
 //To match multiple request methods:
 respond(array('POST','GET'), $route, $callback);
@@ -51,8 +54,19 @@ respond('/posts?/[create|edit:action]?/[i:id]?', function ($request, $response) 
 *Example 4* - Sending objects / files
 
 ```php
-respond('/report.[csv|json:format]?', function ($reqest, $response) {
-    $send = $request->param('format', 'json'); //Get the format, or fallback to JSON as the default
+<?php
+respond(function ($request, $response) {
+    $response->xml = function ($object) {
+        //Custom xml output function
+    }
+    $response->csv = function ($object) {
+        //Custom csv output function
+    }
+});
+
+respond('/report.[xml|csv|json:format]?', function ($reqest, $response) {
+    //Get the format or fallback to JSON as the default
+    $send = $request->param('format', 'json');
     $response->$send($report);
 });
 
@@ -64,7 +78,8 @@ respond('/report/latest', function ($request, $response) {
 *Example 5* - All together
 
 ```php
-respond('*', function ($reguest, $response, $app) {
+<?php
+respond(function ($reguest, $response, $app) {
     //Handle exceptions => flash the message and redirect to the referrer
     $response->onError(function ($response, $err_msg) {
         $response->flash($err_msg);
@@ -75,7 +90,7 @@ respond('*', function ($reguest, $response, $app) {
     $app->db = new PDO(...);
 });
 
-respond('POST', '/users/[i:id]/edit', function ($request, $response) {
+post('/users/[i:id]/edit', function ($request, $response) {
     //Quickly validate input parameters
     $request->validate('username', 'Please enter a valid username')->isLen(5, 64)->isChars('a-zA-Z0-9-');
     $request->validate('password')->notNull();
@@ -98,15 +113,16 @@ respond('POST', '/users/[i:id]/edit', function ($request, $response) {
 ## Route namespaces
 
 ```php
+<?php
 with('/users', function () {
 
     //Show all users
-    respond('/?', function ($request, $response) {
+    get('/?', function ($request, $response) {
         //
     });
 
     //Show a single user
-    respond('/[:id]/?', function ($request, $response) {
+    get('/[:id]', function ($request, $response) {
         //
     });
 
@@ -122,6 +138,7 @@ foreach(array('projects', 'posts') as $controller) {
 To add a custom validator use `addValidator($method, $callback)`
 
 ```php
+<?php
 addValidator('hex', function ($str) {
     return preg_match('/^[0-9a-f]++$/i', $str);
 });
@@ -192,6 +209,7 @@ You can send properties or helpers to the view by assigning them
 to the `$response` object, or by using the second arg of `$response->render()`
 
 ```php
+<?php
 $response->escape = function ($str) {
     return htmlentities($str);
 };
@@ -203,13 +221,14 @@ $response->render('myview.phtml', array('title' => 'My View'));
 
 *myview.phtml*
 
-```php
+```html
 <title><?php echo $this->escape($this->title) ?></title>
 ```
 
 Views are compiled and run in the scope of `$response` so all response methods can be accessed with `$this`
 
 ```php
+<?php
 $this->render('partial.html')           //Render partials
 $this->param('myvar')                   //Access request parameters
 echo $this->query(array('page' => 2))   //Modify the current query string
@@ -218,6 +237,7 @@ echo $this->query(array('page' => 2))   //Modify the current query string
 ## API
 
 ```php
+<?php
 $request->
     header($key)                        //Gets a request header
     cookie($key)                        //Gets a cookie from the request
@@ -246,7 +266,9 @@ $response->
     redirect($url, $code = 302)                     //Redirect to the specified URL
     refresh()                                       //Redirect to the current URL
     back()                                          //Redirect to the referer
-    render($view, $data = array())                  //Renders a view or partial
+    render($view, $data = array())                  //Renders a view or partial (in the scope of $response)
+    layout($layout)                                 //Sets the view layout
+    yield()                                         //Call inside the layout to render the view content
     onError($callback)                              //$callback takes ($response, $msg, $err_type = null)
     set($key, $value = null)                        //Set a view property or helper
     set($arr)
