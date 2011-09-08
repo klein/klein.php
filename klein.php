@@ -22,16 +22,17 @@ function respond($method, $route = '*', $callback = null) {
     return $callback;
 }
 
-//Each route defined inside $routes will be in the namespace
+//Each route defined inside $routes will be in the $namespace
 function with($namespace, $routes) {
     global $__namespace;
+    $previous = $__namespace;
     $__namespace .= $namespace;
     if (is_callback($routes)) {
         $routes();
     } else {
         require_once $routes;
     }
-    $__namespace = null;
+    $__namespace = $previous;
 }
 
 //Some aliases
