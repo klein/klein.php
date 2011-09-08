@@ -107,6 +107,11 @@ function dispatch($uri = null, $req_method = null, array $params = null, $captur
         if ($_route === '*') {
             $match = true;
 
+        //Easily handle 404's
+        } elseif ($_route === '404' && !$matched) {
+            $callback();
+            exit;
+
         //@ is used to specify custom regex
         } elseif ($_route[$i] === '@') {
             $match = preg_match('`' . substr($_route, $i + 1) . '`', $uri, $params);
