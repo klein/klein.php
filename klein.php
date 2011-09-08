@@ -40,6 +40,12 @@ function post ($route, $callback = null) { return respond('POST',   $route, $cal
 function put  ($route, $callback = null) { return respond('PUT',    $route, $callback); }
 function del  ($route, $callback = null) { return respond('DELETE', $route, $callback); }
 
+function startSession() {
+    if (session_id() === '') {
+        session_start();
+    }
+}
+
 //Dispatch the request to the approriate route(s)
 function dispatch($uri = null, $req_method = null, array $params = null, $capture = false) {
     global $__routes;
@@ -296,9 +302,7 @@ class _Request {
 
     //Gets a session variable associated with the request
     public function session($key, $default = null) {
-        if (session_id() === '') {
-            session_start();
-        }
+        startSession();
         return isset($_SESSION[$key]) ? $key : $default;
     }
 
@@ -360,18 +364,18 @@ class _Response extends StdClass {
     }
 
     //Stores a flash message of $type
-    public function flash($msg, $type = 'error', $params = null) {
-        if (session_id() === '') {
-            session_start();
-        }
+    public function flash($msg, $type = 'info', $params = null) {
+        startSession();
         if (is_array($type)) {
             $params = $type;
-            $type = 'error';
+            $type = 'info';
         }
-        if (!isset($_SESSION["__flash_$type"])) {
-            $_SESSION["__flash_$type"] = array();
+        if (!isset($_SESSION['__flash'])) {
+            $_SESSION['__flash'] = array($type => array());
+        } elseif (!isset($_SESSION['__flash'][$type])) {
+            $_SESSION['__flash'][$type] = array();
         }
-        $_SESSION["__flash_$type"][] = $this->markdown($msg, $params);
+        $_SESSION['__flash'][$type] = $this->markdown($msg, $params);
     }
 
     //Support basic markdown syntax
@@ -506,9 +510,7 @@ class _Response extends StdClass {
 
     //Sets a session variable
     public function session($key, $value = null) {
-        if (session_id() === '') {
-            session_start();
-        }
+        startSession();
         return $_SESSION[$key] = $value;
     }
 
@@ -544,20 +546,23 @@ class _Response extends StdClass {
         return isset($_REQUEST[$param]) ?  htmlentities($_REQUEST[$param], ENT_QUOTES) : $default;
     }
 
-    //Returns (and clears) all flashes of $type
-    public function flashes($type = 'error') {
-        if (session_id() === '') {
-            session_start();
+    //Returns and clears all flashes of optional $type
+    public function flashes($type = null) {
+        startSession();
+        if (!isset($_SESSION['__flashes'])) {
+            return array();
         }
-        if (isset($_SESSION["__flash_$type"])) {
-            $flashes = $_SESSION["__flash_$type"];
-            foreach ($flashes as $k => $flash) {
-                $flashes[$k] = htmlentities($flash, ENT_QUOTES);
+        if (null === $type) {
+            $flashes = $_SESSION['__flashes'];
+            unset($_SESSION['__flashes']);
+        } elseif (null !== $type) {
+            $flashes = array();
+            if (isset($_SESSION['__flashes'][$type])) {
+                $flashes = $_SESSION['__flashes'][$type];
+                unset($_SESSION['__flashes'][$type]);
             }
-            unset($_SESSION["__flash_$type"]);
-            return $flashes;
         }
-        return array();
+        return $flashes;
     }
 
     //Escapes a string
@@ -567,7 +572,7 @@ class _Response extends StdClass {
 
     //Discards the current output buffer
     public function discard() {
-        ob_end_clean();
+        return ob_end_clean();
     }
 
     //Flushes the current output buffer
@@ -575,9 +580,9 @@ class _Response extends StdClass {
         ob_end_flush();
     }
 
-    //Return the current otuput buffer as a string (and optionally discard)
-    public function outputBuffer($discard = false) {
-        return $discard ? ob_get_clean() : ob_get_contents();
+    //Return the current output buffer as a string
+    public function buffer() {
+        return ob_get_contents();
     }
 
     //Dump a variable

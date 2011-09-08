@@ -257,7 +257,7 @@ $response->
     header($key, $value = null)                     //Sets a response header
     cookie($key, $value = null, $expiry = null)     //Sets a cookie
     cookie($key, null)                              //Removes a cookie
-    flash($msg, $type = 'error', $params = array()  //Sets a flash message
+    flash($msg, $type = 'info', $params = array()   //Sets a flash message
     file($file, $filename = null)                   //Send a file
     json($object, $callback = null)                 //Send an object as JSON(p)
     code($code)                                     //Sends an HTTP response code
@@ -274,7 +274,7 @@ $response->
     query($key, $value = null)                      //Modify the current query string
     query($arr)
     param($param, $default = null)                  //Gets an escaped request parameter
-    flashes($type = 'error')                        //Retrieves and clears all flashes of $type
+    flashes($type = null)                           //Retrieves and clears all flashes of $type
     flush()                                         //Flush all open output buffers
     discard()                                       //Discard all open output buffers
     outputBuffer($discard = false)                  //Return the contents of the output buffer as a string
