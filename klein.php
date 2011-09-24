@@ -2,6 +2,7 @@
 # (c) Chris O'Hara <cohara87@gmail.com> (MIT License)
 # http://github.com/chriso/klein.php
 
+# Globals?!?? D:
 $__routes = array();
 $__namespace = null;
 
@@ -11,14 +12,14 @@ function respond($method, $route = '*', $callback = null) {
     $count_match = true;
     if (is_callable($method)) {
         $callback = $method;
-        $method = null;
+        $method = $route = null;
         $count_match = false;
     } elseif (is_callable($route)) {
         $callback = $route;
         $route = $method;
         $method = null;
     }
-    $__routes[] = array($method, $namespace . $route, $callback, $count_match);
+    $__routes[] = array($method, $__namespace . $route, $callback, $count_match);
     return $callback;
 }
 
@@ -34,12 +35,6 @@ function with($namespace, $routes) {
     }
     $__namespace = $previous;
 }
-
-//Some aliases
-function get  ($route, $callback = null) { return respond('GET',    $route, $callback); }
-function post ($route, $callback = null) { return respond('POST',   $route, $callback); }
-function put  ($route, $callback = null) { return respond('PUT',    $route, $callback); }
-function del  ($route, $callback = null) { return respond('DELETE', $route, $callback); }
 
 function startSession() {
     if (session_id() === '') {
@@ -99,7 +94,7 @@ function dispatch($uri = null, $req_method = null, array $params = null, $captur
         }
 
         //! is used to negate a match
-        if ($_route[0] === '!') {
+        if (isset($_route[0]) && $_route[0] === '!') {
             $negate = true;
             $i = 1;
         } else {
@@ -108,7 +103,7 @@ function dispatch($uri = null, $req_method = null, array $params = null, $captur
         }
 
         //Check for a wildcard (match all)
-        if ($_route === '*') {
+        if ($_route === '*' || null == $_route) {
             $match = true;
 
         //Easily handle 404's
@@ -117,7 +112,7 @@ function dispatch($uri = null, $req_method = null, array $params = null, $captur
             ++$matched;
 
         //@ is used to specify custom regex
-        } elseif ($_route[$i] === '@') {
+        } elseif (isset($_route[$i]) && $_route[$i] === '@') {
             $match = preg_match('`' . substr($_route, $i + 1) . '`', $uri, $params);
 
         //Compiling and matching regular expressions is relatively
@@ -408,13 +403,13 @@ class _Response extends StdClass {
         $this->discard();
         $this->noCache();
         set_time_limit(1200);
-        header('Content-type: ' . finfo_file(finfo_open(FILEINFO_MIME_TYPE), $file));
-        header('Content-length: ' . filesize($file));
+        header('Content-type: ' . finfo_file(finfo_open(FILEINFO_MIME_TYPE), $path));
+        header('Content-length: ' . filesize($path));
         if (null === $filename) {
-            $filename = basename($file);
+            $filename = basename($path);
         }
         header('Content-Disposition: attachment; filename="'.$filename.'"');
-        fpassthru($file);
+        fpassthru($path);
     }
 
     //Sends an object as json

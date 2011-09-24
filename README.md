@@ -35,10 +35,10 @@ respond('/[:name]', function ($request) {
 
 ```php
 <?php
-get('/posts', $callback);
-post('/posts/create', $callback);
-put('/posts/[i:id]', $callback);
-del('/posts/[i:id]', $callback);
+respond('GET', '/posts', $callback);
+respond('POST', '/posts/create', $callback);
+respond('PUT', '/posts/[i:id]', $callback);
+respond('DELETE', '/posts/[i:id]', $callback);
 
 //To match multiple request methods:
 respond(array('POST','GET'), $route, $callback);
@@ -90,7 +90,7 @@ respond(function ($reguest, $response, $app) {
     $app->db = new PDO(...);
 });
 
-post('/users/[i:id]/edit', function ($request, $response) {
+respond('POST', '/users/[i:id]/edit', function ($request, $response) {
     //Quickly validate input parameters
     $request->validate('username', 'Please enter a valid username')->isLen(5, 64)->isChars('a-zA-Z0-9-');
     $request->validate('password')->notNull();
@@ -116,11 +116,11 @@ post('/users/[i:id]/edit', function ($request, $response) {
 <?php
 with('/users', function () {
 
-    get('/?', function ($request, $response) {
+    respond('GET', '/?', function ($request, $response) {
         //Show all users
     });
 
-    get('/[:id]', function ($request, $response) {
+    respond('GET', '/[:id]', function ($request, $response) {
         //Show a single user
     });
 
