@@ -366,12 +366,12 @@ class _Response extends StdClass {
             $params = $type;
             $type = 'info';
         }
-        if (!isset($_SESSION['__flash'])) {
-            $_SESSION['__flash'] = array($type => array());
-        } elseif (!isset($_SESSION['__flash'][$type])) {
-            $_SESSION['__flash'][$type] = array();
+        if (!isset($_SESSION['__flashes'])) {
+            $_SESSION['__flashes'] = array($type => array());
+        } elseif (!isset($_SESSION['__flashes'][$type])) {
+            $_SESSION['__flashes'][$type] = array();
         }
-        $_SESSION['__flash'][$type] = $this->markdown($msg, $params);
+        $_SESSION['__flashes'][$type] = $this->markdown($msg, $params);
     }
 
     //Support basic markdown syntax
