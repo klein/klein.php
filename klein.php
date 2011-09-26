@@ -371,7 +371,7 @@ class _Response extends StdClass {
         } elseif (!isset($_SESSION['__flashes'][$type])) {
             $_SESSION['__flashes'][$type] = array();
         }
-        $_SESSION['__flashes'][$type] = $this->markdown($msg, $params);
+        $_SESSION['__flashes'][$type][] = $this->markdown($msg, $params);
     }
 
     //Support basic markdown syntax
