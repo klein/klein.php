@@ -409,7 +409,7 @@ class _Response extends StdClass {
             $filename = basename($path);
         }
         header('Content-Disposition: attachment; filename="'.$filename.'"');
-        fpassthru($path);
+        readfile($path);
     }
 
     //Sends an object as json
