@@ -399,15 +399,18 @@ class _Response extends StdClass {
     }
 
     //Sends a file
-    public function file($path, $filename = null) {
+    public function file($path, $filename = null, $mimetype = null) {
         $this->discard();
         $this->noCache();
         set_time_limit(1200);
-        header('Content-type: ' . finfo_file(finfo_open(FILEINFO_MIME_TYPE), $path));
-        header('Content-length: ' . filesize($path));
         if (null === $filename) {
             $filename = basename($path);
         }
+        if (null === $mimetype) {
+            $mimetype = finfo_file(finfo_open(FILEINFO_MIME_TYPE), $path)
+        }
+        header('Content-type: ' . $mimetype);
+        header('Content-length: ' . filesize($path));
         header('Content-Disposition: attachment; filename="'.$filename.'"');
         readfile($path);
     }
