@@ -407,7 +407,7 @@ class _Response extends StdClass {
             $filename = basename($path);
         }
         if (null === $mimetype) {
-            $mimetype = finfo_file(finfo_open(FILEINFO_MIME_TYPE), $path)
+            $mimetype = finfo_file(finfo_open(FILEINFO_MIME_TYPE), $path);
         }
         header('Content-type: ' . $mimetype);
         header('Content-length: ' . filesize($path));
