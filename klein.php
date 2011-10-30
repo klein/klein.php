@@ -3,6 +3,7 @@
 # http://github.com/chriso/klein.php
 
 # Globals?!?? D:
+global $__routes, $__namespace;
 $__routes = array();
 $__namespace = null;
 
