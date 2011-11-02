@@ -266,6 +266,7 @@ $response->
     refresh()                                       //Redirect to the current URL
     back()                                          //Redirect to the referer
     render($view, $data = array())                  //Renders a view or partial (in the scope of $response)
+    partial($view, $data = array())                 //Renders a partial without a layout (in the scope of $response)
     layout($layout)                                 //Sets the view layout
     yield()                                         //Call inside the layout to render the view content
     onError($callback)                              //$callback takes ($response, $msg, $err_type = null)
