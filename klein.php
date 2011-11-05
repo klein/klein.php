@@ -509,6 +509,14 @@ class _Response extends StdClass {
         }
     }
 
+    // Renders a view without a layout
+    public function partial($view, array $data = array()) {
+        $layout = $this->_layout;
+        $this->_layout = null;
+        $this->render($view, $data);
+        $this->_layout = $layout;
+    }
+
     //Sets a session variable
     public function session($key, $value = null) {
         startSession();
