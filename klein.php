@@ -3,6 +3,7 @@
 # http://github.com/chriso/klein.php
 
 # Globals?!?? D:
+global $__routes, $__namespace;
 $__routes = array();
 $__namespace = null;
 
@@ -324,6 +325,7 @@ class _Response extends StdClass {
     protected $_errorCallbacks = array();
     protected $_layout = null;
     protected $_view = null;
+    protected $_code = 200;
 
     //Enable response chunking. See: http://bit.ly/hg3gHb
     public function chunk($str = null) {
@@ -429,9 +431,13 @@ class _Response extends StdClass {
     }
 
     //Sends a HTTP response code
-    public function code($code) {
-        $protocol = isset($_SERVER['SERVER_PROTOCOL']) ? $_SERVER['SERVER_PROTOCOL'] : 'HTTP/1.0';
-        header("$protocol $code");
+    public function code($code = null) {
+        if(null !== $code) {
+            $this->_code = $code;
+            $protocol = isset($_SERVER['SERVER_PROTOCOL']) ? $_SERVER['SERVER_PROTOCOL'] : 'HTTP/1.0';
+            header("$protocol $code");
+        }
+        return $this->_code;
     }
 
     //Redirects the request to another URL
