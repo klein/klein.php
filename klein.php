@@ -299,7 +299,7 @@ class _Request {
     //Gets a session variable associated with the request
     public function session($key, $default = null) {
         startSession();
-        return isset($_SESSION[$key]) ? $key : $default;
+        return isset($_SESSION[$key]) ? $_SESSION[$key] : $default;
     }
 
     //Gets the request IP address
