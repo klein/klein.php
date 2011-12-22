@@ -49,7 +49,7 @@ function dispatch($uri = null, $req_method = null, array $params = null, $captur
     //Pass $request, $response, and a blank object for sharing scope through each callback
     $request  = new _Request;
     $response = new _Response;
-    $app      = new StdClass;
+    $app      = new _App;
 
     //Get/parse the request URI and method
     if (null === $uri) {
@@ -720,5 +720,19 @@ class _Validator {
             throw new ValidatorException($this->_err);
         }
         return $this;
+    }
+}
+
+class _App {
+    public function __call( $method, $args ) {
+        if (!isset($this->$method) || !is_callable($this->$method)) {
+            throw new ErrorException("Unknown method $method()");
+        }
+
+        if ( count($args) === 0 ) {
+            return call_user_func( $this->$method );
+        } else {
+            return call_user_func_array( $this->$method, $args );
+        }
     }
 }
