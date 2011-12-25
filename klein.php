@@ -273,8 +273,8 @@ class _Request {
     }
 
     //Gets a request cookie
-    public function cookie($cookie) {
-        return isset($_COOKIE[$cookie]) ? $_COOKIE[$cookie] : null;
+    public function cookie($cookie, $default = null) {
+        return isset($_COOKIE[$cookie]) ? $_COOKIE[$cookie] : $default;
     }
 
     //Gets the request method, or checks it against $is - e.g. method('post') => true
