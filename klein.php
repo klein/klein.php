@@ -236,8 +236,8 @@ class _Request {
     }
 
     //Return a request parameter, or $default if it doesn't exist
-    public function param($param, $default = null) {
-        return isset($_REQUEST[$param]) && $_REQUEST[$param] !== '' ? $_REQUEST[$param] : $default;
+    public function param($key, $default = null) {
+        return isset($_REQUEST[$key]) && $_REQUEST[$key] !== '' ? $_REQUEST[$key] : $default;
     }
 
     public function __isset($param) {
@@ -273,8 +273,8 @@ class _Request {
     }
 
     //Gets a request cookie
-    public function cookie($cookie) {
-        return isset($_COOKIE[$cookie]) ? $_COOKIE[$cookie] : null;
+    public function cookie($key, $default = null) {
+        return isset($_COOKIE[$key]) ? $_COOKIE[$key] : $default;
     }
 
     //Gets the request method, or checks it against $is - e.g. method('post') => true
@@ -470,15 +470,15 @@ class _Response extends StdClass {
     }
 
     //Adds to or modifies the current query string
-    public function query($new, $value = null) {
+    public function query($key, $value = null) {
         $query = array();
         if (isset($_SERVER['QUERY_STRING'])) {
             parse_str($_SERVER['QUERY_STRING'], $query);
         }
-        if (is_array($new)) {
-            $query = array_merge($query, $new);
+        if (is_array($key)) {
+            $query = array_merge($query, $key);
         } else {
-            $query[$new] = $value;
+            $query[$key] = $value;
         }
 
         $request_uri = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '/';

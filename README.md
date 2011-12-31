@@ -40,10 +40,10 @@ respond('POST', '/posts/create', $callback);
 respond('PUT', '/posts/[i:id]', $callback);
 respond('DELETE', '/posts/[i:id]', $callback);
 
-//To match multiple request methods:
+// To match multiple request methods:
 respond(array('POST','GET'), $route, $callback);
 
-//Or you might want to handle the requests in the same place
+// Or you might want to handle the requests in the same place
 respond('/posts/[create|edit:action]?/[i:id]?', function ($request, $response) {
     switch ($request->action) {
         //
@@ -57,15 +57,15 @@ respond('/posts/[create|edit:action]?/[i:id]?', function ($request, $response) {
 <?php
 respond(function ($request, $response) {
     $response->xml = function ($object) {
-        //Custom xml output function
+        // Custom xml output function
     }
     $response->csv = function ($object) {
-        //Custom csv output function
+        // Custom csv output function
     }
 });
 
 respond('/report.[xml|csv|json:format]?', function ($reqest, $response) {
-    //Get the format or fallback to JSON as the default
+    // Get the format or fallback to JSON as the default
     $send = $request->param('format', 'json');
     $response->$send($report);
 });
@@ -80,33 +80,33 @@ respond('/report/latest', function ($request, $response) {
 ```php
 <?php
 respond(function ($reguest, $response, $app) {
-    //Handle exceptions => flash the message and redirect to the referrer
+    // Handle exceptions => flash the message and redirect to the referrer
     $response->onError(function ($response, $err_msg) {
         $response->flash($err_msg);
         $response->back();
     });
 
-    //The third parameter can be used to share scope and global objects
+    // The third parameter can be used to share scope and global objects
     $app->db = new PDO(...);
 });
 
 respond('POST', '/users/[i:id]/edit', function ($request, $response) {
-    //Quickly validate input parameters
+    // Quickly validate input parameters
     $request->validate('username', 'Please enter a valid username')->isLen(5, 64)->isChars('a-zA-Z0-9-');
     $request->validate('password')->notNull();
 
-    $app->db->query(...); //etc.
+    $app->db->query(...); // etc.
 
-    //Add view properties and helper methods
+    // Add view properties and helper methods
     $response->title = 'foo';
     $response->escape = function ($str) {
-        return htmlentities($str); //Assign view helpers
+        return htmlentities($str); // Assign view helpers
     };
 
     $response->render('myview.phtml');
 });
 
-//myview.phtml:
+// myview.phtml:
 <title><?php echo $this->escape($this->title) ?></title>
 ```
 
@@ -117,11 +117,11 @@ respond('POST', '/users/[i:id]/edit', function ($request, $response) {
 with('/users', function () {
 
     respond('GET', '/?', function ($request, $response) {
-        //Show all users
+        // Show all users
     });
 
     respond('GET', '/[:id]', function ($request, $response) {
-        //Show a single user
+        // Show a single user
     });
 
 });
@@ -160,23 +160,23 @@ $request->validate('key', 'The key was invalid')->isHex()->isLen(32);
 
 Some examples
 
-    *                    //Match all request URIs
-    [i]                  //Match an integer
-    [i:id]               //Match an integer as 'id'
-    [a:action]           //Match alphanumeric characters as 'action'
-    [h:key]              //Match hexadecimal characters as 'key'
-    [:action]            //Match anything up to the next / or end of the URI as 'action'
-    [create|edit:action] //Match either 'create' or 'edit' as 'action'
-    [*]                  //Catch all (lazy)
-    [*:trailing]         //Catch all as 'trailing' (lazy)
-    [**:trailing]        //Catch all (possessive - will match the rest of the URI)
-    .[:format]?          //Matches an optional parameter 'format' - a / or . before the block is also optional
+    *                    // Match all request URIs
+    [i]                  // Match an integer
+    [i:id]               // Match an integer as 'id'
+    [a:action]           // Match alphanumeric characters as 'action'
+    [h:key]              // Match hexadecimal characters as 'key'
+    [:action]            // Match anything up to the next / or end of the URI as 'action'
+    [create|edit:action] // Match either 'create' or 'edit' as 'action'
+    [*]                  // Catch all (lazy)
+    [*:trailing]         // Catch all as 'trailing' (lazy)
+    [**:trailing]        // Catch all (possessive - will match the rest of the URI)
+    .[:format]?          // Match an optional parameter 'format' - a / or . before the block is also optional
 
 Some more complicated examples
 
-    /posts/[*:title][i:id]    //Matches "/posts/this-is-a-title-123"
-    /output.[xml|json:format]? //Matches "/output", "output.xml", "output.json"
-    /[:controller]?/[:action]? //Matches the typical /controller/action format
+    /posts/[*:title][i:id]     // Matches "/posts/this-is-a-title-123"
+    /output.[xml|json:format]? // Matches "/output", "output.xml", "output.json"
+    /[:controller]?/[:action]? // Matches the typical /controller/action format
 
 **Note** - *all* routes that match the request URI are called - this
 allows you to incorporate complex conditional logic such as user
@@ -194,10 +194,10 @@ only a part of the request URI or use a custom regular expression, use the `@` o
 negate a route, use the `!` operator
 
 ```php
-//Match all requests that end with '.json' or '.csv'
+// Match all requests that end with '.json' or '.csv'
 respond('@\.(json|csv)$', ...
 
-//Match all requests that _don't_ start with /admin
+// Match all requests that _don't_ start with /admin
 respond('!@^/admin/', ...
 ```
 
@@ -214,7 +214,7 @@ $response->escape = function ($str) {
 
 $response->render('myview.phtml', array('title' => 'My View'));
 
-//Or just: $response->title = 'My View';
+// Or just: $response->title = 'My View';
 ```
 
 *myview.phtml*
@@ -227,82 +227,85 @@ Views are compiled and run in the scope of `$response` so all response methods c
 
 ```php
 <?php
-$this->render('partial.html')           //Render partials
-$this->param('myvar')                   //Access request parameters
-echo $this->query(array('page' => 2))   //Modify the current query string
+$this->render('partial.html')           // Render partials
+$this->param('myvar')                   // Access request parameters
+echo $this->query(array('page' => 2))   // Modify the current query string
 ```
 
-## API
+-## API
 
 ```php
 <?php
 $request->
-    header($key)                        //Gets a request header
-    cookie($key)                        //Gets a cookie from the request
-    session($key)                       //Gets a session variable
-    param($key, $default = null)        //Gets a request parameter (get, post, named)
-    params()                            //Return all parameters
-    params($mask = null)                //Return all parameters that match the mask array - extract() friendly
-    validate($param, $err_msg = null)   //Starts a validator chain
-    method()                            //Gets the request method
-    method($method)                     //Checks if the request method is $method, i.e. method('post') => true
-    isSecure($required = false)         //https? Redirect if $required is true and the request is not secure
-    id()                                //Gets a unique ID for the request
-    ip()                                //Get the request IP
-    userAgent()                         //Get the request user agent
-    uri()                               //Get the request URI
-    <param>                             //Gets a request parameter
+    header($key, $default = null)       // Get a request header
+    cookie($key, $default = null)       // Get a cookie from the request
+    session($key, $default = null)      // Get a session variable
+    param($key, $default = null)        // Get a request parameter (get, post, named)
+    params()                            // Return all parameters
+    params($mask = null)                // Return all parameters that match the mask array - extract() friendly
+    validate($param, $err_msg = null)   // Start a validator chain
+    method()                            // Get the request method
+    method($method)                     // Check if the request method is $method, i.e. method('post') => true
+    isSecure($required = false)         // https? Redirect if $required is true and the request is not secure
+    id()                                // Get a unique ID for the request
+    ip()                                // Get the request IP
+    userAgent()                         // Get the request user agent
+    uri()                               // Get the request URI
+    <param>                             // Get / Set (if assigned a value)a request parameter
 
 $response->
-    header($key, $value = null)                     //Sets a response header
-    cookie($key, $value = null, $expiry = null)     //Sets a cookie
-    cookie($key, null)                              //Removes a cookie
-    flash($msg, $type = 'info', $params = array()   //Sets a flash message
-    file($file, $filename = null)                   //Send a file
-    json($object, $callback = null)                 //Send an object as JSON(p)
-    markdown($str, $args, ...)                      //Return a string formatted with markdown
-    code($code = null)                              //Return the HTTP response code, or send a new code
-    redirect($url, $code = 302)                     //Redirect to the specified URL
-    refresh()                                       //Redirect to the current URL
-    back()                                          //Redirect to the referer
-    render($view, $data = array())                  //Renders a view or partial (in the scope of $response)
-    partial($view, $data = array())                 //Renders a partial without a layout (in the scope of $response)
-    layout($layout)                                 //Sets the view layout
-    yield()                                         //Call inside the layout to render the view content
-    onError($callback)                              //$callback takes ($response, $msg, $err_type = null)
-    set($key, $value = null)                        //Set a view property or helper
+    header($key, $value = null)                     // Set a response header
+    cookie($key, $value = null, $expiry = null)     // Set a cookie
+    cookie($key, null)                              // Remove a cookie
+    session($key, $value = null)                    // Sets a session variable
+    flash($msg, $type = 'info', $params = array()   // Set a flash message
+    file($path, $filename = null)                   // Send a file
+    noCache()                                       // Tell the browser not to cache the response
+    json($object, $callback = null)                 // Send an object as JSON(p)
+    markdown($str, $args, ...)                      // Return a string formatted with markdown
+    code($code = null)                              // Return the HTTP response code, or send a new code
+    redirect($url, $code = 302)                     // Redirect to the specified URL
+    refresh()                                       // Redirect to the current URL
+    back()                                          // Redirect to the referer
+    render($view, $data = array())                  // Render a view or partial (in the scope of $response)
+    partial($view, $data = array())                 // Render a partial without a layout (in the scope of $response)
+    layout($layout)                                 // Set the view layout
+    yield()                                         // Call inside the layout to render the view content
+    error(Exception $err)                           // Routes an exception through the error callbacks
+    onError($callback)                              // $callback takes ($response, $msg, $err_type = null)
+    set($key, $value = null)                        // Set a view property or helper
     set($arr)
-    escape($str)                                    //Escapes a string
-    query($key, $value = null)                      //Modify the current query string
+    escape($str)                                    // Escape a string
+    query($key, $value = null)                      // Modify the current query string
     query($arr)
-    param($param, $default = null)                  //Gets an escaped request parameter
-    flashes($type = null)                           //Retrieves and clears all flashes of $type
-    flush()                                         //Flush all open output buffers
-    discard()                                       //Discard all open output buffers
-    buffer()                                        //Return the contents of the output buffer as a string
-    chunk($str = null)                              //Enable response chunking (see the wiki)
-    dump($obj)                                      //Dump an object
-    <callback>($arg1, ...)                          //Calls a user-defined helper
-    <property>                                      //Gets a user-defined property
+    param($param, $default = null)                  // Get an escaped request parameter
+    flashes($type = null)                           // Retrieve and clears all flashes of $type
+    flush()                                         // Flush all open output buffers
+    discard()                                       // Discard all open output buffers
+    buffer()                                        // Return the contents of the output buffer as a string
+    chunk($str = null)                              // Enable response chunking (see the wiki)
+    dump($obj)                                      // Dump an object
+    <callback>($arg1, ...)                          // Call a user-defined helper
+    <property>                                      // Get a user-defined property
 
 $validator->
-    notNull()                           //The string must not be null
-    isLen($length)                      //The string must be the exact length
-    isLen($min, $max)                   //The string must be between $min and $max length (inclusive)
-    isInt()                             //Checks for a valid integer
-    isFloat()                           //Checks for a valid float/decimal
-    isEmail()                           //Checks for a valid email
-    isUrl()                             //Checks for a valid URL
-    isIp()                              //Checks for a valid IP
-    isAlpha()                           //Checks for a-z (case insensitive)
-    isAlnum()                           //Checks for alphanumeric characters
-    contains($needle)                   //Checks if the string contains $needle
-    isChars($chars)                     //Validates against a character list
-    isRegex($pattern, $modifiers = '')  //Validates against a regular expression
+    notNull()                           // The string must not be null
+    isLen($length)                      // The string must be the exact length
+    isLen($min, $max)                   // The string must be between $min and $max length (inclusive)
+    isInt()                             // Check for a valid integer
+    isFloat()                           // Check for a valid float/decimal
+    isEmail()                           // Check for a valid email
+    isUrl()                             // Check for a valid URL
+    isIp()                              // Check for a valid IP
+    isAlpha()                           // Check for a-z (case insensitive)
+    isAlnum()                           // Check for alphanumeric characters
+    contains($needle)                   // Check if the string contains $needle
+    isChars($chars)                     // Validate against a character list
+    isRegex($pattern, $modifiers = '')  // Validate against a regular expression
     notRegex($pattern, $modifiers ='')
-    is<Validator>()                     //Validate against a custom validator
-    not<Validator>()                    //The validator can't match
-    <Validator>()                       //Alias for is<Validator>()
+    is<Validator>()                     // Validate against a custom validator
+    not<Validator>()                    // The validator can't match
+    <Validator>()                       // Alias for is<Validator>()
 ```
 
 ## License
