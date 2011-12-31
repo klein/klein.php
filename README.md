@@ -288,6 +288,9 @@ $response->
     <callback>($arg1, ...)                          // Call a user-defined helper
     <property>                                      // Get a user-defined property
 
+$app->
+    <callback>($arg1, ...)                          //Call a user-defined helper
+
 $validator->
     notNull()                           // The string must not be null
     isLen($length)                      // The string must be the exact length
