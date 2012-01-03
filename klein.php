@@ -61,11 +61,12 @@ function dispatch($uri = null, $req_method = null, array $params = null, $captur
     if (null === $req_method) {
         $req_method = isset($_SERVER['REQUEST_METHOD']) ? $_SERVER['REQUEST_METHOD'] : 'GET';
 
-        //For legacy servers: override the HTTP method with the X-HTTP-Method-Override header
-        $headers = apache_request_headers();
-        if(isset($headers['X-HTTP-Method-Override']))
-        {
-            $req_method = $headers['X-HTTP-Method-Override'];
+        //For legacy servers, override the HTTP method with the X-HTTP-Method-Override
+        //header or _method parameter
+        if (isset($_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'])) {
+            $req_method = $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'];
+        } else if (isset($_REQUEST['_method'])) {
+            $req_method = $_REQUEST['_method'];
         }
     }
 
