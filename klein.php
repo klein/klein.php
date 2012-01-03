@@ -62,11 +62,12 @@ function dispatch($uri = null, $req_method = null, array $params = null, $captur
         $req_method = isset($_SERVER['REQUEST_METHOD']) ? $_SERVER['REQUEST_METHOD'] : 'GET';
 
         //For legacy servers: override the HTTP method with the X-HTTP-Method-Override header
-        $headers = apache_request_headers();
-        if(isset($headers['X-HTTP-Method-Override']))
-        {
-            $req_method = $headers['X-HTTP-Method-Override'];
-        }
+		if (function_exists('apache_request_headers')) {
+			$headers = apache_request_headers();
+			if (isset($headers['X-HTTP-Method-Override'])) {
+				$req_method = $headers['X-HTTP-Method-Override'];
+			}
+		}
     }
 
     //Force request_order to be GP
