@@ -384,7 +384,7 @@ class _Response extends StdClass {
     }
 
     //Support basic markdown syntax
-    public function markdown($str, $args = null) {
+    public function markdown($str, $args = array()) {
         $args = func_get_args();
         $md = array(
             '/\[([^\]]++)\]\(([^\)]++)\)/' => '<a href="$2">$1</a>',
