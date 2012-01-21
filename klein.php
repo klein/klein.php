@@ -116,7 +116,7 @@ function dispatch($uri = null, $req_method = null, array $params = null, $captur
 
         //Easily handle 404's
         } elseif ($_route === '404' && !$matched) {
-            $callback();
+            $callback($request, $response, $app, $matched);
             ++$matched;
 
         //@ is used to specify custom regex
