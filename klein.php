@@ -19,7 +19,15 @@ function respond($method, $route = '*', $callback = null) {
         $route = $method;
         $method = null;
     }
-    $__routes[] = array($method, $__namespace . $route, $callback, $count_match);
+
+    // empty route with namespace is a match-all
+    if( $__namespace && ( null == $route || '*' == $route ) ) {
+        $route = '@' . $__namespace . '(/|$)';
+    } else {
+        $route = $__namespace . $route;
+    }
+
+    $__routes[] = array($method, $route, $callback, $count_match);
     return $callback;
 }
 
