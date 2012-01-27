@@ -22,7 +22,7 @@ function respond($method, $route = '*', $callback = null) {
 
     // empty route with namespace is a match-all
     if( $__namespace && ( null == $route || '*' == $route ) ) {
-        $route = '@' . $__namespace . '(/|$)';
+        $route = '@^' . $__namespace . '(/|$)';
     } else {
         $route = $__namespace . $route;
     }
