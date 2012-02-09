@@ -2,7 +2,6 @@
 # (c) Chris O'Hara <cohara87@gmail.com> (MIT License)
 # http://github.com/chriso/klein.php
 
-# Globals?!?? D:
 $__routes = array();
 $__namespace = null;
 
@@ -233,6 +232,8 @@ function compile_route($route) {
 
 class _Request {
 
+    protected $_id = null;
+
     //Returns all parameters (GET, POST, named) that match the mask
     public function params($mask = null) {
         $params = $_REQUEST;
@@ -309,7 +310,10 @@ class _Request {
 
     //Gets a unique ID for the request
     public function id() {
-        return sha1(mt_rand() . microtime(true) . mt_rand());
+        if (null === $this->_id) {
+            $this->_id = sha1(mt_rand() . microtime(true) . mt_rand());
+        }
+        return $this->_id;
     }
 
     //Gets a session variable associated with the request
