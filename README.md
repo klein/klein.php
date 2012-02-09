@@ -79,7 +79,7 @@ respond('/report/latest', function ($request, $response) {
 
 ```php
 <?php
-respond(function ($reguest, $response, $app) {
+respond(function ($request, $response, $app) {
     // Handle exceptions => flash the message and redirect to the referrer
     $response->onError(function ($response, $err_msg) {
         $response->flash($err_msg);
