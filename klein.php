@@ -180,7 +180,9 @@ function dispatch($uri = null, $req_method = null, array $params = null, $captur
             } catch (Exception $e) {
                 $response->error($e);
             }
-            $count_match && ++$matched;
+            if ($_route !== '*' && $_route !== null) {
+                $count_match && ++$matched;
+            }
         }
     }
     if (!$matched) {
