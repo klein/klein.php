@@ -171,7 +171,7 @@ function dispatch($uri = null, $req_method = null, array $params = null, $captur
             $match = preg_match($regex, $uri, $params);
         }
 
-        if ($match ^ $negate) {
+        if (isset($match) && $match ^ $negate) {
             if (null !== $params) {
                 $_REQUEST = array_merge($_REQUEST, $params);
             }
