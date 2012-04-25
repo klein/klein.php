@@ -522,6 +522,8 @@ class _Response extends StdClass {
 
     //Renders a view + optional layout
     public function render($view, array $data = array()) {
+        $original_view = $this->_view;
+
         if (!empty($data)) {
             $this->set($data);
         }
@@ -534,6 +536,9 @@ class _Response extends StdClass {
         if (false !== $this->chunked) {
             $this->chunk();
         }
+
+        // restore state for parent render()
+        $this->_view = $original_view;
     }
 
     // Renders a view without a layout
