@@ -1,0 +1,4 @@
+all:
+
+test:
+	phpunit tests
