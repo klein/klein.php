@@ -373,7 +373,7 @@ class _Response extends StdClass {
     }
 
     //Sets a response header
-    public function header($key, $value = '') {
+    public function header($key, $value = null) {
         self::$_headers->header($key, $value);
     }
 
@@ -769,11 +769,20 @@ class _App {
 }
 
 class _Headers {
-    public function header($key, $value = '') {
+    public function header($key, $value = null) {
         header($this->_header($key, $value));
     }
 
-    public function _header($key, $value = '') {
+    /**
+     * Output an HTTP header. If $value is null, $key is
+     * assume to be the HTTP response code, and the ":"
+     * separator will be omitted.
+     */
+    public function _header($key, $value = null) {
+        if (null === $value ) {
+            return $key;
+        }
+
         $key = str_replace(' ', '-', ucwords(str_replace('-', ' ', $key)));
         return "$key: $value";
     }
