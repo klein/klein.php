@@ -197,6 +197,32 @@ function dispatch($uri = null, $req_method = null, array $params = null, $captur
     }
 }
 
+/**
+ * Stores a $closure as a service callback under $key, or
+ * if $closure is not provided, gets an instance of stored
+ * service by $key. Its like a lazy registry $closure is
+ * evalueted only once on first service request
+ */
+function service($key, $closure = null) {
+    static $services = array();
+    if ($closure instanceof Closure) {
+        // store a service
+        $services[$key] = function() use ($closure) {
+            static $instance;
+            if (null === $instance) {
+                $instance = $closure();
+            }
+            return $instance;
+        };
+        return;
+    } elseif (isset($services[$key])) {
+        // get a service
+        return $services[$key]();
+    }
+    // invalid service key or closure argument
+    throw new InvalidArgumentException("Service was not found by key [$key] or callback wrapping service is not a closure");
+}
+
 //Compiles a route string to a regular expression
 function compile_route($route) {
     if (preg_match_all('`(/|\.|)\[([^:\]]*+)(?::([^:\]]*+))?\](\?|)`', $route, $matches, PREG_SET_ORDER)) {
