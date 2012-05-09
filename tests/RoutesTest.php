@@ -9,71 +9,84 @@ class RoutesTest extends PHPUnit_Framework_TestCase {
 
 		global $__namespace;
 		$__namespace = null;
+
+		$_SERVER['SERVER_PROTOCOL'] = 'HTTP/1.1';
 	}
 
 	public function testBasic() {
+		$this->expectOutputString( 'x' );
+
 		respond( '/', function(){ echo 'x'; });
 		respond( '/something', function(){ echo 'y'; });
-
-		$out = dispatch( '/', 'GET', null, true );
-		$this->assertSame( 'x', $out );
+		dispatch( '/' );
 	}
 
-	public function testCatchall() {
-		respond( function(){ echo 'a'; });
-		respond( '/not', function(){ echo 'b'; });
-		respond( '*', function(){ echo 'c'; });
-		respond( '/something', function(){ echo 'd'; });
-		respond( '*', function(){ echo 'e'; });
-		respond( '/not', function(){ echo 'f'; });
-		respond( function(){ echo 'g'; });
+	public function testCatchallImplicit() {
+		$this->expectOutputString( 'b' );
 
-		$out = dispatch( '/something', 'GET', null, true );
-		$this->assertSame( 'acdeg', $out );
+		respond( '/one', function(){ echo 'a'; });
+		respond( function(){ echo 'b'; });
+		respond( '/two', function(){ } );
+		respond( '/three', function(){ echo 'c'; } );
+		dispatch( '/two' );
+	}
+
+	public function testCatchallAsterisk() {
+		$this->expectOutputString( 'b' );
+
+		respond( '/one', function(){ echo 'a'; } );
+		respond( '*', function(){ echo 'b'; } );
+		respond( '/two', function(){ } );
+		respond( '/three', function(){ echo 'c'; } );
+		dispatch( '/two' );
+	}
+
+	public function testCatchallImplicitTriggers404() {
+		$this->expectOutputString( "bHTTP/1.1 404\n" );
+		respond( function(){ echo 'b'; });
+		dispatch( '/' );
 	}
 
 	public function testRegex() {
-		respond( '@/bar', function(){ echo 'z'; });
+		$this->expectOutputString( 'z' );
 
-		$out = dispatch( '/bar', 'GET', null, true );
-		$this->assertSame( 'z', $out );
+		respond( '@/bar', function(){ echo 'z'; });
+		dispatch( '/bar' );
 	}
 
 	public function testRegexNegate() {
-		respond( '!@/foo', function(){ echo 'y'; });
+		$this->expectOutputString( "y" );
 
-		$out = dispatch( '/bar', 'GET', null, true );
-		$this->assertSame( 'y', $out );
+		respond( '!@/foo', function(){ echo 'y'; });
+		dispatch( '/bar' );
 	}
 
 	public function test404() {
 		$this->expectOutputString("HTTP/1.1 404\n");
 
-		$_SERVER['SERVER_PROTOCOL'] = 'HTTP/1.1';
 		respond( '/', function(){ echo 'a'; } );
-
 		dispatch( '/foo' );
 	}
 
 	public function testParamsBasic() {
-		respond( '/[:color]', function($request){ echo $request->param('color'); });
+		$this->expectOutputString( 'blue' );
 
-		$out = dispatch( '/blue', 'GET', null, true );
-		$this->assertSame( 'blue', $out );
+		respond( '/[:color]', function($request){ echo $request->param('color'); });
+		dispatch( '/blue' );
 	}
 
 	public function testParamsIntegerSuccess() {
-		respond( '/[i:age]', function($request){ var_dump( $request->param('age') ); });
+		$this->expectOutputString( "string(3) \"987\"\n" );
 
-		$out = dispatch( '/987', 'GET', null, true );
-		$this->assertSame( 'string(3) "987"', trim($out) );
+		respond( '/[i:age]', function($request){ var_dump( $request->param('age') ); });
+		dispatch( '/987' );
 	}
 
 	public function testParamsIntegerFail() {
-		respond( '/[i:age]', function($request){ var_dump( $request->param('age') ); });
-		respond( '404', function(){ echo '404'; } );
+		$this->expectOutputString( '404 Code' );
 
-		$out = dispatch( '/blue', 'GET', null, true );
-		$this->assertSame( '404', trim($out) );
+		respond( '/[i:age]', function($request){ var_dump( $request->param('age') ); });
+		respond( '404', function(){ echo '404 Code'; } );
+		dispatch( '/blue' );
 	}
 }

@@ -3,7 +3,7 @@
 include dirname(dirname(__FILE__)) . '/klein.php';
 
 class HeadersEcho extends _Headers {
-	public function header($key, $value = '') {
+	public function header($key, $value = null) {
 		echo $this->_header($key, $value) . "\n";
 	}
 }
