@@ -131,6 +131,43 @@ foreach(array('projects', 'posts') as $controller) {
 }
 ```
 
+## Lazy services
+
+Services are stored as lazily, meaning only on first request the service
+will be evaluated, next time it is requested - same instance is given back.
+
+This is very useful when you have services which may not be used in
+every request. It will save you the response time and the amount of allocated memory.
+
+To create a service:
+
+``` php
+<?php
+service('service.name', function () {
+    $db = new MyDatabase();
+    return $db;
+});
+```
+
+Get the service:
+
+``` php
+<?php
+// database is not yet initialized
+$db1 = service('service.name');
+$db2 = service('service.name');
+// $db1 === $db2 it is the same instance
+```
+
+You can request other services during service initialization:
+
+``` php
+service('parser', function () {
+    $stream = service('loader')->load('whatewer');
+    return service('processor')->process($stream);
+});
+```
+
 ## Validators
 
 To add a custom validator use `addValidator($method, $callback)`
