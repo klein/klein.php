@@ -19,8 +19,31 @@ function respond($method, $route = '*', $callback = null) {
         $method = null;
     }
 
+    if( $__namespace && $route[0] === '@' || ( $route[0] === '!' && $route[1] === '@' ) ) {
+        if( $route[0] === '!' ) {
+            $negate = true;
+            $route = substr( $route, 2 );
+        } else {
+            $negate = false;
+            $route = substr( $route, 1 );
+        }
+
+        // regex anchored to front of string
+        if( $route[0] === '^' ) {
+            $route = substr( $route, 1 );
+        } else {
+            $route = '.*' . $route; 
+        }
+
+        if( $negate ) {
+            $route = '@^' . $__namespace . '(?!' . $route . ')';
+        } else {
+            $route = '@^' . $__namespace . $route;
+        }
+    }
+
     // empty route with namespace is a match-all
-    if( $__namespace && ( null == $route || '*' == $route ) ) {
+    elseif( $__namespace && ( null == $route || '*' === $route ) ) {
         $route = '@^' . $__namespace . '(/|$)';
     } else {
         $route = $__namespace . $route;
