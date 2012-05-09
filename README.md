@@ -133,7 +133,7 @@ foreach(array('projects', 'posts') as $controller) {
 
 ## Lazy services
 
-Services are stored as lazily, meaning only on first request the service
+Services are stored lazily, meaning only on first request the service
 will be evaluated, next time it is requested - same instance is given back.
 
 This is very useful when you have services which may not be used in
@@ -162,6 +162,7 @@ $db2 = service('service.name');
 You can request other services during service initialization:
 
 ``` php
+<?php
 service('parser', function () {
     $stream = service('loader')->load('whatewer');
     return service('processor')->process($stream);
