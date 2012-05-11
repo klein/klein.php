@@ -133,11 +133,15 @@ foreach(array('projects', 'posts') as $controller) {
 
 ## Lazy services
 
-Services are stored lazily, meaning only on first request the service
-will be evaluated, next time it is requested - same instance is given back.
+Services are stored **lazily**, meaning only on the first call for the service by it's **key**
+will evalueate it, all subsequent calls will return same service instance(result).
 
 This is very useful when you have services which may not be used in
-every request. It will save you the response time and the amount of allocated memory.
+every request action. It will save you the response time and the amount of allocated memory.
+
+**NOTE:** you cannot overwrite service during runtime. This restriction is added for your
+own good. Meaning, when it is stored under **key** next attempt to set service under same **key**
+will result in runtime exception.
 
 To create a service:
 
@@ -154,12 +158,12 @@ Get the service:
 ``` php
 <?php
 // database is not yet initialized
-$db1 = service('service.name');
-$db2 = service('service.name');
+$db1 = service('service.name'); // invokes the closure which instanciates database in this case
+$db2 = service('service.name'); // simply returns the database instance
 // $db1 === $db2 it is the same instance
 ```
 
-You can request other services during service initialization:
+You can call other services during service initialization:
 
 ``` php
 <?php
