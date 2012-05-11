@@ -444,8 +444,9 @@ class _Response extends StdClass {
         $this->noCache();
         set_time_limit(1200);
         $json = json_encode($object);
+        header('Content-Type: application/json');
         if (null !== $callback) {
-            echo "$callback($json)";
+            echo $callback($json);
         } else {
             echo $json;
         }
