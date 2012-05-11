@@ -203,10 +203,13 @@ function dispatch($uri = null, $req_method = null, array $params = null, $captur
  * service by $key. Its like a lazy registry $closure is
  * evalueted only once on first service request
  */
-function service($key, $closure = null) {
+function service($key, Closure $closure = null) {
     static $services = array();
-    if ($closure instanceof Closure) {
+    if (null !== $closure) {
         // store a service
+        if (isset($services[$key])) {
+            throw new RuntimeException("Service is allready registered under name: {$key}, to avoid complications it cannot be overwritten");
+        }
         $services[$key] = function() use ($closure) {
             static $instance;
             if (null === $instance) {
@@ -220,7 +223,7 @@ function service($key, $closure = null) {
         return $services[$key]();
     }
     // invalid service key or closure argument
-    throw new InvalidArgumentException("Service was not found by key [$key] or callback wrapping service is not a closure");
+    throw new InvalidArgumentException("There is no service registered under name: [$key]");
 }
 
 //Compiles a route string to a regular expression
