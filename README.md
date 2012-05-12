@@ -261,7 +261,7 @@ $response->
     flash($msg, $type = 'info', $params = array()   // Set a flash message
     file($path, $filename = null)                   // Send a file
     noCache()                                       // Tell the browser not to cache the response
-    json($object, $callback = null)                 // Send an object as JSON(p)
+    json($object, $jsonp_prefix = null)             // Send an object as JSON or JSONP by providing padding prefix
     markdown($str, $args, ...)                      // Return a string formatted with markdown
     code($code = null)                              // Return the HTTP response code, or send a new code
     redirect($url, $code = 302)                     // Redirect to the specified URL
