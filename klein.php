@@ -259,6 +259,9 @@ class _Request {
 
     protected $_id = null;
 
+    //HTTP headers helper
+    static $_headers = null;
+
     //Returns all parameters (GET, POST, named) that match the mask
     public function params($mask = null) {
         $params = $_REQUEST;
@@ -303,7 +306,7 @@ class _Request {
         $secure = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'];
         if (!$secure && $required) {
             $url = 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
-            header('Location: ' . $url);
+            self::$_headers->header('Location: ' . $url);
         }
         return $secure;
     }
@@ -371,11 +374,13 @@ class _Response extends StdClass {
     protected $_view = null;
     protected $_code = 200;
 
+    static $_headers = null;
+
     //Enable response chunking. See: http://bit.ly/hg3gHb
     public function chunk($str = null) {
         if (false === $this->chunked) {
             $this->chunked = true;
-            header('Transfer-encoding: chunked');
+            self::$_headers->header('Transfer-encoding: chunked');
             flush();
         }
         if (null !== $str) {
@@ -391,9 +396,8 @@ class _Response extends StdClass {
     }
 
     //Sets a response header
-    public function header($key, $value = '') {
-        $key = str_replace(' ', '-', ucwords(str_replace('-', ' ', $key)));
-        header("$key: $value");
+    public function header($key, $value = null) {
+        self::$_headers->header($key, $value);
     }
 
     //Sets a response cookie
@@ -440,8 +444,8 @@ class _Response extends StdClass {
 
     //Tell the browser not to cache the response
     public function noCache() {
-        header("Pragma: no-cache");
-        header('Cache-Control: no-store, no-cache');
+        $this->header("Pragma: no-cache");
+        $this->header('Cache-Control: no-store, no-cache');
     }
 
     //Sends a file
@@ -455,9 +459,9 @@ class _Response extends StdClass {
         if (null === $mimetype) {
             $mimetype = finfo_file(finfo_open(FILEINFO_MIME_TYPE), $path);
         }
-        header('Content-type: ' . $mimetype);
-        header('Content-length: ' . filesize($path));
-        header('Content-Disposition: attachment; filename="'.$filename.'"');
+        $this->header('Content-type: ' . $mimetype);
+        $this->header('Content-length: ' . filesize($path));
+        $this->header('Content-Disposition: attachment; filename="'.$filename.'"');
         readfile($path);
     }
 
@@ -481,7 +485,7 @@ class _Response extends StdClass {
         if(null !== $code) {
             $this->_code = $code;
             $protocol = isset($_SERVER['SERVER_PROTOCOL']) ? $_SERVER['SERVER_PROTOCOL'] : 'HTTP/1.0';
-            header("$protocol $code");
+            $this->header("$protocol $code");
         }
         return $this->_code;
     }
@@ -489,7 +493,7 @@ class _Response extends StdClass {
     //Redirects the request to another URL
     public function redirect($url, $code = 302) {
         $this->code($code);
-        header("Location: $url");
+        $this->header("Location: $url");
         exit;
     }
 
@@ -788,3 +792,27 @@ class _App {
         }
     }
 }
+
+class _Headers {
+    public function header($key, $value = null) {
+        header($this->_header($key, $value));
+    }
+
+    /**
+     * Output an HTTP header. If $value is null, $key is
+     * assume to be the HTTP response code, and the ":"
+     * separator will be omitted.
+     */
+    public function _header($key, $value = null) {
+        if (null === $value ) {
+            return $key;
+        }
+
+        $key = str_replace(' ', '-', ucwords(str_replace('-', ' ', $key)));
+        return "$key: $value";
+    }
+}
+
+_Request::$_headers = _Response::$_headers = new _Headers;
+
+// vim:set et:
