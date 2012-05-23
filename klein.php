@@ -776,6 +776,23 @@ class _Validator {
 }
 
 class _App {
+    private $services = array();
+
+    /**
+     * Gets a service instance by its $name
+     */
+    public function __get($name) {
+        if (!isset($this->services[$name])) {
+            throw new InvalidArgumentException("There is no service registered under name: [$name]");
+        }
+        return $this->services[$name]();
+    }
+
+    /**
+     * Calls a method registered to application
+     * like: $app->method = function() {...};
+     * Can be invoked like $app->method();
+     */
     public function __call( $method, $args ) {
         if (!isset($this->$method) || !is_callable($this->$method)) {
             throw new ErrorException("Unknown method $method()");
@@ -786,5 +803,23 @@ class _App {
         } else {
             return call_user_func_array( $this->$method, $args );
         }
+    }
+
+    /**
+     * Stores a $closure as a service callback under $name.
+     * Its like a lazy registry, $closure is
+     * evalueted only once on first service request
+     */
+    public function register($name, Closure $closure) {
+        if (isset($this->services[$name])) {
+            throw new RuntimeException("Service is allready registered under name: {$name}, to avoid complications it cannot be overwritten");
+        }
+        $this->services[$name] = function() use ($closure) {
+            static $instance;
+            if (null === $instance) {
+                $instance = $closure();
+            }
+            return $instance;
+        };
     }
 }
