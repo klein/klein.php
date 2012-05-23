@@ -88,12 +88,11 @@ respond(function ($request, $response, $app) {
 
     // The third parameter can be used to share scope and global objects
     $app->db = new PDO(...);
-    // $app also can store lazy services, in case if you won't use database connection on every
-    route response
+    // $app also can store lazy services, e.g. if you don't want to
+    // instantiate a database connection on every response
     $app->register('db', function() {
         return new PDO(...);
     });
-    // read more about lazy services on its own section in documention
 });
 
 respond('POST', '/users/[i:id]/edit', function ($request, $response) {
@@ -139,17 +138,8 @@ foreach(array('projects', 'posts') as $controller) {
 
 ## Lazy services
 
-Services are stored **lazily**, meaning only on the first call for the service by it's **name**
-will evalueate it, all subsequent calls will return same service instance(result).
-
-This is very useful when you have services which may not be used in
-every request action. It will save you the response time and the amount of allocated memory.
-
-**NOTE:** you cannot overwrite service during runtime. This restriction is added for your
-own good. Meaning, when it is stored under **name** next attempt to register service under same **name**
-will result in runtime exception.
-
-To create a service:
+Services can be stored **lazily**, meaning that they are only instantiated on
+first use.
 
 ``` php
 <?php
@@ -160,29 +150,13 @@ respond(function ($request, $response, $app) {
         return $db;
     });
 });
-```
 
-Use services:
+//Later
 
-``` php
-<?php
 respond('GET', '/posts', function ($request, $response, $app) {
-    // $db is initialized only on call
-    echo $app->lazyDb->name;
+    // $db is initialised on first request
     // all subsequent calls will use the same instance
-});
-```
-
-You can call other services during service initialization
-by adding an use statement with a reference to the **$app**:
-
-``` php
-<?php
-respond(function ($request, $response, $app) {
-    $app->register('parser', function() use ($app) {
-        $stream = $app->loader->load('whatewer'); // invokes loader service
-        return $app->processor->process($stream); // invokes processor service
-    });
+    echo $app->lazyDb->name;
 });
 ```
 
