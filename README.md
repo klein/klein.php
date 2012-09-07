@@ -310,7 +310,7 @@ $response->
     param($param, $default = null)                  // Get an escaped request parameter
     flashes($type = null)                           // Retrieve and clears all flashes of $type
     flush()                                         // Flush all open output buffers
-    discard()                                       // Discard all open output buffers
+    discard($restart_buffer = false)                // Discard all open output buffers and optionally restart it
     buffer()                                        // Return the contents of the output buffer as a string
     chunk($str = null)                              // Enable response chunking (see the wiki)
     dump($obj)                                      // Dump an object
