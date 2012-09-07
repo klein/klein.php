@@ -640,9 +640,15 @@ class _Response extends StdClass {
         return htmlentities($str, ENT_QUOTES);
     }
 
-    //Discards the current output buffer
-    public function discard() {
-        return ob_end_clean();
+    //Discards the current output buffer and restarts it if passed a true boolean
+    public function discard($restart_buffer = false) {
+        $cleaned = ob_end_clean();
+
+	   if ($restart_buffer) {
+		   ob_start();
+	   }
+
+	   return $cleaned;
     }
 
     //Flushes the current output buffer
