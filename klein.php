@@ -467,15 +467,15 @@ class _Response extends StdClass {
 
     //Sends an object as json or jsonp by providing the padding prefix
     public function json($object, $jsonp_prefix = null) {
-        $this->discard();
+        $this->discard(true);
         $this->noCache();
         set_time_limit(1200);
         $json = json_encode($object);
         if (null !== $jsonp_prefix) {
-            header('Content-Type: text/javascript'); // should ideally be application/json-p once adopted
+		   $this->header('Content-Type: text/javascript'); // should ideally be application/json-p once adopted
             echo "$jsonp_prefix($json);";
         } else {
-            header('Content-Type: application/json');
+            $this->header('Content-Type: application/json');
             echo $json;
         }
     }
