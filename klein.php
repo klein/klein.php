@@ -597,7 +597,7 @@ class _Response extends StdClass {
         if (count($this->_errorCallbacks) > 0) {
             foreach (array_reverse($this->_errorCallbacks) as $callback) {
                 if (is_callable($callback)) {
-                    if ($callback($this, $msg, $type)) {
+                    if ($callback($this, $msg, $type, $err)) {
                         return;
                     }
                 } else {
