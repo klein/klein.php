@@ -491,10 +491,12 @@ class _Response extends StdClass {
     }
 
     //Redirects the request to another URL
-    public function redirect($url, $code = 302) {
+    public function redirect($url, $code = 302, $exit_after_redirect = true) {
         $this->code($code);
         $this->header("Location: $url");
-        exit;
+        if ($exit_after_redirect) {
+            exit;
+        }
     }
 
     //Redirects the request to the current URL
