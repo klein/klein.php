@@ -150,8 +150,12 @@ function dispatch($uri = null, $req_method = null, array $params = null, $captur
             $match = true;
 
         //Easily handle 404's
-        } elseif ($_route === '404' && !$matched) {
-            $callback($request, $response, $app, $matched);
+        } elseif ($_route === '404' && !$matched && count($methods_matched) <= 0) {
+            $callback($request, $response, $app, $matched, $methods_matched);
+            ++$matched;
+        //Easily handle 405's
+        } elseif ($_route === '405' && !$matched && count($methods_matched) > 0) {
+            $callback($request, $response, $app, $matched, $methods_matched);
             ++$matched;
 
         //@ is used to specify custom regex
@@ -219,11 +223,13 @@ function dispatch($uri = null, $req_method = null, array $params = null, $captur
              }
         }
     }
+
     if (!$matched && count($methods_matched) > 0) {
         $response->code(405);
     } elseif (!$matched) {
         $response->code(404);
     }
+
     if ($capture) {
         return ob_get_clean();
     } elseif ($response->chunked) {
