@@ -108,6 +108,7 @@ function dispatch($uri = null, $req_method = null, array $params = null, $captur
     }
 
     $matched = 0;
+    $methods_matched = null;
     $apc = function_exists('apc_fetch');
 
     ob_start();
@@ -115,21 +116,25 @@ function dispatch($uri = null, $req_method = null, array $params = null, $captur
     foreach ($__routes as $handler) {
         list($method, $_route, $callback, $count_match) = $handler;
 
+       $method_match = null;
         //Was a method specified? If so, check it against the current request method
         if (is_array($method)) {
-            $method_match = false;
             foreach ($method as $test) {
                 if (strcasecmp($req_method, $test) === 0) {
                     $method_match = true;
-                    continue;
                 }
             }
-            if (false === $method_match) {
-                continue;
+            if (null === $method_match) {
+              $method_match = false;
             }
         } elseif (null !== $method && strcasecmp($req_method, $method) !== 0) {
-            continue;
+           $method_match = false;
+        } elseif (null !== $method && strcasecmp($req_method, $method) === 0) {
+           $method_match = true;
         }
+
+       // If the method was matched or if it wasn't even passed (in the route callback)
+       $possible_match = is_null($method_match) || $method_match;
 
         //! is used to negate a match
         if (isset($_route[0]) && $_route[0] === '!') {
@@ -195,20 +200,28 @@ function dispatch($uri = null, $req_method = null, array $params = null, $captur
         }
 
         if (isset($match) && $match ^ $negate) {
-            if (null !== $params) {
-                $_REQUEST = array_merge($_REQUEST, $params);
-            }
-            try {
-                $callback($request, $response, $app, $matched);
-            } catch (Exception $e) {
-                $response->error($e);
-            }
-            if ($_route !== '*' && $_route !== null) {
-                $count_match && ++$matched;
-            }
+             // Keep track of possibly matched methods
+             $methods_matched = array_merge( (array) $methods_matched, (array) $method );
+             $methods_matched = array_unique( $methods_matched );
+
+             if ( $possible_match ) {
+                  if (null !== $params) {
+                       $_REQUEST = array_merge($_REQUEST, $params);
+                  }
+                  try {
+                       $callback($request, $response, $app, $matched, $methods_matched);
+                  } catch (Exception $e) {
+                       $response->error($e);
+                  }
+                  if ($_route !== '*' && $_route !== null) {
+                       $count_match && ++$matched;
+                  }
+             }
         }
     }
-    if (!$matched) {
+    if (!$matched && count($methods_matched) > 0) {
+        $response->code(405);
+    } elseif (!$matched) {
         $response->code(404);
     }
     if ($capture) {
@@ -472,7 +485,7 @@ class _Response extends StdClass {
         set_time_limit(1200);
         $json = json_encode($object);
         if (null !== $jsonp_prefix) {
-		   $this->header('Content-Type: text/javascript'); // should ideally be application/json-p once adopted
+           $this->header('Content-Type: text/javascript'); // should ideally be application/json-p once adopted
             echo "$jsonp_prefix($json);";
         } else {
             $this->header('Content-Type: application/json');
@@ -646,11 +659,11 @@ class _Response extends StdClass {
     public function discard($restart_buffer = false) {
         $cleaned = ob_end_clean();
 
-	   if ($restart_buffer) {
-		   ob_start();
-	   }
+       if ($restart_buffer) {
+           ob_start();
+       }
 
-	   return $cleaned;
+       return $cleaned;
     }
 
     //Flushes the current output buffer
