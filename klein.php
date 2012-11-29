@@ -108,7 +108,7 @@ function dispatch($uri = null, $req_method = null, array $params = null, $captur
     }
 
     $matched = 0;
-    $methods_matched = null;
+    $methods_matched = array();
     $apc = function_exists('apc_fetch');
 
     ob_start();
@@ -205,7 +205,8 @@ function dispatch($uri = null, $req_method = null, array $params = null, $captur
 
         if (isset($match) && $match ^ $negate) {
              // Keep track of possibly matched methods
-             $methods_matched = array_merge( (array) $methods_matched, (array) $method );
+             $methods_matched[] = $method;
+             $methods_matched = array_filter( $methods_matched );
              $methods_matched = array_unique( $methods_matched );
 
              if ( $possible_match ) {
