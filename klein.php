@@ -227,6 +227,7 @@ function dispatch($uri = null, $req_method = null, array $params = null, $captur
 
     if (!$matched && count($methods_matched) > 0) {
         $response->code(405);
+        $response->header( 'Allow', implode( ', ', $methods_matched ) );
     } elseif (!$matched) {
         $response->code(404);
     }
