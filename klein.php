@@ -151,11 +151,21 @@ function dispatch($uri = null, $req_method = null, array $params = null, $captur
 
         //Easily handle 404's
         } elseif ($_route === '404' && !$matched && count($methods_matched) <= 0) {
-            $callback($request, $response, $app, $matched, $methods_matched);
+            try {
+                $callback($request, $response, $app, $matched, $methods_matched);
+            } catch (Exception $e) {
+                $response->error($e);
+            }
+
             ++$matched;
         //Easily handle 405's
         } elseif ($_route === '405' && !$matched && count($methods_matched) > 0) {
-            $callback($request, $response, $app, $matched, $methods_matched);
+            try {
+                $callback($request, $response, $app, $matched, $methods_matched);
+            } catch (Exception $e) {
+                $response->error($e);
+            }
+
             ++$matched;
 
         //@ is used to specify custom regex
