@@ -5,7 +5,7 @@
 $__routes = array();
 $__namespace = null;
 
-//Add a route callback
+// Add a route callback
 function respond($method, $route = '*', $callback = null) {
     global $__routes, $__namespace;
     $count_match = true;
@@ -19,23 +19,23 @@ function respond($method, $route = '*', $callback = null) {
         $method = null;
     }
 
-    if( $__namespace && $route[0] === '@' || ( $route[0] === '!' && $route[1] === '@' ) ) {
-        if( $route[0] === '!' ) {
+    if ($__namespace && $route[0] === '@' || ($route[0] === '!' && $route[1] === '@')) {
+        if ($route[0] === '!') {
             $negate = true;
-            $route = substr( $route, 2 );
+            $route = substr($route, 2);
         } else {
             $negate = false;
-            $route = substr( $route, 1 );
+            $route = substr($route, 1);
         }
 
         // regex anchored to front of string
-        if( $route[0] === '^' ) {
-            $route = substr( $route, 1 );
+        if ($route[0] === '^') {
+            $route = substr($route, 1);
         } else {
             $route = '.*' . $route; 
         }
 
-        if( $negate ) {
+        if ($negate) {
             $route = '@^' . $__namespace . '(?!' . $route . ')';
         } else {
             $route = '@^' . $__namespace . $route;
@@ -43,7 +43,7 @@ function respond($method, $route = '*', $callback = null) {
     }
 
     // empty route with namespace is a match-all
-    elseif( $__namespace && ( null == $route || '*' === $route ) ) {
+    elseif ($__namespace && (null == $route || '*' === $route)) {
         $route = '@^' . $__namespace . '(/|$)';
     } else {
         $route = $__namespace . $route;
@@ -53,7 +53,7 @@ function respond($method, $route = '*', $callback = null) {
     return $callback;
 }
 
-//Each route defined inside $routes will be in the $namespace
+// Each route defined inside $routes will be in the $namespace
 function with($namespace, $routes) {
     global $__namespace;
     $previous = $__namespace;
@@ -72,16 +72,16 @@ function startSession() {
     }
 }
 
-//Dispatch the request to the approriate route(s)
+// Dispatch the request to the approriate route(s)
 function dispatch($uri = null, $req_method = null, array $params = null, $capture = false) {
     global $__routes;
 
-    //Pass $request, $response, and a blank object for sharing scope through each callback
+    // Pass $request, $response, and a blank object for sharing scope through each callback
     $request  = new _Request;
     $response = new _Response;
     $app      = new _App;
 
-    //Get/parse the request URI and method
+    // Get/parse the request URI and method
     if (null === $uri) {
         $uri = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '/';
     }
@@ -91,8 +91,8 @@ function dispatch($uri = null, $req_method = null, array $params = null, $captur
     if (null === $req_method) {
         $req_method = isset($_SERVER['REQUEST_METHOD']) ? $_SERVER['REQUEST_METHOD'] : 'GET';
 
-        //For legacy servers, override the HTTP method with the X-HTTP-Method-Override
-        //header or _method parameter
+        // For legacy servers, override the HTTP method with the X-HTTP-Method-Override
+        // header or _method parameter
         if (isset($_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'])) {
             $req_method = $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'];
         } else if (isset($_REQUEST['_method'])) {
@@ -100,8 +100,8 @@ function dispatch($uri = null, $req_method = null, array $params = null, $captur
         }
     }
 
-    //Force request_order to be GP
-    //http://www.mail-archive.com/internals@lists.php.net/msg33119.html
+    // Force request_order to be GP
+    // http://www.mail-archive.com/internals@lists.php.net/msg33119.html
     $_REQUEST = array_merge($_GET, $_POST);
     if (null !== $params) {
         $_REQUEST = array_merge($_REQUEST, $params);
@@ -116,8 +116,8 @@ function dispatch($uri = null, $req_method = null, array $params = null, $captur
     foreach ($__routes as $handler) {
         list($method, $_route, $callback, $count_match) = $handler;
 
-       $method_match = null;
-        //Was a method specified? If so, check it against the current request method
+        $method_match = null;
+        // Was a method specified? If so, check it against the current request method
         if (is_array($method)) {
             foreach ($method as $test) {
                 if (strcasecmp($req_method, $test) === 0) {
@@ -136,7 +136,7 @@ function dispatch($uri = null, $req_method = null, array $params = null, $captur
        // If the method was matched or if it wasn't even passed (in the route callback)
        $possible_match = is_null($method_match) || $method_match;
 
-        //! is used to negate a match
+        // ! is used to negate a match
         if (isset($_route[0]) && $_route[0] === '!') {
             $negate = true;
             $i = 1;
@@ -145,11 +145,11 @@ function dispatch($uri = null, $req_method = null, array $params = null, $captur
             $i = 0;
         }
 
-        //Check for a wildcard (match all)
+        // Check for a wildcard (match all)
         if ($_route === '*' || null == $_route) {
             $match = true;
 
-        //Easily handle 404's
+        // Easily handle 404's
         } elseif ($_route === '404' && !$matched && count($methods_matched) <= 0) {
             try {
                 $callback($request, $response, $app, $matched, $methods_matched);
@@ -158,7 +158,7 @@ function dispatch($uri = null, $req_method = null, array $params = null, $captur
             }
 
             ++$matched;
-        //Easily handle 405's
+        // Easily handle 405's
         } elseif ($_route === '405' && !$matched && count($methods_matched) > 0) {
             try {
                 $callback($request, $response, $app, $matched, $methods_matched);
@@ -168,19 +168,19 @@ function dispatch($uri = null, $req_method = null, array $params = null, $captur
 
             ++$matched;
 
-        //@ is used to specify custom regex
+        // @ is used to specify custom regex
         } elseif (isset($_route[$i]) && $_route[$i] === '@') {
             $match = preg_match('`' . substr($_route, $i + 1) . '`', $uri, $params);
 
-        //Compiling and matching regular expressions is relatively
-        //expensive, so try and match by a substring first
+        // Compiling and matching regular expressions is relatively
+        // expensive, so try and match by a substring first
         } else {
             $route = null;
             $regex = false;
             $j = 0;
             $n = isset($_route[$i]) ? $_route[$i] : null;
 
-            //Find the longest non-regex substring and match it against the URI
+            // Find the longest non-regex substring and match it against the URI
             while (true) {
                 if (!isset($_route[$i])) {
                     break;
@@ -199,7 +199,7 @@ function dispatch($uri = null, $req_method = null, array $params = null, $captur
                 $route .= $_route[$i++];
             }
 
-            //Check if there's a cached regex string
+            // Check if there's a cached regex string
             if (false !== $apc) {
                 $regex = apc_fetch("route:$route");
                 if (false === $regex) {
@@ -215,11 +215,11 @@ function dispatch($uri = null, $req_method = null, array $params = null, $captur
 
         if (isset($match) && $match ^ $negate) {
              // Keep track of possibly matched methods
-             $methods_matched = array_merge( $methods_matched, (array) $method );
-             $methods_matched = array_filter( $methods_matched );
-             $methods_matched = array_unique( $methods_matched );
+             $methods_matched = array_merge($methods_matched, (array) $method);
+             $methods_matched = array_filter($methods_matched);
+             $methods_matched = array_unique($methods_matched);
 
-             if ( $possible_match ) {
+             if ($possible_match) {
                   if (null !== $params) {
                        $_REQUEST = array_merge($_REQUEST, $params);
                   }
@@ -237,7 +237,7 @@ function dispatch($uri = null, $req_method = null, array $params = null, $captur
 
     if (!$matched && count($methods_matched) > 0) {
         $response->code(405);
-        $response->header( 'Allow', implode( ', ', $methods_matched ) );
+        $response->header('Allow', implode(', ', $methods_matched));
     } elseif (!$matched) {
         $response->code(404);
     }
@@ -251,7 +251,7 @@ function dispatch($uri = null, $req_method = null, array $params = null, $captur
     }
 }
 
-//Compiles a route string to a regular expression
+// Compiles a route string to a regular expression
 function compile_route($route) {
     if (preg_match_all('`(/|\.|)\[([^:\]]*+)(?::([^:\]]*+))?\](\?|)`', $route, $matches, PREG_SET_ORDER)) {
         $match_types = array(
@@ -271,7 +271,7 @@ function compile_route($route) {
             if ($pre === '.') {
                 $pre = '\.';
             }
-            //Older versions of PCRE require the 'P' in (?P<named>)
+            // Older versions of PCRE require the 'P' in (?P<named>)
             $pattern = '(?:'
                      . ($pre !== '' ? $pre : null)
                      . '('
@@ -290,10 +290,10 @@ class _Request {
 
     protected $_id = null;
 
-    //HTTP headers helper
+    // HTTP headers helper
     static $_headers = null;
 
-    //Returns all parameters (GET, POST, named) that match the mask
+    // Returns all parameters (GET, POST, named) that match the mask
     public function params($mask = null) {
         $params = $_REQUEST;
         if (null !== $mask) {
@@ -301,7 +301,7 @@ class _Request {
                 $mask = func_get_args();
             }
             $params = array_intersect_key($params, array_flip($mask));
-            //Make sure each key in $mask has at least a null value
+            // Make sure each key in $mask has at least a null value
             foreach ($mask as $key) {
                 if (!isset($params[$key])) {
                     $params[$key] = null;
@@ -311,7 +311,7 @@ class _Request {
         return $params;
     }
 
-    //Return a request parameter, or $default if it doesn't exist
+    // Return a request parameter, or $default if it doesn't exist
     public function param($key, $default = null) {
         return isset($_REQUEST[$key]) && $_REQUEST[$key] !== '' ? $_REQUEST[$key] : $default;
     }
@@ -332,7 +332,7 @@ class _Request {
         unset($_REQUEST[$param]);
     }
 
-    //Is the request secure? If $required then redirect to the secure version of the URL
+    // Is the request secure? If $required then redirect to the secure version of the URL
     public function isSecure($required = false) {
         $secure = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'];
         if (!$secure && $required) {
@@ -342,18 +342,18 @@ class _Request {
         return $secure;
     }
 
-    //Gets a request header
+    // Gets a request header
     public function header($key, $default = null) {
         $key = 'HTTP_' . strtoupper(str_replace('-','_', $key));
         return isset($_SERVER[$key]) ? $_SERVER[$key] : $default;
     }
 
-    //Gets a request cookie
+    // Gets a request cookie
     public function cookie($key, $default = null) {
         return isset($_COOKIE[$key]) ? $_COOKIE[$key] : $default;
     }
 
-    //Gets the request method, or checks it against $is - e.g. method('post') => true
+    // Gets the request method, or checks it against $is - e.g. method('post') => true
     public function method($is = null) {
         $method = isset($_SERVER['REQUEST_METHOD']) ? $_SERVER['REQUEST_METHOD'] : 'GET';
         if (null !== $is) {
@@ -362,12 +362,12 @@ class _Request {
         return $method;
     }
 
-    //Start a validator chain for the specified parameter
+    // Start a validator chain for the specified parameter
     public function validate($param, $err = null) {
         return new _Validator($this->param($param), $err);
     }
 
-    //Gets a unique ID for the request
+    // Gets a unique ID for the request
     public function id() {
         if (null === $this->_id) {
             $this->_id = sha1(mt_rand() . microtime(true) . mt_rand());
@@ -375,23 +375,23 @@ class _Request {
         return $this->_id;
     }
 
-    //Gets a session variable associated with the request
+    // Gets a session variable associated with the request
     public function session($key, $default = null) {
         startSession();
         return isset($_SESSION[$key]) ? $_SESSION[$key] : $default;
     }
 
-    //Gets the request IP address
+    // Gets the request IP address
     public function ip() {
         return isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : null;
     }
 
-    //Gets the request user agent
+    // Gets the request user agent
     public function userAgent() {
         return isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : null;
     }
 
-    //Gets the request URI
+    // Gets the request URI
     public function uri() {
         return isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '/';
     }
@@ -407,7 +407,7 @@ class _Response extends StdClass {
 
     static $_headers = null;
 
-    //Enable response chunking. See: http://bit.ly/hg3gHb
+    // Enable response chunking. See: http://bit.ly/hg3gHb
     public function chunk($str = null) {
         if (false === $this->chunked) {
             $this->chunked = true;
@@ -426,12 +426,12 @@ class _Response extends StdClass {
         }
     }
 
-    //Sets a response header
+    // Sets a response header
     public function header($key, $value = null) {
         self::$_headers->header($key, $value);
     }
 
-    //Sets a response cookie
+    // Sets a response cookie
     public function cookie($key, $value = '', $expiry = null, $path = '/',
             $domain = null, $secure = false, $httponly = false) {
         if (null === $expiry) {
@@ -440,7 +440,7 @@ class _Response extends StdClass {
         return setcookie($key, $value, $expiry, $path, $domain, $secure, $httponly);
     }
 
-    //Stores a flash message of $type
+    // Stores a flash message of $type
     public function flash($msg, $type = 'info', $params = null) {
         startSession();
         if (is_array($type)) {
@@ -455,7 +455,7 @@ class _Response extends StdClass {
         $_SESSION['__flashes'][$type][] = $this->markdown($msg, $params);
     }
 
-    //Support basic markdown syntax
+    // Support basic markdown syntax
     public function markdown($str, $args = null) {
         $args = func_get_args();
         $md = array(
@@ -473,13 +473,13 @@ class _Response extends StdClass {
         return vsprintf(preg_replace(array_keys($md), $md, $str), $args);
     }
 
-    //Tell the browser not to cache the response
+    // Tell the browser not to cache the response
     public function noCache() {
         $this->header("Pragma: no-cache");
         $this->header('Cache-Control: no-store, no-cache');
     }
 
-    //Sends a file
+    // Sends a file
     public function file($path, $filename = null, $mimetype = null) {
         $this->discard();
         $this->noCache();
@@ -496,7 +496,7 @@ class _Response extends StdClass {
         readfile($path);
     }
 
-    //Sends an object as json or jsonp by providing the padding prefix
+    // Sends an object as json or jsonp by providing the padding prefix
     public function json($object, $jsonp_prefix = null) {
         $this->discard(true);
         $this->noCache();
@@ -511,26 +511,26 @@ class _Response extends StdClass {
         }
     }
 
-    //Sends a HTTP response code
+    // Sends a HTTP response code
     public function code($code = null) {
-        if(null !== $code) {
+        if (null !== $code) {
             $this->_code = $code;
 
-		  // Do we have the PHP 5.4 "http_response_code" function?
-		  if ( function_exists( 'http_response_code' ) ) {
-			  // Have PHP automatically create our HTTP Status header from our code
-			  http_response_code( $code );
-		  }
-		  else {
-			  // Manually create the HTTP Status header
-			  $protocol = isset($_SERVER['SERVER_PROTOCOL']) ? $_SERVER['SERVER_PROTOCOL'] : 'HTTP/1.0';
-			  $this->header("$protocol $code");
-		  }
+            // Do we have the PHP 5.4 "http_response_code" function?
+            if (function_exists('http_response_code')) {
+                // Have PHP automatically create our HTTP Status header from our code
+                http_response_code($code);
+            }
+            else {
+                // Manually create the HTTP Status header
+                $protocol = isset($_SERVER['SERVER_PROTOCOL']) ? $_SERVER['SERVER_PROTOCOL'] : 'HTTP/1.0';
+                $this->header("$protocol $code");
+            }
         }
         return $this->_code;
     }
 
-    //Redirects the request to another URL
+    // Redirects the request to another URL
     public function redirect($url, $code = 302, $exit_after_redirect = true) {
         $this->code($code);
         $this->header("Location: $url");
@@ -539,12 +539,12 @@ class _Response extends StdClass {
         }
     }
 
-    //Redirects the request to the current URL
+    // Redirects the request to the current URL
     public function refresh() {
         $this->redirect(isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '/');
     }
 
-    //Redirects the request back to the referrer
+    // Redirects the request back to the referrer
     public function back() {
         if (isset($_SERVER['HTTP_REFERER'])) {
             $this->redirect($_SERVER['HTTP_REFERER']);
@@ -552,7 +552,7 @@ class _Response extends StdClass {
         $this->refresh();
     }
 
-    //Sets response properties/helpers
+    // Sets response properties/helpers
     public function set($key, $value = null) {
         if (!is_array($key)) {
             return $this->$key = $value;
@@ -562,7 +562,7 @@ class _Response extends StdClass {
         }
     }
 
-    //Adds to or modifies the current query string
+    // Adds to or modifies the current query string
     public function query($key, $value = null) {
         $query = array();
         if (isset($_SERVER['QUERY_STRING'])) {
@@ -581,17 +581,17 @@ class _Response extends StdClass {
         return $request_uri . (!empty($query) ? '?' . http_build_query($query) : null);
     }
 
-    //Set the view layout
+    // Set the view layout
     public function layout($layout) {
         $this->_layout = $layout;
     }
 
-    //Renders the current view
+    // Renders the current view
     public function yield() {
         require $this->_view;
     }
 
-    //Renders a view + optional layout
+    // Renders a view + optional layout
     public function render($view, array $data = array()) {
         $original_view = $this->_view;
 
@@ -620,18 +620,18 @@ class _Response extends StdClass {
         $this->_layout = $layout;
     }
 
-    //Sets a session variable
+    // Sets a session variable
     public function session($key, $value = null) {
         startSession();
         return $_SESSION[$key] = $value;
     }
 
-    //Adds an error callback to the stack of error handlers
+    // Adds an error callback to the stack of error handlers
     public function onError($callback) {
         $this->_errorCallbacks[] = $callback;
     }
 
-    //Routes an exception through the error callbacks
+    // Routes an exception through the error callbacks
     public function error(Exception $err) {
         $type = get_class($err);
         $msg = $err->getMessage();
@@ -653,12 +653,12 @@ class _Response extends StdClass {
         }
     }
 
-    //Returns an escaped request paramater
+    // Returns an escaped request paramater
     public function param($param, $default = null) {
         return isset($_REQUEST[$param]) ?  htmlentities($_REQUEST[$param], ENT_QUOTES) : $default;
     }
 
-    //Returns and clears all flashes of optional $type
+    // Returns and clears all flashes of optional $type
     public function flashes($type = null) {
         startSession();
         if (!isset($_SESSION['__flashes'])) {
@@ -677,12 +677,12 @@ class _Response extends StdClass {
         return $flashes;
     }
 
-    //Escapes a string
+    // Escapes a string
     public function escape($str) {
         return htmlentities($str, ENT_QUOTES);
     }
 
-    //Discards the current output buffer and restarts it if passed a true boolean
+    // Discards the current output buffer and restarts it if passed a true boolean
     public function discard($restart_buffer = false) {
         $cleaned = ob_end_clean();
 
@@ -693,17 +693,17 @@ class _Response extends StdClass {
        return $cleaned;
     }
 
-    //Flushes the current output buffer
+    // Flushes the current output buffer
     public function flush() {
         ob_end_flush();
     }
 
-    //Return the current output buffer as a string
+    // Return the current output buffer as a string
     public function buffer() {
         return ob_get_contents();
     }
 
-    //Dump a variable
+    // Dump a variable
     public function dump($obj) {
         if (is_array($obj) || is_object($obj)) {
             $obj = print_r($obj, true);
@@ -711,7 +711,7 @@ class _Response extends StdClass {
         echo '<pre>' .  htmlentities($obj, ENT_QUOTES) . "</pre><br />\n";
     }
 
-    //Allow callbacks to be assigned as properties and called like normal methods
+    // Allow callbacks to be assigned as properties and called like normal methods
     public function __call($method, $args) {
         if (!isset($this->$method) || !is_callable($this->$method)) {
             throw new ErrorException("Unknown method $method()");
@@ -740,7 +740,7 @@ class _Validator {
     protected $_str = null;
     protected $_err = null;
 
-    //Sets up the validator chain with the string and optional error message
+    // Sets up the validator chain with the string and optional error message
     public function __construct($str, $err = null) {
         $this->_str = $str;
         $this->_err = $err;
@@ -749,7 +749,7 @@ class _Validator {
         }
     }
 
-    //Adds default validators on first use. See README for usage details
+    // Adds default validators on first use. See README for usage details
     public static function addDefault() {
         static::$_methods['null'] = function($str) {
             return $str === null || $str === '';
@@ -795,9 +795,9 @@ class _Validator {
         $validator = $method;
         $method_substr = substr($method, 0, 2);
 
-        if ($method_substr === 'is') {       //is<$validator>()
+        if ($method_substr === 'is') {       // is<$validator>()
             $validator = substr($method, 2);
-        } elseif ($method_substr === 'no') { //not<$validator>()
+        } elseif ($method_substr === 'no') { // not<$validator>()
             $validator = substr($method, 3);
             $reverse = true;
         }
@@ -831,7 +831,7 @@ class _App {
 
     protected $services = array();
 
-    //Check for a lazy service
+    // Check for a lazy service
     public function __get($name) {
         if (!isset($this->services[$name])) {
             throw new InvalidArgumentException("Unknown service $name");
@@ -840,7 +840,7 @@ class _App {
         return $service();
     }
 
-    //Call a class property like a method
+    // Call a class property like a method
     public function __call($method, $args) {
         if (!isset($this->$method) || !is_callable($this->$method)) {
             throw new ErrorException("Unknown method $method()");
@@ -848,7 +848,7 @@ class _App {
         return call_user_func_array($this->$method, $args);
     }
 
-    //Register a lazy service
+    // Register a lazy service
     public function register($name, $closure) {
         if (isset($this->services[$name])) {
             throw new Exception("A service is already registered under $name");
@@ -874,7 +874,7 @@ class _Headers {
      * separator will be omitted.
      */
     public function _header($key, $value = null) {
-        if (null === $value ) {
+        if (null === $value) {
             return $key;
         }
 
