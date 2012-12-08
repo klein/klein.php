@@ -653,6 +653,11 @@ class _Response extends StdClass {
         }
     }
 
+    public function getSession ($key, $default = null) {
+        startSession();
+        return isset($_SESSION[$key]) ?  htmlentities($_SESSION[$key], ENT_QUOTES) : $default;
+    }
+
     // Returns an escaped request paramater
     public function param($param, $default = null) {
         return isset($_REQUEST[$param]) ?  htmlentities($_REQUEST[$param], ENT_QUOTES) : $default;
