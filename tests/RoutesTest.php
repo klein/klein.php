@@ -34,6 +34,14 @@ class RoutesTest extends PHPUnit_Framework_TestCase {
 		dispatch( '/' );
 	}
 
+	public function testAppReference() {
+		$this->expectOutputString( 'ab' );
+		respond( '/', function($r, $r ,$a){ $a->state = 'a'; });
+		respond( '/', function($r, $r ,$a){ $a->state .= 'b'; });
+		respond( '/', function($r, $r ,$a){ print $a->state; });
+		dispatch( '/' );
+	}
+
 	public function testCatchallImplicit() {
 		$this->expectOutputString( 'b' );
 
