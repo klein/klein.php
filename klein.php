@@ -152,7 +152,7 @@ function dispatch($uri = null, $req_method = null, array $params = null, $captur
         // Easily handle 404's
         } elseif ($_route === '404' && !$matched && count($methods_matched) <= 0) {
             try {
-                $callback($request, $response, $app, $matched, $methods_matched);
+                call_user_func($callback, $request, $response, $app, $matched, $methods_matched);
             } catch (Exception $e) {
                 $response->error($e);
             }
@@ -161,7 +161,7 @@ function dispatch($uri = null, $req_method = null, array $params = null, $captur
         // Easily handle 405's
         } elseif ($_route === '405' && !$matched && count($methods_matched) > 0) {
             try {
-                $callback($request, $response, $app, $matched, $methods_matched);
+                call_user_func($callback, $request, $response, $app, $matched, $methods_matched);
             } catch (Exception $e) {
                 $response->error($e);
             }
@@ -224,7 +224,7 @@ function dispatch($uri = null, $req_method = null, array $params = null, $captur
                        $_REQUEST = array_merge($_REQUEST, $params);
                   }
                   try {
-                       $callback($request, $response, $app, $matched, $methods_matched);
+                       call_user_func($callback, $request, $response, $app, $matched, $methods_matched);
                   } catch (Exception $e) {
                        $response->error($e);
                   }
