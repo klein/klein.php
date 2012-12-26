@@ -224,7 +224,7 @@ function dispatch($uri = null, $req_method = null, array $params = null, $captur
                        $_REQUEST = array_merge($_REQUEST, $params);
                   }
                   try {
-                       $callback($request, $response, $app, $matched, $methods_matched);
+                       call_user_func($callback, $request, $response, $app, $matched, $methods_matched);
                   } catch (Exception $e) {
                        $response->error($e);
                   }
