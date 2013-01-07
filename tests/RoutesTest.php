@@ -2,6 +2,12 @@
 
 require_once dirname(__FILE__) . '/setup.php';
 
+class TestClass {
+	static function GET($r, $r, $a) {
+		echo 'ok';
+	}
+}
+
 class RoutesTest extends PHPUnit_Framework_TestCase {
 	protected function setUp() {
 		global $__routes;
@@ -18,6 +24,21 @@ class RoutesTest extends PHPUnit_Framework_TestCase {
 
 		respond( '/', function(){ echo 'x'; });
 		respond( '/something', function(){ echo 'y'; });
+		dispatch( '/' );
+	}
+
+	public function testCallable() {
+		$this->expectOutputString( 'okok' );
+		respond( '/', array('TestClass', 'GET'));
+		respond( '/', 'TestClass::GET');
+		dispatch( '/' );
+	}
+
+	public function testAppReference() {
+		$this->expectOutputString( 'ab' );
+		respond( '/', function($r, $r ,$a){ $a->state = 'a'; });
+		respond( '/', function($r, $r ,$a){ $a->state .= 'b'; });
+		respond( '/', function($r, $r ,$a){ print $a->state; });
 		dispatch( '/' );
 	}
 
