@@ -293,6 +293,8 @@ class _Request {
     // HTTP headers helper
     static $_headers = null;
 
+    protected $_body = null;
+
     // Returns all parameters (GET, POST, named) that match the mask
     public function params($mask = null) {
         $params = $_REQUEST;
@@ -394,6 +396,14 @@ class _Request {
     // Gets the request URI
     public function uri() {
         return isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '/';
+    }
+
+    // Gets the request body
+    public function body() {
+        if (null === $this->_body) {
+            $this->_body = @file_get_contents('php://input');
+        }
+        return $this->_body;
     }
 }
 
