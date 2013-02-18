@@ -1,0 +1,20 @@
+{
+   "name": "klein/klein",
+   "description": "A lightning fast router for PHP",
+   "keywords": ["router", "routing", "sinatra", "boilerplate"],
+   "homepage": "https://github.com/chriso/klein.php",
+   "license": "MIT",
+   "authors": [
+      {
+         "name": "Chris O'Hara",
+         "email": "cohara87@gmail.com",
+         "homepage": "http://chris6f.com/"
+      }
+   ],
+   "require": {
+      "php": ">=5.3.0"
+   },
+   "autoload": {
+      "files": ["klein.php"]
+   }
+}
