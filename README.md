@@ -340,6 +340,10 @@ $validator->
     <Validator>()                       // Alias for is<Validator>()
 ```
 
+## Contributors
+
+- [Trevor N. Suarez](https://github.com/Rican7)
+
 ## License
 
 (MIT License)
