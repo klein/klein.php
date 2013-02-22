@@ -340,6 +340,10 @@ $validator->
     <Validator>()                       // Alias for is<Validator>()
 ```
 
+## More information
+
+See the [wiki](https://github.com/chriso/klein.php/wiki) for more information
+
 ## Contributors
 
 - [Trevor N. Suarez](https://github.com/Rican7)
