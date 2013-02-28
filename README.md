@@ -213,9 +213,9 @@ authentication or view layouts. e.g. as a basic example, the following
 code will wrap other routes with a header and footer
 
 ```php
-respond(function ($request, $response) { $response->render('header.phtml'; });
+respond('*', function ($request, $response) { $response->render('header.phtml'; });
 //other routes
-respond(function ($request, $response) { $response->render('footer.phtml'; });
+respond('*', function ($request, $response) { $response->render('footer.phtml'; });
 ```
 
 Routes automatically match the entire request URI. If you need to match

@@ -231,7 +231,7 @@ function dispatch($uri = null, $req_method = null, array $params = null, $captur
                   } catch (Exception $e) {
                        $response->error($e);
                   }
-                  if ($_route !== null) { // the null route (not the '*' route) does not count as matched
+                  if ($_route !== '*' && $_route !== null) {
                        $count_match && ++$matched;
                   }
              }
