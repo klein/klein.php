@@ -51,6 +51,11 @@ function respond($method, $route = '*', $callback = null) {
         $route = $__namespace . $route;
     }
 
+    // permit method "GET|POST"
+    if (is_string($method) && strlen($method)) {
+        $method = explode("|", $method);
+    }
+
     $__routes[] = array($method, $route, $callback, $count_match);
     return $callback;
 }
