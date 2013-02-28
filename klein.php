@@ -91,12 +91,8 @@ function getUrl($routeName, array $params = array()) {
         foreach($matches as $match) {
             list($block, $pre, $type, $param, $optional) = $match;
 
-            if ($pre) {
-                $block = substr($block, 1);
-            }
-
             if(isset($params[$param])) {
-                $url = str_replace($block, $params[$param], $url);
+                $url = str_replace($block, $pre . $params[$param], $url);
             } elseif ($optional) {
                 $url = str_replace($block, '', $url);
             }
