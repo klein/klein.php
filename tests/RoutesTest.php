@@ -150,4 +150,27 @@ class RoutesTest extends PHPUnit_Framework_TestCase {
 		respond( "GET|POST",  "/a", function(){ echo 'd'; });
 		dispatch( '/a' );
 	}
+
+	public function testGetUrl() {
+		$expect = "";
+
+		respond('home', 'GET|POST','/', function(){});
+		respond('GET','/users/', function(){});
+		respond('users_show', 'GET','/users/[i:id]', function(){});
+		respond('users_do', 'POST','/users/[i:id]/[delete|update:action]', function(){});
+		respond('posts_do', 'GET', '/posts/[create|edit:action]?/[i:id]?', function(){});
+
+		echo getUrl('home'); echo "\n";
+		$expect .= "/" . "\n";
+		echo getUrl('users_show', array('id' => 14)); echo "\n";
+		$expect .= "/users/14" . "\n";
+		echo getUrl('users_do', array('id' => 17, 'action'=>'delete')); echo "\n";
+		$expect .= "/users/17/delete" . "\n";
+		echo getUrl('posts_do', array('id' => 16)); echo "\n";
+		$expect .= "/posts//16" . "\n";
+		echo getUrl('posts_do', array('action' => 'edit', 'id' => 15)); echo "\n";
+		$expect .= "/posts/edit/15" . "\n";
+		$this->expectOutputString( $expect );
+	}
+
 }

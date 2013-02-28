@@ -6,13 +6,14 @@ $__routes = array();
 $__namespace = null;
 
 // Add a route callback
-function respond($method, $route = '*', $callback = null) {
+function respond($name, $method = null, $route = '*', $callback = null) {
     global $__routes, $__namespace;
 
     $args = func_get_args();
     $callback = array_pop($args);
     $route = array_pop($args);
     $method = array_pop($args);
+    $name = array_pop($args);
 
     if (null === $route) {
         $route = '*';
@@ -56,8 +57,55 @@ function respond($method, $route = '*', $callback = null) {
         $method = explode("|", $method);
     }
 
-    $__routes[] = array($method, $route, $callback, $count_match);
+    if (null !== $name) {
+        $__routes[$name] = array($method, $route, $callback, $count_match);
+    } else {
+        $__routes[] = array($method, $route, $callback, $count_match);
+    }
+
     return $callback;
+ }
+ 
+/**
+ * Reversed routing
+ *
+ * Generate the URL for a named route. Replace regexes with supplied parameters
+ *
+ * @param string $routeName The name of the route.
+ * @param array @params Associative array of parameters to replace placeholders with.
+ * @return string The URL of the route with named parameters in place.
+ */
+function getUrl($routeName, array $params = array()) {
+    global $__routes;
+
+    // Check if named route exists
+    if(!isset($__routes[$routeName])) {
+        throw new Exception("Route '{$routeName}' does not exist.");
+    }
+
+    // Replace named parameters
+    $url = $__routes[$routeName][1];
+
+    if (preg_match_all('`(/|\.|)\[([^:\]]*+)(?::([^:\]]*+))?\](\?|)`', $url, $matches, PREG_SET_ORDER)) {
+
+        foreach($matches as $match) {
+            list($block, $pre, $type, $param, $optional) = $match;
+
+            if ($pre) {
+                $block = substr($block, 1);
+            }
+
+            if(isset($params[$param])) {
+                $url = str_replace($block, $params[$param], $url);
+            } elseif ($optional) {
+                $url = str_replace($block, '', $url);
+            }
+        }
+
+
+    }
+
+    return $url;
 }
 
 // Each route defined inside $routes will be in the $namespace
