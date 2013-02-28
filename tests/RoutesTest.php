@@ -17,6 +17,7 @@ class RoutesTest extends PHPUnit_Framework_TestCase {
 		$__namespace = null;
 
 		$_SERVER['SERVER_PROTOCOL'] = 'HTTP/1.1';
+		$_SERVER['PHPUNIT'] = true;
 	}
 
 	public function testBasic() {
@@ -115,6 +116,22 @@ class RoutesTest extends PHPUnit_Framework_TestCase {
 		$this->expectOutputString( 'd404 Code' );
 
 		respond( function(){ echo "d"; } );
+		respond( '404', function(){ echo '404 Code'; } );
+		dispatch( '/notroute' );
+	}
+
+	public function testStarRouteTriggers404() {
+		$this->expectOutputString( 'c404 Code' );
+
+		respond( '*', function(){ echo 'c'; });
+		respond( '404', function(){ echo '404 Code'; } );
+		dispatch( '/notroute' );
+	}
+
+	public function testNullRouteTriggers404() {
+		$this->expectOutputString( 'c404 Code' );
+
+		respond( function(){ echo 'c'; });
 		respond( '404', function(){ echo '404 Code'; } );
 		dispatch( '/notroute' );
 	}
