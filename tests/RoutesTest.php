@@ -117,5 +117,21 @@ class RoutesTest extends PHPUnit_Framework_TestCase {
 		respond( function(){ echo "d"; } );
 		respond( '404', function(){ echo '404 Code'; } );
 		dispatch( '/notroute' );
+        }
+
+	public function testStarRoutePrevent404() {
+		$this->expectOutputString( 'c' );
+
+		respond( '*', function(){ echo 'c'; });
+		respond( '404', function(){ echo '404 Code'; } );
+		dispatch( '/notroute' );
+	}
+
+	public function testNullRouteTriggers404() {
+		$this->expectOutputString( 'c404 Code' );
+
+		respond( function(){ echo 'c'; });
+		respond( '404', function(){ echo '404 Code'; } );
+		dispatch( '/notroute' );
 	}
 }
