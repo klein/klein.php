@@ -158,6 +158,8 @@ function dispatch($uri = null, $req_method = null, array $params = null, $captur
             }
 
             ++$matched;
+            continue;
+
         // Easily handle 405's
         } elseif ($_route === '405' && !$matched && count($methods_matched) > 0) {
             try {
@@ -167,6 +169,7 @@ function dispatch($uri = null, $req_method = null, array $params = null, $captur
             }
 
             ++$matched;
+            continue;
 
         // @ is used to specify custom regex
         } elseif (isset($_route[$i]) && $_route[$i] === '@') {
