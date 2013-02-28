@@ -167,10 +167,17 @@ class RoutesTest extends PHPUnit_Framework_TestCase {
 		echo getUrl('users_do', array('id' => 17, 'action'=>'delete')); echo "\n";
 		$expect .= "/users/17/delete" . "\n";
 		echo getUrl('posts_do', array('id' => 16)); echo "\n";
-		$expect .= "/posts//16" . "\n";
+		$expect .= "/posts/16" . "\n";
 		echo getUrl('posts_do', array('action' => 'edit', 'id' => 15)); echo "\n";
 		$expect .= "/posts/edit/15" . "\n";
 		$this->expectOutputString( $expect );
+	}
+
+	public function testOptsParam() {
+		$this->expectOutputString( "action=,id=16" );
+		respond('users_do', 'GET','/posts/[create|edit:action]?/[i:id]?', function($rq,$rs,$ap){echo "action=".$rq->param("action").",id=".$rq->param("id");});
+
+		dispatch("/posts/16");
 	}
 
 }
