@@ -331,7 +331,7 @@ function compile_route($route) {
             'h'  => '[0-9A-Fa-f]++',
             '*'  => '.+?',
             '**' => '.++',
-            ''   => '[^/]++'
+            ''   => '[^/\.]++'
         );
         foreach ($matches as $match) {
             list($block, $pre, $type, $param, $optional) = $match;

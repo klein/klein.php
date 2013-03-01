@@ -237,7 +237,7 @@ Some examples
     [i:id]               // Match an integer as 'id'
     [a:action]           // Match alphanumeric characters as 'action'
     [h:key]              // Match hexadecimal characters as 'key'
-    [:action]            // Match anything up to the next / or end of the URI as 'action'
+    [:action]            // Match anything up to the next / or . or end of the URI as 'action'
     [create|edit:action] // Match either 'create' or 'edit' as 'action'
     [*]                  // Catch all (lazy)
     [*:trailing]         // Catch all as 'trailing' (lazy)
