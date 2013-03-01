@@ -65,22 +65,35 @@ function respond($name, $method = null, $route = '*', $callback = null) {
 
     return $callback;
  }
- 
+
 /**
  * Reversed routing
  *
  * Generate the URL for a named route. Replace regexes with supplied parameters
+ * When in PlaceHolders mode, render not-passed params as [:param)
  *
  * @param string $routeName The name of the route.
- * @param array @params Associative array of parameters to replace placeholders with.
+ * @param array[optional] $params Associative array of parameters to replace placeholders with.
+ * @param boolean[optional,false) $fPlaceHolders when set, generate URL with placeholders ie "/user/12/[:action]"
  * @return string The URL of the route with named parameters in place.
+ * @throws OutOfRangeException if $routeName has not been registred
+ * @throws InvalidArgumentException if some mandatory params have not been passed (normal mode)
  */
-function getUrl($routeName, array $params = array()) {
+function getUrl($routeName=null, $params = array(), $fPlaceHolders=false) {
     global $__routes;
+
+    if (null === $routeName) {
+        return (defined("APP_PATH")) ? (APP_PATH.'/') : ('/');
+    }
+
+    if (true === $params) { //called as ($routeName, true)
+        $params = array();
+        $fPlaceHolders = true;
+    }
 
     // Check if named route exists
     if(!isset($__routes[$routeName])) {
-        throw new Exception("Route '{$routeName}' does not exist.");
+        throw new OutOfRangeException("Route '{$routeName}' does not exist.");
     }
 
     // Replace named parameters
@@ -91,10 +104,14 @@ function getUrl($routeName, array $params = array()) {
         foreach($matches as $match) {
             list($block, $pre, $type, $param, $optional) = $match;
 
-            if(isset($params[$param])) {
+            if(isset($params[$param])) { // passed argument
                 $url = str_replace($block, $pre . $params[$param], $url);
+            } elseif ($fPlaceHolders) { // placeholder mode: render /[:param] (remove type and optional)
+                $url = str_replace($block, $pre . '[:' . $param . ']', $url);
             } elseif ($optional) {
                 $url = str_replace($block, '', $url);
+            } else { // not set, mandatory param
+                throw new InvalidArgumentException("Param '{$param}' not set for route '{$routeName}'");
             }
         }
 
