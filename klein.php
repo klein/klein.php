@@ -35,7 +35,7 @@ function respond($name, $method = null, $route = '*', $callback = null) {
         if ($route[0] === '^') {
             $route = substr($route, 1);
         } else {
-            $route = '.*' . $route; 
+            $route = '.*' . $route;
         }
 
         if ($negate) {
@@ -72,7 +72,7 @@ function respond($name, $method = null, $route = '*', $callback = null) {
  * Generate the URL for a named route. Replace regexes with supplied parameters
  * When in PlaceHolders mode, render not-passed params as [:param)
  *
- * @param string $routeName The name of the route.
+ * @param string $routeName[optional] The name of the route.
  * @param array[optional] $params Associative array of parameters to replace placeholders with.
  * @param boolean[optional,false) $fPlaceHolders when set, generate URL with placeholders ie "/user/12/[:action]"
  * @return string The URL of the route with named parameters in place.
@@ -82,8 +82,8 @@ function respond($name, $method = null, $route = '*', $callback = null) {
 function getUrl($routeName=null, $params = array(), $fPlaceHolders=false) {
     global $__routes;
 
-    if (null === $routeName) {
-        return (defined("APP_PATH")) ? (APP_PATH.'/') : ('/');
+    if (null === $routeName || true === $routeName) {
+        return '/';
     }
 
     if (true === $params) { //called as ($routeName, true)

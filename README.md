@@ -116,9 +116,9 @@ respond('POST', '/users/[i:id]/edit', function ($request, $response) {
 ```
 
 
-## Route names
+## Reversed routing
 
-Some routes can have a *name*, so URL can be generated:
+Some routes can have a *name*, so URL can be generated from the respond route.
 ```php
 <?php
 
@@ -136,9 +136,9 @@ respond('posts_do',   'GET',      '/posts/[create|edit:action]?/[i:id]?', functi
 
 getUrl('home');                                            // "/"
 getUrl('users_show', array('id' => 14));                   // "/users/14"
-getUrl('users_do', array('id' => 17, 'action'=>'delete')); // "/users/17/delete"
+getUrl('user_do', array('id' => 17, 'action'=>'delete'));  // "/users/17/delete"
 getUrl('user_do', array('id' => 17));                      // Exception "Param 'action' not set for route 'user_do'"
-getUrl('posts_do', array('id' => 16));                     // "/posts/16"
+getUrl('posts_do', array('id' => 16));                     // "/posts/16" (note that it isn't /posts//16)
 getUrl('posts_do', array('action' => 'edit', 'id' => 15)); // "/posts/edit/15"
 ```
 
@@ -149,10 +149,8 @@ To activate this mode, use getUrl with a new last parameter set to 'true'
 ```php
 <?php
 
-getUrl('users_show', array('id' => 14), true);                  // "/users/14"
 getUrl('users_show', array(), true);                            // "/users/[:id]"
-getUrl('users_show', true);                                     // "/users/[:id]"
-getUrl('posts_do', array('action' => 'edit', 'id' => 15), true);// "/posts/edit/15"
+getUrl('users_show', true);                                     // "/users/[:id]" (shorter notation)
 getUrl('posts_do', array('id' => 15), true);                    // "/posts/[:action]/15"
 getUrl('posts_do', array('action' => "edit"), true);            // "/posts/edit/[:id]"
 ```
