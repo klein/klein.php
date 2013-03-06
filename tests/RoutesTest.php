@@ -110,4 +110,19 @@ class RoutesTest extends PHPUnit_Framework_TestCase {
 		respond( '404', function(){ echo '404 Code'; } );
 		dispatch( '/blue' );
 	}
+
+	public function testMethodSingle() {
+		$this->expectOutputString( 'd' );
+
+		respond( "GET",  "/a", function(){ echo 'd'; });
+		respond( "POST", "/a", function(){ echo 'e'; });
+		dispatch( '/a' );
+	}
+
+	public function testMethodMultiple() {
+		$this->expectOutputString( 'd' );
+
+		respond( "GET|POST",  "/a", function(){ echo 'd'; });
+		dispatch( '/a' );
+	}
 }
