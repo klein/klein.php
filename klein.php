@@ -6,18 +6,21 @@ $__routes = array();
 $__namespace = null;
 
 // Add a route callback
-function respond($method, $route = '*', $callback = null) {
+function respond($name, $method = null, $route = '*', $callback = null) {
     global $__routes, $__namespace;
-    $count_match = true;
-    if (is_callable($method)) {
-        $callback = $method;
-        $method = $route = null;
-        $count_match = false;
-    } elseif (is_callable($route)) {
-        $callback = $route;
-        $route = $method;
-        $method = null;
+
+    $args = func_get_args();
+    $callback = array_pop($args);
+    $route = array_pop($args);
+    $method = array_pop($args);
+    $name = array_pop($args);
+
+    if (null === $route) {
+        $route = '*';
     }
+
+    // only consider a request to be matched when not using matchall
+    $count_match = ($route !== '*');
 
     if ($__namespace && $route[0] === '@' || ($route[0] === '!' && $route[1] === '@')) {
         if ($route[0] === '!') {
@@ -32,7 +35,7 @@ function respond($method, $route = '*', $callback = null) {
         if ($route[0] === '^') {
             $route = substr($route, 1);
         } else {
-            $route = '.*' . $route; 
+            $route = '.*' . $route;
         }
 
         if ($negate) {
@@ -49,8 +52,68 @@ function respond($method, $route = '*', $callback = null) {
         $route = $__namespace . $route;
     }
 
-    $__routes[] = array($method, $route, $callback, $count_match);
+    if (null !== $name) {
+        $__routes[$name] = array($method, $route, $callback, $count_match);
+    } else {
+        $__routes[] = array($method, $route, $callback, $count_match);
+    }
+
     return $callback;
+ }
+
+/**
+ * Reversed routing
+ *
+ * Generate the URL for a named route. Replace regexes with supplied parameters
+ * When in PlaceHolders mode, render not-passed params as [:param)
+ *
+ * @param string $routeName[optional] The name of the route.
+ * @param array[optional] $params Associative array of parameters to replace placeholders with.
+ * @param boolean[optional,false) $fPlaceHolders when set, generate URL with placeholders ie "/user/12/[:action]"
+ * @return string The URL of the route with named parameters in place.
+ * @throws OutOfRangeException if $routeName has not been registred
+ * @throws InvalidArgumentException if some mandatory params have not been passed (normal mode)
+ */
+function getUrl($routeName=null, $params = array(), $fPlaceHolders=false) {
+    global $__routes;
+
+    if (null === $routeName || true === $routeName) {
+        return '/';
+    }
+
+    if (true === $params) { //called as ($routeName, true)
+        $params = array();
+        $fPlaceHolders = true;
+    }
+
+    // Check if named route exists
+    if(!isset($__routes[$routeName])) {
+        throw new OutOfRangeException("Route '{$routeName}' does not exist.");
+    }
+
+    // Replace named parameters
+    $url = $__routes[$routeName][1];
+
+    if (preg_match_all('`(/|\.|)\[([^:\]]*+)(?::([^:\]]*+))?\](\?|)`', $url, $matches, PREG_SET_ORDER)) {
+
+        foreach($matches as $match) {
+            list($block, $pre, $type, $param, $optional) = $match;
+
+            if(isset($params[$param])) { // passed argument
+                $url = str_replace($block, $pre . $params[$param], $url);
+            } elseif ($fPlaceHolders) { // placeholder mode: render /[:param] (remove type and optional)
+                $url = str_replace($block, $pre . '[:' . $param . ']', $url);
+            } elseif ($optional) {
+                $url = str_replace($block, '', $url);
+            } else { // not set, mandatory param
+                throw new InvalidArgumentException("Param '{$param}' not set for route '{$routeName}'");
+            }
+        }
+
+
+    }
+
+    return $url;
 }
 
 // Each route defined inside $routes will be in the $namespace

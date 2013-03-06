@@ -110,4 +110,78 @@ class RoutesTest extends PHPUnit_Framework_TestCase {
 		respond( '404', function(){ echo '404 Code'; } );
 		dispatch( '/blue' );
 	}
+
+	public function testGetUrl() {
+		$expect = "";
+
+		respond('home', 'GET|POST','/', function(){});
+		respond('GET','/users/', function(){});
+		respond('users_show', 'GET','/users/[i:id]', function(){});
+		respond('users_do', 'POST','/users/[i:id]/[delete|update:action]', function(){});
+		respond('posts_do', 'GET', '/posts/[create|edit:action]?/[i:id]?', function(){});
+
+		echo getUrl('home'); echo "\n";
+		$expect .= "/" . "\n";
+		echo getUrl('users_show', array('id' => 14)); echo "\n";
+		$expect .= "/users/14" . "\n";
+		echo getUrl('users_do', array('id' => 17, 'action'=>'delete')); echo "\n";
+		$expect .= "/users/17/delete" . "\n";
+		echo getUrl('posts_do', array('id' => 16)); echo "\n";
+		$expect .= "/posts/16" . "\n";
+		echo getUrl('posts_do', array('action' => 'edit', 'id' => 15)); echo "\n";
+		$expect .= "/posts/edit/15" . "\n";
+		$this->expectOutputString( $expect );
+	}
+
+	public function testOptsParam() {
+		$this->expectOutputString( "action=,id=16" );
+		respond('users_do', 'GET','/posts/[create|edit:action]?/[i:id]?', function($rq,$rs,$ap){echo "action=".$rq->param("action").",id=".$rq->param("id");});
+
+		dispatch("/posts/16");
+	}
+
+	public function testGetUrlPlaceHolders() {
+		$expect = "";
+
+		respond('home', 'GET|POST','/', function(){});
+		respond('GET','/users/', function(){});
+		respond('users_show', 'GET','/users/[i:id]', function(){});
+		respond('posts_do', 'GET', '/posts/[create|edit:action]?/[i:id]?', function(){});
+
+		echo getUrl('home', true); echo "\n";
+		$expect .= "/" . "\n";
+		echo getUrl('users_show', array('id' => 14), true); echo "\n";
+		$expect .= "/users/14" . "\n";
+		echo getUrl('users_show', array(), true); echo "\n";
+		$expect .= "/users/[:id]" . "\n";
+		echo getUrl('users_show', true); echo "\n";
+		$expect .= "/users/[:id]" . "\n";
+		echo getUrl('posts_do', array('action' => 'edit', 'id' => 15), true); echo "\n";
+		$expect .= "/posts/edit/15" . "\n";
+		echo getUrl('posts_do', array('id' => 15), true); echo "\n";
+		$expect .= "/posts/[:action]/15" . "\n";
+		echo getUrl('posts_do', array('action' => "edit"), true); echo "\n";
+		$expect .= "/posts/edit/[:id]" . "\n";
+		$this->expectOutputString( $expect );
+	}
+
+
+	public function testPlaceHoldersException1() {
+		$this->setExpectedException('OutOfRangeException', "does not exist");
+
+		respond('users', 'GET','/users/[i:id]/[:action]', function(){});
+
+		echo getUrl('notset');
+	}
+
+	public function testPlaceHoldersException2() {
+		$this->setExpectedException('InvalidArgumentException', "not set for route");
+
+		respond('users', 'GET','/users/[i:id]/[:action]', function(){});
+
+		echo getUrl('users', array('id' => "10"));
+	}
+
+
+
 }
