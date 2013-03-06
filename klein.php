@@ -8,16 +8,18 @@ $__namespace = null;
 // Add a route callback
 function respond($method, $route = '*', $callback = null) {
     global $__routes, $__namespace;
-    $count_match = true;
-    if (is_callable($method)) {
-        $callback = $method;
-        $method = $route = null;
-        $count_match = false;
-    } elseif (is_callable($route)) {
-        $callback = $route;
-        $route = $method;
-        $method = null;
+
+    $args = func_get_args();
+    $callback = array_pop($args);
+    $route = array_pop($args);
+    $method = array_pop($args);
+
+    if (null === $route) {
+        $route = '*';
     }
+
+    // only consider a request to be matched when not using matchall
+    $count_match = ($route !== '*');
 
     if ($__namespace && $route[0] === '@' || ($route[0] === '!' && $route[1] === '@')) {
         if ($route[0] === '!') {
@@ -43,7 +45,7 @@ function respond($method, $route = '*', $callback = null) {
     }
 
     // empty route with namespace is a match-all
-    elseif ($__namespace && (null == $route || '*' === $route)) {
+    elseif ($__namespace && ('*' === $route)) {
         $route = '@^' . $__namespace . '(/|$)';
     } else {
         $route = $__namespace . $route;
@@ -146,7 +148,7 @@ function dispatch($uri = null, $req_method = null, array $params = null, $captur
         }
 
         // Check for a wildcard (match all)
-        if ($_route === '*' || null == $_route) {
+        if ($_route === '*') {
             $match = true;
 
         // Easily handle 404's
@@ -228,7 +230,7 @@ function dispatch($uri = null, $req_method = null, array $params = null, $captur
                   } catch (Exception $e) {
                        $response->error($e);
                   }
-                  if ($_route !== '*' && $_route !== null) {
+                  if ($_route !== '*') {
                        $count_match && ++$matched;
                   }
              }
