@@ -1,23 +1,39 @@
 <?php
+namespace Klein;
+use \Exception;
+use \ErrorException;
+use \OutOfRangeException;
+use \InvalidArgumentException;
+use \StdClass;
+
+function reset() {
+    Router::$routes = array();
+    Router::$namespace = null;
+}
+class Router {
+    public static $routes = array();
+    public static $namespace = null;
+}
+
 # (c) Chris O'Hara <cohara87@gmail.com> (MIT License)
 # http://github.com/chriso/klein.php
 
-$__routes = array();
-$__namespace = null;
-
 // Add a route callback
-function respond($method, $route = '*', $callback = null) {
-    global $__routes, $__namespace;
-    $count_match = true;
-    if (is_callable($method)) {
-        $callback = $method;
-        $method = $route = null;
-        $count_match = false;
-    } elseif (is_callable($route)) {
-        $callback = $route;
-        $route = $method;
-        $method = null;
+function respond($name, $method = null, $route = '*', $callback = null) {
+    $__namespace = Router::$namespace;
+
+    $args = func_get_args();
+    $callback = array_pop($args);
+    $route = array_pop($args);
+    $method = array_pop($args);
+    $name = array_pop($args);
+
+    if (null === $route) {
+        $route = '*';
     }
+
+    // only consider a request to be matched when not using matchall
+    $count_match = ($route !== '*');
 
     if ($__namespace && $route[0] === '@' || ($route[0] === '!' && $route[1] === '@')) {
         if ($route[0] === '!') {
@@ -32,7 +48,7 @@ function respond($method, $route = '*', $callback = null) {
         if ($route[0] === '^') {
             $route = substr($route, 1);
         } else {
-            $route = '.*' . $route; 
+            $route = '.*' . $route;
         }
 
         if ($negate) {
@@ -43,27 +59,89 @@ function respond($method, $route = '*', $callback = null) {
     }
 
     // empty route with namespace is a match-all
-    elseif ($__namespace && (null == $route || '*' === $route)) {
+    elseif ($__namespace && ('*' === $route)) {
         $route = '@^' . $__namespace . '(/|$)';
     } else {
         $route = $__namespace . $route;
     }
 
-    $__routes[] = array($method, $route, $callback, $count_match);
+    // permit method "GET|POST"
+    if (is_string($method) && strlen($method)) {
+        $method = explode("|", $method);
+    }
+
+    if (null !== $name) {
+        Router::$routes[$name] = array($method, $route, $callback, $count_match);
+    } else {
+        Router::$routes[] = array($method, $route, $callback, $count_match);
+    }
+
     return $callback;
+ }
+
+/**
+ * Reversed routing
+ *
+ * Generate the URL for a named route. Replace regexes with supplied parameters
+ * When in PlaceHolders mode, render not-passed params as [:param)
+ *
+ * @param string $routeName[optional] The name of the route.
+ * @param array[optional] $params Associative array of parameters to replace placeholders with.
+ * @param boolean[optional,false) $fPlaceHolders when set, generate URL with placeholders ie "/user/12/[:action]"
+ * @return string The URL of the route with named parameters in place.
+ * @throws OutOfRangeException if $routeName has not been registred
+ * @throws InvalidArgumentException if some mandatory params have not been passed (normal mode)
+ */
+function getUrl($routeName=null, $params = array(), $fPlaceHolders=false) {
+    if (null === $routeName || true === $routeName) {
+        return '/';
+    }
+
+    if (true === $params) { //called as ($routeName, true)
+        $params = array();
+        $fPlaceHolders = true;
+    }
+
+    // Check if named route exists
+    if(!isset(Router::$routes[$routeName])) {
+        throw new OutOfRangeException("Route '{$routeName}' does not exist.");
+    }
+
+    // Replace named parameters
+    $url = Router::$routes[$routeName][1];
+
+    if (preg_match_all('`(/|\.|)\[([^:\]]*+)(?::([^:\]]*+))?\](\?|)`', $url, $matches, PREG_SET_ORDER)) {
+
+        foreach($matches as $match) {
+            list($block, $pre, $type, $param, $optional) = $match;
+
+            if(isset($params[$param])) { // passed argument
+                $url = str_replace($block, $pre . $params[$param], $url);
+            } elseif ($fPlaceHolders) { // placeholder mode: render /[:param] (remove type and optional)
+                $url = str_replace($block, $pre . '[:' . $param . ']', $url);
+            } elseif ($optional) {
+                $url = str_replace($block, '', $url);
+            } else { // not set, mandatory param
+                throw new InvalidArgumentException("Param '{$param}' not set for route '{$routeName}'");
+            }
+        }
+
+
+    }
+
+    return $url;
 }
 
 // Each route defined inside $routes will be in the $namespace
 function with($namespace, $routes) {
-    global $__namespace;
-    $previous = $__namespace;
-    $__namespace .= $namespace;
+    $previous = Router::$namespace;
+    Router::$namespace .= $namespace;
     if (is_callable($routes)) {
         $routes();
     } else {
         require_once $routes;
     }
-    $__namespace = $previous;
+    Router::$namespace = $previous;
 }
 
 function startSession() {
@@ -74,8 +152,6 @@ function startSession() {
 
 // Dispatch the request to the approriate route(s)
 function dispatch($uri = null, $req_method = null, array $params = null, $capture = false) {
-    global $__routes;
-
     // Pass $request, $response, and a blank object for sharing scope through each callback
     $request  = new _Request;
     $response = new _Response;
@@ -113,7 +189,7 @@ function dispatch($uri = null, $req_method = null, array $params = null, $captur
 
     ob_start();
 
-    foreach ($__routes as $handler) {
+    foreach (Router::$routes as $handler) {
         list($method, $_route, $callback, $count_match) = $handler;
 
         $method_match = null;
@@ -146,7 +222,7 @@ function dispatch($uri = null, $req_method = null, array $params = null, $captur
         }
 
         // Check for a wildcard (match all)
-        if ($_route === '*' || null == $_route) {
+        if ($_route === '*') {
             $match = true;
 
         // Easily handle 404's
@@ -158,6 +234,8 @@ function dispatch($uri = null, $req_method = null, array $params = null, $captur
             }
 
             ++$matched;
+            continue;
+
         // Easily handle 405's
         } elseif ($_route === '405' && !$matched && count($methods_matched) > 0) {
             try {
@@ -167,6 +245,7 @@ function dispatch($uri = null, $req_method = null, array $params = null, $captur
             }
 
             ++$matched;
+            continue;
 
         // @ is used to specify custom regex
         } elseif (isset($_route[$i]) && $_route[$i] === '@') {
@@ -228,7 +307,7 @@ function dispatch($uri = null, $req_method = null, array $params = null, $captur
                   } catch (Exception $e) {
                        $response->error($e);
                   }
-                  if ($_route !== '*' && $_route !== null) {
+                  if ($_route !== '*') {
                        $count_match && ++$matched;
                   }
              }
@@ -260,7 +339,7 @@ function compile_route($route) {
             'h'  => '[0-9A-Fa-f]++',
             '*'  => '.+?',
             '**' => '.++',
-            ''   => '[^/]++'
+            ''   => '[^/\.]++'
         );
         foreach ($matches as $match) {
             list($block, $pre, $type, $param, $optional) = $match;
@@ -527,7 +606,7 @@ class _Response extends StdClass {
             $this->_code = $code;
 
             // Do we have the PHP 5.4 "http_response_code" function?
-            if (function_exists('http_response_code')) {
+            if (function_exists('http_response_code') && !isset($_SERVER["PHPUNIT"])) {
                 // Have PHP automatically create our HTTP Status header from our code
                 http_response_code($code);
             }

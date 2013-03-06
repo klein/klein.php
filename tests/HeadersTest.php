@@ -2,7 +2,7 @@
 
 require_once dirname(__FILE__) . '/setup.php';
 
-class HeadersTest extends PHPUnit_Framework_TestCase {
+class HeadersTest extends \PHPUnit_Framework_TestCase {
 	public function setUp() {
 		$this->headers = new HeadersEcho;
 	}

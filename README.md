@@ -11,7 +11,7 @@
 3. Add `<?php require 'klein.php';` as your first line and `dispatch();` as your last
 4. (Optional) Throw in some [APC](http://pecl.php.net/package/APC) for good measure
 
-## Example
+## Examples
 
 *Example 1* - Respond to all requests
 
@@ -115,6 +115,47 @@ respond('POST', '/users/[i:id]/edit', function ($request, $response) {
 <title><?php echo $this->escape($this->title) ?></title>
 ```
 
+
+## Reversed routing
+
+Some routes can have a *name*, so URL can be generated from the respond route.
+```php
+<?php
+
+respond('home',       'GET|POST', '/', function(){});
+respond(              'GET',      '/users/', function(){});
+respond('users_show', 'GET',      '/users/[i:id]', function(){});
+respond('user_do',    'POST',     '/users/[i:id]/[delete|update:action]', function(){});
+respond('posts_do',   'GET',      '/posts/[create|edit:action]?/[i:id]?', function(){});
+```
+
+*Example* - Generating URL for immediate consumption
+
+```php
+<?php
+
+getUrl('home');                                            // "/"
+getUrl('users_show', array('id' => 14));                   // "/users/14"
+getUrl('user_do', array('id' => 17, 'action'=>'delete'));  // "/users/17/delete"
+getUrl('user_do', array('id' => 17));                      // Exception "Param 'action' not set for route 'user_do'"
+getUrl('posts_do', array('id' => 16));                     // "/posts/16" (note that it isn't /posts//16)
+getUrl('posts_do', array('action' => 'edit', 'id' => 15)); // "/posts/edit/15"
+```
+
+*Example* - Generating URL for later use (placeholder mode)
+
+This mode allows to generate URL that can be templated elsewhere.
+To activate this mode, use getUrl with a new last parameter set to 'true'
+```php
+<?php
+
+getUrl('users_show', array(), true);                            // "/users/[:id]"
+getUrl('users_show', true);                                     // "/users/[:id]" (shorter notation)
+getUrl('posts_do', array('id' => 15), true);                    // "/posts/[:action]/15"
+getUrl('posts_do', array('action' => "edit"), true);            // "/posts/edit/[:id]"
+```
+
+
 ## Route namespaces
 
 ```php
@@ -194,7 +235,7 @@ Some examples
     [i:id]               // Match an integer as 'id'
     [a:action]           // Match alphanumeric characters as 'action'
     [h:key]              // Match hexadecimal characters as 'key'
-    [:action]            // Match anything up to the next / or end of the URI as 'action'
+    [:action]            // Match anything up to the next / or . or end of the URI as 'action'
     [create|edit:action] // Match either 'create' or 'edit' as 'action'
     [*]                  // Catch all (lazy)
     [*:trailing]         // Catch all as 'trailing' (lazy)
