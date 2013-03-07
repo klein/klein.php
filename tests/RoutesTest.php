@@ -18,6 +18,13 @@ class RoutesTest extends PHPUnit_Framework_TestCase {
 
 		$_SERVER['SERVER_PROTOCOL'] = 'HTTP/1.1';
 	}
+	protected function assertOutputSame($expected, $callback, $message = '') {
+	    ob_start();
+	    call_user_func($callback);
+	    $out = ob_get_contents();
+	    ob_end_clean();
+	    $this->assertSame($expected, $out, $message);
+	}
 
 	public function testBasic() {
 		$this->expectOutputString( 'x' );
@@ -110,4 +117,17 @@ class RoutesTest extends PHPUnit_Framework_TestCase {
 		respond( '404', function(){ echo '404 Code'; } );
 		dispatch( '/blue' );
 	}
+
+	public function testNSDispatch() {
+		with('/u', function () {
+			respond('GET', '/?',     function ($request, $response) { echo "slash";   });
+			respond('GET', '/[:id]', function ($request, $response) { echo "id"; });
+		});
+
+		$this->assertOutputSame("slash",          function(){dispatch("/u");});
+		$this->assertOutputSame("slash",          function(){dispatch("/u/");});
+		$this->assertOutputSame("id",             function(){dispatch("/u/35");});
+		$this->assertOutputSame("HTTP/1.1 404\n", function(){dispatch("/35");});
+	}
+
 }
