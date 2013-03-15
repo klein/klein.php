@@ -526,16 +526,9 @@ class _Response extends StdClass {
         if (null !== $code) {
             $this->_code = $code;
 
-            // Do we have the PHP 5.4 "http_response_code" function?
-            if (function_exists('http_response_code') && !isset($_SERVER["PHPUNIT"])) {
-                // Have PHP automatically create our HTTP Status header from our code
-                http_response_code($code);
-            }
-            else {
-                // Manually create the HTTP Status header
-                $protocol = isset($_SERVER['SERVER_PROTOCOL']) ? $_SERVER['SERVER_PROTOCOL'] : 'HTTP/1.0';
-                $this->header("$protocol $code");
-            }
+            // Manually create the HTTP Status header
+            $protocol = isset($_SERVER['SERVER_PROTOCOL']) ? $_SERVER['SERVER_PROTOCOL'] : 'HTTP/1.0';
+            $this->header("$protocol $code");
         }
         return $this->_code;
     }
