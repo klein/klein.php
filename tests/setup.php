@@ -1,6 +1,6 @@
 <?php
 
-include dirname(dirname(__FILE__)) . '/klein.php';
+require_once dirname(dirname(__FILE__)) . '/klein.php';
 
 class HeadersEcho extends _Headers {
 	public function header($key, $value = null) {
