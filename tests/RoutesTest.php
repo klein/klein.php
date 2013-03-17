@@ -63,8 +63,10 @@ class RoutesTest extends PHPUnit_Framework_TestCase {
 	}
 
 	public function testCatchallImplicitTriggers404() {
-		$this->expectOutputString( "bHTTP/1.1 404\n" );
+		$this->expectOutputString("b404\n");
+
 		respond( function(){ echo 'b'; });
+		respond( 404, function(){ echo "404\n"; } );
 		dispatch( '/' );
 	}
 
@@ -83,9 +85,10 @@ class RoutesTest extends PHPUnit_Framework_TestCase {
 	}
 
 	public function test404() {
-		$this->expectOutputString("HTTP/1.1 404\n");
+		$this->expectOutputString("404\n");
 
 		respond( '/', function(){ echo 'a'; } );
+		respond( 404, function(){ echo "404\n"; } );
 		dispatch( '/foo' );
 	}
 
