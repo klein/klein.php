@@ -190,4 +190,22 @@ class RoutesTest extends PHPUnit_Framework_TestCase {
 		$this->assertContains( 'GET', $resultArray );
 		$this->assertContains( 'POST', $resultArray );
 	}
+
+	public function testDot1() {
+		$this->expectOutputString( 'matchA:slug=ABCD_E--matchB:slug=ABCD_E--' );
+
+		respond('/[*:cpath]/[:slug].[:format]',   function($rq){ echo 'matchA:slug='.$rq->param("slug").'--';});
+		respond('/[*:cpath]/[:slug].[:format]?',  function($rq){ echo 'matchB:slug='.$rq->param("slug").'--';});
+		respond('/[*:cpath]/[a:slug].[:format]?', function($rq){ echo 'matchC:slug='.$rq->param("slug").'--';});
+		dispatch("/category1/categoryX/ABCD_E.php");
+	}
+
+	public function testDot2() {
+		$this->expectOutputString( 'matchB:slug=ABCD_E--' );
+
+		respond('/[*:cpath]/[:slug].[:format]',   function($rq){ echo 'matchA:slug='.$rq->param("slug").'--';});
+		respond('/[*:cpath]/[:slug].[:format]?',  function($rq){ echo 'matchB:slug='.$rq->param("slug").'--';});
+		respond('/[*:cpath]/[a:slug].[:format]?', function($rq){ echo 'matchC:slug='.$rq->param("slug").'--';});
+		dispatch("/category1/categoryX/ABCD_E");
+	}
 }
