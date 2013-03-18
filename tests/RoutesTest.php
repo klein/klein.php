@@ -63,8 +63,10 @@ class RoutesTest extends PHPUnit_Framework_TestCase {
 	}
 
 	public function testCatchallImplicitTriggers404() {
-		$this->expectOutputString( "bHTTP/1.1 404\n" );
+		$this->expectOutputString("b404\n");
+
 		respond( function(){ echo 'b'; });
+		respond( 404, function(){ echo "404\n"; } );
 		dispatch( '/' );
 	}
 
@@ -83,9 +85,10 @@ class RoutesTest extends PHPUnit_Framework_TestCase {
 	}
 
 	public function test404() {
-		$this->expectOutputString("HTTP/1.1 404\n");
+		$this->expectOutputString("404\n");
 
 		respond( '/', function(){ echo 'a'; } );
+		respond( 404, function(){ echo "404\n"; } );
 		dispatch( '/foo' );
 	}
 
@@ -109,6 +112,83 @@ class RoutesTest extends PHPUnit_Framework_TestCase {
 		respond( '/[i:age]', function($request){ var_dump( $request->param('age') ); });
 		respond( '404', function(){ echo '404 Code'; } );
 		dispatch( '/blue' );
+	}
+
+	public function test404TriggersOnce() {
+		$this->expectOutputString( 'd404 Code' );
+
+		respond( function(){ echo "d"; } );
+		respond( '404', function(){ echo '404 Code'; } );
+		dispatch( '/notroute' );
+	}
+
+	public function testMethodCatchAll() {
+		$this->expectOutputString( 'yup!123' );
+
+		respond( 'POST', null, function($request){ echo 'yup!'; });
+		respond( 'POST', '*', function($request){ echo '1'; });
+		respond( 'POST', '/', function($request){ echo '2'; });
+		respond( function($request){ echo '3'; });
+		dispatch( '/', 'POST' );
+	}
+
+	public function testLazyTrailingMatch() {
+		$this->expectOutputString( 'this-is-a-title-123' );
+
+		respond( '/posts/[*:title][i:id]', function($request){
+			echo $request->param('title')
+				. $request->param('id');
+		});
+		dispatch( '/posts/this-is-a-title-123' );
+	}
+
+	public function testFormatMatch() {
+		$this->expectOutputString( 'xml' );
+
+		respond( '/output.[xml|json:format]', function($request){
+			echo $request->param('format');
+		});
+		dispatch( '/output.xml' );
+	}
+
+	public function testControllerActionStyleRouteMatch() {
+		$this->expectOutputString( 'donkey-kick' );
+
+		respond( '/[:controller]?/[:action]?', function($request){
+			echo $request->param('controller')
+				. '-' . $request->param('action');
+		});
+		dispatch( '/donkey/kick' );
+	}
+
+	public function testRespondArgumentOrder() {
+		$this->expectOutputString( 'abcdef' );
+
+		respond( function(){ echo 'a'; });
+		respond( null, function(){ echo 'b'; });
+		respond( '/endpoint', function(){ echo 'c'; });
+		respond( 'GET', null, function(){ echo 'd'; });
+		respond( array( 'GET', 'POST' ), null, function(){ echo 'e'; });
+		respond( array( 'GET', 'POST' ), '/endpoint', function(){ echo 'f'; });
+		dispatch( '/endpoint' );
+	}
+
+	public function test405Routes() {
+		$resultArray = array();
+
+		$this->expectOutputString( '_' );
+
+		respond( function(){ echo '_'; });
+		respond( 'GET', null, function(){ echo 'fail'; });
+		respond( array( 'GET', 'POST' ), null, function(){ echo 'fail'; });
+		respond( 405, function($a,$b,$c,$d,$methods) use ( &$resultArray ) {
+			$resultArray = $methods;
+		});
+		dispatch( '/sure', 'DELETE' );
+
+		$this->assertCount( 2, $resultArray );
+		$this->assertContains( 'GET', $resultArray );
+		$this->assertContains( 'POST', $resultArray );
 	}
 
 	public function testGetUrl() {
@@ -181,7 +261,5 @@ class RoutesTest extends PHPUnit_Framework_TestCase {
 
 		echo getUrl('users', array('id' => "10"));
 	}
-
-
 
 }

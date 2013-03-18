@@ -46,7 +46,7 @@ function respond($name, $method = null, $route = '*', $callback = null) {
     }
 
     // empty route with namespace is a match-all
-    elseif ($__namespace && (null == $route || '*' === $route)) {
+    elseif ($__namespace && ('*' === $route)) {
         $route = '@^' . $__namespace . '(/|$)';
     } else {
         $route = $__namespace . $route;
@@ -209,7 +209,7 @@ function dispatch($uri = null, $req_method = null, array $params = null, $captur
         }
 
         // Check for a wildcard (match all)
-        if ($_route === '*' || null == $_route) {
+        if ($_route === '*') {
             $match = true;
 
         // Easily handle 404's
@@ -221,6 +221,8 @@ function dispatch($uri = null, $req_method = null, array $params = null, $captur
             }
 
             ++$matched;
+            continue;
+
         // Easily handle 405's
         } elseif ($_route === '405' && !$matched && count($methods_matched) > 0) {
             try {
@@ -230,6 +232,7 @@ function dispatch($uri = null, $req_method = null, array $params = null, $captur
             }
 
             ++$matched;
+            continue;
 
         // @ is used to specify custom regex
         } elseif (isset($_route[$i]) && $_route[$i] === '@') {
@@ -291,7 +294,7 @@ function dispatch($uri = null, $req_method = null, array $params = null, $captur
                   } catch (Exception $e) {
                        $response->error($e);
                   }
-                  if ($_route !== '*' && $_route !== null) {
+                  if ($_route !== '*') {
                        $count_match && ++$matched;
                   }
              }
