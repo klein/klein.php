@@ -113,4 +113,12 @@ class RoutesTest extends PHPUnit_Framework_TestCase {
 		respond( '404', function(){ echo '404 Code'; } );
 		dispatch( '/blue' );
 	}
+
+	public function test404TriggersOnce() {
+		$this->expectOutputString( 'd404 Code' );
+
+		respond( function(){ echo "d"; } );
+		respond( '404', function(){ echo '404 Code'; } );
+		dispatch( '/notroute' );
+	}
 }
