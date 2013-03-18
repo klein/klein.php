@@ -172,4 +172,22 @@ class RoutesTest extends PHPUnit_Framework_TestCase {
 		respond( array( 'GET', 'POST' ), '/endpoint', function(){ echo 'f'; });
 		dispatch( '/endpoint' );
 	}
+
+	public function test405Routes() {
+		$resultArray = array();
+
+		$this->expectOutputString( '_' );
+
+		respond( function(){ echo '_'; });
+		respond( 'GET', null, function(){ echo 'fail'; });
+		respond( array( 'GET', 'POST' ), null, function(){ echo 'fail'; });
+		respond( 405, function($a,$b,$c,$d,$methods) use ( &$resultArray ) {
+			$resultArray = $methods;
+		});
+		dispatch( '/sure', 'DELETE' );
+
+		$this->assertCount( 2, $resultArray );
+		$this->assertContains( 'GET', $resultArray );
+		$this->assertContains( 'POST', $resultArray );
+	}
 }
