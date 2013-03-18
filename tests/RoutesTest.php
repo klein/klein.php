@@ -160,4 +160,16 @@ class RoutesTest extends PHPUnit_Framework_TestCase {
 		});
 		dispatch( '/donkey/kick' );
 	}
+
+	public function testRespondArgumentOrder() {
+		$this->expectOutputString( 'abcdef' );
+
+		respond( function(){ echo 'a'; });
+		respond( null, function(){ echo 'b'; });
+		respond( '/endpoint', function(){ echo 'c'; });
+		respond( 'GET', null, function(){ echo 'd'; });
+		respond( array( 'GET', 'POST' ), null, function(){ echo 'e'; });
+		respond( array( 'GET', 'POST' ), '/endpoint', function(){ echo 'f'; });
+		dispatch( '/endpoint' );
+	}
 }
