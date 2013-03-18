@@ -131,4 +131,33 @@ class RoutesTest extends PHPUnit_Framework_TestCase {
 		respond( function($request){ echo '3'; });
 		dispatch( '/', 'POST' );
 	}
+
+	public function testLazyTrailingMatch() {
+		$this->expectOutputString( 'this-is-a-title-123' );
+
+		respond( '/posts/[*:title][i:id]', function($request){
+			echo $request->param('title')
+				. $request->param('id');
+		});
+		dispatch( '/posts/this-is-a-title-123' );
+	}
+
+	public function testFormatMatch() {
+		$this->expectOutputString( 'xml' );
+
+		respond( '/output.[xml|json:format]', function($request){
+			echo $request->param('format');
+		});
+		dispatch( '/output.xml' );
+	}
+
+	public function testControllerActionStyleRouteMatch() {
+		$this->expectOutputString( 'donkey-kick' );
+
+		respond( '/[:controller]?/[:action]?', function($request){
+			echo $request->param('controller')
+				. '-' . $request->param('action');
+		});
+		dispatch( '/donkey/kick' );
+	}
 }
