@@ -121,4 +121,14 @@ class RoutesTest extends PHPUnit_Framework_TestCase {
 		respond( '404', function(){ echo '404 Code'; } );
 		dispatch( '/notroute' );
 	}
+
+	public function testMethodCatchAll() {
+		$this->expectOutputString( 'yup!123' );
+
+		respond( 'POST', null, function($request){ echo 'yup!'; });
+		respond( 'POST', '*', function($request){ echo '1'; });
+		respond( 'POST', '/', function($request){ echo '2'; });
+		respond( function($request){ echo '3'; });
+		dispatch( '/', 'POST' );
+	}
 }
