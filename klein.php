@@ -63,7 +63,7 @@ function with($namespace, $routes) {
     if (is_callable($routes)) {
         $routes();
     } else {
-        require_once $routes;
+        require $routes;
     }
     $__namespace = $previous;
 }
