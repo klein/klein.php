@@ -178,6 +178,24 @@ class RoutesTest extends PHPUnit_Framework_TestCase {
 		dispatch( '/output.xml' );
 	}
 
+	public function testDotSeparator() {
+		$this->expectOutputString( 'matchA:slug=ABCD_E--matchB:slug=ABCD_E--' );
+
+		respond('/[*:cpath]/[:slug].[:format]',   function($rq){ echo 'matchA:slug='.$rq->param("slug").'--';});
+		respond('/[*:cpath]/[:slug].[:format]?',  function($rq){ echo 'matchB:slug='.$rq->param("slug").'--';});
+		respond('/[*:cpath]/[a:slug].[:format]?', function($rq){ echo 'matchC:slug='.$rq->param("slug").'--';});
+		dispatch("/category1/categoryX/ABCD_E.php");
+
+		$this->assertOutputSame(
+			'matchA:slug=ABCD_E--matchB:slug=ABCD_E--',
+			function(){dispatch( '/category1/categoryX/ABCD_E.php' );}
+		);
+		$this->assertOutputSame(
+			'matchB:slug=ABCD_E--',
+			function(){dispatch( '/category1/categoryX/ABCD_E' );}
+		);
+	}
+
 	public function testControllerActionStyleRouteMatch() {
 		$this->expectOutputString( 'donkey-kick' );
 
