@@ -28,6 +28,23 @@ class RoutesTest extends PHPUnit_Framework_TestCase {
 	    $this->assertSame($expected, $out, $message);
 	}
 
+	protected function loadExternalRoutes() {
+		$route_directory = __DIR__ . '/routes/';
+		$route_files = scandir( $route_directory );
+		$route_namespaces = array();
+
+		foreach( $route_files as $file ) {
+			if ( is_file( $route_directory . $file ) ) {
+				$route_namespace = '/' . basename( $file, '.php' );
+				$route_namespaces[] = $route_namespace;
+
+				with( $route_namespace, $route_directory . $file );
+			}
+		}
+
+		return $route_namespaces;
+	}
+
 	public function testBasic() {
 		$this->expectOutputString( 'x' );
 
@@ -249,6 +266,28 @@ class RoutesTest extends PHPUnit_Framework_TestCase {
 		$this->assertOutputSame("slash",          function(){dispatch("/u/");});
 		$this->assertOutputSame("id",             function(){dispatch("/u/35");});
 		$this->assertOutputSame("404",             function(){dispatch("/35");});
+	}
+
+	public function testNSDispatchExternal() {
+		$ext_namespaces = $this->loadExternalRoutes();
+
+		respond(404, function ($request, $response) { echo "404"; });
+
+		foreach ( $ext_namespaces as $namespace ) {
+			$this->assertOutputSame('yup',  function() use ( $namespace ) { dispatch( $namespace . '/' ); });
+			$this->assertOutputSame('yup',  function() use ( $namespace ) { dispatch( $namespace . '/testing/' ); });
+		}
+	}
+
+	public function testNSDispatchExternalRerequired() {
+		$ext_namespaces = $this->loadExternalRoutes();
+
+		respond(404, function ($request, $response) { echo "404"; });
+
+		foreach ( $ext_namespaces as $namespace ) {
+			$this->assertOutputSame('yup',  function() use ( $namespace ) { dispatch( $namespace . '/' ); });
+			$this->assertOutputSame('yup',  function() use ( $namespace ) { dispatch( $namespace . '/testing/' ); });
+		}
 	}
 
 	public function test405Routes() {
