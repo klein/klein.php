@@ -9,6 +9,7 @@ class TestClass {
 }
 
 class RoutesTest extends PHPUnit_Framework_TestCase {
+
 	protected function setUp() {
 		global $__routes;
 		$__routes = array();
@@ -18,6 +19,7 @@ class RoutesTest extends PHPUnit_Framework_TestCase {
 
 		$_SERVER['SERVER_PROTOCOL'] = 'HTTP/1.1';
 	}
+
 	protected function assertOutputSame($expected, $callback, $message = '') {
 	    ob_start();
 	    call_user_func($callback);
@@ -180,6 +182,19 @@ class RoutesTest extends PHPUnit_Framework_TestCase {
 		dispatch( '/endpoint' );
 	}
 
+	public function testNSDispatch() {
+		with('/u', function () {
+			respond('GET', '/?',     function ($request, $response) { echo "slash";   });
+			respond('GET', '/[:id]', function ($request, $response) { echo "id"; });
+		});
+		respond(404, function ($request, $response) { echo "404"; });
+
+		$this->assertOutputSame("slash",          function(){dispatch("/u");});
+		$this->assertOutputSame("slash",          function(){dispatch("/u/");});
+		$this->assertOutputSame("id",             function(){dispatch("/u/35");});
+		$this->assertOutputSame("404",             function(){dispatch("/35");});
+	}
+
 	public function test405Routes() {
 		$resultArray = array();
 
@@ -196,19 +211,6 @@ class RoutesTest extends PHPUnit_Framework_TestCase {
 		$this->assertCount( 2, $resultArray );
 		$this->assertContains( 'GET', $resultArray );
 		$this->assertContains( 'POST', $resultArray );
-	}
-
-	public function testNSDispatch() {
-		with('/u', function () {
-			respond('GET', '/?',     function ($request, $response) { echo "slash";   });
-			respond('GET', '/[:id]', function ($request, $response) { echo "id"; });
-		});
-		respond(404, function ($request, $response) { echo "404"; });
-
-		$this->assertOutputSame("slash",          function(){dispatch("/u");});
-		$this->assertOutputSame("slash",          function(){dispatch("/u/");});
-		$this->assertOutputSame("id",             function(){dispatch("/u/35");});
-		$this->assertOutputSame("404",             function(){dispatch("/35");});
 	}
 
 }
