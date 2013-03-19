@@ -123,6 +123,24 @@ class RoutesTest extends PHPUnit_Framework_TestCase {
 		dispatch( '/blue' );
 	}
 
+	public function testParamsAlphaNum() {
+		respond( '/[a:audible]', function($request){ echo $request->param('audible'); });
+
+		$this->assertOutputSame( 'blue42',  function(){ dispatch('/blue42'); });
+		$this->assertOutputSame( '',        function(){ dispatch('/texas-29'); });
+		$this->assertOutputSame( '',        function(){ dispatch('/texas29!'); });
+	}
+
+	public function testParamsHex() {
+		respond( '/[h:hexcolor]', function($request){ echo $request->param('hexcolor'); });
+
+		$this->assertOutputSame( '00f',     function(){ dispatch('/00f'); });
+		$this->assertOutputSame( 'abc123',  function(){ dispatch('/abc123'); });
+		$this->assertOutputSame( '',        function(){ dispatch('/876zih'); });
+		$this->assertOutputSame( '',        function(){ dispatch('/00g'); });
+		$this->assertOutputSame( '',        function(){ dispatch('/hi23'); });
+	}
+
 	public function test404TriggersOnce() {
 		$this->expectOutputString( 'd404 Code' );
 
