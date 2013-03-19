@@ -9,6 +9,7 @@ class TestClass {
 }
 
 class RoutesTest extends PHPUnit_Framework_TestCase {
+
 	protected function setUp() {
 		global $__routes;
 		$__routes = array();
@@ -17,6 +18,14 @@ class RoutesTest extends PHPUnit_Framework_TestCase {
 		$__namespace = null;
 
 		$_SERVER['SERVER_PROTOCOL'] = 'HTTP/1.1';
+	}
+
+	protected function assertOutputSame($expected, $callback, $message = '') {
+	    ob_start();
+	    call_user_func($callback);
+	    $out = ob_get_contents();
+	    ob_end_clean();
+	    $this->assertSame($expected, $out, $message);
 	}
 
 	public function testBasic() {
@@ -114,6 +123,24 @@ class RoutesTest extends PHPUnit_Framework_TestCase {
 		dispatch( '/blue' );
 	}
 
+	public function testParamsAlphaNum() {
+		respond( '/[a:audible]', function($request){ echo $request->param('audible'); });
+
+		$this->assertOutputSame( 'blue42',  function(){ dispatch('/blue42'); });
+		$this->assertOutputSame( '',        function(){ dispatch('/texas-29'); });
+		$this->assertOutputSame( '',        function(){ dispatch('/texas29!'); });
+	}
+
+	public function testParamsHex() {
+		respond( '/[h:hexcolor]', function($request){ echo $request->param('hexcolor'); });
+
+		$this->assertOutputSame( '00f',     function(){ dispatch('/00f'); });
+		$this->assertOutputSame( 'abc123',  function(){ dispatch('/abc123'); });
+		$this->assertOutputSame( '',        function(){ dispatch('/876zih'); });
+		$this->assertOutputSame( '',        function(){ dispatch('/00g'); });
+		$this->assertOutputSame( '',        function(){ dispatch('/hi23'); });
+	}
+
 	public function test404TriggersOnce() {
 		$this->expectOutputString( 'd404 Code' );
 
@@ -173,6 +200,39 @@ class RoutesTest extends PHPUnit_Framework_TestCase {
 		dispatch( '/endpoint' );
 	}
 
+	public function testTrailingMatch() {
+		respond( '/?[*:trailing]/dog/?', function($request){ echo 'yup'; });
+
+		$this->assertOutputSame( 'yup', function(){ dispatch('/cat/dog'); });
+		$this->assertOutputSame( 'yup', function(){ dispatch('/cat/cheese/dog'); });
+		$this->assertOutputSame( 'yup', function(){ dispatch('/cat/ball/cheese/dog/'); });
+		$this->assertOutputSame( 'yup', function(){ dispatch('/cat/ball/cheese/dog'); });
+		$this->assertOutputSame( 'yup', function(){ dispatch('cat/ball/cheese/dog/'); });
+		$this->assertOutputSame( 'yup', function(){ dispatch('cat/ball/cheese/dog'); });
+	}
+
+	public function testTrailingPossessiveMatch() {
+		respond( '/sub-dir/[**:trailing]', function($request){ echo 'yup'; });
+
+		$this->assertOutputSame( 'yup', function(){ dispatch('/sub-dir/dog'); });
+		$this->assertOutputSame( 'yup', function(){ dispatch('/sub-dir/cheese/dog'); });
+		$this->assertOutputSame( 'yup', function(){ dispatch('/sub-dir/ball/cheese/dog/'); });
+		$this->assertOutputSame( 'yup', function(){ dispatch('/sub-dir/ball/cheese/dog'); });
+	}
+
+	public function testNSDispatch() {
+		with('/u', function () {
+			respond('GET', '/?',     function ($request, $response) { echo "slash";   });
+			respond('GET', '/[:id]', function ($request, $response) { echo "id"; });
+		});
+		respond(404, function ($request, $response) { echo "404"; });
+
+		$this->assertOutputSame("slash",          function(){dispatch("/u");});
+		$this->assertOutputSame("slash",          function(){dispatch("/u/");});
+		$this->assertOutputSame("id",             function(){dispatch("/u/35");});
+		$this->assertOutputSame("404",             function(){dispatch("/35");});
+	}
+
 	public function test405Routes() {
 		$resultArray = array();
 
@@ -190,4 +250,5 @@ class RoutesTest extends PHPUnit_Framework_TestCase {
 		$this->assertContains( 'GET', $resultArray );
 		$this->assertContains( 'POST', $resultArray );
 	}
+
 }
