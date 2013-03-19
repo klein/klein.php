@@ -182,6 +182,17 @@ class RoutesTest extends PHPUnit_Framework_TestCase {
 		dispatch( '/endpoint' );
 	}
 
+	public function testTrailingMatch() {
+		respond( '/?[*:trailing]/dog/?', function($request){ echo 'yup'; });
+
+		$this->assertOutputSame( 'yup', function(){ dispatch('/cat/dog'); });
+		$this->assertOutputSame( 'yup', function(){ dispatch('/cat/cheese/dog'); });
+		$this->assertOutputSame( 'yup', function(){ dispatch('/cat/ball/cheese/dog/'); });
+		$this->assertOutputSame( 'yup', function(){ dispatch('/cat/ball/cheese/dog'); });
+		$this->assertOutputSame( 'yup', function(){ dispatch('cat/ball/cheese/dog/'); });
+		$this->assertOutputSame( 'yup', function(){ dispatch('cat/ball/cheese/dog'); });
+	}
+
 	public function testNSDispatch() {
 		with('/u', function () {
 			respond('GET', '/?',     function ($request, $response) { echo "slash";   });
