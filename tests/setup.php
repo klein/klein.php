@@ -1,6 +1,7 @@
 <?php
 
 require_once dirname(dirname(__FILE__)) . '/klein.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 
 class HeadersEcho extends _Headers {
 	public function header($key, $value = null) {

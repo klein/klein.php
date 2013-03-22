@@ -8,15 +8,11 @@ class TestClass {
 	}
 }
 
+use \Klein\Klein;
+
 class RoutesTest extends PHPUnit_Framework_TestCase {
 
 	protected function setUp() {
-		global $__routes;
-		$__routes = array();
-
-		global $__namespace;
-		$__namespace = null;
-
 		$_SERVER['SERVER_PROTOCOL'] = 'HTTP/1.1';
 	}
 
@@ -28,7 +24,7 @@ class RoutesTest extends PHPUnit_Framework_TestCase {
 	    $this->assertSame($expected, $out, $message);
 	}
 
-	protected function loadExternalRoutes() {
+	protected function loadExternalRoutes( Klein $app_context ) {
 		$route_directory = __DIR__ . '/routes/';
 		$route_files = scandir( $route_directory );
 		$route_namespaces = array();
@@ -38,7 +34,7 @@ class RoutesTest extends PHPUnit_Framework_TestCase {
 				$route_namespace = '/' . basename( $file, '.php' );
 				$route_namespaces[] = $route_namespace;
 
-				with( $route_namespace, $route_directory . $file );
+				$app_context->with( $route_namespace, $route_directory . $file );
 			}
 		}
 
@@ -48,245 +44,299 @@ class RoutesTest extends PHPUnit_Framework_TestCase {
 	public function testBasic() {
 		$this->expectOutputString( 'x' );
 
-		respond( '/', function(){ echo 'x'; });
-		respond( '/something', function(){ echo 'y'; });
-		dispatch( '/' );
+		$klein = new Klein();
+
+		$klein->respond( '/', function(){ echo 'x'; });
+		$klein->respond( '/something', function(){ echo 'y'; });
+		$klein->dispatch( '/' );
 	}
 
 	public function testCallable() {
 		$this->expectOutputString( 'okok' );
-		respond( '/', array('TestClass', 'GET'));
-		respond( '/', 'TestClass::GET');
-		dispatch( '/' );
+
+		$klein = new Klein();
+
+		$klein->respond( '/', array('TestClass', 'GET'));
+		$klein->respond( '/', 'TestClass::GET');
+		$klein->dispatch( '/' );
 	}
 
 	public function testAppReference() {
 		$this->expectOutputString( 'ab' );
-		respond( '/', function($r, $r ,$a){ $a->state = 'a'; });
-		respond( '/', function($r, $r ,$a){ $a->state .= 'b'; });
-		respond( '/', function($r, $r ,$a){ print $a->state; });
-		dispatch( '/' );
+
+		$klein = new Klein();
+
+		$klein->respond( '/', function($r, $r ,$a){ $a->state = 'a'; });
+		$klein->respond( '/', function($r, $r ,$a){ $a->state .= 'b'; });
+		$klein->respond( '/', function($r, $r ,$a){ print $a->state; });
+		$klein->dispatch( '/' );
 	}
 
 	public function testCatchallImplicit() {
 		$this->expectOutputString( 'b' );
 
-		respond( '/one', function(){ echo 'a'; });
-		respond( function(){ echo 'b'; });
-		respond( '/two', function(){ } );
-		respond( '/three', function(){ echo 'c'; } );
-		dispatch( '/two' );
+		$klein = new Klein();
+
+		$klein->respond( '/one', function(){ echo 'a'; });
+		$klein->respond( function(){ echo 'b'; });
+		$klein->respond( '/two', function(){ } );
+		$klein->respond( '/three', function(){ echo 'c'; } );
+		$klein->dispatch( '/two' );
 	}
 
 	public function testCatchallAsterisk() {
 		$this->expectOutputString( 'b' );
 
-		respond( '/one', function(){ echo 'a'; } );
-		respond( '*', function(){ echo 'b'; } );
-		respond( '/two', function(){ } );
-		respond( '/three', function(){ echo 'c'; } );
-		dispatch( '/two' );
+		$klein = new Klein();
+
+		$klein->respond( '/one', function(){ echo 'a'; } );
+		$klein->respond( '*', function(){ echo 'b'; } );
+		$klein->respond( '/two', function(){ } );
+		$klein->respond( '/three', function(){ echo 'c'; } );
+		$klein->dispatch( '/two' );
 	}
 
 	public function testCatchallImplicitTriggers404() {
 		$this->expectOutputString("b404\n");
 
-		respond( function(){ echo 'b'; });
-		respond( 404, function(){ echo "404\n"; } );
-		dispatch( '/' );
+		$klein = new Klein();
+
+		$klein->respond( function(){ echo 'b'; });
+		$klein->respond( 404, function(){ echo "404\n"; } );
+		$klein->dispatch( '/' );
 	}
 
 	public function testRegex() {
 		$this->expectOutputString( 'z' );
 
-		respond( '@/bar', function(){ echo 'z'; });
-		dispatch( '/bar' );
+		$klein = new Klein();
+
+		$klein->respond( '@/bar', function(){ echo 'z'; });
+		$klein->dispatch( '/bar' );
 	}
 
 	public function testRegexNegate() {
 		$this->expectOutputString( "y" );
 
-		respond( '!@/foo', function(){ echo 'y'; });
-		dispatch( '/bar' );
+		$klein = new Klein();
+
+		$klein->respond( '!@/foo', function(){ echo 'y'; });
+		$klein->dispatch( '/bar' );
 	}
 
 	public function test404() {
 		$this->expectOutputString("404\n");
 
-		respond( '/', function(){ echo 'a'; } );
-		respond( 404, function(){ echo "404\n"; } );
-		dispatch( '/foo' );
+		$klein = new Klein();
+
+		$klein->respond( '/', function(){ echo 'a'; } );
+		$klein->respond( 404, function(){ echo "404\n"; } );
+		$klein->dispatch( '/foo' );
 	}
 
 	public function testParamsBasic() {
 		$this->expectOutputString( 'blue' );
 
-		respond( '/[:color]', function($request){ echo $request->param('color'); });
-		dispatch( '/blue' );
+		$klein = new Klein();
+
+		$klein->respond( '/[:color]', function($request){ echo $request->param('color'); });
+		$klein->dispatch( '/blue' );
 	}
 
 	public function testParamsIntegerSuccess() {
 		$this->expectOutputString( "string(3) \"987\"\n" );
 
-		respond( '/[i:age]', function($request){ var_dump( $request->param('age') ); });
-		dispatch( '/987' );
+		$klein = new Klein();
+
+		$klein->respond( '/[i:age]', function($request){ var_dump( $request->param('age') ); });
+		$klein->dispatch( '/987' );
 	}
 
 	public function testParamsIntegerFail() {
 		$this->expectOutputString( '404 Code' );
 
-		respond( '/[i:age]', function($request){ var_dump( $request->param('age') ); });
-		respond( '404', function(){ echo '404 Code'; } );
-		dispatch( '/blue' );
+		$klein = new Klein();
+
+		$klein->respond( '/[i:age]', function($request){ var_dump( $request->param('age') ); });
+		$klein->respond( '404', function(){ echo '404 Code'; } );
+		$klein->dispatch( '/blue' );
 	}
 
 	public function testParamsAlphaNum() {
-		respond( '/[a:audible]', function($request){ echo $request->param('audible'); });
+		$klein = new Klein();
 
-		$this->assertOutputSame( 'blue42',  function(){ dispatch('/blue42'); });
-		$this->assertOutputSame( '',        function(){ dispatch('/texas-29'); });
-		$this->assertOutputSame( '',        function(){ dispatch('/texas29!'); });
+		$klein->respond( '/[a:audible]', function($request){ echo $request->param('audible'); });
+
+		$this->assertOutputSame( 'blue42',  function() use ($klein) { $klein->dispatch('/blue42'); });
+		$this->assertOutputSame( '',        function() use ($klein) { $klein->dispatch('/texas-29'); });
+		$this->assertOutputSame( '',        function() use ($klein) { $klein->dispatch('/texas29!'); });
 	}
 
 	public function testParamsHex() {
-		respond( '/[h:hexcolor]', function($request){ echo $request->param('hexcolor'); });
+		$klein = new Klein();
 
-		$this->assertOutputSame( '00f',     function(){ dispatch('/00f'); });
-		$this->assertOutputSame( 'abc123',  function(){ dispatch('/abc123'); });
-		$this->assertOutputSame( '',        function(){ dispatch('/876zih'); });
-		$this->assertOutputSame( '',        function(){ dispatch('/00g'); });
-		$this->assertOutputSame( '',        function(){ dispatch('/hi23'); });
+		$klein->respond( '/[h:hexcolor]', function($request){ echo $request->param('hexcolor'); });
+
+		$this->assertOutputSame( '00f',     function() use ($klein) { $klein->dispatch('/00f'); });
+		$this->assertOutputSame( 'abc123',  function() use ($klein) { $klein->dispatch('/abc123'); });
+		$this->assertOutputSame( '',        function() use ($klein) { $klein->dispatch('/876zih'); });
+		$this->assertOutputSame( '',        function() use ($klein) { $klein->dispatch('/00g'); });
+		$this->assertOutputSame( '',        function() use ($klein) { $klein->dispatch('/hi23'); });
 	}
 
 	public function test404TriggersOnce() {
 		$this->expectOutputString( 'd404 Code' );
 
-		respond( function(){ echo "d"; } );
-		respond( '404', function(){ echo '404 Code'; } );
-		dispatch( '/notroute' );
+		$klein = new Klein();
+
+		$klein->respond( function(){ echo "d"; } );
+		$klein->respond( '404', function(){ echo '404 Code'; } );
+		$klein->dispatch( '/notroute' );
 	}
 
 	public function testMethodCatchAll() {
 		$this->expectOutputString( 'yup!123' );
 
-		respond( 'POST', null, function($request){ echo 'yup!'; });
-		respond( 'POST', '*', function($request){ echo '1'; });
-		respond( 'POST', '/', function($request){ echo '2'; });
-		respond( function($request){ echo '3'; });
-		dispatch( '/', 'POST' );
+		$klein = new Klein();
+
+		$klein->respond( 'POST', null, function($request){ echo 'yup!'; });
+		$klein->respond( 'POST', '*', function($request){ echo '1'; });
+		$klein->respond( 'POST', '/', function($request){ echo '2'; });
+		$klein->respond( function($request){ echo '3'; });
+		$klein->dispatch( '/', 'POST' );
 	}
 
 	public function testLazyTrailingMatch() {
 		$this->expectOutputString( 'this-is-a-title-123' );
 
-		respond( '/posts/[*:title][i:id]', function($request){
+		$klein = new Klein();
+
+		$klein->respond( '/posts/[*:title][i:id]', function($request){
 			echo $request->param('title')
 				. $request->param('id');
 		});
-		dispatch( '/posts/this-is-a-title-123' );
+		$klein->dispatch( '/posts/this-is-a-title-123' );
 	}
 
 	public function testFormatMatch() {
 		$this->expectOutputString( 'xml' );
 
-		respond( '/output.[xml|json:format]', function($request){
+		$klein = new Klein();
+
+		$klein->respond( '/output.[xml|json:format]', function($request){
 			echo $request->param('format');
 		});
-		dispatch( '/output.xml' );
+		$klein->dispatch( '/output.xml' );
 	}
 
 	public function testDotSeparator() {
 		$this->expectOutputString( 'matchA:slug=ABCD_E--matchB:slug=ABCD_E--' );
 
-		respond('/[*:cpath]/[:slug].[:format]',   function($rq){ echo 'matchA:slug='.$rq->param("slug").'--';});
-		respond('/[*:cpath]/[:slug].[:format]?',  function($rq){ echo 'matchB:slug='.$rq->param("slug").'--';});
-		respond('/[*:cpath]/[a:slug].[:format]?', function($rq){ echo 'matchC:slug='.$rq->param("slug").'--';});
-		dispatch("/category1/categoryX/ABCD_E.php");
+		$klein = new Klein();
+
+		$klein->respond('/[*:cpath]/[:slug].[:format]',   function($rq){ echo 'matchA:slug='.$rq->param("slug").'--';});
+		$klein->respond('/[*:cpath]/[:slug].[:format]?',  function($rq){ echo 'matchB:slug='.$rq->param("slug").'--';});
+		$klein->respond('/[*:cpath]/[a:slug].[:format]?', function($rq){ echo 'matchC:slug='.$rq->param("slug").'--';});
+		$klein->dispatch("/category1/categoryX/ABCD_E.php");
 
 		$this->assertOutputSame(
 			'matchA:slug=ABCD_E--matchB:slug=ABCD_E--',
-			function(){dispatch( '/category1/categoryX/ABCD_E.php' );}
+			function() use ($klein) { $klein->dispatch( '/category1/categoryX/ABCD_E.php' );}
 		);
 		$this->assertOutputSame(
 			'matchB:slug=ABCD_E--',
-			function(){dispatch( '/category1/categoryX/ABCD_E' );}
+			function() use ($klein) { $klein->dispatch( '/category1/categoryX/ABCD_E' );}
 		);
 	}
 
 	public function testControllerActionStyleRouteMatch() {
 		$this->expectOutputString( 'donkey-kick' );
 
-		respond( '/[:controller]?/[:action]?', function($request){
+		$klein = new Klein();
+
+		$klein->respond( '/[:controller]?/[:action]?', function($request){
 			echo $request->param('controller')
 				. '-' . $request->param('action');
 		});
-		dispatch( '/donkey/kick' );
+		$klein->dispatch( '/donkey/kick' );
 	}
 
 	public function testRespondArgumentOrder() {
 		$this->expectOutputString( 'abcdef' );
 
-		respond( function(){ echo 'a'; });
-		respond( null, function(){ echo 'b'; });
-		respond( '/endpoint', function(){ echo 'c'; });
-		respond( 'GET', null, function(){ echo 'd'; });
-		respond( array( 'GET', 'POST' ), null, function(){ echo 'e'; });
-		respond( array( 'GET', 'POST' ), '/endpoint', function(){ echo 'f'; });
-		dispatch( '/endpoint' );
+		$klein = new Klein();
+
+		$klein->respond( function(){ echo 'a'; });
+		$klein->respond( null, function(){ echo 'b'; });
+		$klein->respond( '/endpoint', function(){ echo 'c'; });
+		$klein->respond( 'GET', null, function(){ echo 'd'; });
+		$klein->respond( array( 'GET', 'POST' ), null, function(){ echo 'e'; });
+		$klein->respond( array( 'GET', 'POST' ), '/endpoint', function(){ echo 'f'; });
+		$klein->dispatch( '/endpoint' );
 	}
 
 	public function testTrailingMatch() {
-		respond( '/?[*:trailing]/dog/?', function($request){ echo 'yup'; });
+		$klein = new Klein();
 
-		$this->assertOutputSame( 'yup', function(){ dispatch('/cat/dog'); });
-		$this->assertOutputSame( 'yup', function(){ dispatch('/cat/cheese/dog'); });
-		$this->assertOutputSame( 'yup', function(){ dispatch('/cat/ball/cheese/dog/'); });
-		$this->assertOutputSame( 'yup', function(){ dispatch('/cat/ball/cheese/dog'); });
-		$this->assertOutputSame( 'yup', function(){ dispatch('cat/ball/cheese/dog/'); });
-		$this->assertOutputSame( 'yup', function(){ dispatch('cat/ball/cheese/dog'); });
+		$klein->respond( '/?[*:trailing]/dog/?', function($request){ echo 'yup'; });
+
+		$this->assertOutputSame( 'yup', function() use ($klein) { $klein->dispatch('/cat/dog'); });
+		$this->assertOutputSame( 'yup', function() use ($klein) { $klein->dispatch('/cat/cheese/dog'); });
+		$this->assertOutputSame( 'yup', function() use ($klein) { $klein->dispatch('/cat/ball/cheese/dog/'); });
+		$this->assertOutputSame( 'yup', function() use ($klein) { $klein->dispatch('/cat/ball/cheese/dog'); });
+		$this->assertOutputSame( 'yup', function() use ($klein) { $klein->dispatch('cat/ball/cheese/dog/'); });
+		$this->assertOutputSame( 'yup', function() use ($klein) { $klein->dispatch('cat/ball/cheese/dog'); });
 	}
 
 	public function testTrailingPossessiveMatch() {
-		respond( '/sub-dir/[**:trailing]', function($request){ echo 'yup'; });
+		$klein = new Klein();
 
-		$this->assertOutputSame( 'yup', function(){ dispatch('/sub-dir/dog'); });
-		$this->assertOutputSame( 'yup', function(){ dispatch('/sub-dir/cheese/dog'); });
-		$this->assertOutputSame( 'yup', function(){ dispatch('/sub-dir/ball/cheese/dog/'); });
-		$this->assertOutputSame( 'yup', function(){ dispatch('/sub-dir/ball/cheese/dog'); });
+		$klein->respond( '/sub-dir/[**:trailing]', function($request){ echo 'yup'; });
+
+		$this->assertOutputSame( 'yup', function() use ($klein) { $klein->dispatch('/sub-dir/dog'); });
+		$this->assertOutputSame( 'yup', function() use ($klein) { $klein->dispatch('/sub-dir/cheese/dog'); });
+		$this->assertOutputSame( 'yup', function() use ($klein) { $klein->dispatch('/sub-dir/ball/cheese/dog/'); });
+		$this->assertOutputSame( 'yup', function() use ($klein) { $klein->dispatch('/sub-dir/ball/cheese/dog'); });
 	}
 
 	public function testNSDispatch() {
-		with('/u', function () {
-			respond('GET', '/?',     function ($request, $response) { echo "slash";   });
-			respond('GET', '/[:id]', function ($request, $response) { echo "id"; });
-		});
-		respond(404, function ($request, $response) { echo "404"; });
+		$klein = new Klein();
 
-		$this->assertOutputSame("slash",          function(){dispatch("/u");});
-		$this->assertOutputSame("slash",          function(){dispatch("/u/");});
-		$this->assertOutputSame("id",             function(){dispatch("/u/35");});
-		$this->assertOutputSame("404",             function(){dispatch("/35");});
+		$klein->with('/u', function () use ($klein) {
+			$klein->respond('GET', '/?',     function ($request, $response) { echo "slash";   });
+			$klein->respond('GET', '/[:id]', function ($request, $response) { echo "id"; });
+		});
+		$klein->respond(404, function ($request, $response) { echo "404"; });
+
+		$this->assertOutputSame("slash",          function() use ($klein) { $klein->dispatch("/u");});
+		$this->assertOutputSame("slash",          function() use ($klein) { $klein->dispatch("/u/");});
+		$this->assertOutputSame("id",             function() use ($klein) { $klein->dispatch("/u/35");});
+		$this->assertOutputSame("404",             function() use ($klein) { $klein->dispatch("/35");});
 	}
 
 	public function testNSDispatchExternal() {
-		$ext_namespaces = $this->loadExternalRoutes();
+		$klein = new Klein();
 
-		respond(404, function ($request, $response) { echo "404"; });
+		$ext_namespaces = $this->loadExternalRoutes( $klein );
+
+		$klein->respond(404, function ($request, $response) { echo "404"; });
 
 		foreach ( $ext_namespaces as $namespace ) {
-			$this->assertOutputSame('yup',  function() use ( $namespace ) { dispatch( $namespace . '/' ); });
-			$this->assertOutputSame('yup',  function() use ( $namespace ) { dispatch( $namespace . '/testing/' ); });
+			$this->assertOutputSame('yup',  function() use ( $klein, $namespace ) { $klein->dispatch( $namespace . '/' ); });
+			$this->assertOutputSame('yup',  function() use ( $klein, $namespace ) { $klein->dispatch( $namespace . '/testing/' ); });
 		}
 	}
 
 	public function testNSDispatchExternalRerequired() {
-		$ext_namespaces = $this->loadExternalRoutes();
+		$klein = new Klein();
 
-		respond(404, function ($request, $response) { echo "404"; });
+		$ext_namespaces = $this->loadExternalRoutes( $klein );
+
+		$klein->respond(404, function ($request, $response) { echo "404"; });
 
 		foreach ( $ext_namespaces as $namespace ) {
-			$this->assertOutputSame('yup',  function() use ( $namespace ) { dispatch( $namespace . '/' ); });
-			$this->assertOutputSame('yup',  function() use ( $namespace ) { dispatch( $namespace . '/testing/' ); });
+			$this->assertOutputSame('yup',  function() use ( $klein, $namespace ) { $klein->dispatch( $namespace . '/' ); });
+			$this->assertOutputSame('yup',  function() use ( $klein, $namespace ) { $klein->dispatch( $namespace . '/testing/' ); });
 		}
 	}
 
@@ -295,13 +345,15 @@ class RoutesTest extends PHPUnit_Framework_TestCase {
 
 		$this->expectOutputString( '_' );
 
-		respond( function(){ echo '_'; });
-		respond( 'GET', null, function(){ echo 'fail'; });
-		respond( array( 'GET', 'POST' ), null, function(){ echo 'fail'; });
-		respond( 405, function($a,$b,$c,$d,$methods) use ( &$resultArray ) {
+		$klein = new Klein();
+
+		$klein->respond( function(){ echo '_'; });
+		$klein->respond( 'GET', null, function(){ echo 'fail'; });
+		$klein->respond( array( 'GET', 'POST' ), null, function(){ echo 'fail'; });
+		$klein->respond( 405, function($a,$b,$c,$d,$methods) use ( &$resultArray ) {
 			$resultArray = $methods;
 		});
-		dispatch( '/sure', 'DELETE' );
+		$klein->dispatch( '/sure', 'DELETE' );
 
 		$this->assertCount( 2, $resultArray );
 		$this->assertContains( 'GET', $resultArray );
