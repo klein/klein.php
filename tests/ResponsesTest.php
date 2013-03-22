@@ -2,17 +2,14 @@
 
 require_once dirname(__FILE__) . '/setup.php';
 
+use \Klein\Klein;
+
 class ResponsesTest extends PHPUnit_Framework_TestCase {
 
 	/**
 	 * Class properties
 	 */
 	protected $header_vals = array();
-
-	public function setUp() {
-		$this->headers = new HeadersSave( $this->header_vals );
-		_Request::$_headers = _Response::$_headers = new HeadersSave( $this->header_vals );
-	}
 
 	public function testJSON() {
 		// Create a test object to be JSON encoded/decoded
@@ -26,10 +23,12 @@ class ResponsesTest extends PHPUnit_Framework_TestCase {
 			'uniqid' => uniqid(),
 		);
 
-		respond( '/json', function( $request, $response ) use ( $test_object ) {
+		$klein = new Klein( new HeadersSave( $this->header_vals ) );
+
+		$klein->respond( '/json', function( $request, $response ) use ( $test_object ) {
 			$response->json( $test_object );
 		});
-		dispatch( '/json' );
+		$klein->dispatch( '/json' );
 
 		// Expect our output to match our json encoded test object
 		$this->expectOutputString(
