@@ -11,12 +11,9 @@
 
 namespace Klein;
 
-use \_Request;
-use \_Response;
-use \_App;
 
 /**
- * Klein 
+ * Klein
  *
  * Main Klein router class
  * 
@@ -29,8 +26,23 @@ class Klein {
      */
     protected $_routes;
     protected $_namespace;
+    protected $headers;
 
-    public function	__construct() {
+    /**
+     * Route objects
+     */
+    protected $request;
+    protected $response;
+    protected $app;
+
+    public function	__construct( Headers $headers = null, Request $request = null, Response $response = null, App $app = null ) {
+        // Create our base Headers object to be cloned
+        $headers        = $headers  ?: new Headers();
+
+        // Instanciate our routing objects
+        $this->request  = $request  ?: new Request( clone $headers );
+        $this->response = $response ?: new Response( clone $headers );
+        $this->app      = $app      ?: new App();
     }
 
     function respond($method, $route = '*', $callback = null) {
@@ -101,11 +113,6 @@ class Klein {
 
     // Dispatch the request to the approriate route(s)
     function dispatch($uri = null, $req_method = null, array $params = null, $capture = false) {
-        // Pass $request, $response, and a blank object for sharing scope through each callback
-        $request  = new _Request;
-        $response = new _Response;
-        $app      = new _App;
-
         // Get/parse the request URI and method
         if (null === $uri) {
             $uri = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '/';
@@ -177,9 +184,9 @@ class Klein {
             // Easily handle 404's
             } elseif ($_route === '404' && !$matched && count($methods_matched) <= 0) {
                 try {
-                    call_user_func($callback, $request, $response, $app, $matched, $methods_matched);
+                    call_user_func($callback, $this->request, $this->response, $this->app, $matched, $methods_matched);
                 } catch (Exception $e) {
-                    $response->error($e);
+                    $this->response->error($e);
                 }
 
                 ++$matched;
@@ -188,9 +195,9 @@ class Klein {
             // Easily handle 405's
             } elseif ($_route === '405' && !$matched && count($methods_matched) > 0) {
                 try {
-                    call_user_func($callback, $request, $response, $app, $matched, $methods_matched);
+                    call_user_func($callback, $this->request, $this->response, $this->app, $matched, $methods_matched);
                 } catch (Exception $e) {
-                    $response->error($e);
+                    $this->response->error($e);
                 }
 
                 ++$matched;
@@ -231,11 +238,11 @@ class Klein {
                 if (false !== $apc) {
                     $regex = apc_fetch("route:$route");
                     if (false === $regex) {
-                        $regex = compile_route($route);
+                        $regex = $this->compile_route($route);
                         apc_store("route:$route", $regex);
                     }
                 } else {
-                    $regex = compile_route($route);
+                    $regex = $this->compile_route($route);
                 }
 
                 $match = preg_match($regex, $uri, $params);
@@ -252,9 +259,9 @@ class Klein {
                            $_REQUEST = array_merge($_REQUEST, $params);
                       }
                       try {
-                           call_user_func($callback, $request, $response, $app, $matched, $methods_matched);
+                           call_user_func($callback, $this->request, $this->response, $this->app, $matched, $methods_matched);
                       } catch (Exception $e) {
-                           $response->error($e);
+                           $this->response->error($e);
                       }
                       if ($_route !== '*') {
                            $count_match && ++$matched;
@@ -264,16 +271,16 @@ class Klein {
         }
 
         if (!$matched && count($methods_matched) > 0) {
-            $response->code(405);
-            $response->header('Allow', implode(', ', $methods_matched));
+            $this->response->code(405);
+            $this->response->header('Allow', implode(', ', $methods_matched));
         } elseif (!$matched) {
-            $response->code(404);
+            $this->response->code(404);
         }
 
         if ($capture) {
             return ob_get_clean();
-        } elseif ($response->chunked) {
-            $response->chunk();
+        } elseif ($this->response->chunked) {
+            $this->response->chunk();
         } else {
             ob_end_flush();
         }
@@ -312,6 +319,10 @@ class Klein {
             }
         }
         return "`^$route$`";
+    }
+
+    function addValidator($method, $callback) {
+        Validator::$_methods[strtolower($method)] = $callback;
     }
 
 } // End class Klein
