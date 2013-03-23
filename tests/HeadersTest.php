@@ -1,8 +1,8 @@
 <?php
 
-require_once dirname(__FILE__) . '/setup.php';
+require_once dirname(__FILE__) . '/AbstractKleinTest.php';
 
-class HeadersTest extends PHPUnit_Framework_TestCase {
+class HeadersTest extends AbstractKleinTest {
 	public function setUp() {
 		$this->headers = new HeadersEcho;
 	}
