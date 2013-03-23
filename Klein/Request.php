@@ -101,7 +101,7 @@ class Request {
 
     // Start a validator chain for the specified parameter
     public function validate($param, $err = null) {
-        return new _Validator($this->param($param), $err);
+        return new Validator($this->param($param), $err);
     }
 
     // Gets a unique ID for the request

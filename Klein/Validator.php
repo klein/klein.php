@@ -11,6 +11,8 @@
 
 namespace Klein;
 
+use \Klein\Exceptions\ValidatorException;
+
 
 /**
  * Validator 
