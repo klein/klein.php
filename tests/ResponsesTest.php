@@ -10,6 +10,8 @@ class ResponsesTest extends AbstractKleinTest {
 	protected $header_vals = array();
 
 	public function setUp() {
+		parent::setUp();
+
 		$this->headers = new HeadersSave( $this->header_vals );
 		_Request::$_headers = _Response::$_headers = new HeadersSave( $this->header_vals );
 	}
