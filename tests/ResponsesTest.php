@@ -1,10 +1,10 @@
 <?php
 
-require_once dirname(__FILE__) . '/setup.php';
+require_once dirname(__FILE__) . '/AbstractKleinTest.php';
 
 use \Klein\Klein;
 
-class ResponsesTest extends PHPUnit_Framework_TestCase {
+class ResponsesTest extends AbstractKleinTest {
 
 	/**
 	 * Class properties
