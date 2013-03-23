@@ -9,7 +9,7 @@
  * @license     MIT
  */
 
-namespace Klein;
+namespace Klein\Exceptions;
 
 use \Exception;
 
