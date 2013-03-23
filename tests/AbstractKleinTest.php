@@ -26,7 +26,7 @@ abstract class AbstractKleinTest extends PHPUnit_Framework_TestCase {
 	    $this->assertSame($expected, $out, $message);
 	}
 
-	protected function loadExternalRoutes() {
+	protected function loadExternalRoutes( Klein $app_context ) {
 		$route_directory = __DIR__ . '/routes/';
 		$route_files = scandir( $route_directory );
 		$route_namespaces = array();
@@ -36,7 +36,7 @@ abstract class AbstractKleinTest extends PHPUnit_Framework_TestCase {
 				$route_namespace = '/' . basename( $file, '.php' );
 				$route_namespaces[] = $route_namespace;
 
-				with( $route_namespace, $route_directory . $file );
+				$app_context->with( $route_namespace, $route_directory . $file );
 			}
 		}
 
