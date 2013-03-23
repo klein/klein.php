@@ -2,6 +2,8 @@
 
 require_once dirname(__FILE__) . '/setup.php';
 
+use \Klein\Klein;
+
 /**
  * AbstractKleinTest 
  * 
@@ -10,12 +12,15 @@ require_once dirname(__FILE__) . '/setup.php';
  */
 abstract class AbstractKleinTest extends PHPUnit_Framework_TestCase {
 
-	protected function setUp() {
-		global $__routes;
-		$__routes = array();
+	/**
+	 * Class properties
+	 */
+	protected $klein_app;
 
-		global $__namespace;
-		$__namespace = null;
+	protected function setUp() {
+		// Create a new klein app,
+		// since we need one pretty much everywhere
+		$this->klein_app = new Klein();
 	}
 
 	protected function assertOutputSame($expected, $callback, $message = '') {
@@ -26,7 +31,12 @@ abstract class AbstractKleinTest extends PHPUnit_Framework_TestCase {
 	    $this->assertSame($expected, $out, $message);
 	}
 
-	protected function loadExternalRoutes( Klein $app_context ) {
+	protected function loadExternalRoutes( Klein $app_context = null ) {
+		// Did we not pass an instance?
+		if ( is_null( $app_context ) ) {
+			$app_context = $this->klein_app ?: new Klein();
+		}
+
 		$route_directory = __DIR__ . '/routes/';
 		$route_files = scandir( $route_directory );
 		$route_namespaces = array();
