@@ -89,4 +89,133 @@ class ValidationsTest extends AbstractKleinTest {
 		$this->assertOutputSame( 'fail', function(){ dispatch('/test'); });
 	}
 
+	public function testFloat() {
+		respond( '/[:test_param]', function( $request ) {
+			$request->validate( 'test_param' )
+			        ->notNull()
+			        ->isFloat();
+
+            // We should only get here if we passed our validations
+            echo 'yup!';
+		} );
+
+		$this->assertOutputSame( 'yup!', function(){ dispatch('/2'); });
+		$this->assertOutputSame( 'yup!', function(){ dispatch('/2.5'); });
+		$this->assertOutputSame( 'yup!', function(){ dispatch('/3.14'); });
+		$this->assertOutputSame( 'fail', function(){ dispatch('/2.'); });
+		$this->assertOutputSame( 'fail', function(){ dispatch('/2,5'); });
+		$this->assertOutputSame( 'fail', function(){ dispatch('/~2'); });
+		$this->assertOutputSame( 'fail', function(){ dispatch('/2 5'); });
+		$this->assertOutputSame( 'fail', function(){ dispatch('/test'); });
+	}
+
+	public function testEmail() {
+		respond( '/[:test_param]', function( $request ) {
+			$request->validate( 'test_param' )
+			        ->notNull()
+			        ->isEmail();
+
+            // We should only get here if we passed our validations
+            echo 'yup!';
+		} );
+
+		$this->assertOutputSame( 'yup!', function(){ dispatch('/test@test.com'); });
+		$this->assertOutputSame( 'yup!', function(){ dispatch('/test@test.co.uk'); });
+		$this->assertOutputSame( 'fail', function(){ dispatch('/test'); });
+		$this->assertOutputSame( 'fail', function(){ dispatch('/test@'); });
+		$this->assertOutputSame( 'fail', function(){ dispatch('/2 5'); });
+	}
+
+	public function testAlpha() {
+		respond( '/[:test_param]', function( $request ) {
+			$request->validate( 'test_param' )
+			        ->notNull()
+			        ->isAlpha();
+
+            // We should only get here if we passed our validations
+            echo 'yup!';
+		} );
+
+		$this->assertOutputSame( 'yup!', function(){ dispatch('/test'); });
+		$this->assertOutputSame( 'yup!', function(){ dispatch('/Test'); });
+		$this->assertOutputSame( 'yup!', function(){ dispatch('/TesT'); });
+		$this->assertOutputSame( 'fail', function(){ dispatch('/test1'); });
+		$this->assertOutputSame( 'fail', function(){ dispatch('/1test'); });
+		$this->assertOutputSame( 'fail', function(){ dispatch('/@test'); });
+		$this->assertOutputSame( 'fail', function(){ dispatch('/-test'); });
+	}
+
+	public function testAlnum() {
+		respond( '/[:test_param]', function( $request ) {
+			$request->validate( 'test_param' )
+			        ->notNull()
+			        ->isAlnum();
+
+            // We should only get here if we passed our validations
+            echo 'yup!';
+		} );
+
+		$this->assertOutputSame( 'yup!', function(){ dispatch('/test'); });
+		$this->assertOutputSame( 'yup!', function(){ dispatch('/Test'); });
+		$this->assertOutputSame( 'yup!', function(){ dispatch('/TesT'); });
+		$this->assertOutputSame( 'yup!', function(){ dispatch('/test1'); });
+		$this->assertOutputSame( 'yup!', function(){ dispatch('/1test'); });
+		$this->assertOutputSame( 'fail', function(){ dispatch('/@test'); });
+		$this->assertOutputSame( 'fail', function(){ dispatch('/-test'); });
+	}
+
+	public function testContains() {
+		respond( '/[:test_param]', function( $request ) {
+			$request->validate( 'test_param' )
+			        ->notNull()
+			        ->contains( 'dog' );
+
+            // We should only get here if we passed our validations
+            echo 'yup!';
+		} );
+
+		$this->assertOutputSame( 'yup!', function(){ dispatch('/bigdog'); });
+		$this->assertOutputSame( 'yup!', function(){ dispatch('/dogbig'); });
+		$this->assertOutputSame( 'yup!', function(){ dispatch('/cat-dog'); });
+		$this->assertOutputSame( 'yup!', function(){ dispatch('/catdogbear'); });
+		$this->assertOutputSame( 'fail', function(){ dispatch('/DOG'); });
+		$this->assertOutputSame( 'fail', function(){ dispatch('/doog'); });
+	}
+
+	public function testChars() {
+		respond( '/[:test_param]', function( $request ) {
+			$request->validate( 'test_param' )
+			        ->notNull()
+			        ->isChars( 'c-f' );
+
+            // We should only get here if we passed our validations
+            echo 'yup!';
+		} );
+
+		$this->assertOutputSame( 'yup!', function(){ dispatch('/cdef'); });
+		$this->assertOutputSame( 'yup!', function(){ dispatch('/cfed'); });
+		$this->assertOutputSame( 'yup!', function(){ dispatch('/cf'); });
+		$this->assertOutputSame( 'fail', function(){ dispatch('/cdefg'); });
+		$this->assertOutputSame( 'fail', function(){ dispatch('/dog'); });
+	}
+
+	public function testRegex() {
+		respond( '/[:test_param]', function( $request ) {
+			$request->validate( 'test_param' )
+			        ->notNull()
+			        ->isRegex( '/cat-[dog|bear|thing]/' );
+
+            // We should only get here if we passed our validations
+            echo 'yup!';
+		} );
+
+		$this->assertOutputSame( 'yup!', function(){ dispatch('/cat-dog'); });
+		$this->assertOutputSame( 'yup!', function(){ dispatch('/cat-bear'); });
+		$this->assertOutputSame( 'yup!', function(){ dispatch('/cat-thing'); });
+		$this->assertOutputSame( 'fail', function(){ dispatch('/cat'); });
+		$this->assertOutputSame( 'fail', function(){ dispatch('/cat-'); });
+		$this->assertOutputSame( 'fail', function(){ dispatch('/dog-cat'); });
+		$this->assertOutputSame( 'fail', function(){ dispatch('/catdog'); });
+	}
+
 }
