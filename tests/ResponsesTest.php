@@ -1,8 +1,8 @@
 <?php
 
-require_once dirname(__FILE__) . '/setup.php';
+require_once dirname(__FILE__) . '/AbstractKleinTest.php';
 
-class ResponsesTest extends PHPUnit_Framework_TestCase {
+class ResponsesTest extends AbstractKleinTest {
 
 	/**
 	 * Class properties
@@ -10,6 +10,8 @@ class ResponsesTest extends PHPUnit_Framework_TestCase {
 	protected $header_vals = array();
 
 	public function setUp() {
+		parent::setUp();
+
 		$this->headers = new HeadersSave( $this->header_vals );
 		_Request::$_headers = _Response::$_headers = new HeadersSave( $this->header_vals );
 	}
