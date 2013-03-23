@@ -218,4 +218,49 @@ class ValidationsTest extends AbstractKleinTest {
 		$this->assertOutputSame( 'fail', function(){ dispatch('/catdog'); });
 	}
 
+	public function testNotRegex() {
+		respond( '/[:test_param]', function( $request ) {
+			$request->validate( 'test_param' )
+			        ->notNull()
+			        ->notRegex( '/cat-[dog|bear|thing]/' );
+
+            // We should only get here if we passed our validations
+            echo 'yup!';
+		} );
+
+		$this->assertOutputSame( 'yup!', function(){ dispatch('/cat'); });
+		$this->assertOutputSame( 'yup!', function(){ dispatch('/cat-'); });
+		$this->assertOutputSame( 'yup!', function(){ dispatch('/dog-cat'); });
+		$this->assertOutputSame( 'yup!', function(){ dispatch('/catdog'); });
+		$this->assertOutputSame( 'fail', function(){ dispatch('/cat-dog'); });
+		$this->assertOutputSame( 'fail', function(){ dispatch('/cat-bear'); });
+		$this->assertOutputSame( 'fail', function(){ dispatch('/cat-thing'); });
+	}
+
+	public function testCustomValidator() {
+        // Add our custom validator
+        addValidator( 'donkey', function( $string, $color ) {
+            $regex_str = $color . '[-_]?donkey';
+
+            return preg_match( '/' . $regex_str . '/', $string );
+        });
+
+		respond( '/[:test_param]', function( $request ) {
+			$request->validate( 'test_param' )
+			        ->notNull()
+			        ->isDonkey( 'brown' );
+
+            // We should only get here if we passed our validations
+            echo 'yup!';
+		} );
+
+		$this->assertOutputSame( 'yup!', function(){ dispatch('/browndonkey'); });
+		$this->assertOutputSame( 'yup!', function(){ dispatch('/brown-donkey'); });
+		$this->assertOutputSame( 'yup!', function(){ dispatch('/brown_donkey'); });
+		$this->assertOutputSame( 'fail', function(){ dispatch('/bluedonkey'); });
+		$this->assertOutputSame( 'fail', function(){ dispatch('/blue-donkey'); });
+		$this->assertOutputSame( 'fail', function(){ dispatch('/blue_donkey'); });
+		$this->assertOutputSame( 'fail', function(){ dispatch('/brown_donk'); });
+	}
+
 }
