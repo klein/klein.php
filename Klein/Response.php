@@ -11,6 +11,9 @@
 
 namespace Klein;
 
+use \Exception;
+use \ErrorException;
+
 
 /**
  * Response 

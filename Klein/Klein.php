@@ -11,6 +11,8 @@
 
 namespace Klein;
 
+use \Exception;
+
 
 /**
  * Klein

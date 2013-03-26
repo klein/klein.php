@@ -11,6 +11,8 @@
 
 namespace Klein;
 
+use \ErrorException;
+
 use \Klein\Exceptions\ValidatorException;
 
 
