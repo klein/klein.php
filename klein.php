@@ -374,6 +374,11 @@ class _Request {
         return new _Validator($this->param($param), $err);
     }
 
+    // Start a validator chain for the current URI
+    public function validateUri($err = null) {
+        return new _Validator($this->uri(), $err);
+    }
+
     // Gets a unique ID for the request
     public function id() {
         if (null === $this->_id) {
