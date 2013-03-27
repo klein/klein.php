@@ -254,7 +254,11 @@ class Response {
     }
 
     // Adds an error callback to the stack of error handlers
-    public function onError($callback) {
+    public function onError($callback, $allow_duplicates = true) {
+        if ( !$allow_duplicates && in_array($callback, $this->_errorCallbacks) ) {
+            return false;
+        }
+
         $this->_errorCallbacks[] = $callback;
     }
 
