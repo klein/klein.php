@@ -19,15 +19,15 @@ namespace Klein;
  */
 class Request {
 
-    protected $_id = null;
+    protected $id = null;
 
     // HTTP headers helper
-    protected $_headers = null;
+    protected $headers = null;
 
-    protected $_body = null;
+    protected $body = null;
 
     public function	__construct( Headers $headers ) {
-        $this->_headers = $headers;
+        $this->headers = $headers;
     }
 
     // Returns all parameters (GET, POST, named) that match the mask
@@ -74,7 +74,7 @@ class Request {
         $secure = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'];
         if (!$secure && $required) {
             $url = 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
-            $this->_headers->header('Location: ' . $url);
+            $this->headers->header('Location: ' . $url);
         }
         return $secure;
     }
@@ -106,10 +106,10 @@ class Request {
 
     // Gets a unique ID for the request
     public function id() {
-        if (null === $this->_id) {
-            $this->_id = sha1(mt_rand() . microtime(true) . mt_rand());
+        if (null === $this->id) {
+            $this->id = sha1(mt_rand() . microtime(true) . mt_rand());
         }
-        return $this->_id;
+        return $this->id;
     }
 
     // Gets a session variable associated with the request
@@ -135,10 +135,10 @@ class Request {
 
     // Gets the request body
     public function body() {
-        if (null === $this->_body) {
-            $this->_body = @file_get_contents('php://input');
+        if (null === $this->body) {
+            $this->body = @file_get_contents('php://input');
         }
-        return $this->_body;
+        return $this->body;
     }
 
 } // End class Request

@@ -25,13 +25,13 @@ class Validator {
 
     public static $_methods = array();
 
-    protected $_str = null;
-    protected $_err = null;
+    protected $str = null;
+    protected $err = null;
 
     // Sets up the validator chain with the string and optional error message
     public function __construct($str, $err = null) {
-        $this->_str = $str;
-        $this->_err = $err;
+        $this->str = $str;
+        $this->err = $err;
         if (empty(static::$_defaultAdded)) {
             static::addDefault();
         }
@@ -95,7 +95,7 @@ class Validator {
             throw new ErrorException("Unknown method $method()");
         }
         $validator = static::$_methods[$validator];
-        array_unshift($args, $this->_str);
+        array_unshift($args, $this->str);
 
         switch (count($args)) {
             case 1:  $result = $validator($args[0]); break;
@@ -106,10 +106,10 @@ class Validator {
         }
 
         $result = (bool)($result ^ $reverse);
-        if (false === $this->_err) {
+        if (false === $this->err) {
             return $result;
         } elseif (false === $result) {
-            throw new ValidatorException($this->_err);
+            throw new ValidatorException($this->err);
         }
         return $this;
     }

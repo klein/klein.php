@@ -26,8 +26,8 @@ class Klein {
     /**
      * Class properties
      */
-    protected $_routes;
-    protected $_namespace;
+    protected $routes;
+    protected $namespace;
     protected $headers;
 
     /**
@@ -60,7 +60,7 @@ class Klein {
         // only consider a request to be matched when not using matchall
         $count_match = ($route !== '*');
 
-        if ($this->_namespace && $route[0] === '@' || ($route[0] === '!' && $route[1] === '@')) {
+        if ($this->namespace && $route[0] === '@' || ($route[0] === '!' && $route[1] === '@')) {
             if ($route[0] === '!') {
                 $negate = true;
                 $route = substr($route, 2);
@@ -77,26 +77,26 @@ class Klein {
             }
 
             if ($negate) {
-                $route = '@^' . $this->_namespace . '(?!' . $route . ')';
+                $route = '@^' . $this->namespace . '(?!' . $route . ')';
             } else {
-                $route = '@^' . $this->_namespace . $route;
+                $route = '@^' . $this->namespace . $route;
             }
         }
         // empty route with namespace is a match-all
-        elseif ($this->_namespace && ('*' === $route)) {
-            $route = '@^' . $this->_namespace . '(/|$)';
+        elseif ($this->namespace && ('*' === $route)) {
+            $route = '@^' . $this->namespace . '(/|$)';
         } else {
-            $route = $this->_namespace . $route;
+            $route = $this->namespace . $route;
         }
 
-        $this->_routes[] = array($method, $route, $callback, $count_match);
+        $this->routes[] = array($method, $route, $callback, $count_match);
 
         return $callback;
     }
 
     function with($namespace, $routes) {
-        $previous = $this->_namespace;
-        $this->_namespace .= $namespace;
+        $previous = $this->namespace;
+        $this->namespace .= $namespace;
 
         if (is_callable($routes)) {
             $routes();
@@ -104,7 +104,7 @@ class Klein {
             require $routes;
         }
 
-        $this->_namespace = $previous;
+        $this->namespace = $previous;
     }
 
     function startSession() {
@@ -147,7 +147,7 @@ class Klein {
 
         ob_start();
 
-        foreach ($this->_routes as $handler) {
+        foreach ($this->routes as $handler) {
             list($method, $_route, $callback, $count_match) = $handler;
 
             $method_match = null;

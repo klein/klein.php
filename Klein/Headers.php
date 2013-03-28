@@ -20,7 +20,7 @@ namespace Klein;
 class Headers {
 
     public function header($key, $value = null) {
-        header($this->_header($key, $value));
+        header($this->header($key, $value));
     }
 
     /**

@@ -23,22 +23,22 @@ use \ErrorException;
 class Response {
 
     public $chunked = false;
-    protected $_errorCallbacks = array();
-    protected $_layout = null;
-    protected $_view = null;
-    protected $_code = 200;
+    protected $errorCallbacks = array();
+    protected $layout = null;
+    protected $view = null;
+    protected $code = 200;
 
-    protected $_headers = null;
+    protected $headers = null;
 
     public function	__construct( Headers $headers ) {
-        $this->_headers = $headers;
+        $this->headers = $headers;
     }
 
     // Enable response chunking. See: http://bit.ly/hg3gHb
     public function chunk($str = null) {
         if (false === $this->chunked) {
             $this->chunked = true;
-            $this->_headers->header('Transfer-encoding: chunked');
+            $this->headers->header('Transfer-encoding: chunked');
             flush();
         }
         if (null !== $str) {
@@ -55,7 +55,7 @@ class Response {
 
     // Sets a response header
     public function header($key, $value = null) {
-        $this->_headers->header($key, $value);
+        $this->headers->header($key, $value);
     }
 
     // Sets a response cookie
@@ -141,7 +141,7 @@ class Response {
     // Sends a HTTP response code
     public function code($code = null) {
         if (null !== $code) {
-            $this->_code = $code;
+            $this->code = $code;
 
             // Do we have the PHP 5.4 "http_response_code" function?
             if (function_exists('http_response_code')) {
@@ -154,7 +154,7 @@ class Response {
                 $this->header("$protocol $code");
             }
         }
-        return $this->_code;
+        return $this->code;
     }
 
     // Redirects the request to another URL
@@ -210,41 +210,41 @@ class Response {
 
     // Set the view layout
     public function layout($layout) {
-        $this->_layout = $layout;
+        $this->layout = $layout;
     }
 
     // Renders the current view
     public function yield() {
-        require $this->_view;
+        require $this->view;
     }
 
     // Renders a view + optional layout
     public function render($view, array $data = array()) {
-        $original_view = $this->_view;
+        $original_view = $this->view;
 
         if (!empty($data)) {
             $this->set($data);
         }
-        $this->_view = $view;
-        if (null === $this->_layout) {
+        $this->view = $view;
+        if (null === $this->layout) {
             $this->yield();
         } else {
-            require $this->_layout;
+            require $this->layout;
         }
         if (false !== $this->chunked) {
             $this->chunk();
         }
 
         // restore state for parent render()
-        $this->_view = $original_view;
+        $this->view = $original_view;
     }
 
     // Renders a view without a layout
     public function partial($view, array $data = array()) {
-        $layout = $this->_layout;
-        $this->_layout = null;
+        $layout = $this->layout;
+        $this->layout = null;
         $this->render($view, $data);
-        $this->_layout = $layout;
+        $this->layout = $layout;
     }
 
     // Sets a session variable
@@ -255,11 +255,11 @@ class Response {
 
     // Adds an error callback to the stack of error handlers
     public function onError($callback, $allow_duplicates = true) {
-        if ( !$allow_duplicates && in_array($callback, $this->_errorCallbacks) ) {
+        if ( !$allow_duplicates && in_array($callback, $this->errorCallbacks) ) {
             return false;
         }
 
-        $this->_errorCallbacks[] = $callback;
+        $this->errorCallbacks[] = $callback;
     }
 
     // Routes an exception through the error callbacks
@@ -267,8 +267,8 @@ class Response {
         $type = get_class($err);
         $msg = $err->getMessage();
 
-        if (count($this->_errorCallbacks) > 0) {
-            foreach (array_reverse($this->_errorCallbacks) as $callback) {
+        if (count($this->errorCallbacks) > 0) {
+            foreach (array_reverse($this->errorCallbacks) as $callback) {
                 if (is_callable($callback)) {
                     if ($callback($this, $msg, $type, $err)) {
                         return;
