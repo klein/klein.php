@@ -1,15 +1,26 @@
 <?php
+/**
+ * Klein (klein.php) - A lightning fast router for PHP
+ *
+ * @author      Chris O'Hara <cohara87@gmail.com>
+ * @author      Trevor Suarez (Rican7) (contributor and v2 refactorer)
+ * @copyright   (c) Chris O'Hara
+ * @link        https://github.com/chriso/klein.php
+ * @license     MIT
+ */
 
-require_once dirname(__FILE__) . '/AbstractKleinTest.php';
+namespace Klein\Tests;
 
-class TestClass {
-	static function GET($r, $r, $a) {
-		echo 'ok';
-	}
-}
 
 use \Klein\Klein;
 
+
+/**
+ * RoutesTest 
+ * 
+ * @uses AbstractKleinTest
+ * @package Klein\Tests
+ */
 class RoutesTest extends AbstractKleinTest {
 
 	protected function setUp() {
@@ -29,8 +40,8 @@ class RoutesTest extends AbstractKleinTest {
 	public function testCallable() {
 		$this->expectOutputString( 'okok' );
 
-		$this->klein_app->respond( '/', array('TestClass', 'GET'));
-		$this->klein_app->respond( '/', 'TestClass::GET');
+		$this->klein_app->respond( '/', array(__NAMESPACE__ . '\TestClass', 'GET'));
+		$this->klein_app->respond( '/', __NAMESPACE__ . '\TestClass::GET');
 		$this->klein_app->dispatch( '/' );
 	}
 
@@ -283,4 +294,4 @@ class RoutesTest extends AbstractKleinTest {
 		$this->assertContains( 'POST', $resultArray );
 	}
 
-}
+} // End class RoutesTest

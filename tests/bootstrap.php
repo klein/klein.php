@@ -1,9 +1,23 @@
 <?php
+/**
+ * Klein (klein.php) - A lightning fast router for PHP
+ *
+ * @author      Chris O'Hara <cohara87@gmail.com>
+ * @author      Trevor Suarez (Rican7) (contributor and v2 refactorer)
+ * @copyright   (c) Chris O'Hara
+ * @link        https://github.com/chriso/klein.php
+ * @license     MIT
+ */
+
+namespace Klein\Tests;
 
 use \Klein\Headers;
 
-// require_once dirname(dirname(__FILE__)) . '/klein.php';
-require_once __DIR__ . '/../vendor/autoload.php';
+
+// Load our autoloader, and add our Test class namespace
+$autoloader = require( __DIR__ . '/../vendor/autoload.php' );
+$autoloader->add( 'Klein\Tests', __DIR__ );
+
 
 class HeadersEcho extends Headers {
 	public function header($key, $value = null) {
@@ -28,5 +42,11 @@ class HeadersSave extends Headers {
 		$this->headers_values[] = $this->_header($key, $value) . "\n";
 
 		return $this->headers_values;
+	}
+}
+
+class TestClass {
+	static function GET($r, $r, $a) {
+		echo 'ok';
 	}
 }

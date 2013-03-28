@@ -1,13 +1,34 @@
 <?php
+/**
+ * Klein (klein.php) - A lightning fast router for PHP
+ *
+ * @author      Chris O'Hara <cohara87@gmail.com>
+ * @author      Trevor Suarez (Rican7) (contributor and v2 refactorer)
+ * @copyright   (c) Chris O'Hara
+ * @link        https://github.com/chriso/klein.php
+ * @license     MIT
+ */
 
-require_once dirname(__FILE__) . '/AbstractKleinTest.php';
+namespace Klein\Tests;
 
+
+use \Klein\Headers;
+
+
+/**
+ * HeadersTest 
+ * 
+ * @uses AbstractKleinTest
+ * @package Klein\Tests
+ */
 class HeadersTest extends AbstractKleinTest {
+
 	public function setUp() {
 		parent::setUp();
 
 		$this->headers = new HeadersEcho;
 	}
+
 	public function testResponseCode() {
 		$this->expectOutputString("HTTP/1.1 404 Not Found\n");
 		$this->headers->header( 'HTTP/1.1 404 Not Found' );
@@ -27,4 +48,5 @@ class HeadersTest extends AbstractKleinTest {
 		$this->expectOutputString("Foo-Bar: baz\n");
 		$this->headers->header( 'foo bar', 'baz' );
 	}
-}
+
+} // End class HeadersTest

@@ -1,7 +1,26 @@
 <?php
+/**
+ * Klein (klein.php) - A lightning fast router for PHP
+ *
+ * @author      Chris O'Hara <cohara87@gmail.com>
+ * @author      Trevor Suarez (Rican7) (contributor and v2 refactorer)
+ * @copyright   (c) Chris O'Hara
+ * @link        https://github.com/chriso/klein.php
+ * @license     MIT
+ */
 
-require_once dirname(__FILE__) . '/AbstractKleinTest.php';
+namespace Klein\Tests;
 
+
+use \Klein\Klein;
+
+
+/**
+ * ValidationsTest 
+ * 
+ * @uses AbstractKleinTest
+ * @package Klein\Tests
+ */
 class ValidationsTest extends AbstractKleinTest {
 
 	public function setUp() {
@@ -263,4 +282,4 @@ class ValidationsTest extends AbstractKleinTest {
 		$this->assertOutputSame( 'fail', function(){ $this->klein_app->dispatch('/brown_donk'); });
 	}
 
-}
+} // End class ValidationsTest
