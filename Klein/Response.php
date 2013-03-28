@@ -22,16 +22,20 @@ use \ErrorException;
  */
 class Response {
 
+    protected static $default_status_code = 200;
+
     public $chunked = false;
     protected $errorCallbacks = array();
-    protected $layout = null;
-    protected $view = null;
-    protected $code = 200;
+    protected $layout;
+    protected $view;
 
-    protected $headers = null;
+    protected $headers;
+    protected $http_status;
 
     public function	__construct( Headers $headers ) {
         $this->headers = $headers;
+
+        $this->http_status = new HttpStatus( static::$default_status_code );
     }
 
     // Enable response chunking. See: http://bit.ly/hg3gHb
@@ -139,22 +143,16 @@ class Response {
     }
 
     // Sends a HTTP response code
-    public function code($code = null) {
-        if (null !== $code) {
-            $this->code = $code;
+    public function code( $code = null ) {
+        if ( null !== $code ) {
+            $this->http_status = new HttpStatus( $code );
 
-            // Do we have the PHP 5.4 "http_response_code" function?
-            if (function_exists('http_response_code')) {
-                // Have PHP automatically create our HTTP Status header from our code
-                http_response_code($code);
-            }
-            else {
-                // Manually create the HTTP Status header
-                $protocol = isset($_SERVER['SERVER_PROTOCOL']) ? $_SERVER['SERVER_PROTOCOL'] : 'HTTP/1.0';
-                $this->header("$protocol $code");
-            }
+            // Manually create the HTTP Status header
+            $protocol = isset($_SERVER['SERVER_PROTOCOL']) ? $_SERVER['SERVER_PROTOCOL'] : 'HTTP/1.0';
+            $this->header( "$protocol $this->http_status" );
         }
-        return $this->code;
+
+        return $this->http_status->get_code();
     }
 
     // Redirects the request to another URL
@@ -279,7 +277,7 @@ class Response {
                 }
             }
         } else {
-            $this->code(500);
+            $this->code( 500 );
             throw new ErrorException($err);
         }
     }
