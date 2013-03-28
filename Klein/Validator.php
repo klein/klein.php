@@ -74,7 +74,7 @@ class Validator {
             return preg_match($pattern, $str);
         };
         static::$_methods['chars'] = function($str, $chars) {
-            return preg_match("`^[$chars]++$`i", $str);
+            return preg_match("/^[$chars]++$/i", $str);
         };
     }
 
