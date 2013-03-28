@@ -21,7 +21,7 @@ $autoloader->add( 'Klein\Tests', __DIR__ );
 
 class HeadersEcho extends Headers {
 	public function header($key, $value = null) {
-		echo $this->_header($key, $value) . "\n";
+		echo $this->create_header_string($key, $value) . "\n";
 	}
 }
 
@@ -39,7 +39,7 @@ class HeadersSave extends Headers {
 	}
 
 	public function header($key, $value = null) {
-		$this->headers_values[] = $this->_header($key, $value) . "\n";
+		$this->headers_values[] = $this->create_header_string($key, $value) . "\n";
 
 		return $this->headers_values;
 	}
