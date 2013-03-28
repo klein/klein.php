@@ -48,7 +48,7 @@ abstract class AbstractKleinTest extends PHPUnit_Framework_TestCase {
 	protected function setUp() {
 		// Create a new klein app,
 		// since we need one pretty much everywhere
-		$this->klein_app = new Klein();
+		$this->klein_app = new Klein( new HeadersNoOp() );
 	}
 
 	/**
