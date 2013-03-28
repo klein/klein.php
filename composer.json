@@ -8,7 +8,14 @@
       {
          "name": "Chris O'Hara",
          "email": "cohara87@gmail.com",
-         "homepage": "http://chris6f.com/"
+         "homepage": "http://chris6f.com/",
+         "role": "Creator/Developer"
+      },
+      {
+         "name": "Trevor Suarez",
+         "email": "rican7@gmail.com",
+         "homepage": "http://about.me/tnsuarez",
+         "role": "Contributor/Developer"
       }
    ],
    "require": {
