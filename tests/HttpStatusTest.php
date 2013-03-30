@@ -36,16 +36,34 @@ class HttpStatusTests extends AbstractKleinTest {
 		$code = 666;
 		$message = 'The devil\'s mark';
 
-		// Create and echo our status
 		$http_status = new HttpStatus( $code, $message );
-		echo $http_status;
-
-		$this->expectOutputString(
-			$code . ' ' . $message
-		);
 
 		$this->assertSame( $code, $http_status->get_code() );
 		$this->assertSame( $message, $http_status->get_message() );
+	}
+
+	public function testAutomaticMessage() {
+		$code = 201;
+		$expected_message = 'Created';
+
+		$http_status = new HttpStatus( $code );
+
+		$this->assertSame( $code, $http_status->get_code() );
+		$this->assertSame( $expected_message, $http_status->get_message() );
+	}
+
+	public function testStringOutput() {
+		// Set our manual test data
+		$code = 404;
+		$expected_string = '404 Not Found';
+
+		// Create and echo our status
+		$http_status = new HttpStatus( $code );
+		echo $http_status;
+
+		$this->expectOutputString( $expected_string );
+
+		$this->assertSame( $expected_string, $http_status->get_formatted_string() );
 	}
 
 } // End class HttpStatusTests
