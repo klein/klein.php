@@ -57,6 +57,7 @@ $klein->respond('GET', '/posts', $callback);
 $klein->respond('POST', '/posts/create', $callback);
 $klein->respond('PUT', '/posts/[i:id]', $callback);
 $klein->respond('DELETE', '/posts/[i:id]', $callback);
+$klein->respond('OPTIONS', null, $callback);
 
 // To match multiple request methods:
 $klein->respond(array('POST','GET'), $route, $callback);
