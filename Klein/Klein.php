@@ -459,7 +459,7 @@ class Klein {
      * @return void
      */
     function addValidator($method, $callback) {
-        Validator::$_methods[strtolower($method)] = $callback;
+        Validator::$methods[strtolower($method)] = $callback;
     }
 
 } // End class Klein

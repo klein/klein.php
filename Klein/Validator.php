@@ -34,7 +34,7 @@ class Validator {
      * @var array
      * @access protected
      */
-    public static $_methods = array();
+    public static $methods = array();
 
     /**
      * The string to validate
@@ -67,7 +67,7 @@ class Validator {
     public function __construct($str, $err = null) {
         $this->str = $str;
         $this->err = $err;
-        if (empty(static::$_defaultAdded)) {
+        if (empty(static::$defaultAdded)) {
             static::addDefault();
         }
     }
@@ -80,41 +80,41 @@ class Validator {
      * @return void
      */
     public static function addDefault() {
-        static::$_methods['null'] = function($str) {
+        static::$methods['null'] = function($str) {
             return $str === null || $str === '';
         };
-        static::$_methods['len'] = function($str, $min, $max = null) {
+        static::$methods['len'] = function($str, $min, $max = null) {
             $len = strlen($str);
             return null === $max ? $len === $min : $len >= $min && $len <= $max;
         };
-        static::$_methods['int'] = function($str) {
+        static::$methods['int'] = function($str) {
             return (string)$str === ((string)(int)$str);
         };
-        static::$_methods['float'] = function($str) {
+        static::$methods['float'] = function($str) {
             return (string)$str === ((string)(float)$str);
         };
-        static::$_methods['email'] = function($str) {
+        static::$methods['email'] = function($str) {
             return filter_var($str, FILTER_VALIDATE_EMAIL) !== false;
         };
-        static::$_methods['url'] = function($str) {
+        static::$methods['url'] = function($str) {
             return filter_var($str, FILTER_VALIDATE_URL) !== false;
         };
-        static::$_methods['ip'] = function($str) {
+        static::$methods['ip'] = function($str) {
             return filter_var($str, FILTER_VALIDATE_IP) !== false;
         };
-        static::$_methods['alnum'] = function($str) {
+        static::$methods['alnum'] = function($str) {
             return ctype_alnum($str);
         };
-        static::$_methods['alpha'] = function($str) {
+        static::$methods['alpha'] = function($str) {
             return ctype_alpha($str);
         };
-        static::$_methods['contains'] = function($str, $needle) {
+        static::$methods['contains'] = function($str, $needle) {
             return strpos($str, $needle) !== false;
         };
-        static::$_methods['regex'] = function($str, $pattern) {
+        static::$methods['regex'] = function($str, $pattern) {
             return preg_match($pattern, $str);
         };
-        static::$_methods['chars'] = function($str, $chars) {
+        static::$methods['chars'] = function($str, $chars) {
             return preg_match("/^[$chars]++$/i", $str);
         };
     }
@@ -143,10 +143,10 @@ class Validator {
         }
         $validator = strtolower($validator);
 
-        if (!$validator || !isset(static::$_methods[$validator])) {
+        if (!$validator || !isset(static::$methods[$validator])) {
             throw new ErrorException("Unknown method $method()");
         }
-        $validator = static::$_methods[$validator];
+        $validator = static::$methods[$validator];
         array_unshift($args, $this->str);
 
         switch (count($args)) {
