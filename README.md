@@ -53,7 +53,6 @@ $klein->respond('/[:name]', function ($request) {
 *Example 3* - [So RESTful](http://bit.ly/g93B1s)
 
 ```php
-<?php
 $klein->respond('GET', '/posts', $callback);
 $klein->respond('POST', '/posts/create', $callback);
 $klein->respond('PUT', '/posts/[i:id]', $callback);
@@ -73,7 +72,6 @@ $klein->respond('/posts/[create|edit:action]?/[i:id]?', function ($request, $res
 *Example 4* - Sending objects / files
 
 ```php
-<?php
 $klein->respond(function ($request, $response) {
     $response->xml = function ($object) {
         // Custom xml output function
@@ -97,7 +95,6 @@ $klein->respond('/report/latest', function ($request, $response) {
 *Example 5* - All together
 
 ```php
-<?php
 $klein->respond(function ($request, $response, $app) {
     // Handle exceptions => flash the message and redirect to the referrer
     $response->onError(function ($response, $err_msg) {
@@ -137,7 +134,6 @@ $klein->respond('POST', '/users/[i:id]/edit', function ($request, $response) {
 ## Route namespaces
 
 ```php
-<?php
 $klein->with('/users', function () use ($klein) {
 
     $klein->respond('GET', '/?', function ($request, $response) {
@@ -184,7 +180,6 @@ $klein->respond('GET', '/posts', function ($request, $response, $app) {
 To add a custom validator use `addValidator($method, $callback)`
 
 ```php
-<?php
 $klein->addValidator('hex', function ($str) {
     return preg_match('/^[0-9a-f]++$/i', $str);
 });
@@ -255,7 +250,6 @@ You can send properties or helpers to the view by assigning them
 to the `$response` object, or by using the second arg of `$response->render()`
 
 ```php
-<?php
 $response->escape = function ($str) {
     return htmlentities($str);
 };
@@ -274,7 +268,6 @@ $response->render('myview.phtml', array('title' => 'My View'));
 Views are compiled and run in the scope of `$response` so all response methods can be accessed with `$this`
 
 ```php
-<?php
 $this->render('partial.html')           // Render partials
 $this->param('myvar')                   // Access request parameters
 echo $this->query(array('page' => 2))   // Modify the current query string
@@ -283,7 +276,6 @@ echo $this->query(array('page' => 2))   // Modify the current query string
 -## API
 
 ```php
-<?php
 $request->
     header($key, $default = null)       // Get a request header
     cookie($key, $default = null)       // Get a cookie from the request
