@@ -394,7 +394,10 @@ class Klein {
         }
 
         if (!$matched && count($methods_matched) > 0) {
-            $this->response->code(405);
+            if (strcasecmp($req_method, 'OPTIONS') !== 0) {
+                $this->response->code(405);
+            }
+
             $this->response->header('Allow', implode(', ', $methods_matched));
         } elseif (!$matched) {
             $this->response->code(404);
