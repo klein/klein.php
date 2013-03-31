@@ -26,18 +26,72 @@ class Klein {
     /**
      * Class properties
      */
+
+    /**
+     * Array of the routes to match on dispatch
+     *
+     * @var array
+     * @access protected
+     */
     protected $routes;
+
+    /**
+     * The namespace of which to collect the routes in
+     * when matching, so you can define routes under a
+     * common endpoint
+     *
+     * @var string
+     * @access protected
+     */
     protected $namespace;
-    protected $headers;
+
 
     /**
      * Route objects
      */
+
+    /**
+     * The Request object passed to each matched route
+     *
+     * @var Request
+     * @access protected
+     */
     protected $request;
+
+    /**
+     * The Response object passed to each matched route
+     *
+     * @var Response
+     * @access protected
+     */
     protected $response;
+
+    /**
+     * A generic variable passed to each matched route
+     *
+     * @var mixed
+     * @access protected
+     */
     protected $app;
 
-    public function	__construct( Headers $headers = null, Request $request = null, Response $response = null, App $app = null ) {
+
+    /**
+     * Methods
+     */
+
+    /**
+     * Constructor
+     *
+     * Create a new Klein instance with optionally injected dependencies
+     * This DI allows for easy testing, object mocking, or class extension
+     *
+     * @param Headers $headers      A Headers object to be cloned to both the Request and Response objects
+     * @param Request $request      To contain all incoming request properties and related functions
+     * @param Response $response    To contain all outgoing response properties and related functions
+     * @param mixed $app            A generic that will be passed to each route callback, defaults to a new "App" instance
+     * @access public
+     */
+    public function	__construct( Headers $headers = null, Request $request = null, Response $response = null, $app = null ) {
         // Create our base Headers object to be cloned
         $headers        = $headers  ?: new Headers();
 
@@ -47,6 +101,32 @@ class Klein {
         $this->app      = $app      ?: new App();
     }
 
+    /**
+     * Add a new route to be matched on dispatch
+     *
+     * This method takes its arguments in a very loose format
+     * The only "required" parameter is the callback (which is very strange considering the argument definition order)
+     *
+     * <code>
+     * $router = new Klein();
+     *
+     * $router->respond( function() {
+     *     echo 'this works';
+     * });
+     * $router->respond( '/endpoint', function() {
+     *     echo 'this also works';
+     * });
+     * $router->respond( 'POST', '/endpoint', function() {
+     *     echo 'this also works!!!!';
+     * });
+     * </code>
+     *
+     * @param string | array $method    HTTP Method to match
+     * @param string $route             Route URI to match
+     * @param callable $callback        Callable callback method to execute on route match
+     * @access public
+     * @return callable $callback
+     */
     function respond($method, $route = '*', $callback = null) {
         $args = func_get_args();
         $callback = array_pop($args);
@@ -94,6 +174,32 @@ class Klein {
         return $callback;
     }
 
+    /**
+     * Collect a set of routes under a common namespace
+     *
+     * The routes may be passed in as either a callable (which holds the route definitions),
+     * or as a string of a filename, of which to "include" under the Klein router scope
+     *
+     * <code>
+     * $router = new Klein();
+     *
+     * $router->with( '/users', function() use ( $router ) {
+     *     $router->respond( '/', function() {
+     *         // do something interesting
+     *     });
+     *     $router->respond( '/[i:id]', function() {
+     *         // do something different
+     *     });
+     * });
+     *
+     * $router->with( '/cars', __DIR__ . '/routes/cars.php' );
+     * </code>
+     *
+     * @param string $namespace                     The namespace under which to collect the routes
+     * @param callable | string[filename] $routes   The defined routes to collect under the namespace
+     * @access public
+     * @return void
+     */
     function with($namespace, $routes) {
         $previous = $this->namespace;
         $this->namespace .= $namespace;
@@ -107,13 +213,28 @@ class Klein {
         $this->namespace = $previous;
     }
 
+    /**
+     * Start a PHP session
+     *
+     * @access public
+     * @return void
+     */
     function startSession() {
         if (session_id() === '') {
             session_start();
         }
     }
 
-    // Dispatch the request to the approriate route(s)
+    /**
+     * Dispatch the request to the approriate route(s)
+     *
+     * @param string $uri           The URI of which to match the routes against
+     * @param string $req_method    The HTTP request method of which to match the routes against
+     * @param array $params         The incoming request parameters to match the routes against
+     * @param boolean $capture      Whether or not we should capture the output in the output buffer
+     * @access public
+     * @return void
+     */
     function dispatch($uri = null, $req_method = null, array $params = null, $capture = false) {
         // Get/parse the request URI and method
         if (null === $uri) {
@@ -288,7 +409,13 @@ class Klein {
         }
     }
 
-    // Compiles a route string to a regular expression
+    /**
+     * Compiles a route string to a regular expression
+     *
+     * @param string $route     The route string to compile
+     * @access public
+     * @return void
+     */
     function compile_route($route) {
         if (preg_match_all('`(/|\.|)\[([^:\]]*+)(?::([^:\]]*+))?\](\?|)`', $route, $matches, PREG_SET_ORDER)) {
             $match_types = array(
@@ -323,6 +450,14 @@ class Klein {
         return "`^$route$`";
     }
 
+    /**
+     * Add a custom validator to validate request parameters against
+     *
+     * @param string $method        The name of the validator method
+     * @param callable $callback    The callback to perform on validation
+     * @access public
+     * @return void
+     */
     function addValidator($method, $callback) {
         Validator::$_methods[strtolower($method)] = $callback;
     }
