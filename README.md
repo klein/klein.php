@@ -324,7 +324,7 @@ $response->
     layout($layout)                                 // Set the view layout
     yield()                                         // Call inside the layout to render the view content
     error(Exception $err)                           // Routes an exception through the error callbacks
-    onError($callback)                              // $callback takes ($response, $msg, $err_type = null)
+    onError($callback, $allow_duplicates = true)    // $callback takes ($response, $msg, $err_type = null)
     set($key, $value = null)                        // Set a view property or helper
     set($arr)
     escape($str)                                    // Escape a string
