@@ -364,14 +364,6 @@ $validator->
     <Validator>()                       // Alias for is<Validator>()
 ```
 
-## More information
-
-See the [wiki](https://github.com/chriso/klein.php/wiki) for more information
-
-## Contributors
-
-- [Trevor N. Suarez](https://github.com/Rican7)
-
 ## Unit Testing
 
 Unit tests are a crucial part of developing a routing engine such as Klein.
@@ -402,6 +394,14 @@ account:
    [PHPDoc syntax](http://www.phpdoc.org/docs/latest/for-users/phpdoc-reference.html)
 - When creating pull requests, make sure to have checked your code for styling
   and create useful/verbose PR messages
+
+## More information
+
+See the [wiki](https://github.com/chriso/klein.php/wiki) for more information
+
+## Contributors
+
+- [Trevor N. Suarez](https://github.com/Rican7)
 
 ## License
 
