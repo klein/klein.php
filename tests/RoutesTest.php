@@ -276,6 +276,19 @@ class RoutesTest extends AbstractKleinTest {
 		}
 	}
 
+	public function test405DefaultRequest() {
+		// Echo our headers
+		$klein_app = new Klein( new HeadersEcho() );
+
+		$klein_app->respond( array( 'GET', 'POST' ), null, function(){ echo 'fail'; });
+		$klein_app->dispatch( '/', 'DELETE' );
+
+		$this->expectOutputString(
+			'HTTP/1.1 405 Method Not Allowed' . "\n"
+			. 'Allow: GET, POST' . "\n"
+		);
+	}
+
 	public function test405Routes() {
 		$resultArray = array();
 
@@ -292,6 +305,59 @@ class RoutesTest extends AbstractKleinTest {
 		$this->assertCount( 2, $resultArray );
 		$this->assertContains( 'GET', $resultArray );
 		$this->assertContains( 'POST', $resultArray );
+	}
+
+	public function testOptionsDefaultRequest() {
+		// Echo our headers
+		$klein_app = new Klein( new HeadersEcho() );
+
+		$klein_app->respond( function( $request, $response ) { $response->code( 200 ); } );
+		$klein_app->respond( array( 'GET', 'POST' ), null, function(){ echo 'fail'; });
+		$klein_app->dispatch( '/', 'OPTIONS' );
+
+		$this->expectOutputString(
+			'HTTP/1.1 200 OK' . "\n"
+			. 'Allow: GET, POST' . "\n"
+		);
+	}
+
+	public function testOptionsRoutes() {
+		$header_values = array();
+
+		$klein_app = new Klein( new HeadersSave( $header_values ) );
+
+		$access_control_headers = array(
+			array(
+				'key' => 'Access-Control-Allow-Origin',
+				'val' => 'http://example.com',
+			),
+			array(
+				'key' => 'Access-Control-Allow-Methods',
+				'val' => 'POST, GET, DELETE, OPTIONS, HEAD',
+			),
+		);
+
+		$klein_app->respond( 'GET', null, function(){ echo 'fail'; });
+		$klein_app->respond( array( 'GET', 'POST' ), null, function(){ echo 'fail'; });
+		$klein_app->respond( 'OPTIONS', null, function( $request, $response ) use ( $access_control_headers ) {
+			// Add access control headers
+			foreach ( $access_control_headers as $header ) {
+				$response->header( $header[ 'key' ], $header[ 'val' ] );
+			}
+		});
+		$klein_app->dispatch( '/', 'OPTIONS' );
+
+		// Assert headers were passed
+		$this->assertContains(
+			'Allow: GET, POST, OPTIONS' . "\n",
+			$header_values
+		);
+		foreach ( $access_control_headers as $header ) {
+			$this->assertContains(
+				sprintf( '%s: %s', $header[ 'key' ], $header[ 'val' ] ) . "\n",
+				$header_values
+			);
+		}
 	}
 
 } // End class RoutesTest
