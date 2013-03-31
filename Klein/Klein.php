@@ -19,7 +19,7 @@ use \Exception;
  *
  * Main Klein router class
  * 
- * @package		Klein
+ * @package     Klein
  */
 class Klein {
 
@@ -91,7 +91,7 @@ class Klein {
      * @param mixed $app            A generic that will be passed to each route callback, defaults to a new "App" instance
      * @access public
      */
-    public function	__construct( Headers $headers = null, Request $request = null, Response $response = null, $app = null ) {
+    public function __construct( Headers $headers = null, Request $request = null, Response $response = null, $app = null ) {
         // Create our base Headers object to be cloned
         $headers        = $headers  ?: new Headers();
 

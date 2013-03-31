@@ -15,7 +15,7 @@ namespace Klein;
 /**
  * Request
  * 
- * @package    Klein
+ * @package     Klein
  */
 class Request {
 
@@ -24,7 +24,7 @@ class Request {
      */
 
     /**
-	 * Unique identifier for the request
+     * Unique identifier for the request
      *
      * @var string
      * @access protected
@@ -32,7 +32,7 @@ class Request {
     protected $id;
 
     /**
-	 * HTTP Headers helper
+     * HTTP Headers helper
      *
      * @var Headers
      * @access protected
@@ -40,7 +40,7 @@ class Request {
     protected $headers;
 
     /**
-	 * The request body
+     * The request body
      *
      * @var string
      * @access protected
@@ -53,14 +53,14 @@ class Request {
      */
 
     /**
-	 * Constructor
-	 *
-	 * Create a new Request object with a dependency injected Headers instance
+     * Constructor
+     *
+     * Create a new Request object with a dependency injected Headers instance
      *
      * @param Headers $headers  Headers class to handle writing HTTP headers
      * @access public
      */
-    public function	__construct( Headers $headers ) {
+    public function __construct( Headers $headers ) {
         $this->headers = $headers;
     }
 

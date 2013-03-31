@@ -15,7 +15,7 @@ namespace Klein;
 /**
  * Headers 
  * 
- * @package    Klein
+ * @package		Klein
  */
 class Headers {
 

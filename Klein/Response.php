@@ -18,7 +18,7 @@ use \ErrorException;
 /**
  * Response 
  * 
- * @package    Klein
+ * @package     Klein
  */
 class Response {
 
@@ -32,7 +32,7 @@ class Response {
     protected $headers;
     protected $http_status;
 
-    public function	__construct( Headers $headers ) {
+    public function __construct( Headers $headers ) {
         $this->headers = $headers;
 
         $this->http_status = new HttpStatus( static::$default_status_code );
