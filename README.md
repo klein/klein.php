@@ -7,26 +7,45 @@
 ## Getting started
 
 1. PHP 5.3.x is required
-2. Setup [URL rewriting](https://gist.github.com/874000) so that all requests are handled by **index.php**
-3. Add `<?php require 'klein.php';` as your first line and `dispatch();` as your last
+2. Install Klein using [Composer](#composer-installation) (recommended) or manually
+3. Setup [URL rewriting](https://gist.github.com/874000) so that all requests are handled by **index.php**
 4. (Optional) Throw in some [APC](http://pecl.php.net/package/APC) for good measure
 
+## Composer Installation
+
+1. Get [Composer](http://getcomposer.org/)
+2. Require Klein with `php composer.phar require klein/klein v2.0.x`
+3. Install dependencies with `php composer.phar install`
+
 ## Example
+
+*Hello World* - Obligatory hello world example
+
+```php
+<?php
+require_once __DIR__ . '/../vendor/autoload.php';
+
+$klein = new \Klein\Klein();
+
+$klein->respond('GET', '/hello-world', function () {
+    echo 'Hello World!';
+});
+
+$klein->dispatch();
+```
 
 *Example 1* - Respond to all requests
 
 ```php
-<?php
-respond(function () {
-    echo 'Hello World!';
+$klein->respond(function () {
+    echo 'All the things';
 });
 ```
 
 *Example 2* - Named parameters
 
 ```php
-<?php
-respond('/[:name]', function ($request) {
+$klein->respond('/[:name]', function ($request) {
     echo 'Hello ' . $request->name;
 });
 ```
@@ -35,16 +54,16 @@ respond('/[:name]', function ($request) {
 
 ```php
 <?php
-respond('GET', '/posts', $callback);
-respond('POST', '/posts/create', $callback);
-respond('PUT', '/posts/[i:id]', $callback);
-respond('DELETE', '/posts/[i:id]', $callback);
+$klein->respond('GET', '/posts', $callback);
+$klein->respond('POST', '/posts/create', $callback);
+$klein->respond('PUT', '/posts/[i:id]', $callback);
+$klein->respond('DELETE', '/posts/[i:id]', $callback);
 
 // To match multiple request methods:
-respond(array('POST','GET'), $route, $callback);
+$klein->respond(array('POST','GET'), $route, $callback);
 
 // Or you might want to handle the requests in the same place
-respond('/posts/[create|edit:action]?/[i:id]?', function ($request, $response) {
+$klein->respond('/posts/[create|edit:action]?/[i:id]?', function ($request, $response) {
     switch ($request->action) {
         //
     }
@@ -55,7 +74,7 @@ respond('/posts/[create|edit:action]?/[i:id]?', function ($request, $response) {
 
 ```php
 <?php
-respond(function ($request, $response) {
+$klein->respond(function ($request, $response) {
     $response->xml = function ($object) {
         // Custom xml output function
     }
@@ -64,13 +83,13 @@ respond(function ($request, $response) {
     }
 });
 
-respond('/report.[xml|csv|json:format]?', function ($reqest, $response) {
+$klein->respond('/report.[xml|csv|json:format]?', function ($reqest, $response) {
     // Get the format or fallback to JSON as the default
     $send = $request->param('format', 'json');
     $response->$send($report);
 });
 
-respond('/report/latest', function ($request, $response) {
+$klein->respond('/report/latest', function ($request, $response) {
     $response->file('/tmp/cached_report.zip');
 });
 ```
@@ -79,7 +98,7 @@ respond('/report/latest', function ($request, $response) {
 
 ```php
 <?php
-respond(function ($request, $response, $app) {
+$klein->respond(function ($request, $response, $app) {
     // Handle exceptions => flash the message and redirect to the referrer
     $response->onError(function ($response, $err_msg) {
         $response->flash($err_msg);
@@ -95,7 +114,7 @@ respond(function ($request, $response, $app) {
     });
 });
 
-respond('POST', '/users/[i:id]/edit', function ($request, $response) {
+$klein->respond('POST', '/users/[i:id]/edit', function ($request, $response) {
     // Quickly validate input parameters
     $request->validate('username', 'Please enter a valid username')->isLen(5, 64)->isChars('a-zA-Z0-9-');
     $request->validate('password')->notNull();
@@ -119,20 +138,20 @@ respond('POST', '/users/[i:id]/edit', function ($request, $response) {
 
 ```php
 <?php
-with('/users', function () {
+$klein->with('/users', function () use ($klein) {
 
-    respond('GET', '/?', function ($request, $response) {
+    $klein->respond('GET', '/?', function ($request, $response) {
         // Show all users
     });
 
-    respond('GET', '/[:id]', function ($request, $response) {
+    $klein->respond('GET', '/[:id]', function ($request, $response) {
         // Show a single user
     });
 
 });
 
 foreach(array('projects', 'posts') as $controller) {
-    with("/$controller", "controllers/$controller.php");
+    $klein->with("/$controller", "controllers/$controller.php");
 }
 ```
 
@@ -143,7 +162,7 @@ first use.
 
 ``` php
 <?php
-respond(function ($request, $response, $app) {
+$klein->respond(function ($request, $response, $app) {
     $app->register('lazyDb', function() {
         $db = new stdClass();
         $db->name = 'foo';
@@ -153,7 +172,7 @@ respond(function ($request, $response, $app) {
 
 //Later
 
-respond('GET', '/posts', function ($request, $response, $app) {
+$klein->respond('GET', '/posts', function ($request, $response, $app) {
     // $db is initialised on first request
     // all subsequent calls will use the same instance
     echo $app->lazyDb->name;
@@ -166,7 +185,7 @@ To add a custom validator use `addValidator($method, $callback)`
 
 ```php
 <?php
-addValidator('hex', function ($str) {
+$klein->addValidator('hex', function ($str) {
     return preg_match('/^[0-9a-f]++$/i', $str);
 });
 ```
@@ -213,9 +232,9 @@ authentication or view layouts. e.g. as a basic example, the following
 code will wrap other routes with a header and footer
 
 ```php
-respond('*', function ($request, $response) { $response->render('header.phtml'; });
+$klein->respond('*', function ($request, $response) { $response->render('header.phtml'; });
 //other routes
-respond('*', function ($request, $response) { $response->render('footer.phtml'; });
+$klein->respond('*', function ($request, $response) { $response->render('footer.phtml'; });
 ```
 
 Routes automatically match the entire request URI. If you need to match
@@ -224,10 +243,10 @@ negate a route, use the `!` operator
 
 ```php
 // Match all requests that end with '.json' or '.csv'
-respond('@\.(json|csv)$', ...
+$klein->respond('@\.(json|csv)$', ...
 
 // Match all requests that _don't_ start with /admin
-respond('!@^/admin/', ...
+$klein->respond('!@^/admin/', ...
 ```
 
 ## Views
