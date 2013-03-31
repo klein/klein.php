@@ -52,6 +52,15 @@ class Validator {
      */
     protected $err;
 
+	/**
+	 * Flag for whether the default validation methods have been added or not
+	 *
+	 * @static
+	 * @var boolean
+	 * @access protected
+	 */
+	protected static $defaultAdded = false;
+
 
     /**
      * Methods
@@ -67,7 +76,8 @@ class Validator {
     public function __construct($str, $err = null) {
         $this->str = $str;
         $this->err = $err;
-        if (empty(static::$defaultAdded)) {
+
+        if ( !static::$defaultAdded ) {
             static::addDefault();
         }
     }
@@ -117,6 +127,8 @@ class Validator {
         static::$methods['chars'] = function($str, $chars) {
             return preg_match("/^[$chars]++$/i", $str);
         };
+
+		static::$defaultAdded = true;
     }
 
     /**
