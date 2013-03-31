@@ -22,7 +22,7 @@ class HttpStatus {
 
     /**
      * The HTTP status code
-     * 
+     *
      * @var int
      * @access protected
      */
@@ -30,7 +30,7 @@ class HttpStatus {
 
     /**
      * The HTTP status message
-     * 
+     *
      * @var string
      * @access protected
      */
@@ -100,7 +100,7 @@ class HttpStatus {
 
     /**
      * Constructor
-     * 
+     *
      * @param int $code The HTTP code
      * @param string $message (optional) HTTP message for the corresponding code
      * @access public
@@ -117,6 +117,8 @@ class HttpStatus {
     }
 
     /**
+     * Get the HTTP status code
+     *
      * @access public
      * @return int
      */
@@ -125,6 +127,8 @@ class HttpStatus {
     }
 
     /**
+     * Get the HTTP status message
+     *
      * @access public
      * @return string
      */
@@ -133,6 +137,8 @@ class HttpStatus {
     }
 
     /**
+     * Set the HTTP status code
+     *
      * @param int $code 
      * @access public
      * @return HttpStatus
@@ -143,6 +149,8 @@ class HttpStatus {
     }
 
     /**
+     * Set the HTTP status message
+     *
      * @param string $message 
      * @access public
      * @return HttpStatus
@@ -169,6 +177,12 @@ class HttpStatus {
     }
 
     /**
+     * Magic "__toString" method
+     *
+     * Allows the ability to arbitrarily use an instance of this class as a string
+     * This method will be automatically called, returning a string representation
+     * of this instance
+     *
      * @access public
      * @return string
      */
@@ -181,7 +195,7 @@ class HttpStatus {
      *
      * Returns null if no corresponding message was
      * found for the passed in code
-     * 
+     *
      * @param int $int 
      * @static
      * @access public
