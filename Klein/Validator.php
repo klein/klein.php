@@ -23,12 +23,47 @@ use \Klein\Exceptions\ValidatorException;
  */
 class Validator {
 
+    /**
+     * Class properties
+     */
+
+    /**
+     * The available validator methods
+     *
+     * @static
+     * @var array
+     * @access protected
+     */
     public static $_methods = array();
 
-    protected $str = null;
-    protected $err = null;
+    /**
+     * The string to validate
+     *
+     * @var string
+     * @access protected
+     */
+    protected $str;
 
-    // Sets up the validator chain with the string and optional error message
+    /**
+     * The custom exception message to throw on validation failure
+     *
+     * @var string
+     * @access protected
+     */
+    protected $err;
+
+
+    /**
+     * Methods
+     */
+
+    /**
+     * Sets up the validator chain with the string and optional error message
+     *
+     * @param string $str	The string to validate
+     * @param string $err	The optional custom exception message to throw on validation failure
+     * @access public
+     */
     public function __construct($str, $err = null) {
         $this->str = $str;
         $this->err = $err;
@@ -37,7 +72,13 @@ class Validator {
         }
     }
 
-    // Adds default validators on first use. See README for usage details
+    /**
+     * Adds default validators on first use
+     *
+     * @static
+     * @access public
+     * @return void
+     */
     public static function addDefault() {
         static::$_methods['null'] = function($str) {
             return $str === null || $str === '';
@@ -78,6 +119,17 @@ class Validator {
         };
     }
 
+    /**
+     * Magic "__call" method
+     *
+	 * Allows the ability to arbitrarily call a validator with an optional prefix
+	 * of "is" or "not" by simply calling an instance property like a callback
+	 *
+     * @param callable $method  The callable method to execute
+     * @param array $args       The argument array to pass to our callback
+     * @access public
+     * @return Validator
+     */
     public function __call($method, $args) {
         $reverse = false;
         $validator = $method;

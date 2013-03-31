@@ -95,7 +95,6 @@ class Response {
      *
      * @param Headers $headers  Headers class to handle writing HTTP headers
      * @access public
-     * @return void
      */
     public function __construct( Headers $headers ) {
         $this->headers = $headers;
