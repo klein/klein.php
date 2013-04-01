@@ -278,12 +278,23 @@ class Klein {
                     if (strcasecmp($req_method, $test) === 0) {
                         $method_match = true;
                     }
+                    // Test for HEAD request (like GET)
+                    elseif (strcasecmp($req_method, 'HEAD') === 0
+                            && ( strcasecmp($test, 'HEAD') === 0 || strcasecmp($test, 'GET') === 0 ) ) {
+                        $method_match = true;
+                    }
                 }
                 if (null === $method_match) {
                   $method_match = false;
                 }
             } elseif (null !== $method && strcasecmp($req_method, $method) !== 0) {
                $method_match = false;
+
+               // Test for HEAD request (like GET)
+               if (strcasecmp($req_method, 'HEAD') === 0
+                       && ( strcasecmp($method, 'HEAD') === 0 || strcasecmp($method, 'GET') === 0 ) ) {
+                   $method_match = true;
+               }
             } elseif (null !== $method && strcasecmp($req_method, $method) === 0) {
                $method_match = true;
             }
@@ -403,7 +414,12 @@ class Klein {
             $this->response->code(404);
         }
 
-        if ($capture) {
+        // Test for HEAD request (like GET)
+        if (strcasecmp($req_method, 'HEAD') === 0) {
+            // HEAD requests shouldn't return a body
+            return ob_get_clean();
+        }
+        elseif ($capture) {
             return ob_get_clean();
         } elseif ($this->response->chunked) {
             $this->response->chunk();
