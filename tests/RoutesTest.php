@@ -360,4 +360,41 @@ class RoutesTest extends AbstractKleinTest {
 		}
 	}
 
+	public function testHeadDefaultRequest() {
+		$header_values = array();
+
+		// Echo our headers
+		$klein_app = new Klein( new HeadersSave( $header_values ) );
+
+		$expected_headers = array(
+			array(
+				'key' => 'X-Some-Random-Header',
+				'val' => 'This was a GET route',
+			),
+		);
+
+		$klein_app->respond( 'GET', null, function( $request, $response ) use ( $expected_headers ) {
+			$response->code( 200 );
+
+			// Add access control headers
+			foreach ( $expected_headers as $header ) {
+				$response->header( $header[ 'key' ], $header[ 'val' ] );
+			}
+		});
+		$klein_app->respond( 'GET', '/', function(){ echo 'GET!'; });
+		$klein_app->respond( 'POST', '/', function(){ echo 'POST!'; });
+		$klein_app->dispatch( '/', 'HEAD' );
+
+		// Make sure we don't get a response body
+		$this->expectOutputString( '' );
+
+		// Assert headers were passed
+		foreach ( $expected_headers as $header ) {
+			$this->assertContains(
+				sprintf( '%s: %s', $header[ 'key' ], $header[ 'val' ] ) . "\n",
+				$header_values
+			);
+		}
+	}
+
 } // End class RoutesTest
