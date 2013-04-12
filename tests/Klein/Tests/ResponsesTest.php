@@ -22,14 +22,16 @@ use \Klein\Tests\Mocks\HeadersSave;
  * @uses AbstractKleinTest
  * @package Klein\Tests
  */
-class ResponsesTest extends AbstractKleinTest {
+class ResponsesTest extends AbstractKleinTest
+{
 
     /**
      * Class properties
      */
     protected $header_vals = array();
 
-    public function testJSON() {
+    public function testJSON()
+    {
         // Create a test object to be JSON encoded/decoded
         $test_object = (object) array(
             'cheese',
@@ -43,9 +45,13 @@ class ResponsesTest extends AbstractKleinTest {
 
         $klein = new Klein(new HeadersSave($this->header_vals));
 
-        $klein->respond('/json', function($request, $response) use ( $test_object) {
-            $response->json($test_object);
-        });
+        $klein->respond(
+            '/json',
+            function ($request, $response) use ($test_object) {
+                $response->json($test_object);
+            }
+        );
+
         $klein->dispatch('/json');
 
         // Expect our output to match our json encoded test object
@@ -67,5 +73,4 @@ class ResponsesTest extends AbstractKleinTest {
             $this->header_vals
         );
     }
-
-} // End class ResponsesTest
+}

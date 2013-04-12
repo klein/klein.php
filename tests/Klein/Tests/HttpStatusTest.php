@@ -14,16 +14,17 @@ namespace Klein\Tests;
 
 use \Klein\HttpStatus;
 
-
 /**
  * HttpStatusTests 
  * 
  * @uses AbstractKleinTest
  * @package Klein\Tests
  */
-class HttpStatusTests extends AbstractKleinTest {
+class HttpStatusTests extends AbstractKleinTest
+{
 
-    public function testStaticMessageFromCode() {
+    public function testStaticMessageFromCode()
+    {
         // Set our test data
         $code = 404;
         $message = 'Not Found'; // HTTP 1.1 404 status message
@@ -31,7 +32,8 @@ class HttpStatusTests extends AbstractKleinTest {
         $this->assertSame($message, HttpStatus::get_message_from_code($code));
     }
 
-    public function testManualEntry() {
+    public function testManualEntry()
+    {
         // Set our manual test data
         $code = 666;
         $message = 'The devil\'s mark';
@@ -42,7 +44,8 @@ class HttpStatusTests extends AbstractKleinTest {
         $this->assertSame($message, $http_status->get_message());
     }
 
-    public function testAutomaticMessage() {
+    public function testAutomaticMessage()
+    {
         $code = 201;
         $expected_message = 'Created';
 
@@ -52,7 +55,8 @@ class HttpStatusTests extends AbstractKleinTest {
         $this->assertSame($expected_message, $http_status->get_message());
     }
 
-    public function testStringOutput() {
+    public function testStringOutput()
+    {
         // Set our manual test data
         $code = 404;
         $expected_string = '404 Not Found';
@@ -65,5 +69,4 @@ class HttpStatusTests extends AbstractKleinTest {
 
         $this->assertSame($expected_string, $http_status->get_formatted_string());
     }
-
-} // End class HttpStatusTests
+}

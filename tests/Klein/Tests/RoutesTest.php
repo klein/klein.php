@@ -23,23 +23,32 @@ use \Klein\Tests\Mocks\HeadersSave;
  * @uses AbstractKleinTest
  * @package Klein\Tests
  */
-class RoutesTest extends AbstractKleinTest {
+class RoutesTest extends AbstractKleinTest
+{
 
-    protected function setUp() {
+    protected function setUp()
+    {
         parent::setUp();
 
         $_SERVER['SERVER_PROTOCOL'] = 'HTTP/1.1';
     }
 
-    public function testBasic() {
+    public function testBasic()
+    {
         $this->expectOutputString('x');
 
-        $this->klein_app->respond( '/', function(){ echo 'x'; });
-        $this->klein_app->respond( '/something', function(){ echo 'y'; });
+        $this->klein_app->respond(
+            '/',
+            function (){
+                echo 'x';
+            }
+        );
+        $this->klein_app->respond('/something', function (){ echo 'y'; });
         $this->klein_app->dispatch('/');
     }
 
-    public function testCallable() {
+    public function testCallable()
+    {
         $this->expectOutputString('okok');
 
         $this->klein_app->respond( '/', array(__NAMESPACE__ . '\TestClass', 'GET'));
@@ -47,7 +56,8 @@ class RoutesTest extends AbstractKleinTest {
         $this->klein_app->dispatch('/');
     }
 
-    public function testAppReference() {
+    public function testAppReference()
+    {
         $this->expectOutputString('ab');
 
         $this->klein_app->respond( '/', function($r, $r ,$a){ $a->state = 'a'; });
@@ -56,7 +66,8 @@ class RoutesTest extends AbstractKleinTest {
         $this->klein_app->dispatch('/');
     }
 
-    public function testCatchallImplicit() {
+    public function testCatchallImplicit()
+    {
         $this->expectOutputString('b');
 
         $this->klein_app->respond( '/one', function(){ echo 'a'; });
@@ -66,7 +77,8 @@ class RoutesTest extends AbstractKleinTest {
         $this->klein_app->dispatch('/two');
     }
 
-    public function testCatchallAsterisk() {
+    public function testCatchallAsterisk()
+    {
         $this->expectOutputString('b');
 
         $this->klein_app->respond('/one', function(){ echo 'a'; });
@@ -76,7 +88,8 @@ class RoutesTest extends AbstractKleinTest {
         $this->klein_app->dispatch('/two');
     }
 
-    public function testCatchallImplicitTriggers404() {
+    public function testCatchallImplicitTriggers404()
+    {
         $this->expectOutputString("b404\n");
 
         $this->klein_app->respond( function(){ echo 'b'; });
@@ -84,21 +97,24 @@ class RoutesTest extends AbstractKleinTest {
         $this->klein_app->dispatch('/');
     }
 
-    public function testRegex() {
+    public function testRegex()
+    {
         $this->expectOutputString('z');
 
         $this->klein_app->respond( '@/bar', function(){ echo 'z'; });
         $this->klein_app->dispatch('/bar');
     }
 
-    public function testRegexNegate() {
+    public function testRegexNegate()
+    {
         $this->expectOutputString("y");
 
         $this->klein_app->respond( '!@/foo', function(){ echo 'y'; });
         $this->klein_app->dispatch('/bar');
     }
 
-    public function test404() {
+    public function test404()
+    {
         $this->expectOutputString("404\n");
 
         $this->klein_app->respond('/', function(){ echo 'a'; });
@@ -106,21 +122,24 @@ class RoutesTest extends AbstractKleinTest {
         $this->klein_app->dispatch('/foo');
     }
 
-    public function testParamsBasic() {
+    public function testParamsBasic()
+    {
         $this->expectOutputString('blue');
 
         $this->klein_app->respond( '/[:color]', function($request){ echo $request->param('color'); });
         $this->klein_app->dispatch('/blue');
     }
 
-    public function testParamsIntegerSuccess() {
+    public function testParamsIntegerSuccess()
+    {
         $this->expectOutputString("string(3) \"987\"\n");
 
         $this->klein_app->respond('/[i:age]', function($request){ var_dump( $request->param('age')); });
         $this->klein_app->dispatch('/987');
     }
 
-    public function testParamsIntegerFail() {
+    public function testParamsIntegerFail()
+    {
         $this->expectOutputString('404 Code');
 
         $this->klein_app->respond('/[i:age]', function($request){ var_dump( $request->param('age')); });
@@ -128,7 +147,8 @@ class RoutesTest extends AbstractKleinTest {
         $this->klein_app->dispatch('/blue');
     }
 
-    public function testParamsAlphaNum() {
+    public function testParamsAlphaNum()
+    {
         $this->klein_app->respond( '/[a:audible]', function($request){ echo $request->param('audible'); });
 
         $this->assertOutputSame( 'blue42',  function() { $this->klein_app->dispatch('/blue42'); });
@@ -136,7 +156,8 @@ class RoutesTest extends AbstractKleinTest {
         $this->assertOutputSame( '',        function() { $this->klein_app->dispatch('/texas29!'); });
     }
 
-    public function testParamsHex() {
+    public function testParamsHex()
+    {
         $this->klein_app->respond( '/[h:hexcolor]', function($request){ echo $request->param('hexcolor'); });
 
         $this->assertOutputSame( '00f',     function() { $this->klein_app->dispatch('/00f'); });
@@ -146,7 +167,8 @@ class RoutesTest extends AbstractKleinTest {
         $this->assertOutputSame( '',        function() { $this->klein_app->dispatch('/hi23'); });
     }
 
-    public function test404TriggersOnce() {
+    public function test404TriggersOnce()
+    {
         $this->expectOutputString('d404 Code');
 
         $this->klein_app->respond(function(){ echo "d"; });
@@ -154,7 +176,8 @@ class RoutesTest extends AbstractKleinTest {
         $this->klein_app->dispatch('/notroute');
     }
 
-    public function testMethodCatchAll() {
+    public function testMethodCatchAll()
+    {
         $this->expectOutputString('yup!123');
 
         $this->klein_app->respond( 'POST', null, function($request){ echo 'yup!'; });
@@ -164,7 +187,8 @@ class RoutesTest extends AbstractKleinTest {
         $this->klein_app->dispatch('/', 'POST');
     }
 
-    public function testLazyTrailingMatch() {
+    public function testLazyTrailingMatch()
+    {
         $this->expectOutputString('this-is-a-title-123');
 
         $this->klein_app->respond( '/posts/[*:title][i:id]', function($request){
@@ -174,7 +198,8 @@ class RoutesTest extends AbstractKleinTest {
         $this->klein_app->dispatch('/posts/this-is-a-title-123');
     }
 
-    public function testFormatMatch() {
+    public function testFormatMatch()
+    {
         $this->expectOutputString('xml');
 
         $this->klein_app->respond( '/output.[xml|json:format]', function($request){
@@ -183,7 +208,8 @@ class RoutesTest extends AbstractKleinTest {
         $this->klein_app->dispatch('/output.xml');
     }
 
-    public function testDotSeparator() {
+    public function testDotSeparator()
+    {
         $this->expectOutputString('matchA:slug=ABCD_E--matchB:slug=ABCD_E--');
 
         $this->klein_app->respond('/[*:cpath]/[:slug].[:format]',   function($rq){ echo 'matchA:slug='.$rq->param("slug").'--';});
@@ -201,7 +227,8 @@ class RoutesTest extends AbstractKleinTest {
         );
     }
 
-    public function testControllerActionStyleRouteMatch() {
+    public function testControllerActionStyleRouteMatch()
+    {
         $this->expectOutputString('donkey-kick');
 
         $this->klein_app->respond( '/[:controller]?/[:action]?', function($request){
@@ -211,7 +238,8 @@ class RoutesTest extends AbstractKleinTest {
         $this->klein_app->dispatch('/donkey/kick');
     }
 
-    public function testRespondArgumentOrder() {
+    public function testRespondArgumentOrder()
+    {
         $this->expectOutputString('abcdef');
 
         $this->klein_app->respond( function(){ echo 'a'; });
@@ -223,7 +251,8 @@ class RoutesTest extends AbstractKleinTest {
         $this->klein_app->dispatch('/endpoint');
     }
 
-    public function testTrailingMatch() {
+    public function testTrailingMatch()
+    {
         $this->klein_app->respond( '/?[*:trailing]/dog/?', function($request){ echo 'yup'; });
 
         $this->assertOutputSame( 'yup', function() { $this->klein_app->dispatch('/cat/dog'); });
@@ -234,7 +263,8 @@ class RoutesTest extends AbstractKleinTest {
         $this->assertOutputSame( 'yup', function() { $this->klein_app->dispatch('cat/ball/cheese/dog'); });
     }
 
-    public function testTrailingPossessiveMatch() {
+    public function testTrailingPossessiveMatch()
+    {
         $this->klein_app->respond( '/sub-dir/[**:trailing]', function($request){ echo 'yup'; });
 
         $this->assertOutputSame( 'yup', function() { $this->klein_app->dispatch('/sub-dir/dog'); });
@@ -243,7 +273,8 @@ class RoutesTest extends AbstractKleinTest {
         $this->assertOutputSame( 'yup', function() { $this->klein_app->dispatch('/sub-dir/ball/cheese/dog'); });
     }
 
-    public function testNSDispatch() {
+    public function testNSDispatch()
+    {
         $this->klein_app->with('/u', function () {
             $this->klein_app->respond('GET', '/?',     function ($request, $response) { echo "slash";   });
             $this->klein_app->respond('GET', '/[:id]', function ($request, $response) { echo "id"; });
@@ -256,7 +287,8 @@ class RoutesTest extends AbstractKleinTest {
         $this->assertOutputSame("404",             function() { $this->klein_app->dispatch("/35");});
     }
 
-    public function testNSDispatchExternal() {
+    public function testNSDispatchExternal()
+    {
         $ext_namespaces = $this->loadExternalRoutes();
 
         $this->klein_app->respond(404, function ($request, $response) { echo "404"; });
@@ -267,7 +299,8 @@ class RoutesTest extends AbstractKleinTest {
         }
     }
 
-    public function testNSDispatchExternalRerequired() {
+    public function testNSDispatchExternalRerequired()
+    {
         $ext_namespaces = $this->loadExternalRoutes();
 
         $this->klein_app->respond(404, function ($request, $response) { echo "404"; });
@@ -278,7 +311,8 @@ class RoutesTest extends AbstractKleinTest {
         }
     }
 
-    public function test405DefaultRequest() {
+    public function test405DefaultRequest()
+    {
         // Echo our headers
         $klein_app = new Klein(new HeadersEcho());
 
@@ -291,7 +325,8 @@ class RoutesTest extends AbstractKleinTest {
         );
     }
 
-    public function test405Routes() {
+    public function test405Routes()
+    {
         $resultArray = array();
 
         $this->expectOutputString('_');
@@ -309,7 +344,8 @@ class RoutesTest extends AbstractKleinTest {
         $this->assertContains('POST', $resultArray);
     }
 
-    public function testOptionsDefaultRequest() {
+    public function testOptionsDefaultRequest()
+    {
         // Echo our headers
         $klein_app = new Klein(new HeadersEcho());
 
@@ -323,7 +359,8 @@ class RoutesTest extends AbstractKleinTest {
         );
     }
 
-    public function testOptionsRoutes() {
+    public function testOptionsRoutes()
+    {
         $header_values = array();
 
         $klein_app = new Klein(new HeadersSave($header_values));
@@ -362,7 +399,8 @@ class RoutesTest extends AbstractKleinTest {
         }
     }
 
-    public function testHeadDefaultRequest() {
+    public function testHeadDefaultRequest()
+    {
         $header_values = array();
 
         // Echo our headers
@@ -398,5 +436,4 @@ class RoutesTest extends AbstractKleinTest {
             );
         }
     }
-
-} // End class RoutesTest
+}

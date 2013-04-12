@@ -23,7 +23,8 @@ use \Klein\Klein;
  */
 class ValidationsTest extends AbstractKleinTest {
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         // Setup our error handler
@@ -32,7 +33,8 @@ class ValidationsTest extends AbstractKleinTest {
         } );
     }
 
-    public function errorHandler($response, $message, $type, $exception) {
+    public function errorHandler($response, $message, $type, $exception)
+    {
         if (!is_null($message ) && !empty( $message)) {
             echo $message;
         }
@@ -41,7 +43,8 @@ class ValidationsTest extends AbstractKleinTest {
         }
     }
 
-    public function testCustomValidationMessage() {
+    public function testCustomValidationMessage()
+    {
         $custom_message = 'This is a custom error message...';
 
         $this->klein_app->respond('/[:test_param]', function($request) use ( $custom_message) {
@@ -56,7 +59,8 @@ class ValidationsTest extends AbstractKleinTest {
         $this->assertOutputSame( $custom_message, function(){ $this->klein_app->dispatch('/test'); });
     }
 
-    public function testStringLengthExact() {
+    public function testStringLengthExact()
+    {
         $this->klein_app->respond('/[:test_param]', function( $request) {
             $request->validate('test_param')
                     ->notNull()
@@ -70,7 +74,8 @@ class ValidationsTest extends AbstractKleinTest {
         $this->assertOutputSame( 'fail', function(){ $this->klein_app->dispatch('/test'); });
     }
 
-    public function testStringLengthRange() {
+    public function testStringLengthRange()
+    {
         $this->klein_app->respond('/[:test_param]', function( $request) {
             $request->validate('test_param')
                     ->notNull()
@@ -89,7 +94,8 @@ class ValidationsTest extends AbstractKleinTest {
         $this->assertOutputSame( 'fail', function(){ $this->klein_app->dispatch('/testing'); });
     }
 
-    public function testInt() {
+    public function testInt()
+    {
         $this->klein_app->respond('/[:test_param]', function( $request) {
             $request->validate('test_param')
                     ->notNull()
@@ -108,7 +114,8 @@ class ValidationsTest extends AbstractKleinTest {
         $this->assertOutputSame( 'fail', function(){ $this->klein_app->dispatch('/test'); });
     }
 
-    public function testFloat() {
+    public function testFloat()
+    {
         $this->klein_app->respond('/[:test_param]', function( $request) {
             $request->validate('test_param')
                     ->notNull()
@@ -128,7 +135,8 @@ class ValidationsTest extends AbstractKleinTest {
         $this->assertOutputSame( 'fail', function(){ $this->klein_app->dispatch('/test'); });
     }
 
-    public function testEmail() {
+    public function testEmail()
+    {
         $this->klein_app->respond('/[:test_param]', function( $request) {
             $request->validate('test_param')
                     ->notNull()
@@ -145,7 +153,8 @@ class ValidationsTest extends AbstractKleinTest {
         $this->assertOutputSame( 'fail', function(){ $this->klein_app->dispatch('/2 5'); });
     }
 
-    public function testAlpha() {
+    public function testAlpha()
+    {
         $this->klein_app->respond('/[:test_param]', function( $request) {
             $request->validate('test_param')
                     ->notNull()
@@ -164,7 +173,8 @@ class ValidationsTest extends AbstractKleinTest {
         $this->assertOutputSame( 'fail', function(){ $this->klein_app->dispatch('/-test'); });
     }
 
-    public function testAlnum() {
+    public function testAlnum()
+    {
         $this->klein_app->respond('/[:test_param]', function( $request) {
             $request->validate('test_param')
                     ->notNull()
@@ -183,7 +193,8 @@ class ValidationsTest extends AbstractKleinTest {
         $this->assertOutputSame( 'fail', function(){ $this->klein_app->dispatch('/-test'); });
     }
 
-    public function testContains() {
+    public function testContains()
+    {
         $this->klein_app->respond('/[:test_param]', function( $request) {
             $request->validate('test_param')
                     ->notNull()
@@ -201,7 +212,8 @@ class ValidationsTest extends AbstractKleinTest {
         $this->assertOutputSame( 'fail', function(){ $this->klein_app->dispatch('/doog'); });
     }
 
-    public function testChars() {
+    public function testChars()
+    {
         $this->klein_app->respond('/[:test_param]', function( $request) {
             $request->validate('test_param')
                     ->notNull()
@@ -218,7 +230,8 @@ class ValidationsTest extends AbstractKleinTest {
         $this->assertOutputSame( 'fail', function(){ $this->klein_app->dispatch('/dog'); });
     }
 
-    public function testRegex() {
+    public function testRegex()
+    {
         $this->klein_app->respond('/[:test_param]', function( $request) {
             $request->validate('test_param')
                     ->notNull()
@@ -237,7 +250,8 @@ class ValidationsTest extends AbstractKleinTest {
         $this->assertOutputSame( 'fail', function(){ $this->klein_app->dispatch('/catdog'); });
     }
 
-    public function testNotRegex() {
+    public function testNotRegex()
+    {
         $this->klein_app->respond('/[:test_param]', function( $request) {
             $request->validate('test_param')
                     ->notNull()
@@ -256,7 +270,8 @@ class ValidationsTest extends AbstractKleinTest {
         $this->assertOutputSame( 'fail', function(){ $this->klein_app->dispatch('/cat-thing'); });
     }
 
-    public function testCustomValidator() {
+    public function testCustomValidator()
+    {
         // Add our custom validator
         $this->klein_app->addValidator('donkey', function( $string, $color) {
             $regex_str = $color . '[-_]?donkey';
@@ -281,5 +296,4 @@ class ValidationsTest extends AbstractKleinTest {
         $this->assertOutputSame( 'fail', function(){ $this->klein_app->dispatch('/blue_donkey'); });
         $this->assertOutputSame( 'fail', function(){ $this->klein_app->dispatch('/brown_donk'); });
     }
-
-} // End class ValidationsTest
+}
