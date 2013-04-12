@@ -14,6 +14,8 @@ namespace Klein\Tests;
 
 use \Klein\Klein;
 
+use \Klein\Tests\Mocks\HeadersEcho;
+use \Klein\Tests\Mocks\HeadersSave;
 
 /**
  * RoutesTest 

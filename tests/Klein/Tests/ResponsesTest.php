@@ -14,6 +14,7 @@ namespace Klein\Tests;
 
 use \Klein\Klein;
 
+use \Klein\Tests\Mocks\HeadersSave;
 
 /**
  * ResponsesTest 

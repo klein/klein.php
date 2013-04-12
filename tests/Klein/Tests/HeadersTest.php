@@ -14,6 +14,7 @@ namespace Klein\Tests;
 
 use \Klein\Headers;
 
+use \Klein\Tests\Mocks\HeadersEcho;
 
 /**
  * HeadersTest 
