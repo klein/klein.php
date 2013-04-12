@@ -9,6 +9,13 @@
  * @license     MIT
  */
 
-// Load our autoloader, and add our Test class namespace
-$autoloader = require(__DIR__ . '/../vendor/autoload.php');
-$autoloader->add('Klein\Tests', __DIR__);
+namespace Klein\Tests\Mocks;
+
+class TestClass
+{
+
+    public static function get($r, $r, $a)
+    {
+        echo 'ok';
+    }
+}

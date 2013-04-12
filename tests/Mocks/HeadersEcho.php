@@ -9,6 +9,15 @@
  * @license     MIT
  */
 
-// Load our autoloader, and add our Test class namespace
-$autoloader = require(__DIR__ . '/../vendor/autoload.php');
-$autoloader->add('Klein\Tests', __DIR__);
+namespace Klein\Tests\Mocks;
+
+use \Klein\Headers;
+
+class HeadersEcho extends Headers
+{
+
+    public function header($key, $value = null)
+    {
+        echo $this->createHeaderString($key, $value) . "\n";
+    }
+}
