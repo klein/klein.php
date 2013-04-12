@@ -16,7 +16,6 @@ use \PHPUnit_Framework_TestCase;
 
 use \Klein\Klein;
 
-
 /**
  * AbstractKleinTest
  *
@@ -26,7 +25,8 @@ use \Klein\Klein;
  * @abstract
  * @package Klein\Tests
  */
-abstract class AbstractKleinTest extends PHPUnit_Framework_TestCase {
+abstract class AbstractKleinTest extends PHPUnit_Framework_TestCase
+{
 
     /**
      * The automatically created test Klein instance
@@ -45,7 +45,8 @@ abstract class AbstractKleinTest extends PHPUnit_Framework_TestCase {
      * @access protected
      * @return void
      */
-    protected function setUp() {
+    protected function setUp()
+    {
         // Create a new klein app,
         // since we need one pretty much everywhere
         $this->klein_app = new Klein(new HeadersNoOp());
@@ -61,7 +62,8 @@ abstract class AbstractKleinTest extends PHPUnit_Framework_TestCase {
      * @access protected
      * @return void
      */
-    protected function assertOutputSame($expected, $callback, $message = '') {
+    protected function assertOutputSame($expected, $callback, $message = '')
+    {
         // Start our output buffer so we can capture our output
         ob_start();
 
@@ -84,7 +86,8 @@ abstract class AbstractKleinTest extends PHPUnit_Framework_TestCase {
      * @access protected
      * @return array
      */
-    protected function loadExternalRoutes(Klein $app_context = null) {
+    protected function loadExternalRoutes(Klein $app_context = null)
+    {
         // Did we not pass an instance?
         if (is_null($app_context)) {
             $app_context = $this->klein_app ?: new Klein();
@@ -94,7 +97,7 @@ abstract class AbstractKleinTest extends PHPUnit_Framework_TestCase {
         $route_files = scandir($route_directory);
         $route_namespaces = array();
 
-        foreach($route_files as $file) {
+        foreach ($route_files as $file) {
             if (is_file($route_directory . $file)) {
                 $route_namespace = '/' . basename($file, '.php');
                 $route_namespaces[] = $route_namespace;
@@ -105,5 +108,4 @@ abstract class AbstractKleinTest extends PHPUnit_Framework_TestCase {
 
         return $route_namespaces;
     }
-
-} // End class AbstractKleinTest
+}
