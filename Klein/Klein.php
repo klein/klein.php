@@ -13,7 +13,6 @@ namespace Klein;
 
 use \Exception;
 
-
 /**
  * Klein
  *
@@ -21,7 +20,8 @@ use \Exception;
  * 
  * @package     Klein
  */
-class Klein {
+class Klein
+{
 
     /**
      * Class properties
@@ -91,13 +91,14 @@ class Klein {
      * @param mixed $app            A generic that will be passed to each route callback, defaults to a new "App" instance
      * @access public
      */
-    public function __construct( Headers $headers = null, Request $request = null, Response $response = null, $app = null ) {
+    public function __construct(Headers $headers = null, Request $request = null, Response $response = null, $app = null)
+    {
         // Create our base Headers object to be cloned
         $headers        = $headers  ?: new Headers();
 
         // Instanciate our routing objects
-        $this->request  = $request  ?: new Request( clone $headers );
-        $this->response = $response ?: new Response( clone $headers );
+        $this->request  = $request  ?: new Request(clone $headers);
+        $this->response = $response ?: new Response(clone $headers);
         $this->app      = $app      ?: new App();
     }
 
@@ -127,7 +128,8 @@ class Klein {
      * @access public
      * @return callable $callback
      */
-    function respond($method, $route = '*', $callback = null) {
+    public function respond($method, $route = '*', $callback = null)
+    {
         $args = func_get_args();
         $callback = array_pop($args);
         $route = array_pop($args);
@@ -153,7 +155,7 @@ class Klein {
             if ($route[0] === '^') {
                 $route = substr($route, 1);
             } else {
-                $route = '.*' . $route; 
+                $route = '.*' . $route;
             }
 
             if ($negate) {
@@ -161,9 +163,9 @@ class Klein {
             } else {
                 $route = '@^' . $this->namespace . $route;
             }
-        }
-        // empty route with namespace is a match-all
-        elseif ($this->namespace && ('*' === $route)) {
+
+        } elseif ($this->namespace && ('*' === $route)) {
+            // empty route with namespace is a match-all
             $route = '@^' . $this->namespace . '(/|$)';
         } else {
             $route = $this->namespace . $route;
@@ -183,7 +185,7 @@ class Klein {
      * <code>
      * $router = new Klein();
      *
-     * $router->with( '/users', function() use ( $router ) {
+     * $router->with('/users', function() use ( $router) {
      *     $router->respond( '/', function() {
      *         // do something interesting
      *     });
@@ -192,7 +194,7 @@ class Klein {
      *     });
      * });
      *
-     * $router->with( '/cars', __DIR__ . '/routes/cars.php' );
+     * $router->with('/cars', __DIR__ . '/routes/cars.php');
      * </code>
      *
      * @param string $namespace                     The namespace under which to collect the routes
@@ -200,7 +202,8 @@ class Klein {
      * @access public
      * @return void
      */
-    function with($namespace, $routes) {
+    public function with($namespace, $routes)
+    {
         $previous = $this->namespace;
         $this->namespace .= $namespace;
 
@@ -219,7 +222,8 @@ class Klein {
      * @access public
      * @return void
      */
-    function startSession() {
+    public function startSession()
+    {
         if (session_id() === '') {
             session_start();
         }
@@ -235,7 +239,8 @@ class Klein {
      * @access public
      * @return void
      */
-    function dispatch($uri = null, $req_method = null, array $params = null, $capture = false) {
+    public function dispatch($uri = null, $req_method = null, array $params = null, $capture = false)
+    {
         // Get/parse the request URI and method
         if (null === $uri) {
             $uri = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '/';
@@ -250,7 +255,7 @@ class Klein {
             // header or _method parameter
             if (isset($_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'])) {
                 $req_method = $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'];
-            } else if (isset($_REQUEST['_method'])) {
+            } elseif (isset($_REQUEST['_method'])) {
                 $req_method = $_REQUEST['_method'];
             }
         }
@@ -277,30 +282,32 @@ class Klein {
                 foreach ($method as $test) {
                     if (strcasecmp($req_method, $test) === 0) {
                         $method_match = true;
-                    }
-                    // Test for HEAD request (like GET)
-                    elseif (strcasecmp($req_method, 'HEAD') === 0
-                            && ( strcasecmp($test, 'HEAD') === 0 || strcasecmp($test, 'GET') === 0 ) ) {
+                    } elseif (strcasecmp($req_method, 'HEAD') === 0
+                          && (strcasecmp($test, 'HEAD') === 0 || strcasecmp($test, 'GET') === 0)) {
+
+                        // Test for HEAD request (like GET)
                         $method_match = true;
                     }
                 }
+
                 if (null === $method_match) {
-                  $method_match = false;
+                    $method_match = false;
                 }
             } elseif (null !== $method && strcasecmp($req_method, $method) !== 0) {
-               $method_match = false;
+                $method_match = false;
 
-               // Test for HEAD request (like GET)
-               if (strcasecmp($req_method, 'HEAD') === 0
-                       && ( strcasecmp($method, 'HEAD') === 0 || strcasecmp($method, 'GET') === 0 ) ) {
-                   $method_match = true;
-               }
+                // Test for HEAD request (like GET)
+                if (strcasecmp($req_method, 'HEAD') === 0
+                    && (strcasecmp($method, 'HEAD') === 0 || strcasecmp($method, 'GET') === 0 )) {
+
+                    $method_match = true;
+                }
             } elseif (null !== $method && strcasecmp($req_method, $method) === 0) {
-               $method_match = true;
+                $method_match = true;
             }
 
-           // If the method was matched or if it wasn't even passed (in the route callback)
-           $possible_match = is_null($method_match) || $method_match;
+            // If the method was matched or if it wasn't even passed (in the route callback)
+            $possible_match = is_null($method_match) || $method_match;
 
             // ! is used to negate a match
             if (isset($_route[0]) && $_route[0] === '!') {
@@ -315,8 +322,9 @@ class Klein {
             if ($_route === '*') {
                 $match = true;
 
-            // Easily handle 404's
             } elseif ($_route === '404' && !$matched && count($methods_matched) <= 0) {
+                // Easily handle 404's
+
                 try {
                     call_user_func($callback, $this->request, $this->response, $this->app, $matched, $methods_matched);
                 } catch (Exception $e) {
@@ -326,8 +334,9 @@ class Klein {
                 ++$matched;
                 continue;
 
-            // Easily handle 405's
             } elseif ($_route === '405' && !$matched && count($methods_matched) > 0) {
+                // Easily handle 405's
+
                 try {
                     call_user_func($callback, $this->request, $this->response, $this->app, $matched, $methods_matched);
                 } catch (Exception $e) {
@@ -337,13 +346,15 @@ class Klein {
                 ++$matched;
                 continue;
 
-            // @ is used to specify custom regex
             } elseif (isset($_route[$i]) && $_route[$i] === '@') {
+                // @ is used to specify custom regex
+
                 $match = preg_match('`' . substr($_route, $i + 1) . '`', $uri, $params);
 
-            // Compiling and matching regular expressions is relatively
-            // expensive, so try and match by a substring first
             } else {
+                // Compiling and matching regular expressions is relatively
+                // expensive, so try and match by a substring first
+
                 $route = null;
                 $regex = false;
                 $j = 0;
@@ -372,35 +383,35 @@ class Klein {
                 if (false !== $apc) {
                     $regex = apc_fetch("route:$route");
                     if (false === $regex) {
-                        $regex = $this->compile_route($route);
+                        $regex = $this->compileRoute($route);
                         apc_store("route:$route", $regex);
                     }
                 } else {
-                    $regex = $this->compile_route($route);
+                    $regex = $this->compileRoute($route);
                 }
 
                 $match = preg_match($regex, $uri, $params);
             }
 
             if (isset($match) && $match ^ $negate) {
-                 // Keep track of possibly matched methods
-                 $methods_matched = array_merge($methods_matched, (array) $method);
-                 $methods_matched = array_filter($methods_matched);
-                 $methods_matched = array_unique($methods_matched);
+                // Keep track of possibly matched methods
+                $methods_matched = array_merge($methods_matched, (array) $method);
+                $methods_matched = array_filter($methods_matched);
+                $methods_matched = array_unique($methods_matched);
 
-                 if ($possible_match) {
-                      if (null !== $params) {
-                           $_REQUEST = array_merge($_REQUEST, $params);
-                      }
-                      try {
-                           call_user_func($callback, $this->request, $this->response, $this->app, $matched, $methods_matched);
-                      } catch (Exception $e) {
-                           $this->response->error($e);
-                      }
-                      if ($_route !== '*') {
-                           $count_match && ++$matched;
-                      }
-                 }
+                if ($possible_match) {
+                    if (null !== $params) {
+                        $_REQUEST = array_merge($_REQUEST, $params);
+                    }
+                    try {
+                        call_user_func($callback, $this->request, $this->response, $this->app, $matched, $methods_matched);
+                    } catch (Exception $e) {
+                        $this->response->error($e);
+                    }
+                    if ($_route !== '*') {
+                        $count_match && ++$matched;
+                    }
+                }
             }
         }
 
@@ -418,11 +429,13 @@ class Klein {
         if (strcasecmp($req_method, 'HEAD') === 0) {
             // HEAD requests shouldn't return a body
             return ob_get_clean();
-        }
-        elseif ($capture) {
+
+        } elseif ($capture) {
             return ob_get_clean();
+
         } elseif ($this->response->chunked) {
             $this->response->chunk();
+
         } else {
             ob_end_flush();
         }
@@ -435,7 +448,8 @@ class Klein {
      * @access public
      * @return void
      */
-    function compile_route($route) {
+    public function compileRoute($route)
+    {
         if (preg_match_all('`(/|\.|)\[([^:\]]*+)(?::([^:\]]*+))?\](\?|)`', $route, $matches, PREG_SET_ORDER)) {
             $match_types = array(
                 'i'  => '[0-9]++',
@@ -477,8 +491,8 @@ class Klein {
      * @access public
      * @return void
      */
-    function addValidator($method, $callback) {
+    public function addValidator($method, $callback)
+    {
         Validator::$methods[strtolower($method)] = $callback;
     }
-
-} // End class Klein
+}
