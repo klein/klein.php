@@ -40,16 +40,16 @@ class ResponsesTest extends AbstractKleinTest {
             'uniqid' => uniqid(),
         );
 
-        $klein = new Klein( new HeadersSave( $this->header_vals ) );
+        $klein = new Klein(new HeadersSave($this->header_vals));
 
-        $klein->respond( '/json', function( $request, $response ) use ( $test_object ) {
-            $response->json( $test_object );
+        $klein->respond('/json', function($request, $response) use ( $test_object) {
+            $response->json($test_object);
         });
-        $klein->dispatch( '/json' );
+        $klein->dispatch('/json');
 
         // Expect our output to match our json encoded test object
         $this->expectOutputString(
-            json_encode( $test_object )
+            json_encode($test_object)
         );
 
         // Assert headers were passed

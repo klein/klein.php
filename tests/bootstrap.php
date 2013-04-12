@@ -15,8 +15,8 @@ use \Klein\Headers;
 
 
 // Load our autoloader, and add our Test class namespace
-$autoloader = require( __DIR__ . '/../vendor/autoload.php' );
-$autoloader->add( 'Klein\Tests', __DIR__ );
+$autoloader = require(__DIR__ . '/../vendor/autoload.php');
+$autoloader->add('Klein\Tests', __DIR__);
 
 
 class HeadersEcho extends Headers {
@@ -34,7 +34,7 @@ class HeadersNoOp extends Headers {
 class HeadersSave extends Headers {
     public $headers_values = array();
 
-    public function __construct( &$headers_array_ref ) {
+    public function __construct(&$headers_array_ref) {
         $this->headers_values = &$headers_array_ref;
     }
 

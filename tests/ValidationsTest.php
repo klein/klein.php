@@ -27,13 +27,13 @@ class ValidationsTest extends AbstractKleinTest {
         parent::setUp();
 
         // Setup our error handler
-        $this->klein_app->respond( function( $request, $response ) {
-            $response->onError( array( $this, 'errorHandler' ), false );
+        $this->klein_app->respond(function( $request, $response) {
+            $response->onError(array($this, 'errorHandler'), false);
         } );
     }
 
-    public function errorHandler( $response, $message, $type, $exception ) {
-        if ( !is_null( $message ) && !empty( $message ) ) {
+    public function errorHandler($response, $message, $type, $exception) {
+        if (!is_null($message ) && !empty( $message)) {
             echo $message;
         }
         else {
@@ -44,10 +44,10 @@ class ValidationsTest extends AbstractKleinTest {
     public function testCustomValidationMessage() {
         $custom_message = 'This is a custom error message...';
 
-        $this->klein_app->respond( '/[:test_param]', function( $request ) use ( $custom_message ) {
-            $request->validate( 'test_param', $custom_message )
+        $this->klein_app->respond('/[:test_param]', function($request) use ( $custom_message) {
+            $request->validate('test_param', $custom_message)
                     ->notNull()
-                    ->isLen( 0 );
+                    ->isLen(0);
 
             // We should only get here if we passed our validations
             echo 'yup!';
@@ -57,10 +57,10 @@ class ValidationsTest extends AbstractKleinTest {
     }
 
     public function testStringLengthExact() {
-        $this->klein_app->respond( '/[:test_param]', function( $request ) {
-            $request->validate( 'test_param' )
+        $this->klein_app->respond('/[:test_param]', function( $request) {
+            $request->validate('test_param')
                     ->notNull()
-                    ->isLen( 2 );
+                    ->isLen(2);
 
             // We should only get here if we passed our validations
             echo 'yup!';
@@ -71,10 +71,10 @@ class ValidationsTest extends AbstractKleinTest {
     }
 
     public function testStringLengthRange() {
-        $this->klein_app->respond( '/[:test_param]', function( $request ) {
-            $request->validate( 'test_param' )
+        $this->klein_app->respond('/[:test_param]', function( $request) {
+            $request->validate('test_param')
                     ->notNull()
-                    ->isLen( 3, 5 );
+                    ->isLen(3, 5);
 
             // We should only get here if we passed our validations
             echo 'yup!';
@@ -90,8 +90,8 @@ class ValidationsTest extends AbstractKleinTest {
     }
 
     public function testInt() {
-        $this->klein_app->respond( '/[:test_param]', function( $request ) {
-            $request->validate( 'test_param' )
+        $this->klein_app->respond('/[:test_param]', function( $request) {
+            $request->validate('test_param')
                     ->notNull()
                     ->isInt();
 
@@ -109,8 +109,8 @@ class ValidationsTest extends AbstractKleinTest {
     }
 
     public function testFloat() {
-        $this->klein_app->respond( '/[:test_param]', function( $request ) {
-            $request->validate( 'test_param' )
+        $this->klein_app->respond('/[:test_param]', function( $request) {
+            $request->validate('test_param')
                     ->notNull()
                     ->isFloat();
 
@@ -129,8 +129,8 @@ class ValidationsTest extends AbstractKleinTest {
     }
 
     public function testEmail() {
-        $this->klein_app->respond( '/[:test_param]', function( $request ) {
-            $request->validate( 'test_param' )
+        $this->klein_app->respond('/[:test_param]', function( $request) {
+            $request->validate('test_param')
                     ->notNull()
                     ->isEmail();
 
@@ -146,8 +146,8 @@ class ValidationsTest extends AbstractKleinTest {
     }
 
     public function testAlpha() {
-        $this->klein_app->respond( '/[:test_param]', function( $request ) {
-            $request->validate( 'test_param' )
+        $this->klein_app->respond('/[:test_param]', function( $request) {
+            $request->validate('test_param')
                     ->notNull()
                     ->isAlpha();
 
@@ -165,8 +165,8 @@ class ValidationsTest extends AbstractKleinTest {
     }
 
     public function testAlnum() {
-        $this->klein_app->respond( '/[:test_param]', function( $request ) {
-            $request->validate( 'test_param' )
+        $this->klein_app->respond('/[:test_param]', function( $request) {
+            $request->validate('test_param')
                     ->notNull()
                     ->isAlnum();
 
@@ -184,10 +184,10 @@ class ValidationsTest extends AbstractKleinTest {
     }
 
     public function testContains() {
-        $this->klein_app->respond( '/[:test_param]', function( $request ) {
-            $request->validate( 'test_param' )
+        $this->klein_app->respond('/[:test_param]', function( $request) {
+            $request->validate('test_param')
                     ->notNull()
-                    ->contains( 'dog' );
+                    ->contains('dog');
 
             // We should only get here if we passed our validations
             echo 'yup!';
@@ -202,10 +202,10 @@ class ValidationsTest extends AbstractKleinTest {
     }
 
     public function testChars() {
-        $this->klein_app->respond( '/[:test_param]', function( $request ) {
-            $request->validate( 'test_param' )
+        $this->klein_app->respond('/[:test_param]', function( $request) {
+            $request->validate('test_param')
                     ->notNull()
-                    ->isChars( 'c-f' );
+                    ->isChars('c-f');
 
             // We should only get here if we passed our validations
             echo 'yup!';
@@ -219,10 +219,10 @@ class ValidationsTest extends AbstractKleinTest {
     }
 
     public function testRegex() {
-        $this->klein_app->respond( '/[:test_param]', function( $request ) {
-            $request->validate( 'test_param' )
+        $this->klein_app->respond('/[:test_param]', function( $request) {
+            $request->validate('test_param')
                     ->notNull()
-                    ->isRegex( '/cat-[dog|bear|thing]/' );
+                    ->isRegex('/cat-[dog|bear|thing]/');
 
             // We should only get here if we passed our validations
             echo 'yup!';
@@ -238,10 +238,10 @@ class ValidationsTest extends AbstractKleinTest {
     }
 
     public function testNotRegex() {
-        $this->klein_app->respond( '/[:test_param]', function( $request ) {
-            $request->validate( 'test_param' )
+        $this->klein_app->respond('/[:test_param]', function( $request) {
+            $request->validate('test_param')
                     ->notNull()
-                    ->notRegex( '/cat-[dog|bear|thing]/' );
+                    ->notRegex('/cat-[dog|bear|thing]/');
 
             // We should only get here if we passed our validations
             echo 'yup!';
@@ -258,16 +258,16 @@ class ValidationsTest extends AbstractKleinTest {
 
     public function testCustomValidator() {
         // Add our custom validator
-        $this->klein_app->addValidator( 'donkey', function( $string, $color ) {
+        $this->klein_app->addValidator('donkey', function( $string, $color) {
             $regex_str = $color . '[-_]?donkey';
 
-            return preg_match( '/' . $regex_str . '/', $string );
+            return preg_match('/' . $regex_str . '/', $string);
         });
 
-        $this->klein_app->respond( '/[:test_param]', function( $request ) {
-            $request->validate( 'test_param' )
+        $this->klein_app->respond('/[:test_param]', function( $request) {
+            $request->validate('test_param')
                     ->notNull()
-                    ->isDonkey( 'brown' );
+                    ->isDonkey('brown');
 
             // We should only get here if we passed our validations
             echo 'yup!';
