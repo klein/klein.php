@@ -17,7 +17,8 @@ namespace Klein;
  * 
  * @package     Klein
  */
-class Request {
+class Request
+{
 
     /**
      * Class properties
@@ -60,7 +61,8 @@ class Request {
      * @param Headers $headers  Headers class to handle writing HTTP headers
      * @access public
      */
-    public function __construct( Headers $headers ) {
+    public function __construct(Headers $headers)
+    {
         $this->headers = $headers;
     }
 
@@ -74,13 +76,17 @@ class Request {
      * @access public
      * @return array
      */
-    public function params($mask = null) {
+    public function params($mask = null)
+    {
         $params = $_REQUEST;
+
         if (null !== $mask) {
             if (!is_array($mask)) {
                 $mask = func_get_args();
             }
+
             $params = array_intersect_key($params, array_flip($mask));
+
             // Make sure each key in $mask has at least a null value
             foreach ($mask as $key) {
                 if (!isset($params[$key])) {
@@ -88,6 +94,7 @@ class Request {
                 }
             }
         }
+
         return $params;
     }
 
@@ -99,7 +106,8 @@ class Request {
      * @access public
      * @return string
      */
-    public function param($key, $default = null) {
+    public function param($key, $default = null)
+    {
         return isset($_REQUEST[$key]) && $_REQUEST[$key] !== '' ? $_REQUEST[$key] : $default;
     }
 
@@ -113,7 +121,8 @@ class Request {
      * @access public
      * @return boolean
      */
-    public function __isset($param) {
+    public function __isset($param)
+    {
         return isset($_REQUEST[$param]);
     }
 
@@ -127,7 +136,8 @@ class Request {
      * @access public
      * @return string
      */
-    public function __get($param) {
+    public function __get($param)
+    {
         return isset($_REQUEST[$param]) ? $_REQUEST[$param] : null;
     }
 
@@ -142,7 +152,8 @@ class Request {
      * @access public
      * @return void
      */
-    public function __set($param, $value) {
+    public function __set($param, $value)
+    {
         $_REQUEST[$param] = $value;
     }
 
@@ -156,7 +167,8 @@ class Request {
      * @access public
      * @return void
      */
-    public function __unset($param) {
+    public function __unset($param)
+    {
         unset($_REQUEST[$param]);
     }
 
@@ -169,7 +181,8 @@ class Request {
      * @access public
      * @return boolean
      */
-    public function isSecure($required = false) {
+    public function isSecure($required = false)
+    {
         $secure = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'];
         if (!$secure && $required) {
             $url = 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
@@ -186,8 +199,9 @@ class Request {
      * @access public
      * @return string
      */
-    public function header($key, $default = null) {
-        $key = 'HTTP_' . strtoupper(str_replace('-','_', $key));
+    public function header($key, $default = null)
+    {
+        $key = 'HTTP_' . strtoupper(str_replace('-', '_', $key));
         return isset($_SERVER[$key]) ? $_SERVER[$key] : $default;
     }
 
@@ -199,7 +213,8 @@ class Request {
      * @access public
      * @return string
      */
-    public function cookie($key, $default = null) {
+    public function cookie($key, $default = null)
+    {
         return isset($_COOKIE[$key]) ? $_COOKIE[$key] : $default;
     }
 
@@ -211,7 +226,8 @@ class Request {
      * @access public
      * @return mixed
      */
-    public function session($key, $default = null) {
+    public function session($key, $default = null)
+    {
         startSession();
         return isset($_SESSION[$key]) ? $_SESSION[$key] : $default;
     }
@@ -222,7 +238,8 @@ class Request {
      * @access public
      * @return string
      */
-    public function ip() {
+    public function ip()
+    {
         return isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : null;
     }
 
@@ -232,7 +249,8 @@ class Request {
      * @access public
      * @return string
      */
-    public function userAgent() {
+    public function userAgent()
+    {
         return isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : null;
     }
 
@@ -242,7 +260,8 @@ class Request {
      * @access public
      * @return string
      */
-    public function uri() {
+    public function uri()
+    {
         return isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '/';
     }
 
@@ -252,7 +271,8 @@ class Request {
      * @access public
      * @return string
      */
-    public function body() {
+    public function body()
+    {
         if (null === $this->body) {
             $this->body = @file_get_contents('php://input');
         }
@@ -273,7 +293,8 @@ class Request {
      * @access public
      * @return string | boolean
      */
-    public function method($is = null) {
+    public function method($is = null)
+    {
         $method = isset($_SERVER['REQUEST_METHOD']) ? $_SERVER['REQUEST_METHOD'] : 'GET';
         if (null !== $is) {
             return strcasecmp($method, $is) === 0;
@@ -289,7 +310,8 @@ class Request {
      * @access public
      * @return Validator
      */
-    public function validate($param, $err = null) {
+    public function validate($param, $err = null)
+    {
         return new Validator($this->param($param), $err);
     }
 
@@ -301,11 +323,11 @@ class Request {
      * @access public
      * @return string
      */
-    public function id() {
+    public function id()
+    {
         if (null === $this->id) {
             $this->id = sha1(mt_rand() . microtime(true) . mt_rand());
         }
         return $this->id;
     }
-
-} // End class Request
+}
