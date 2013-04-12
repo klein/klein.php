@@ -17,7 +17,8 @@ namespace Klein;
  * 
  * @package    Klein
  */
-class App {
+class App
+{
 
     /**
      * Class properties
@@ -44,7 +45,8 @@ class App {
      * @access public
      * @return mixed
      */
-    public function __get($name) {
+    public function __get($name)
+    {
         if (!isset($this->services[$name])) {
             throw new InvalidArgumentException("Unknown service $name");
         }
@@ -63,7 +65,8 @@ class App {
      * @access public
      * @return void
      */
-    public function __call($method, $args) {
+    public function __call($method, $args)
+    {
         if (!isset($this->$method) || !is_callable($this->$method)) {
             throw new ErrorException("Unknown method $method()");
         }
@@ -78,11 +81,13 @@ class App {
      * @access public
      * @return mixed
      */
-    public function register($name, $closure) {
+    public function register($name, $closure)
+    {
         if (isset($this->services[$name])) {
             throw new Exception("A service is already registered under $name");
         }
-        $this->services[$name] = function() use ($closure) {
+
+        $this->services[$name] = function () use ($closure) {
             static $instance;
             if (null === $instance) {
                 $instance = $closure();
@@ -90,5 +95,4 @@ class App {
             return $instance;
         };
     }
-
-} // End class App
+}

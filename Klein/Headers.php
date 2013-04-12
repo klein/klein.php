@@ -15,23 +15,25 @@ namespace Klein;
 /**
  * Headers 
  * 
- * @package		Klein
+ * @package     Klein
  */
-class Headers {
+class Headers
+{
 
     /**
-	 * Set an HTTP header by first creating
-	 * a header string from our passed values
+     * Set an HTTP header by first creating
+     * a header string from our passed values
      * 
      * @param string $key
      * @param string $value
      * @access public
      * @return void
      */
-    public function header( $key, $value = null ) {
-		header(
-			$this->create_header_string( $key, $value )
-		);
+    public function header($key, $value = null)
+    {
+        header(
+            $this->createHeaderString($key, $value)
+        );
     }
 
     /**
@@ -44,13 +46,13 @@ class Headers {
      * @access public
      * @return string
      */
-    public function create_header_string( $key, $value = null ) {
-        if ( null === $value ) {
+    public function createHeaderString($key, $value = null)
+    {
+        if (null === $value) {
             return $key;
         }
 
-        $key = str_replace( ' ', '-', ucwords( str_replace( '-', ' ', $key ) ) );
+        $key = str_replace(' ', '-', ucwords(str_replace('-', ' ', $key)));
         return $key . ': ' . $value;
     }
-
-} // End class Headers
+}

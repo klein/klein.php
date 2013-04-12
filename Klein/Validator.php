@@ -15,13 +15,13 @@ use \ErrorException;
 
 use \Klein\Exceptions\ValidatorException;
 
-
 /**
  * Validator 
  * 
  * @package    Klein
  */
-class Validator {
+class Validator
+{
 
     /**
      * Class properties
@@ -52,14 +52,14 @@ class Validator {
      */
     protected $err;
 
-	/**
-	 * Flag for whether the default validation methods have been added or not
-	 *
-	 * @static
-	 * @var boolean
-	 * @access protected
-	 */
-	protected static $defaultAdded = false;
+    /**
+     * Flag for whether the default validation methods have been added or not
+     *
+     * @static
+     * @var boolean
+     * @access protected
+     */
+    protected static $defaultAdded = false;
 
 
     /**
@@ -69,15 +69,16 @@ class Validator {
     /**
      * Sets up the validator chain with the string and optional error message
      *
-     * @param string $str	The string to validate
-     * @param string $err	The optional custom exception message to throw on validation failure
+     * @param string $str   The string to validate
+     * @param string $err   The optional custom exception message to throw on validation failure
      * @access public
      */
-    public function __construct($str, $err = null) {
+    public function __construct($str, $err = null)
+    {
         $this->str = $str;
         $this->err = $err;
 
-        if ( !static::$defaultAdded ) {
+        if (!static::$defaultAdded) {
             static::addDefault();
         }
     }
@@ -89,60 +90,62 @@ class Validator {
      * @access public
      * @return void
      */
-    public static function addDefault() {
-        static::$methods['null'] = function($str) {
+    public static function addDefault()
+    {
+        static::$methods['null'] = function ($str) {
             return $str === null || $str === '';
         };
-        static::$methods['len'] = function($str, $min, $max = null) {
+        static::$methods['len'] = function ($str, $min, $max = null) {
             $len = strlen($str);
             return null === $max ? $len === $min : $len >= $min && $len <= $max;
         };
-        static::$methods['int'] = function($str) {
+        static::$methods['int'] = function ($str) {
             return (string)$str === ((string)(int)$str);
         };
-        static::$methods['float'] = function($str) {
+        static::$methods['float'] = function ($str) {
             return (string)$str === ((string)(float)$str);
         };
-        static::$methods['email'] = function($str) {
+        static::$methods['email'] = function ($str) {
             return filter_var($str, FILTER_VALIDATE_EMAIL) !== false;
         };
-        static::$methods['url'] = function($str) {
+        static::$methods['url'] = function ($str) {
             return filter_var($str, FILTER_VALIDATE_URL) !== false;
         };
-        static::$methods['ip'] = function($str) {
+        static::$methods['ip'] = function ($str) {
             return filter_var($str, FILTER_VALIDATE_IP) !== false;
         };
-        static::$methods['alnum'] = function($str) {
+        static::$methods['alnum'] = function ($str) {
             return ctype_alnum($str);
         };
-        static::$methods['alpha'] = function($str) {
+        static::$methods['alpha'] = function ($str) {
             return ctype_alpha($str);
         };
-        static::$methods['contains'] = function($str, $needle) {
+        static::$methods['contains'] = function ($str, $needle) {
             return strpos($str, $needle) !== false;
         };
-        static::$methods['regex'] = function($str, $pattern) {
+        static::$methods['regex'] = function ($str, $pattern) {
             return preg_match($pattern, $str);
         };
-        static::$methods['chars'] = function($str, $chars) {
+        static::$methods['chars'] = function ($str, $chars) {
             return preg_match("/^[$chars]++$/i", $str);
         };
 
-		static::$defaultAdded = true;
+        static::$defaultAdded = true;
     }
 
     /**
      * Magic "__call" method
      *
-	 * Allows the ability to arbitrarily call a validator with an optional prefix
-	 * of "is" or "not" by simply calling an instance property like a callback
-	 *
+     * Allows the ability to arbitrarily call a validator with an optional prefix
+     * of "is" or "not" by simply calling an instance property like a callback
+     *
      * @param callable $method  The callable method to execute
      * @param array $args       The argument array to pass to our callback
      * @access public
      * @return Validator
      */
-    public function __call($method, $args) {
+    public function __call($method, $args)
+    {
         $reverse = false;
         $validator = $method;
         $method_substr = substr($method, 0, 2);
@@ -162,11 +165,21 @@ class Validator {
         array_unshift($args, $this->str);
 
         switch (count($args)) {
-            case 1:  $result = $validator($args[0]); break;
-            case 2:  $result = $validator($args[0], $args[1]); break;
-            case 3:  $result = $validator($args[0], $args[1], $args[2]); break;
-            case 4:  $result = $validator($args[0], $args[1], $args[2], $args[3]); break;
-            default: $result = call_user_func_array($validator, $args); break;
+            case 1:
+                $result = $validator($args[0]);
+                break;
+            case 2:
+                $result = $validator($args[0], $args[1]);
+                break;
+            case 3:
+                $result = $validator($args[0], $args[1], $args[2]);
+                break;
+            case 4:
+                $result = $validator($args[0], $args[1], $args[2], $args[3]);
+                break;
+            default:
+                $result = call_user_func_array($validator, $args);
+                break;
         }
 
         $result = (bool)($result ^ $reverse);
@@ -177,5 +190,4 @@ class Validator {
         }
         return $this;
     }
-
-} // End class Validator
+}
