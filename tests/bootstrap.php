@@ -20,33 +20,33 @@ $autoloader->add( 'Klein\Tests', __DIR__ );
 
 
 class HeadersEcho extends Headers {
-	public function header($key, $value = null) {
-		echo $this->create_header_string($key, $value) . "\n";
-	}
+    public function header($key, $value = null) {
+        echo $this->create_header_string($key, $value) . "\n";
+    }
 }
 
 class HeadersNoOp extends Headers {
-	public function header($key, $value = null) {
-		// Do nothing. ;)
-	}
+    public function header($key, $value = null) {
+        // Do nothing. ;)
+    }
 }
 
 class HeadersSave extends Headers {
-	public $headers_values = array();
+    public $headers_values = array();
 
-	public function __construct( &$headers_array_ref ) {
-		$this->headers_values = &$headers_array_ref;
-	}
+    public function __construct( &$headers_array_ref ) {
+        $this->headers_values = &$headers_array_ref;
+    }
 
-	public function header($key, $value = null) {
-		$this->headers_values[] = $this->create_header_string($key, $value) . "\n";
+    public function header($key, $value = null) {
+        $this->headers_values[] = $this->create_header_string($key, $value) . "\n";
 
-		return $this->headers_values;
-	}
+        return $this->headers_values;
+    }
 }
 
 class TestClass {
-	static function GET($r, $r, $a) {
-		echo 'ok';
-	}
+    static function GET($r, $r, $a) {
+        echo 'ok';
+    }
 }

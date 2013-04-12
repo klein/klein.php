@@ -23,47 +23,47 @@ use \Klein\HttpStatus;
  */
 class HttpStatusTests extends AbstractKleinTest {
 
-	public function testStaticMessageFromCode() {
-		// Set our test data
-		$code = 404;
-		$message = 'Not Found'; // HTTP 1.1 404 status message
+    public function testStaticMessageFromCode() {
+        // Set our test data
+        $code = 404;
+        $message = 'Not Found'; // HTTP 1.1 404 status message
 
-		$this->assertSame( $message, HttpStatus::get_message_from_code( $code ) );
-	}
+        $this->assertSame( $message, HttpStatus::get_message_from_code( $code ) );
+    }
 
-	public function testManualEntry() {
-		// Set our manual test data
-		$code = 666;
-		$message = 'The devil\'s mark';
+    public function testManualEntry() {
+        // Set our manual test data
+        $code = 666;
+        $message = 'The devil\'s mark';
 
-		$http_status = new HttpStatus( $code, $message );
+        $http_status = new HttpStatus( $code, $message );
 
-		$this->assertSame( $code, $http_status->get_code() );
-		$this->assertSame( $message, $http_status->get_message() );
-	}
+        $this->assertSame( $code, $http_status->get_code() );
+        $this->assertSame( $message, $http_status->get_message() );
+    }
 
-	public function testAutomaticMessage() {
-		$code = 201;
-		$expected_message = 'Created';
+    public function testAutomaticMessage() {
+        $code = 201;
+        $expected_message = 'Created';
 
-		$http_status = new HttpStatus( $code );
+        $http_status = new HttpStatus( $code );
 
-		$this->assertSame( $code, $http_status->get_code() );
-		$this->assertSame( $expected_message, $http_status->get_message() );
-	}
+        $this->assertSame( $code, $http_status->get_code() );
+        $this->assertSame( $expected_message, $http_status->get_message() );
+    }
 
-	public function testStringOutput() {
-		// Set our manual test data
-		$code = 404;
-		$expected_string = '404 Not Found';
+    public function testStringOutput() {
+        // Set our manual test data
+        $code = 404;
+        $expected_string = '404 Not Found';
 
-		// Create and echo our status
-		$http_status = new HttpStatus( $code );
-		echo $http_status;
+        // Create and echo our status
+        $http_status = new HttpStatus( $code );
+        echo $http_status;
 
-		$this->expectOutputString( $expected_string );
+        $this->expectOutputString( $expected_string );
 
-		$this->assertSame( $expected_string, $http_status->get_formatted_string() );
-	}
+        $this->assertSame( $expected_string, $http_status->get_formatted_string() );
+    }
 
 } // End class HttpStatusTests
