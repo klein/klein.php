@@ -29,7 +29,7 @@ class HttpStatusTests extends AbstractKleinTest
         $code = 404;
         $message = 'Not Found'; // HTTP 1.1 404 status message
 
-        $this->assertSame($message, HttpStatus::get_message_from_code($code));
+        $this->assertSame($message, HttpStatus::getMessageFromCode($code));
     }
 
     public function testManualEntry()
@@ -40,8 +40,8 @@ class HttpStatusTests extends AbstractKleinTest
 
         $http_status = new HttpStatus($code, $message);
 
-        $this->assertSame($code, $http_status->get_code());
-        $this->assertSame($message, $http_status->get_message());
+        $this->assertSame($code, $http_status->getCode());
+        $this->assertSame($message, $http_status->getMessage());
     }
 
     public function testAutomaticMessage()
@@ -51,8 +51,8 @@ class HttpStatusTests extends AbstractKleinTest
 
         $http_status = new HttpStatus($code);
 
-        $this->assertSame($code, $http_status->get_code());
-        $this->assertSame($expected_message, $http_status->get_message());
+        $this->assertSame($code, $http_status->getCode());
+        $this->assertSame($expected_message, $http_status->getMessage());
     }
 
     public function testStringOutput()
@@ -67,6 +67,6 @@ class HttpStatusTests extends AbstractKleinTest
 
         $this->expectOutputString($expected_string);
 
-        $this->assertSame($expected_string, $http_status->get_formatted_string());
+        $this->assertSame($expected_string, $http_status->getFormattedString());
     }
 }

@@ -51,8 +51,8 @@ class RoutesTest extends AbstractKleinTest
     {
         $this->expectOutputString('okok');
 
-        $this->klein_app->respond( '/', array(__NAMESPACE__ . '\TestClass', 'GET'));
-        $this->klein_app->respond( '/', __NAMESPACE__ . '\TestClass::GET');
+        $this->klein_app->respond( '/', array(__NAMESPACE__ . '\Mocks\TestClass', 'GET'));
+        $this->klein_app->respond( '/', __NAMESPACE__ . '\Mocks\TestClass::GET');
         $this->klein_app->dispatch('/');
     }
 

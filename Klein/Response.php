@@ -303,7 +303,7 @@ class Response
             $this->header("$protocol $this->http_status");
         }
 
-        return $this->http_status->get_code();
+        return $this->http_status->getCode();
     }
 
     /**
@@ -480,7 +480,8 @@ class Response
      * Adds an error callback to the stack of error handlers
      *
      * @param callable $callback            The callable function to execute in the error handling chain
-     * @param boolean $allow_duplicates     Whether or not to allow duplicate callbacks to exist in the error handling chain
+     * @param boolean $allow_duplicates     Whether or not to allow duplicate callbacks to exist in the
+     *  error handling chain
      * @access public
      * @return boolean | void
      */
