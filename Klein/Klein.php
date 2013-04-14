@@ -88,11 +88,15 @@ class Klein
      * @param Headers $headers      A Headers object to be cloned to both the Request and Response objects
      * @param Request $request      To contain all incoming request properties and related functions
      * @param Response $response    To contain all outgoing response properties and related functions
-     * @param mixed $app            A generic that will be passed to each route callback, defaults to a new "App" instance
+     * @param mixed $app            An object that will be passed to each route callback, defaults to a new App instance
      * @access public
      */
-    public function __construct(Headers $headers = null, Request $request = null, Response $response = null, $app = null)
-    {
+    public function __construct(
+        Headers $headers = null,
+        Request $request = null,
+        Response $response = null,
+        $app = null
+    ) {
         // Create our base Headers object to be cloned
         $headers        = $headers  ?: new Headers();
 
@@ -404,7 +408,14 @@ class Klein
                         $_REQUEST = array_merge($_REQUEST, $params);
                     }
                     try {
-                        call_user_func($callback, $this->request, $this->response, $this->app, $matched, $methods_matched);
+                        call_user_func(
+                            $callback,
+                            $this->request,
+                            $this->response,
+                            $this->app,
+                            $matched,
+                            $methods_matched
+                        );
                     } catch (Exception $e) {
                         $this->response->error($e);
                     }

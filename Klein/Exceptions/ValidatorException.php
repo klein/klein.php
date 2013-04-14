@@ -13,12 +13,12 @@ namespace Klein\Exceptions;
 
 use \Exception;
 
-
 /**
  * ValidatorException 
  * 
  * @uses       Exception
  * @package    Klein
  */
-class ValidatorException extends Exception {
-} // End class ValidatorException
+class ValidatorException extends Exception
+{
+}
