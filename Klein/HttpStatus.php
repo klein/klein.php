@@ -18,7 +18,8 @@ namespace Klein;
  * 
  * @package     Klein
  */
-class HttpStatus {
+class HttpStatus
+{
 
     /**
      * The HTTP status code
@@ -106,11 +107,12 @@ class HttpStatus {
      * @access public
      * @return void
      */
-    public function __construct( $code, $message = null ) {
-        $this->set_code( $code );
+    public function __construct($code, $message = null)
+    {
+        $this->setCode($code);
 
-        if ( is_null( $message ) ) {
-            $message = static::get_message_from_code( $code );
+        if (is_null($message)) {
+            $message = static::getMessageFromCode($code);
         }
 
         $this->message = $message;
@@ -122,7 +124,8 @@ class HttpStatus {
      * @access public
      * @return int
      */
-    public function get_code() {
+    public function getCode()
+    {
         return $this->code;
     }
 
@@ -132,7 +135,8 @@ class HttpStatus {
      * @access public
      * @return string
      */
-    public function get_message() {
+    public function getMessage()
+    {
         return $this->message;
     }
 
@@ -143,7 +147,8 @@ class HttpStatus {
      * @access public
      * @return HttpStatus
      */
-    public function set_code( $code ) {
+    public function setCode($code)
+    {
         $this->code = (int) $code;
         return $this;
     }
@@ -155,7 +160,8 @@ class HttpStatus {
      * @access public
      * @return HttpStatus
      */
-    public function set_message( $message ) {
+    public function setMessage($message)
+    {
         $this->message = (string) $message;
         return $this;
     }
@@ -166,10 +172,11 @@ class HttpStatus {
      * @access public
      * @return string
      */
-    public function get_formatted_string() {
+    public function getFormattedString()
+    {
         $string = (string) $this->code;
 
-        if ( !is_null( $this->message ) ) {
+        if (!is_null($this->message)) {
             $string = $string . ' ' . $this->message;
         }
 
@@ -186,8 +193,9 @@ class HttpStatus {
      * @access public
      * @return string
      */
-    public function __toString() {
-        return $this->get_formatted_string();
+    public function __toString()
+    {
+        return $this->getFormattedString();
     }
 
     /**
@@ -201,13 +209,12 @@ class HttpStatus {
      * @access public
      * @return string | null
      */
-    public static function get_message_from_code( $int ) {
-        if ( isset( static::$http_messages[ $int ] ) ) {
+    public static function getMessageFromCode($int)
+    {
+        if (isset(static::$http_messages[ $int ])) {
             return static::$http_messages[ $int ];
-        }
-        else {
+        } else {
             return null;
         }
     }
-
-} // End class HttpStatus
+}

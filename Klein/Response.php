@@ -14,13 +14,13 @@ namespace Klein;
 use \Exception;
 use \ErrorException;
 
-
 /**
  * Response 
  * 
  * @package     Klein
  */
-class Response {
+class Response
+{
 
     /**
      * Class properties
@@ -96,10 +96,11 @@ class Response {
      * @param Headers $headers  Headers class to handle writing HTTP headers
      * @access public
      */
-    public function __construct( Headers $headers ) {
+    public function __construct(Headers $headers)
+    {
         $this->headers = $headers;
 
-        $this->http_status = new HttpStatus( static::$default_status_code );
+        $this->http_status = new HttpStatus(static::$default_status_code);
     }
 
     /**
@@ -111,7 +112,8 @@ class Response {
      * @access public
      * @return void
      */
-    public function chunk($str = null) {
+    public function chunk($str = null)
+    {
         if (false === $this->chunked) {
             $this->chunked = true;
             $this->headers->header('Transfer-encoding: chunked');
@@ -137,7 +139,8 @@ class Response {
      * @access public
      * @return void
      */
-    public function header($key, $value = null) {
+    public function header($key, $value = null)
+    {
         $this->headers->header($key, $value);
     }
 
@@ -154,11 +157,19 @@ class Response {
      * @access public
      * @return boolean
      */
-    public function cookie($key, $value = '', $expiry = null, $path = '/',
-            $domain = null, $secure = false, $httponly = false) {
+    public function cookie(
+        $key,
+        $value = '',
+        $expiry = null,
+        $path = '/',
+        $domain = null,
+        $secure = false,
+        $httponly = false
+    ) {
         if (null === $expiry) {
             $expiry = time() + (3600 * 24 * 30);
         }
+
         return setcookie($key, $value, $expiry, $path, $domain, $secure, $httponly);
     }
 
@@ -171,7 +182,8 @@ class Response {
      * @access public
      * @return void
      */
-    public function flash($msg, $type = 'info', $params = null) {
+    public function flash($msg, $type = 'info', $params = null)
+    {
         startSession();
         if (is_array($type)) {
             $params = $type;
@@ -195,7 +207,8 @@ class Response {
      * @access public
      * @return string
      */
-    public function markdown($str, $args = null) {
+    public function markdown($str, $args = null)
+    {
         $args = func_get_args();
         $md = array(
             '/\[([^\]]++)\]\(([^\)]++)\)/' => '<a href="$2">$1</a>',
@@ -218,7 +231,8 @@ class Response {
      * @access public
      * @return void
      */
-    public function noCache() {
+    public function noCache()
+    {
         $this->header("Pragma: no-cache");
         $this->header('Cache-Control: no-store, no-cache');
     }
@@ -232,7 +246,8 @@ class Response {
      * @access public
      * @return void
      */
-    public function file($path, $filename = null, $mimetype = null) {
+    public function file($path, $filename = null, $mimetype = null)
+    {
         $this->discard();
         $this->noCache();
         set_time_limit(1200);
@@ -256,13 +271,14 @@ class Response {
      * @access public
      * @return void
      */
-    public function json($object, $jsonp_prefix = null) {
+    public function json($object, $jsonp_prefix = null)
+    {
         $this->discard(true);
         $this->noCache();
         set_time_limit(1200);
         $json = json_encode($object);
         if (null !== $jsonp_prefix) {
-           $this->header('Content-Type: text/javascript'); // should ideally be application/json-p once adopted
+            $this->header('Content-Type: text/javascript'); // should ideally be application/json-p once adopted
             echo "$jsonp_prefix($json);";
         } else {
             $this->header('Content-Type: application/json');
@@ -277,16 +293,17 @@ class Response {
      * @access public
      * @return int | void
      */
-    public function code( $code = null ) {
-        if ( null !== $code ) {
-            $this->http_status = new HttpStatus( $code );
+    public function code($code = null)
+    {
+        if (null !== $code) {
+            $this->http_status = new HttpStatus($code);
 
             // Manually create the HTTP Status header
             $protocol = isset($_SERVER['SERVER_PROTOCOL']) ? $_SERVER['SERVER_PROTOCOL'] : 'HTTP/1.0';
-            $this->header( "$protocol $this->http_status" );
+            $this->header("$protocol $this->http_status");
         }
 
-        return $this->http_status->get_code();
+        return $this->http_status->getCode();
     }
 
     /**
@@ -298,7 +315,8 @@ class Response {
      * @access public
      * @return void
      */
-    public function redirect($url, $code = 302, $exit_after_redirect = true) {
+    public function redirect($url, $code = 302, $exit_after_redirect = true)
+    {
         $this->code($code);
         $this->header("Location: $url");
         if ($exit_after_redirect) {
@@ -312,7 +330,8 @@ class Response {
      * @access public
      * @return void
      */
-    public function refresh() {
+    public function refresh()
+    {
         $this->redirect(isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '/');
     }
 
@@ -322,7 +341,8 @@ class Response {
      * @access public
      * @return void
      */
-    public function back() {
+    public function back()
+    {
         if (isset($_SERVER['HTTP_REFERER'])) {
             $this->redirect($_SERVER['HTTP_REFERER']);
         }
@@ -337,7 +357,8 @@ class Response {
      * @access public
      * @return void
      */
-    public function set($key, $value = null) {
+    public function set($key, $value = null)
+    {
         if (!is_array($key)) {
             return $this->$key = $value;
         }
@@ -354,7 +375,8 @@ class Response {
      * @access public
      * @return void
      */
-    public function query($key, $value = null) {
+    public function query($key, $value = null)
+    {
         $query = array();
         if (isset($_SERVER['QUERY_STRING'])) {
             parse_str($_SERVER['QUERY_STRING'], $query);
@@ -379,7 +401,8 @@ class Response {
      * @access public
      * @return void
      */
-    public function layout($layout) {
+    public function layout($layout)
+    {
         $this->layout = $layout;
     }
 
@@ -389,7 +412,8 @@ class Response {
      * @access public
      * @return void
      */
-    public function yield() {
+    public function yield()
+    {
         require $this->view;
     }
 
@@ -401,7 +425,8 @@ class Response {
      * @access public
      * @return void
      */
-    public function render($view, array $data = array()) {
+    public function render($view, array $data = array())
+    {
         $original_view = $this->view;
 
         if (!empty($data)) {
@@ -429,7 +454,8 @@ class Response {
      * @access public
      * @return void
      */
-    public function partial($view, array $data = array()) {
+    public function partial($view, array $data = array())
+    {
         $layout = $this->layout;
         $this->layout = null;
         $this->render($view, $data);
@@ -444,7 +470,8 @@ class Response {
      * @access public
      * @return mixed
      */
-    public function session($key, $value = null) {
+    public function session($key, $value = null)
+    {
         startSession();
         return $_SESSION[$key] = $value;
     }
@@ -453,12 +480,14 @@ class Response {
      * Adds an error callback to the stack of error handlers
      *
      * @param callable $callback            The callable function to execute in the error handling chain
-     * @param boolean $allow_duplicates     Whether or not to allow duplicate callbacks to exist in the error handling chain
+     * @param boolean $allow_duplicates     Whether or not to allow duplicate callbacks to exist in the
+     *  error handling chain
      * @access public
      * @return boolean | void
      */
-    public function onError($callback, $allow_duplicates = true) {
-        if ( !$allow_duplicates && in_array($callback, $this->errorCallbacks) ) {
+    public function onError($callback, $allow_duplicates = true)
+    {
+        if (!$allow_duplicates && in_array($callback, $this->errorCallbacks)) {
             return false;
         }
 
@@ -472,7 +501,8 @@ class Response {
      * @access public
      * @return void
      */
-    public function error(Exception $err) {
+    public function error(Exception $err)
+    {
         $type = get_class($err);
         $msg = $err->getMessage();
 
@@ -488,7 +518,7 @@ class Response {
                 }
             }
         } else {
-            $this->code( 500 );
+            $this->code(500);
             throw new ErrorException($err);
         }
     }
@@ -504,7 +534,8 @@ class Response {
      * @access public
      * @return void
      */
-    public function param($param, $default = null) {
+    public function param($param, $default = null)
+    {
         return isset($_REQUEST[$param]) ?  htmlentities($_REQUEST[$param], ENT_QUOTES) : $default;
     }
 
@@ -515,7 +546,8 @@ class Response {
      * @access public
      * @return array
      */
-    public function flashes($type = null) {
+    public function flashes($type = null)
+    {
         startSession();
         if (!isset($_SESSION['__flashes'])) {
             return array();
@@ -542,7 +574,8 @@ class Response {
      * @access public
      * @return void
      */
-    public function escape($str) {
+    public function escape($str)
+    {
         return htmlentities($str, ENT_QUOTES);
     }
 
@@ -553,14 +586,15 @@ class Response {
      * @access public
      * @return void
      */
-    public function discard($restart_buffer = false) {
+    public function discard($restart_buffer = false)
+    {
         $cleaned = ob_end_clean();
 
-       if ($restart_buffer) {
-           ob_start();
-       }
+        if ($restart_buffer) {
+            ob_start();
+        }
 
-       return $cleaned;
+        return $cleaned;
     }
 
     /**
@@ -569,7 +603,8 @@ class Response {
      * @access public
      * @return void
      */
-    public function flush() {
+    public function flush()
+    {
         ob_end_flush();
     }
 
@@ -579,7 +614,8 @@ class Response {
      * @access public
      * @return string
      */
-    public function buffer() {
+    public function buffer()
+    {
         return ob_get_contents();
     }
 
@@ -590,7 +626,8 @@ class Response {
      * @access public
      * @return void
      */
-    public function dump($obj) {
+    public function dump($obj)
+    {
         if (is_array($obj) || is_object($obj)) {
             $obj = print_r($obj, true);
         }
@@ -608,18 +645,25 @@ class Response {
      * @access public
      * @return void
      */
-    public function __call($method, $args) {
+    public function __call($method, $args)
+    {
         if (!isset($this->$method) || !is_callable($this->$method)) {
             throw new ErrorException("Unknown method $method()");
         }
+
         $callback = $this->$method;
+
         switch (count($args)) {
-            case 1:  return $callback($args[0]);
-            case 2:  return $callback($args[0], $args[1]);
-            case 3:  return $callback($args[0], $args[1], $args[2]);
-            case 4:  return $callback($args[0], $args[1], $args[2], $args[3]);
-            default: return call_user_func_array($callback, $args);
+            case 1:
+                return $callback($args[0]);
+            case 2:
+                return $callback($args[0], $args[1]);
+            case 3:
+                return $callback($args[0], $args[1], $args[2]);
+            case 4:
+                return $callback($args[0], $args[1], $args[2], $args[3]);
+            default:
+                return call_user_func_array($callback, $args);
         }
     }
-
-} // End class Response
+}
