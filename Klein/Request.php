@@ -442,10 +442,23 @@ class Request
      * @access public
      * @return string | boolean
      */
-    public function method($is = null)
+    public function method($is = null, $allow_override = true)
     {
         $method = $this->server->get('REQUEST_METHOD', 'GET');
 
+        // Override
+        if ($allow_override && $method === 'POST') {
+            // For legacy servers, override the HTTP method with the X-HTTP-Method-Override header or _method parameter
+            if ($this->server->exists('X_HTTP_METHOD_OVERRIDE')) {
+                $method = $this->server->get('X_HTTP_METHOD_OVERRIDE', $method);
+            } else {
+                $method = $this->param('_method', $method);
+            }
+
+            $method = strtoupper($method);
+        }
+
+        // We're doing a check
         if (null !== $is) {
             return strcasecmp($method, $is) === 0;
         }
