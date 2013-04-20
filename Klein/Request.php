@@ -407,9 +407,16 @@ class Request
      * @access public
      * @return string
      */
-    public function uri()
+    public function uri($strip_query_string = false)
     {
-        return $this->server->get('REQUEST_URI', '/');
+        $uri = $this->server->get('REQUEST_URI', '/');
+
+        // Should we strip the query string?
+        if ($strip_query_string) {
+            $uri = strstr($uri, '?', true) ?: $uri;
+        }
+
+        return $uri;
     }
 
     /**
