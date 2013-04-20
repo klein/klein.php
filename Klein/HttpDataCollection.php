@@ -22,6 +22,9 @@ use \ArrayIterator;
  * A generic collection class to contain array-like data, specifically
  * designed to work with HTTP data (request params, session data, etc)
  *
+ * Inspired by @fabpot's Symfony 2's HttpFoundation
+ * @link https://github.com/symfony/HttpFoundation/blob/master/ParameterBag.php
+ *
  * @uses        IteratorAggregate
  * @uses        ArrayAccess
  * @uses        Countable
