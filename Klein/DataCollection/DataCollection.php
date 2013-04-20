@@ -171,6 +171,9 @@ class DataCollection implements IteratorAggregate, ArrayAccess, Countable
     /**
      * Magic "__get" method
      *
+     * Allows the ability to arbitrarily request an attribute from
+     * this instance while treating it as an instance property
+     *
      * @see get()
      * @param string $key   The name of the parameter to return
      * @access public
@@ -183,6 +186,9 @@ class DataCollection implements IteratorAggregate, ArrayAccess, Countable
 
     /**
      * Magic "__set" method
+     *
+     * Allows the ability to arbitrarily set an attribute from
+     * this instance while treating it as an instance property
      *
      * @see set()
      * @param string $key   The name of the parameter to set
@@ -198,6 +204,9 @@ class DataCollection implements IteratorAggregate, ArrayAccess, Countable
     /**
      * Magic "__isset" method
      *
+     * Allows the ability to arbitrarily check the existence of an attribute
+     * from this instance while treating it as an instance property
+     *
      * @see exists()
      * @param string $key   The name of the parameter
      * @access public
@@ -210,6 +219,9 @@ class DataCollection implements IteratorAggregate, ArrayAccess, Countable
 
     /**
      * Magic "__unset" method
+     *
+     * Allows the ability to arbitrarily remove an attribute from
+     * this instance while treating it as an instance property
      *
      * @see remove()
      * @param string $key   The name of the parameter
@@ -241,6 +253,10 @@ class DataCollection implements IteratorAggregate, ArrayAccess, Countable
     }
 
     /**
+     * Get an attribute via array syntax
+     *
+     * Allows the access of attributes of this instance while treating it like an array
+     *
      * @see \ArrayAccess::offsetGet()
      * @see get()
      * @param string $key   The name of the parameter to return
@@ -253,6 +269,10 @@ class DataCollection implements IteratorAggregate, ArrayAccess, Countable
     }
 
     /**
+     * Set an attribute via array syntax
+     *
+     * Allows the access of attributes of this instance while treating it like an array
+     *
      * @see \ArrayAccess::offsetSet()
      * @see set()
      * @param string $key   The name of the parameter to set
@@ -266,6 +286,10 @@ class DataCollection implements IteratorAggregate, ArrayAccess, Countable
     }
 
     /**
+     * Check existence an attribute via array syntax
+     *
+     * Allows the access of attributes of this instance while treating it like an array
+     *
      * @see \ArrayAccess::offsetIsset()
      * @see exists()
      * @param string $key   The name of the parameter
@@ -278,6 +302,10 @@ class DataCollection implements IteratorAggregate, ArrayAccess, Countable
     }
 
     /**
+     * Remove an attribute via array syntax
+     *
+     * Allows the access of attributes of this instance while treating it like an array
+     *
      * @see \ArrayAccess::offsetUnset()
      * @see remove()
      * @param string $key   The name of the parameter
@@ -290,6 +318,11 @@ class DataCollection implements IteratorAggregate, ArrayAccess, Countable
     }
 
     /**
+     * Count the attributes via a simple "count" call
+     *
+     * Allows the use of the "count" function (or any internal counters)
+     * to simply count the number of attributes in the collection.
+     *
      * @see \Countable::count()
      * @access public
      * @return int
