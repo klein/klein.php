@@ -409,7 +409,7 @@ class Request
      */
     public function uri()
     {
-        return $this->server->get('REQUEST_URI') ?: '/';
+        return $this->server->get('REQUEST_URI', '/');
     }
 
     /**
@@ -444,7 +444,7 @@ class Request
      */
     public function method($is = null)
     {
-        $method = $this->server->get('REQUEST_METHOD') ?: 'GET';
+        $method = $this->server->get('REQUEST_METHOD', 'GET');
 
         if (null !== $is) {
             return strcasecmp($method, $is) === 0;
