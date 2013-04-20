@@ -9,7 +9,7 @@
  * @license     MIT
  */
 
-namespace Klein;
+namespace Klein\DataCollection;
 
 use \IteratorAggregate;
 use \ArrayAccess;
@@ -17,7 +17,7 @@ use \Countable;
 use \ArrayIterator;
 
 /**
- * HttpDataCollection
+ * DataCollection
  *
  * A generic collection class to contain array-like data, specifically
  * designed to work with HTTP data (request params, session data, etc)
@@ -28,9 +28,9 @@ use \ArrayIterator;
  * @uses        IteratorAggregate
  * @uses        ArrayAccess
  * @uses        Countable
- * @package     Klein
+ * @package     Klein\DataCollection
  */
-class HttpDataCollection implements IteratorAggregate, ArrayAccess, Countable
+class DataCollection implements IteratorAggregate, ArrayAccess, Countable
 {
 
     /**
@@ -129,7 +129,7 @@ class HttpDataCollection implements IteratorAggregate, ArrayAccess, Countable
      * @param string $key   The name of the parameter to set
      * @param mixed  $value The value of the parameter to set
      * @access public
-     * @return HttpDataCollection
+     * @return DataCollection
      */
     public function set($key, $value)
     {
@@ -188,7 +188,7 @@ class HttpDataCollection implements IteratorAggregate, ArrayAccess, Countable
      * @param string $key   The name of the parameter to set
      * @param mixed  $value The value of the parameter to set
      * @access public
-     * @return HttpDataCollection
+     * @return DataCollection
      */
     public function __set($key, $value)
     {
