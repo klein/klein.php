@@ -236,43 +236,24 @@ class Klein
     /**
      * Dispatch the request to the approriate route(s)
      *
-     * @param string $uri           The URI of which to match the routes against
-     * @param string $req_method    The HTTP request method of which to match the routes against
-     * @param array $params         The incoming request parameters to match the routes against
-     * @param boolean $capture      Whether or not we should capture the output in the output buffer
+     * @param Request $request		The request object to inject into the router
      * @access public
      * @return void
      */
-    public function dispatch($uri = null, $req_method = null, array $params = null, $capture = false)
+    public function dispatch(Request $request = null)
     {
-        // Get/parse the request URI and method
-        if (null === $uri) {
-            $uri = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '/';
-        }
-        if (false !== strpos($uri, '?')) {
-            $uri = strstr($uri, '?', true);
-        }
-        if (null === $req_method) {
-            $req_method = isset($_SERVER['REQUEST_METHOD']) ? $_SERVER['REQUEST_METHOD'] : 'GET';
-
-            // For legacy servers, override the HTTP method with the X-HTTP-Method-Override
-            // header or _method parameter
-            if (isset($_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'])) {
-                $req_method = $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'];
-            } elseif (isset($_REQUEST['_method'])) {
-                $req_method = $_REQUEST['_method'];
-            }
+        if (is_null($request)) {
+            $request = Request::createFromGlobals();
         }
 
-        // Force request_order to be GP
-        // http://www.mail-archive.com/internals@lists.php.net/msg33119.html
-        $_REQUEST = array_merge($_GET, $_POST);
-        if (null !== $params) {
-            $_REQUEST = array_merge($_REQUEST, $params);
-        }
+        // Grab some data from the request
+        $uri = $request->uri(true); // Strip the query string
+        $req_method = $request->method();
 
+        // Set up some variables for matching
         $matched = 0;
         $methods_matched = array();
+        $params = array();
         $apc = function_exists('apc_fetch');
 
         ob_start();
@@ -280,7 +261,9 @@ class Klein
         foreach ($this->routes as $handler) {
             list($method, $_route, $callback, $count_match) = $handler;
 
+            // Keep track of whether this specific request method was matched
             $method_match = null;
+
             // Was a method specified? If so, check it against the current request method
             if (is_array($method)) {
                 foreach ($method as $test) {
@@ -330,7 +313,7 @@ class Klein
                 // Easily handle 404's
 
                 try {
-                    call_user_func($callback, $this->request, $this->response, $this->app, $matched, $methods_matched);
+                    call_user_func($callback, $request, $this->response, $this->app, $matched, $methods_matched);
                 } catch (Exception $e) {
                     $this->response->error($e);
                 }
@@ -342,7 +325,7 @@ class Klein
                 // Easily handle 405's
 
                 try {
-                    call_user_func($callback, $this->request, $this->response, $this->app, $matched, $methods_matched);
+                    call_user_func($callback, $request, $this->response, $this->app, $matched, $methods_matched);
                 } catch (Exception $e) {
                     $this->response->error($e);
                 }
@@ -404,13 +387,15 @@ class Klein
                 $methods_matched = array_unique($methods_matched);
 
                 if ($possible_match) {
-                    if (null !== $params) {
-                        $_REQUEST = array_merge($_REQUEST, $params);
+                    if (!empty($params)) {
+                        $request->paramsNamed()->merge($params);
                     }
+
+                    // Try and call our route's callback
                     try {
                         call_user_func(
                             $callback,
-                            $this->request,
+                            $request,
                             $this->response,
                             $this->app,
                             $matched,
@@ -419,6 +404,7 @@ class Klein
                     } catch (Exception $e) {
                         $this->response->error($e);
                     }
+
                     if ($_route !== '*') {
                         $count_match && ++$matched;
                     }
