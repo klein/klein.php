@@ -11,6 +11,7 @@
 
 namespace Klein;
 
+use Klein\DataCollection\DataCollection;
 
 /**
  * Request
@@ -33,12 +34,52 @@ class Request
     protected $id;
 
     /**
-     * HTTP Headers helper
+     * GET (query) parameters
      *
-     * @var Headers
+     * @var \Klein\DataCollection\DataCollection
+     * @access protected
+     */
+    protected $params_get;
+
+    /**
+     * POST parameters
+     *
+     * @var \Klein\DataCollection\DataCollection
+     * @access protected
+     */
+    protected $params_post;
+
+    /**
+     * Server created attributes
+     *
+     * @var \Klein\DataCollection\ServerDataCollection
+     * @access protected
+     */
+    protected $server;
+
+    /**
+     * HTTP request headers
+     *
+     * @var \Klein\DataCollection\DataCollection
      * @access protected
      */
     protected $headers;
+
+    /**
+     * Uploaded temporary files
+     *
+     * @var \Klein\DataCollection\DataCollection
+     * @access protected
+     */
+    protected $files;
+
+    /**
+     * Client cookie data
+     *
+     * @var \Klein\DataCollection\DataCollection
+     * @access protected
+     */
+    protected $cookies;
 
     /**
      * The request body
@@ -56,14 +97,53 @@ class Request
     /**
      * Constructor
      *
-     * Create a new Request object with a dependency injected Headers instance
+     * Create a new Request object and define all of its request data
      *
-     * @param Headers $headers  Headers class to handle writing HTTP headers
+     * @param array  $params_get
+     * @param array  $params_post
+     * @param array  $server
+     * @param array  $files
+     * @param array  $cookies
+     * @param string $body
      * @access public
      */
-    public function __construct(Headers $headers)
+    public function __construct(
+        array $params_get = array(),
+        array $params_post = array(),
+        array $server = array(),
+        array $files = array(),
+        array $cookies = array(),
+        $body = null
+    ) {
+        // Assignment city...
+        $this->params_get   = new DataCollection($params_get);
+        $this->params_post  = new DataCollection($params_post);
+        $this->server       = new ServerDataCollection($server);
+        $this->headers      = new DataCollection($this->server->getHeaders());
+        $this->files        = new DataCollection($files);
+        $this->cookies      = new DataCollection($cookies);
+        $this->body         = $body ? (string) $body : null;
+    }
+
+    /**
+     * Create a new request object using the built-in "superglobals"
+     *
+     * @link http://php.net/manual/en/language.variables.superglobals.php
+     * @static
+     * @access public
+     * @return Request
+     */
+    public static function createFromGlobals()
     {
-        $this->headers = $headers;
+        // Create and return a new instance of this
+        return new static(
+            $_GET,
+            $_POST,
+            $_SERVER,
+            $_FILES,
+            $_COOKIES,
+            null // Let our content getter take care of the "body"
+        );
     }
 
     /**
