@@ -194,11 +194,11 @@ class DataCollection implements IteratorAggregate, ArrayAccess, Countable
      * @param string $key   The name of the parameter to set
      * @param mixed  $value The value of the parameter to set
      * @access public
-     * @return DataCollection
+     * @return void
      */
     public function __set($key, $value)
     {
-        return $this->set($key, $value);
+        $this->set($key, $value);
     }
 
     /**
