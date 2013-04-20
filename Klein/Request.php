@@ -404,6 +404,7 @@ class Request
     /**
      * Gets the request URI
      *
+     * @param boolean $strip_query_string Whether or not to strip the query string from the URI
      * @access public
      * @return string
      */
@@ -445,7 +446,8 @@ class Request
      * $request->method('get') // returns false
      * </code>
      * 
-     * @param string $is    The method to check the current request method against
+     * @param string $is				The method to check the current request method against
+     * @param boolean $allow_override	Whether or not to allow HTTP method overriding via header or params
      * @access public
      * @return string | boolean
      */
