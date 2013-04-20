@@ -139,6 +139,53 @@ class DataCollection implements IteratorAggregate, ArrayAccess, Countable
     }
 
     /**
+     * Replace the collection's attributes
+     *
+     * @param array $attributes The attributes to replace the collection's with
+     * @access public
+     * @return DataCollection
+     */
+    public function replace(array $attributes = array())
+    {
+        $this->attributes = $attributes;
+
+        return $this;
+    }
+
+    /**
+     * Merge attributes with the collection's attributes
+     *
+     * Optionally allows a second boolean parameter to merge the attributes
+     * into the collection in a "hard" manner, using the "array_replace"
+     * method instead of the usual "array_merge" method
+     *
+     * @param array $attributes The attributes to merge into the collection
+     * @param boolean $hard     Whether or not to make the merge "hard"
+     * @access public
+     * @return DataCollection
+     */
+    public function merge(array $attributes = array(), $hard = false)
+    {
+        // Don't waste our time with an "array_merge" call if the array is empty
+        if (!empty($attributes)) {
+            // Hard merge?
+            if ($hard) {
+                $this->attributes = array_replace(
+                    $this->attributes,
+                    $attributes
+                );
+            } else {
+                $this->attributes = array_merge(
+                    $this->attributes,
+                    $attributes
+                );
+            }
+        }
+
+        return $this;
+    }
+
+    /**
      * See if an attribute exists in the collection
      *
      * @param string $key   The name of the parameter
