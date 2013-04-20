@@ -50,6 +50,22 @@ class Request
     protected $params_post;
 
     /**
+     * Named parameters
+     *
+     * @var \Klein\DataCollection\DataCollection
+     * @access protected
+     */
+    protected $params_named;
+
+    /**
+     * Client cookie data
+     *
+     * @var \Klein\DataCollection\DataCollection
+     * @access protected
+     */
+    protected $cookies;
+
+    /**
      * Server created attributes
      *
      * @var \Klein\DataCollection\ServerDataCollection
@@ -74,14 +90,6 @@ class Request
     protected $files;
 
     /**
-     * Client cookie data
-     *
-     * @var \Klein\DataCollection\DataCollection
-     * @access protected
-     */
-    protected $cookies;
-
-    /**
      * The request body
      *
      * @var string
@@ -101,28 +109,31 @@ class Request
      *
      * @param array  $params_get
      * @param array  $params_post
+     * @param array  $cookies
      * @param array  $server
      * @param array  $files
-     * @param array  $cookies
      * @param string $body
      * @access public
      */
     public function __construct(
         array $params_get = array(),
         array $params_post = array(),
+        array $cookies = array(),
         array $server = array(),
         array $files = array(),
-        array $cookies = array(),
         $body = null
     ) {
         // Assignment city...
         $this->params_get   = new DataCollection($params_get);
         $this->params_post  = new DataCollection($params_post);
+        $this->cookies      = new DataCollection($cookies);
         $this->server       = new ServerDataCollection($server);
         $this->headers      = new DataCollection($this->server->getHeaders());
         $this->files        = new DataCollection($files);
-        $this->cookies      = new DataCollection($cookies);
         $this->body         = $body ? (string) $body : null;
+
+        // Non-injected assignments
+        $this->params_named = new DataCollection();
     }
 
     /**
@@ -139,43 +150,110 @@ class Request
         return new static(
             $_GET,
             $_POST,
+            $_COOKIES,
             $_SERVER,
             $_FILES,
-            $_COOKIES,
             null // Let our content getter take care of the "body"
         );
     }
 
     /**
-     * Returns all parameters (GET, POST, named) that match the mask
+     * Returns the GET parameters collection
+     *
+     * @access public
+     * @return \Klein\DataCollection\DataCollection
+     */
+    public function paramsGet()
+    {
+        return $this->params_get;
+    }
+
+    /**
+     * Returns the POST parameters collection
+     *
+     * @access public
+     * @return \Klein\DataCollection\DataCollection
+     */
+    public function paramsPost()
+    {
+        return $this->params_post;
+    }
+
+    /**
+     * Returns the named parameters collection
+     *
+     * @access public
+     * @return \Klein\DataCollection\DataCollection
+     */
+    public function paramsNamed()
+    {
+        return $this->params_named;
+    }
+
+    /**
+     * Returns the cookies collection
+     *
+     * @access public
+     * @return \Klein\DataCollection\DataCollection
+     */
+    public function cookies()
+    {
+        return $this->cookies;
+    }
+
+    /**
+     * Returns the server collection
+     *
+     * @access public
+     * @return \Klein\DataCollection\DataCollection
+     */
+    public function server()
+    {
+        return $this->server;
+    }
+
+    /**
+     * Returns the headers collection
+     *
+     * @access public
+     * @return \Klein\DataCollection\DataCollection
+     */
+    public function headers()
+    {
+        return $this->headers;
+    }
+
+    /**
+     * Returns the files collection
+     *
+     * @access public
+     * @return \Klein\DataCollection\DataCollection
+     */
+    public function files()
+    {
+        return $this->files;
+    }
+
+    /**
+     * Returns all parameters (GET, POST, named, and cookies) that match the mask
      *
      * Takes an optional mask param that contains the names of any params
      * you'd like this method to exclude in the returned array
      *
+     * @see \Klein\DataCollection\DataCollection::all()
      * @param array $mask  The parameter mask array
      * @access public
      * @return array
      */
     public function params($mask = null)
     {
-        $params = $_REQUEST;
-
-        if (null !== $mask) {
-            if (!is_array($mask)) {
-                $mask = func_get_args();
-            }
-
-            $params = array_intersect_key($params, array_flip($mask));
-
-            // Make sure each key in $mask has at least a null value
-            foreach ($mask as $key) {
-                if (!isset($params[$key])) {
-                    $params[$key] = null;
-                }
-            }
-        }
-
-        return $params;
+        // Merge our params in the get, post, cookies, named order
+        return array_merge(
+            $this->params_get->all($mask),
+            $this->params_post->all($mask),
+            $this->cookies->all($mask),
+            $this->params_named->all($mask) // Add our named params last
+        );
     }
 
     /**
@@ -188,7 +266,10 @@ class Request
      */
     public function param($key, $default = null)
     {
-        return isset($_REQUEST[$key]) && $_REQUEST[$key] !== '' ? $_REQUEST[$key] : $default;
+        // Get all of our request params
+        $params = $this->params();
+
+        return isset($params[$key]) ? $params[$key] : $default;
     }
 
     /**
@@ -203,7 +284,10 @@ class Request
      */
     public function __isset($param)
     {
-        return isset($_REQUEST[$param]);
+        // Get all of our request params
+        $params = $this->params();
+
+        return isset($params[$param]);
     }
 
     /**
@@ -218,7 +302,7 @@ class Request
      */
     public function __get($param)
     {
-        return isset($_REQUEST[$param]) ? $_REQUEST[$param] : null;
+        return $this->param($param);
     }
 
     /**
@@ -227,6 +311,9 @@ class Request
      * Allows the ability to arbitrarily set a parameter from this instance
      * while treating it as an instance property
      *
+     * NOTE: This currently sets the "named" parameters, since that's the
+     * one collection that we have the most sane control over
+     *
      * @param string $param     The name of the parameter
      * @param mixed $value      The value of the parameter
      * @access public
@@ -234,7 +321,7 @@ class Request
      */
     public function __set($param, $value)
     {
-        $_REQUEST[$param] = $value;
+        $this->params_named->set($param, $value);
     }
 
     /**
@@ -249,26 +336,18 @@ class Request
      */
     public function __unset($param)
     {
-        unset($_REQUEST[$param]);
+        $this->params_named->remove($param);
     }
 
     /**
      * Is the request secure?
      *
-     * If $required then redirect to the secure version of the URL
-     *
-     * @param boolean $required     Whether or not the request is required to be secure
      * @access public
      * @return boolean
      */
-    public function isSecure($required = false)
+    public function isSecure()
     {
-        $secure = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'];
-        if (!$secure && $required) {
-            $url = 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
-            $this->headers->header('Location: ' . $url);
-        }
-        return $secure;
+        return ($this->server->get('HTTPS') == true);
     }
 
     /**
@@ -279,38 +358,26 @@ class Request
      * @access public
      * @return string
      */
-    public function header($key, $default = null)
-    {
-        $key = 'HTTP_' . strtoupper(str_replace('-', '_', $key));
-        return isset($_SERVER[$key]) ? $_SERVER[$key] : $default;
-    }
-
-    /**
-     * Gets a request cookie
-     *
-     * @param string $key       The name of the cookie
-     * @param mixed $default    The default value of the cookie if its not set
-     * @access public
-     * @return string
-     */
-    public function cookie($key, $default = null)
-    {
-        return isset($_COOKIE[$key]) ? $_COOKIE[$key] : $default;
-    }
+    // public function header($key, $default = null)
+    // {
+    //     $key = 'HTTP_' . strtoupper(str_replace('-', '_', $key));
+    //     return isset($_SERVER[$key]) ? $_SERVER[$key] : $default;
+    // }
 
     /**
      * Gets a session variable associated with the request
+     * TODO: Move this to main Klein class
      * 
      * @param string $key       The name of the session variable
      * @param mixed $default    The default value of the session variable if its not set
      * @access public
      * @return mixed
      */
-    public function session($key, $default = null)
-    {
-        startSession();
-        return isset($_SESSION[$key]) ? $_SESSION[$key] : $default;
-    }
+    // public function session($key, $default = null)
+    // {
+    //     startSession();
+    //     return isset($_SESSION[$key]) ? $_SESSION[$key] : $default;
+    // }
 
     /**
      * Gets the request IP address
@@ -320,7 +387,7 @@ class Request
      */
     public function ip()
     {
-        return isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : null;
+        return $this->server->get('REMOTE_ADDR');
     }
 
     /**
@@ -331,7 +398,7 @@ class Request
      */
     public function userAgent()
     {
-        return isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : null;
+        return $this->server->get('HTTP_USER_AGENT');
     }
 
     /**
@@ -342,7 +409,7 @@ class Request
      */
     public function uri()
     {
-        return isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '/';
+        return $this->server->get('REQUEST_URI') ?: '/';
     }
 
     /**
@@ -353,9 +420,11 @@ class Request
      */
     public function body()
     {
-        if (null === $this->body) {
+        // Only get it once
+        if (is_null($this->body)) {
             $this->body = @file_get_contents('php://input');
         }
+
         return $this->body;
     }
 
@@ -375,15 +444,18 @@ class Request
      */
     public function method($is = null)
     {
-        $method = isset($_SERVER['REQUEST_METHOD']) ? $_SERVER['REQUEST_METHOD'] : 'GET';
+        $method = $this->server->get('REQUEST_METHOD') ?: 'GET';
+
         if (null !== $is) {
             return strcasecmp($method, $is) === 0;
         }
+
         return $method;
     }
 
     /**
      * Start a validator chain for the specified parameter
+     * TODO: Move this to main Klein class
      *
      * @param string $param     The name of the parameter to validate
      * @param string $err       The custom exception message to throw
@@ -400,14 +472,20 @@ class Request
      *
      * Generates one on the first call
      *
+     * @param boolean $hash     Whether or not to hash the ID on creation
      * @access public
      * @return string
      */
-    public function id()
+    public function id($hash = true)
     {
-        if (null === $this->id) {
-            $this->id = sha1(mt_rand() . microtime(true) . mt_rand());
+        if (is_null($this->id)) {
+            $this->id = uniqid();
+
+            if ($hash) {
+                $this->id = sha1($this->id);
+            }
         }
+
         return $this->id;
     }
 }
