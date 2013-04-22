@@ -12,6 +12,7 @@
 namespace Klein\Tests;
 
 use \Klein\Klein;
+use \Klein\Tests\Mocks\MockRequestFactory;
 
 /**
  * ValidationsTest 
@@ -62,7 +63,9 @@ class ValidationsTest extends AbstractKleinTest
         $this->assertOutputSame(
             $custom_message,
             function () {
-                $this->klein_app->dispatch('/test');
+                $this->klein_app->dispatch(
+                    MockRequestFactory::create('/test')
+                );
             }
         );
     }
@@ -84,13 +87,17 @@ class ValidationsTest extends AbstractKleinTest
         $this->assertOutputSame(
             'yup!',
             function () {
-                $this->klein_app->dispatch('/ab');
+                $this->klein_app->dispatch(
+                    MockRequestFactory::create('/ab')
+                );
             }
         );
         $this->assertOutputSame(
             'fail',
             function () {
-                $this->klein_app->dispatch('/test');
+                $this->klein_app->dispatch(
+                    MockRequestFactory::create('/test')
+                );
             }
         );
     }
@@ -112,43 +119,57 @@ class ValidationsTest extends AbstractKleinTest
         $this->assertOutputSame(
             'yup!',
             function () {
-                $this->klein_app->dispatch('/dog');
+                $this->klein_app->dispatch(
+                    MockRequestFactory::create('/dog')
+                );
             }
         );
         $this->assertOutputSame(
             'yup!',
             function () {
-                $this->klein_app->dispatch('/dogg');
+                $this->klein_app->dispatch(
+                    MockRequestFactory::create('/dogg')
+                );
             }
         );
         $this->assertOutputSame(
             'yup!',
             function () {
-                $this->klein_app->dispatch('/doggg');
+                $this->klein_app->dispatch(
+                    MockRequestFactory::create('/doggg')
+                );
             }
         );
         $this->assertOutputSame(
             'fail',
             function () {
-                $this->klein_app->dispatch('/t');
+                $this->klein_app->dispatch(
+                    MockRequestFactory::create('/t')
+                );
             }
         );
         $this->assertOutputSame(
             'fail',
             function () {
-                $this->klein_app->dispatch('/te');
+                $this->klein_app->dispatch(
+                    MockRequestFactory::create('/te')
+                );
             }
         );
         $this->assertOutputSame(
             'fail',
             function () {
-                $this->klein_app->dispatch('/testin');
+                $this->klein_app->dispatch(
+                    MockRequestFactory::create('/testin')
+                );
             }
         );
         $this->assertOutputSame(
             'fail',
             function () {
-                $this->klein_app->dispatch('/testing');
+                $this->klein_app->dispatch(
+                    MockRequestFactory::create('/testing')
+                );
             }
         );
     }
@@ -170,43 +191,57 @@ class ValidationsTest extends AbstractKleinTest
         $this->assertOutputSame(
             'yup!',
             function () {
-                $this->klein_app->dispatch('/2');
+                $this->klein_app->dispatch(
+                    MockRequestFactory::create('/2')
+                );
             }
         );
         $this->assertOutputSame(
             'yup!',
             function () {
-                $this->klein_app->dispatch('/12318935');
+                $this->klein_app->dispatch(
+                    MockRequestFactory::create('/12318935')
+                );
             }
         );
         $this->assertOutputSame(
             'fail',
             function () {
-                $this->klein_app->dispatch('/2.5');
+                $this->klein_app->dispatch(
+                    MockRequestFactory::create('/2.5')
+                );
             }
         );
         $this->assertOutputSame(
             'fail',
             function () {
-                $this->klein_app->dispatch('/2,5');
+                $this->klein_app->dispatch(
+                    MockRequestFactory::create('/2,5')
+                );
             }
         );
         $this->assertOutputSame(
             'fail',
             function () {
-                $this->klein_app->dispatch('/~2');
+                $this->klein_app->dispatch(
+                    MockRequestFactory::create('/~2')
+                );
             }
         );
         $this->assertOutputSame(
             'fail',
             function () {
-                $this->klein_app->dispatch('/2 5');
+                $this->klein_app->dispatch(
+                    MockRequestFactory::create('/2 5')
+                );
             }
         );
         $this->assertOutputSame(
             'fail',
             function () {
-                $this->klein_app->dispatch('/test');
+                $this->klein_app->dispatch(
+                    MockRequestFactory::create('/test')
+                );
             }
         );
     }
@@ -228,49 +263,65 @@ class ValidationsTest extends AbstractKleinTest
         $this->assertOutputSame(
             'yup!',
             function () {
-                $this->klein_app->dispatch('/2');
+                $this->klein_app->dispatch(
+                    MockRequestFactory::create('/2')
+                );
             }
         );
         $this->assertOutputSame(
             'yup!',
             function () {
-                $this->klein_app->dispatch('/2.5');
+                $this->klein_app->dispatch(
+                    MockRequestFactory::create('/2.5')
+                );
             }
         );
         $this->assertOutputSame(
             'yup!',
             function () {
-                $this->klein_app->dispatch('/3.14');
+                $this->klein_app->dispatch(
+                    MockRequestFactory::create('/3.14')
+                );
             }
         );
         $this->assertOutputSame(
             'fail',
             function () {
-                $this->klein_app->dispatch('/2.');
+                $this->klein_app->dispatch(
+                    MockRequestFactory::create('/2.')
+                );
             }
         );
         $this->assertOutputSame(
             'fail',
             function () {
-                $this->klein_app->dispatch('/2,5');
+                $this->klein_app->dispatch(
+                    MockRequestFactory::create('/2,5')
+                );
             }
         );
         $this->assertOutputSame(
             'fail',
             function () {
-                $this->klein_app->dispatch('/~2');
+                $this->klein_app->dispatch(
+                    MockRequestFactory::create('/~2')
+                );
             }
         );
         $this->assertOutputSame(
             'fail',
             function () {
-                $this->klein_app->dispatch('/2 5');
+                $this->klein_app->dispatch(
+                    MockRequestFactory::create('/2 5')
+                );
             }
         );
         $this->assertOutputSame(
             'fail',
             function () {
-                $this->klein_app->dispatch('/test');
+                $this->klein_app->dispatch(
+                    MockRequestFactory::create('/test')
+                );
             }
         );
     }
@@ -292,31 +343,41 @@ class ValidationsTest extends AbstractKleinTest
         $this->assertOutputSame(
             'yup!',
             function () {
-                $this->klein_app->dispatch('/test@test.com');
+                $this->klein_app->dispatch(
+                    MockRequestFactory::create('/test@test.com')
+                );
             }
         );
         $this->assertOutputSame(
             'yup!',
             function () {
-                $this->klein_app->dispatch('/test@test.co.uk');
+                $this->klein_app->dispatch(
+                    MockRequestFactory::create('/test@test.co.uk')
+                );
             }
         );
         $this->assertOutputSame(
             'fail',
             function () {
-                $this->klein_app->dispatch('/test');
+                $this->klein_app->dispatch(
+                    MockRequestFactory::create('/test')
+                );
             }
         );
         $this->assertOutputSame(
             'fail',
             function () {
-                $this->klein_app->dispatch('/test@');
+                $this->klein_app->dispatch(
+                    MockRequestFactory::create('/test@')
+                );
             }
         );
         $this->assertOutputSame(
             'fail',
             function () {
-                $this->klein_app->dispatch('/2 5');
+                $this->klein_app->dispatch(
+                    MockRequestFactory::create('/2 5')
+                );
             }
         );
     }
@@ -338,43 +399,57 @@ class ValidationsTest extends AbstractKleinTest
         $this->assertOutputSame(
             'yup!',
             function () {
-                $this->klein_app->dispatch('/test');
+                $this->klein_app->dispatch(
+                    MockRequestFactory::create('/test')
+                );
             }
         );
         $this->assertOutputSame(
             'yup!',
             function () {
-                $this->klein_app->dispatch('/Test');
+                $this->klein_app->dispatch(
+                    MockRequestFactory::create('/Test')
+                );
             }
         );
         $this->assertOutputSame(
             'yup!',
             function () {
-                $this->klein_app->dispatch('/TesT');
+                $this->klein_app->dispatch(
+                    MockRequestFactory::create('/TesT')
+                );
             }
         );
         $this->assertOutputSame(
             'fail',
             function () {
-                $this->klein_app->dispatch('/test1');
+                $this->klein_app->dispatch(
+                    MockRequestFactory::create('/test1')
+                );
             }
         );
         $this->assertOutputSame(
             'fail',
             function () {
-                $this->klein_app->dispatch('/1test');
+                $this->klein_app->dispatch(
+                    MockRequestFactory::create('/1test')
+                );
             }
         );
         $this->assertOutputSame(
             'fail',
             function () {
-                $this->klein_app->dispatch('/@test');
+                $this->klein_app->dispatch(
+                    MockRequestFactory::create('/@test')
+                );
             }
         );
         $this->assertOutputSame(
             'fail',
             function () {
-                $this->klein_app->dispatch('/-test');
+                $this->klein_app->dispatch(
+                    MockRequestFactory::create('/-test')
+                );
             }
         );
     }
@@ -396,43 +471,57 @@ class ValidationsTest extends AbstractKleinTest
         $this->assertOutputSame(
             'yup!',
             function () {
-                $this->klein_app->dispatch('/test');
+                $this->klein_app->dispatch(
+                    MockRequestFactory::create('/test')
+                );
             }
         );
         $this->assertOutputSame(
             'yup!',
             function () {
-                $this->klein_app->dispatch('/Test');
+                $this->klein_app->dispatch(
+                    MockRequestFactory::create('/Test')
+                );
             }
         );
         $this->assertOutputSame(
             'yup!',
             function () {
-                $this->klein_app->dispatch('/TesT');
+                $this->klein_app->dispatch(
+                    MockRequestFactory::create('/TesT')
+                );
             }
         );
         $this->assertOutputSame(
             'yup!',
             function () {
-                $this->klein_app->dispatch('/test1');
+                $this->klein_app->dispatch(
+                    MockRequestFactory::create('/test1')
+                );
             }
         );
         $this->assertOutputSame(
             'yup!',
             function () {
-                $this->klein_app->dispatch('/1test');
+                $this->klein_app->dispatch(
+                    MockRequestFactory::create('/1test')
+                );
             }
         );
         $this->assertOutputSame(
             'fail',
             function () {
-                $this->klein_app->dispatch('/@test');
+                $this->klein_app->dispatch(
+                    MockRequestFactory::create('/@test')
+                );
             }
         );
         $this->assertOutputSame(
             'fail',
             function () {
-                $this->klein_app->dispatch('/-test');
+                $this->klein_app->dispatch(
+                    MockRequestFactory::create('/-test')
+                );
             }
         );
     }
@@ -454,37 +543,49 @@ class ValidationsTest extends AbstractKleinTest
         $this->assertOutputSame(
             'yup!',
             function () {
-                $this->klein_app->dispatch('/bigdog');
+                $this->klein_app->dispatch(
+                    MockRequestFactory::create('/bigdog')
+                );
             }
         );
         $this->assertOutputSame(
             'yup!',
             function () {
-                $this->klein_app->dispatch('/dogbig');
+                $this->klein_app->dispatch(
+                    MockRequestFactory::create('/dogbig')
+                );
             }
         );
         $this->assertOutputSame(
             'yup!',
             function () {
-                $this->klein_app->dispatch('/cat-dog');
+                $this->klein_app->dispatch(
+                    MockRequestFactory::create('/cat-dog')
+                );
             }
         );
         $this->assertOutputSame(
             'yup!',
             function () {
-                $this->klein_app->dispatch('/catdogbear');
+                $this->klein_app->dispatch(
+                    MockRequestFactory::create('/catdogbear')
+                );
             }
         );
         $this->assertOutputSame(
             'fail',
             function () {
-                $this->klein_app->dispatch('/DOG');
+                $this->klein_app->dispatch(
+                    MockRequestFactory::create('/DOG')
+                );
             }
         );
         $this->assertOutputSame(
             'fail',
             function () {
-                $this->klein_app->dispatch('/doog');
+                $this->klein_app->dispatch(
+                    MockRequestFactory::create('/doog')
+                );
             }
         );
     }
@@ -506,31 +607,41 @@ class ValidationsTest extends AbstractKleinTest
         $this->assertOutputSame(
             'yup!',
             function () {
-                $this->klein_app->dispatch('/cdef');
+                $this->klein_app->dispatch(
+                    MockRequestFactory::create('/cdef')
+                );
             }
         );
         $this->assertOutputSame(
             'yup!',
             function () {
-                $this->klein_app->dispatch('/cfed');
+                $this->klein_app->dispatch(
+                    MockRequestFactory::create('/cfed')
+                );
             }
         );
         $this->assertOutputSame(
             'yup!',
             function () {
-                $this->klein_app->dispatch('/cf');
+                $this->klein_app->dispatch(
+                    MockRequestFactory::create('/cf')
+                );
             }
         );
         $this->assertOutputSame(
             'fail',
             function () {
-                $this->klein_app->dispatch('/cdefg');
+                $this->klein_app->dispatch(
+                    MockRequestFactory::create('/cdefg')
+                );
             }
         );
         $this->assertOutputSame(
             'fail',
             function () {
-                $this->klein_app->dispatch('/dog');
+                $this->klein_app->dispatch(
+                    MockRequestFactory::create('/dog')
+                );
             }
         );
     }
@@ -552,43 +663,57 @@ class ValidationsTest extends AbstractKleinTest
         $this->assertOutputSame(
             'yup!',
             function () {
-                $this->klein_app->dispatch('/cat-dog');
+                $this->klein_app->dispatch(
+                    MockRequestFactory::create('/cat-dog')
+                );
             }
         );
         $this->assertOutputSame(
             'yup!',
             function () {
-                $this->klein_app->dispatch('/cat-bear');
+                $this->klein_app->dispatch(
+                    MockRequestFactory::create('/cat-bear')
+                );
             }
         );
         $this->assertOutputSame(
             'yup!',
             function () {
-                $this->klein_app->dispatch('/cat-thing');
+                $this->klein_app->dispatch(
+                    MockRequestFactory::create('/cat-thing')
+                );
             }
         );
         $this->assertOutputSame(
             'fail',
             function () {
-                $this->klein_app->dispatch('/cat');
+                $this->klein_app->dispatch(
+                    MockRequestFactory::create('/cat')
+                );
             }
         );
         $this->assertOutputSame(
             'fail',
             function () {
-                $this->klein_app->dispatch('/cat-');
+                $this->klein_app->dispatch(
+                    MockRequestFactory::create('/cat-')
+                );
             }
         );
         $this->assertOutputSame(
             'fail',
             function () {
-                $this->klein_app->dispatch('/dog-cat');
+                $this->klein_app->dispatch(
+                    MockRequestFactory::create('/dog-cat')
+                );
             }
         );
         $this->assertOutputSame(
             'fail',
             function () {
-                $this->klein_app->dispatch('/catdog');
+                $this->klein_app->dispatch(
+                    MockRequestFactory::create('/catdog')
+                );
             }
         );
     }
@@ -610,43 +735,57 @@ class ValidationsTest extends AbstractKleinTest
         $this->assertOutputSame(
             'yup!',
             function () {
-                $this->klein_app->dispatch('/cat');
+                $this->klein_app->dispatch(
+                    MockRequestFactory::create('/cat')
+                );
             }
         );
         $this->assertOutputSame(
             'yup!',
             function () {
-                $this->klein_app->dispatch('/cat-');
+                $this->klein_app->dispatch(
+                    MockRequestFactory::create('/cat-')
+                );
             }
         );
         $this->assertOutputSame(
             'yup!',
             function () {
-                $this->klein_app->dispatch('/dog-cat');
+                $this->klein_app->dispatch(
+                    MockRequestFactory::create('/dog-cat')
+                );
             }
         );
         $this->assertOutputSame(
             'yup!',
             function () {
-                $this->klein_app->dispatch('/catdog');
+                $this->klein_app->dispatch(
+                    MockRequestFactory::create('/catdog')
+                );
             }
         );
         $this->assertOutputSame(
             'fail',
             function () {
-                $this->klein_app->dispatch('/cat-dog');
+                $this->klein_app->dispatch(
+                    MockRequestFactory::create('/cat-dog')
+                );
             }
         );
         $this->assertOutputSame(
             'fail',
             function () {
-                $this->klein_app->dispatch('/cat-bear');
+                $this->klein_app->dispatch(
+                    MockRequestFactory::create('/cat-bear')
+                );
             }
         );
         $this->assertOutputSame(
             'fail',
             function () {
-                $this->klein_app->dispatch('/cat-thing');
+                $this->klein_app->dispatch(
+                    MockRequestFactory::create('/cat-thing')
+                );
             }
         );
     }
@@ -678,43 +817,57 @@ class ValidationsTest extends AbstractKleinTest
         $this->assertOutputSame(
             'yup!',
             function () {
-                $this->klein_app->dispatch('/browndonkey');
+                $this->klein_app->dispatch(
+                    MockRequestFactory::create('/browndonkey')
+                );
             }
         );
         $this->assertOutputSame(
             'yup!',
             function () {
-                $this->klein_app->dispatch('/brown-donkey');
+                $this->klein_app->dispatch(
+                    MockRequestFactory::create('/brown-donkey')
+                );
             }
         );
         $this->assertOutputSame(
             'yup!',
             function () {
-                $this->klein_app->dispatch('/brown_donkey');
+                $this->klein_app->dispatch(
+                    MockRequestFactory::create('/brown_donkey')
+                );
             }
         );
         $this->assertOutputSame(
             'fail',
             function () {
-                $this->klein_app->dispatch('/bluedonkey');
+                $this->klein_app->dispatch(
+                    MockRequestFactory::create('/bluedonkey')
+                );
             }
         );
         $this->assertOutputSame(
             'fail',
             function () {
-                $this->klein_app->dispatch('/blue-donkey');
+                $this->klein_app->dispatch(
+                    MockRequestFactory::create('/blue-donkey')
+                );
             }
         );
         $this->assertOutputSame(
             'fail',
             function () {
-                $this->klein_app->dispatch('/blue_donkey');
+                $this->klein_app->dispatch(
+                    MockRequestFactory::create('/blue_donkey')
+                );
             }
         );
         $this->assertOutputSame(
             'fail',
             function () {
-                $this->klein_app->dispatch('/brown_donk');
+                $this->klein_app->dispatch(
+                    MockRequestFactory::create('/brown_donk')
+                );
             }
         );
     }

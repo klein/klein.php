@@ -15,6 +15,7 @@ namespace Klein\Tests;
 use \Klein\Klein;
 
 use \Klein\Tests\Mocks\HeadersSave;
+use \Klein\Tests\Mocks\MockRequestFactory;
 
 /**
  * ResponsesTest 
@@ -52,7 +53,9 @@ class ResponsesTest extends AbstractKleinTest
             }
         );
 
-        $klein->dispatch('/json');
+        $klein->dispatch(
+            MockRequestFactory::create('/json')
+        );
 
         // Expect our output to match our json encoded test object
         $this->expectOutputString(
