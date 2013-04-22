@@ -236,7 +236,7 @@ class Klein
     /**
      * Dispatch the request to the approriate route(s)
      *
-     * @param Request $request		The request object to inject into the router
+     * @param Request $request      The request object to inject into the router
      * @access public
      * @return void
      */
@@ -427,7 +427,7 @@ class Klein
             // HEAD requests shouldn't return a body
             return ob_get_clean();
 
-			// TODO
+        // TODO
         // } elseif ($capture) {
         //     return ob_get_clean();
 

@@ -151,7 +151,7 @@ class Request
         return new static(
             $_GET,
             $_POST,
-            $_COOKIES,
+            $_COOKIE,
             $_SERVER,
             $_FILES,
             null // Let our content getter take care of the "body"
@@ -399,7 +399,7 @@ class Request
      */
     public function userAgent()
     {
-        return $this->server->get('HTTP_USER_AGENT');
+        return $this->headers->get('USER_AGENT');
     }
 
     /**
