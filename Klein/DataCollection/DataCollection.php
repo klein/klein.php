@@ -337,13 +337,13 @@ class DataCollection implements IteratorAggregate, ArrayAccess, Countable
      *
      * Allows the access of attributes of this instance while treating it like an array
      *
-     * @see \ArrayAccess::offsetIsset()
+     * @see \ArrayAccess::offsetExists()
      * @see exists()
      * @param string $key   The name of the parameter
      * @access public
      * @return boolean
      */
-    public function offsetIsset($key)
+    public function offsetExists($key)
     {
         return $this->exists($key);
     }
