@@ -101,7 +101,7 @@ class Klein
         $headers        = $headers  ?: new Headers();
 
         // Instanciate our routing objects
-        $this->request  = $request  ?: new Request(clone $headers);
+        // $this->request  = $request  ?: new Request(clone $headers);
         $this->response = $response ?: new Response(clone $headers);
         $this->app      = $app      ?: new App();
     }
@@ -427,8 +427,9 @@ class Klein
             // HEAD requests shouldn't return a body
             return ob_get_clean();
 
-        } elseif ($capture) {
-            return ob_get_clean();
+			// TODO
+        // } elseif ($capture) {
+        //     return ob_get_clean();
 
         } elseif ($this->response->chunked) {
             $this->response->chunk();
