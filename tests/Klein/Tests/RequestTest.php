@@ -12,6 +12,7 @@
 namespace Klein\Tests;
 
 use \Klein\Request;
+use \Klein\Tests\Mocks\MockRequestFactory;
 
 /**
  * RequestTest
@@ -229,5 +230,41 @@ class RequestTest extends AbstractKleinTest
 
         // Make sure the ID's are unique to each request
         $this->assertNotSame($request_one->id(), $request_two->id());
+    }
+
+    public function testMockFactory()
+    {
+        // Test data
+        $uri         = '/test/uri';
+        $method      = 'OPTIONS';
+        $params      = array('get');
+        $cookies     = array('cookies');
+        $server      = array('server');
+        $files       = array('files');
+        $body        = 'body';
+
+        // Create the request
+        $request = MockRequestFactory::create(
+            $uri,
+            $method,
+            $params,
+            $cookies,
+            $server,
+            $files,
+            $body
+        );
+
+        // Make sure our data's the same
+        $this->assertSame($uri, $request->uri());
+        $this->assertSame($method, $request->method());
+        $this->assertSame($params, $request->paramsGet()->all());
+
+        $this->assertSame(array(), $request->paramsPost()->all());
+        $this->assertSame(array(), $request->paramsNamed()->all());
+        $this->assertSame($cookies, $request->cookies()->all());
+        $this->assertContains($cookies[0], $request->params());
+        $this->assertContains($server[0], $request->server()->all());
+        $this->assertSame($files, $request->files()->all());
+        $this->assertSame($body, $request->body());
     }
 }
