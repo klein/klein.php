@@ -233,4 +233,124 @@ class DataCollectionTest extends AbstractKleinTest
         $this->assertTrue($data_collection->exists(key($sample_data)));
         $this->assertFalse($data_collection->exists(static::$nonexistent_key));
     }
+
+    /**
+     * @dataProvider sampleDataProvider
+     */
+    public function testRemove($sample_data, $data_collection)
+    {
+        $this->assertTrue($data_collection->exists(key($sample_data)));
+
+        $data_collection->remove(key($sample_data));
+
+        $this->assertFalse($data_collection->exists(key($sample_data)));
+    }
+
+    /**
+     * @dataProvider sampleDataProvider
+     */
+    public function testMagicGet($sample_data, $data_collection)
+    {
+        $this->assertSame($sample_data['float'], $data_collection->float);
+        $this->assertNull($data_collection->{static::$nonexistent_key});
+    }
+
+    public function testMagicSet()
+    {
+        // Test data
+        $data = array(
+            'dog' => 'cooper',
+        );
+
+        // Create our collection with NO data
+        $data_collection = new DataCollection();
+
+        // Set our data from our test data
+        $data_collection->{key($data)} = current($data);
+
+        // Make sure the set worked
+        $this->assertSame(current($data), $data_collection->get(key($data)));
+    }
+
+    /**
+     * @dataProvider sampleDataProvider
+     */
+    public function testMagicIsset($sample_data, $data_collection)
+    {
+        $this->assertTrue(isset($data_collection->{key($sample_data)}));
+        $this->assertFalse(isset($data_collection->{static::$nonexistent_key}));
+    }
+
+    /**
+     * @dataProvider sampleDataProvider
+     */
+    public function testMagicUnset($sample_data, $data_collection)
+    {
+        $this->assertTrue(isset($data_collection->{key($sample_data)}));
+
+        unset($data_collection->{key($sample_data)});
+
+        $this->assertFalse(isset($data_collection->{key($sample_data)}));
+    }
+
+    /**
+     * @dataProvider sampleDataProvider
+     */
+    public function testIteratorAggregate($sample_data, $data_collection)
+    {
+        $filled_data = array();
+
+        foreach ($data_collection as $key => $data) {
+            $filled_data[$key] = $data;
+        }
+
+        $this->assertSame($filled_data, $sample_data);
+    }
+
+    /**
+     * @dataProvider sampleDataProvider
+     */
+    public function testArrayAccessGet($sample_data, $data_collection)
+    {
+        $this->assertSame($sample_data['float'], $data_collection['float']);
+        $this->assertNull($data_collection[static::$nonexistent_key]);
+    }
+
+    public function testArrayAccessSet()
+    {
+        // Test data
+        $data = array(
+            'dog' => 'cooper',
+        );
+
+        // Create our collection with NO data
+        $data_collection = new DataCollection();
+
+        // Set our data from our test data
+        $data_collection[key($data)] = current($data);
+
+        // Make sure the set worked
+        $this->assertSame(current($data), $data_collection->get(key($data)));
+    }
+
+    /**
+     * @dataProvider sampleDataProvider
+     */
+    public function testArrayAccessIsset($sample_data, $data_collection)
+    {
+        $this->assertTrue(isset($data_collection[key($sample_data)]));
+        $this->assertFalse(isset($data_collection[static::$nonexistent_key]));
+    }
+
+    /**
+     * @dataProvider sampleDataProvider
+     */
+    public function testArrayAccessUnset($sample_data, $data_collection)
+    {
+        $this->assertTrue(isset($data_collection[key($sample_data)]));
+
+        unset($data_collection[key($sample_data)]);
+
+        $this->assertFalse(isset($data_collection[key($sample_data)]));
+    }
 }
