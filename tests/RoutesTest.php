@@ -279,4 +279,37 @@ class RoutesTest extends AbstractKleinTest {
 		$this->assertContains( 'POST', $resultArray );
 	}
 
+	public function testDispatchOutput() {
+		$expectedOutput = array(
+			'echoed' => 'yup',
+			'returned' => 'nope',
+		);
+
+		respond(function() use ($expectedOutput) {
+			echo $expectedOutput['echoed'];
+		});
+		respond(function() use ($expectedOutput) {
+			return $expectedOutput['returned'];
+		});
+
+		$output = dispatch(null, null, null, true);
+
+		// Should only capture ECHO'd output (returned values are lost)
+		$this->assertSame($expectedOutput['echoed'], $output);
+	}
+
+	public function testRespondReturn() {
+		$return_one = respond(function() {
+			return 1337;
+		});
+		$return_two = respond(function() {
+			return 'dog';
+		});
+
+		dispatch();
+
+		$this->assertTrue(is_callable($return_one));
+		$this->assertTrue(is_callable($return_two));
+	}
+
 }
