@@ -19,7 +19,7 @@ use \Klein\DataCollection\DataCollection;
  * DataCollectionTest
  *
  * @uses AbstractKleinTest
- * @package Klein\Tests
+ * @package Klein\Tests\DataCollection
  */
 class DataCollectionTest extends AbstractKleinTest
 {
