@@ -96,6 +96,61 @@ class RoutesTest extends AbstractKleinTest
         );
     }
 
+    /**
+     * TODO!!!
+     *
+     * Dispatch output buffering will work differently in the future
+     * ... implement this!
+     */
+    public function testDispatchOutput()
+    {
+        // TODO
+        $this->markTestIncomplete(
+            'TODO!'
+        );
+
+        $expectedOutput = array(
+            'echoed' => 'yup',
+            'returned' => 'nope',
+        );
+
+        $this->klein_app->respond(
+            function () use ($expectedOutput) {
+                echo $expectedOutput['echoed'];
+            }
+        );
+        $this->klein_app->respond(
+            function () use ($expectedOutput) {
+                return $expectedOutput['returned'];
+            }
+        );
+
+        // $output = dispatch(null, null, null, true);
+        $output = $this->klein_app->dispatch();
+
+        // Should only capture ECHO'd output (returned values are lost)
+        $this->assertSame($expectedOutput['echoed'], $output);
+    }
+
+    public function testRespondReturn()
+    {
+        $return_one = $this->klein_app->respond(
+            function () {
+                return 1337;
+            }
+        );
+        $return_two = $this->klein_app->respond(
+            function () {
+                return 'dog';
+            }
+        );
+
+        $this->klein_app->dispatch();
+
+        $this->assertTrue(is_callable($return_one));
+        $this->assertTrue(is_callable($return_two));
+    }
+
     public function testCatchallImplicit()
     {
         $this->expectOutputString('b');
