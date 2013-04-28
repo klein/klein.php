@@ -13,6 +13,7 @@ namespace Klein;
 
 use \Exception;
 use \ErrorException;
+use \Klein\DataCollection\HeaderDataCollection;
 
 /**
  * Response 
@@ -34,6 +35,39 @@ class Response
      * @access protected
      */
     protected static $default_status_code = 200;
+
+    /**
+     * The response body
+     *
+     * @var string
+     * @access protected
+     */
+    protected $body;
+
+    /**
+     * HTTP response status
+     *
+     * @var \Klein\HttpStatus
+     * @access protected
+     */
+    protected $status;
+
+    /**
+     * HTTP response headers
+     *
+     * @var \Klein\DataCollection\HeaderDataCollection
+     * @access protected
+     */
+    protected $headers;
+
+    /**
+     * Whether or not the response is "locked" from
+     * any further modification
+     *
+     * @var boolean
+     * @access protected
+     */
+    protected $locked = false;
 
     /**
      * Whether the response has been chunked or not
@@ -67,22 +101,6 @@ class Response
      */
     protected $view;
 
-    /**
-     * HTTP Headers helper
-     *
-     * @var Headers
-     * @access protected
-     */
-    protected $headers;
-
-    /**
-     * HTTP Status helper
-     *
-     * @var HttpStatus
-     * @access protected
-     */
-    protected $http_status;
-
 
     /**
      * Methods
@@ -93,14 +111,228 @@ class Response
      *
      * Create a new Response object with a dependency injected Headers instance
      *
-     * @param Headers $headers  Headers class to handle writing HTTP headers
+     * @param string $body          The response body's content
+     * @param int $status_code      The status code
+     * @param array $headers        The response header "hash"
      * @access public
      */
-    public function __construct(Headers $headers)
+    public function __construct($body = '', $status_code = null, array $headers = array())
     {
-        $this->headers = $headers;
+        $status_code   = $status_code ?: static::$default_status_code;
 
-        $this->http_status = new HttpStatus(static::$default_status_code);
+        $this->body    = $this->body($body);
+        $this->status  = $this->code($status_code);
+        $this->headers = new HeaderDataCollection($headers);
+    }
+
+    /**
+     * Get (or set) the response's body content
+     *
+     * Simply calling this method without any arguments returns the current response body.
+     * Calling with an argument, however, sets the response body to what was provided by the argument.
+     *
+     * @param string $body  The body content string
+     * @access public
+     * @return string|Response
+     */
+    public function body($body = null)
+    {
+        if (null !== $body) {
+            if (!$this->isLocked()) {
+                $this->body = (string) $body;
+            }
+
+            return $this;
+        }
+
+        return $this->body;
+    }
+
+    /**
+     * Returns the status object
+     *
+     * @access public
+     * @return \Klein\DataCollection\HeaderDataCollection
+     */
+    public function status()
+    {
+        return $this->status;
+    }
+
+    /**
+     * Returns the headers collection
+     *
+     * @access public
+     * @return \Klein\DataCollection\HeaderDataCollection
+     */
+    public function headers()
+    {
+        return $this->headers;
+    }
+
+    /**
+     * Get (or set) the HTTP response code
+     *
+     * Simply calling this method without any arguments returns the current response code.
+     * Calling with an integer argument, however, attempts to set the response code to what
+     * was provided by the argument.
+     *
+     * @param int $code     The HTTP status code to send
+     * @access public
+     * @return int|Response
+     */
+    public function code($code = null)
+    {
+        if (null !== $code) {
+            if (!$this->isLocked()) {
+                $this->status = new HttpStatus($code);
+            }
+
+            return $this;
+        }
+
+        return $this->status->getCode();
+    }
+
+    /**
+     * Prepend a string to the response's content body
+     *
+     * @param string $content   The string to prepend
+     * @access public
+     * @return Response
+     */
+    public function prepend($content)
+    {
+        if (!$this->isLocked()) {
+            $this->body = $content . $this->body;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Append a string to the response's content body
+     *
+     * @param string $content   The string to append
+     * @access public
+     * @return Response
+     */
+    public function append($content)
+    {
+        if (!$this->isLocked()) {
+            $this->body .= $content;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Check if the response is locked
+     *
+     * @access public
+     * @return boolean
+     */
+    public function isLocked()
+    {
+        return $this->locked;
+    }
+
+    /**
+     * Lock the response from further modification
+     *
+     * @access public
+     * @return Response
+     */
+    public function lock()
+    {
+        $this->locked = true;
+
+        return $this;
+    }
+
+    /**
+     * Unlock the response from further modification
+     *
+     * @access public
+     * @return Response
+     */
+    public function unlock()
+    {
+        $this->locked = false;
+
+        return $this;
+    }
+
+    /**
+     * Generates an HTTP compatible status header line string
+     *
+     * Creates the string based off of the response's properties
+     *
+     * @access protected
+     * @return string
+     */
+    protected function httpStatusLine()
+    {
+        return sprintf('HTTP/%s %s', $this->protocol_version, $this->status);
+    }
+
+    /**
+     * Send our HTTP headers
+     *
+     * @access public
+     * @return Response
+     */
+    public function sendHeaders()
+    {
+        if (headers_sent()) {
+            return $this;
+        }
+
+        // Send our HTTP status line
+        header($this->httpStatusLine());
+
+        // Iterate through our Headers data collection and send each header
+        foreach ($this->headers as $key => $value) {
+            header($key .': '. $value, false);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Send our body's contents
+     *
+     * @access public
+     * @return Response
+     */
+    public function sendBody()
+    {
+        echo $this->body;
+
+        return $this;
+    }
+
+    /**
+     * Send the response and lock it
+     *
+     * @access public
+     * @return Response
+     */
+    public function send()
+    {
+        // Send our response data
+        $this->sendHeaders();
+        $this->sendBody();
+
+        // Lock the response from further modification
+        $this->lock();
+
+        // If there running FPM, tell the process manager to finish the server request/response handling
+        if (function_exists('fastcgi_finish_request')) {
+            fastcgi_finish_request();
+        }
+
+        return $this;
     }
 
     /**
@@ -139,10 +371,10 @@ class Response
      * @access public
      * @return void
      */
-    public function header($key, $value = null)
-    {
-        $this->headers->header($key, $value);
-    }
+    // public function header($key, $value = null)
+    // {
+    //     $this->headers->header($key, $value);
+    // }
 
     /**
      * Sets a response cookie
@@ -284,26 +516,6 @@ class Response
             $this->header('Content-Type: application/json');
             echo $json;
         }
-    }
-
-    /**
-     * Sends a HTTP response code
-     *
-     * @param int $code     The HTTP status code to send
-     * @access public
-     * @return int | void
-     */
-    public function code($code = null)
-    {
-        if (null !== $code) {
-            $this->http_status = new HttpStatus($code);
-
-            // Manually create the HTTP Status header
-            $protocol = isset($_SERVER['SERVER_PROTOCOL']) ? $_SERVER['SERVER_PROTOCOL'] : 'HTTP/1.0';
-            $this->header("$protocol $this->http_status");
-        }
-
-        return $this->http_status->getCode();
     }
 
     /**
