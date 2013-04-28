@@ -13,6 +13,7 @@ namespace Klein;
 
 use \Klein\DataCollection\DataCollection;
 use \Klein\DataCollection\ServerDataCollection;
+use \Klein\DataCollection\HeaderDataCollection;
 
 /**
  * Request
@@ -77,7 +78,7 @@ class Request
     /**
      * HTTP request headers
      *
-     * @var \Klein\DataCollection\DataCollection
+     * @var \Klein\DataCollection\HeaderDataCollection
      * @access protected
      */
     protected $headers;
@@ -129,7 +130,7 @@ class Request
         $this->params_post  = new DataCollection($params_post);
         $this->cookies      = new DataCollection($cookies);
         $this->server       = new ServerDataCollection($server);
-        $this->headers      = new DataCollection($this->server->getHeaders());
+        $this->headers      = new HeaderDataCollection($this->server->getHeaders());
         $this->files        = new DataCollection($files);
         $this->body         = $body ? (string) $body : null;
 
@@ -217,7 +218,7 @@ class Request
      * Returns the headers collection
      *
      * @access public
-     * @return \Klein\DataCollection\DataCollection
+     * @return \Klein\DataCollection\HeaderDataCollection
      */
     public function headers()
     {
