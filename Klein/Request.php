@@ -353,35 +353,6 @@ class Request
     }
 
     /**
-     * Gets a request header
-     *
-     * @param string $key       The name of the HTTP request header
-     * @param mixed $default    The default value of the header if its not set
-     * @access public
-     * @return string
-     */
-    // public function header($key, $default = null)
-    // {
-    //     $key = 'HTTP_' . strtoupper(str_replace('-', '_', $key));
-    //     return isset($_SERVER[$key]) ? $_SERVER[$key] : $default;
-    // }
-
-    /**
-     * Gets a session variable associated with the request
-     * TODO: Move this to main Klein class
-     * 
-     * @param string $key       The name of the session variable
-     * @param mixed $default    The default value of the session variable if its not set
-     * @access public
-     * @return mixed
-     */
-    // public function session($key, $default = null)
-    // {
-    //     startSession();
-    //     return isset($_SESSION[$key]) ? $_SESSION[$key] : $default;
-    // }
-
-    /**
      * Gets the request IP address
      *
      * @access public

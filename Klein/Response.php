@@ -93,22 +93,6 @@ class Response
      */
     protected $errorCallbacks = array();
 
-    /**
-     * The view layout
-     *
-     * @var string
-     * @access protected
-     */
-    protected $layout;
-
-    /**
-     * The view to render
-     *
-     * @var string
-     * @access protected
-     */
-    protected $view;
-
 
     /**
      * Methods
@@ -186,7 +170,7 @@ class Response
      * Returns the status object
      *
      * @access public
-     * @return \Klein\DataCollection\HeaderDataCollection
+     * @return \Klein\HttpStatus
      */
     public function status()
     {
@@ -441,116 +425,17 @@ class Response
     }
 
     /**
-     * Stores a flash message of $type
-     *
-     * @param string $msg       The message to flash
-     * @param string $type      The flash message type
-     * @param array $params     Optional params to be parsed by markdown
-     * @access public
-     * @return void
-     */
-    public function flash($msg, $type = 'info', $params = null)
-    {
-        startSession();
-        if (is_array($type)) {
-            $params = $type;
-            $type = 'info';
-        }
-        if (!isset($_SESSION['__flashes'])) {
-            $_SESSION['__flashes'] = array($type => array());
-        } elseif (!isset($_SESSION['__flashes'][$type])) {
-            $_SESSION['__flashes'][$type] = array();
-        }
-        $_SESSION['__flashes'][$type][] = $this->markdown($msg, $params);
-    }
-
-    /**
-     * Render a text string as markdown
-     *
-     * Supports basic markdown syntax
-     *
-     * @param string $str   The text string to parse
-     * @param array $args   Optional arguments to be parsed by markdown
-     * @access public
-     * @return string
-     */
-    public function markdown($str, $args = null)
-    {
-        $args = func_get_args();
-        $md = array(
-            '/\[([^\]]++)\]\(([^\)]++)\)/' => '<a href="$2">$1</a>',
-            '/\*\*([^\*]++)\*\*/'          => '<strong>$1</strong>',
-            '/\*([^\*]++)\*/'              => '<em>$1</em>'
-        );
-        $str = array_shift($args);
-        if (is_array($args[0])) {
-            $args = $args[0];
-        }
-        foreach ($args as &$arg) {
-            $arg = htmlentities($arg, ENT_QUOTES);
-        }
-        return vsprintf(preg_replace(array_keys($md), $md, $str), $args);
-    }
-
-    /**
      * Tell the browser not to cache the response
      *
      * @access public
-     * @return void
+     * @return Response
      */
     public function noCache()
     {
         $this->header('Pragma', 'no-cache');
         $this->header('Cache-Control', 'no-store, no-cache');
-    }
 
-    /**
-     * Sends a file
-     *
-     * @param string $path      The path of the file to send
-     * @param string $filename  The file's name
-     * @param string $mimetype  The MIME type of the file
-     * @access public
-     * @return void
-     */
-    public function file($path, $filename = null, $mimetype = null)
-    {
-        $this->discard();
-        $this->noCache();
-        set_time_limit(1200);
-        if (null === $filename) {
-            $filename = basename($path);
-        }
-        if (null === $mimetype) {
-            $mimetype = finfo_file(finfo_open(FILEINFO_MIME_TYPE), $path);
-        }
-        $this->header('Content-type: ' . $mimetype);
-        $this->header('Content-length: ' . filesize($path));
-        $this->header('Content-Disposition', 'attachment; filename="'.$filename.'"');
-        readfile($path);
-    }
-
-    /**
-     * Sends an object as json or jsonp by providing the padding prefix
-     *
-     * @param mixed $object         The data to encode as JSON
-     * @param string $jsonp_prefix  The name of the JSON-P function prefix
-     * @access public
-     * @return void
-     */
-    public function json($object, $jsonp_prefix = null)
-    {
-        $this->discard(true);
-        $this->noCache();
-        set_time_limit(1200);
-        $json = json_encode($object);
-        if (null !== $jsonp_prefix) {
-            $this->header('Content-Type', 'text/javascript'); // should ideally be application/json-p once adopted
-            echo "$jsonp_prefix($json);";
-        } else {
-            $this->header('Content-Type', 'application/json');
-            echo $json;
-        }
+        return $this;
     }
 
     /**
@@ -558,169 +443,16 @@ class Response
      *
      * @param string $url                   The URL to redirect to
      * @param int $code                     The HTTP status code to use for redirection
-     * @param boolean $exit_after_redirect  Whether or not to exit after redirection
      * @access public
-     * @return void
+     * @return Response
      */
-    public function redirect($url, $code = 302, $exit_after_redirect = true)
+    public function redirect($url, $code = 302)
     {
         $this->code($code);
-        $this->header("Location: $url");
-        if ($exit_after_redirect) {
-            exit;
-        }
-    }
+        $this->header('Location', $url);
+        $this->lock();
 
-    /**
-     * Redirects the request to the current URL
-     *
-     * @access public
-     * @return void
-     */
-    public function refresh()
-    {
-        $this->redirect(isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '/');
-    }
-
-    /**
-     * Redirects the request back to the referrer
-     *
-     * @access public
-     * @return void
-     */
-    public function back()
-    {
-        if (isset($_SERVER['HTTP_REFERER'])) {
-            $this->redirect($_SERVER['HTTP_REFERER']);
-        }
-        $this->refresh();
-    }
-
-    /**
-     * Sets response properties/helpers
-     *
-     * @param string $key   The name of the response property
-     * @param mixed $value  The value of the response property
-     * @access public
-     * @return void
-     */
-    public function set($key, $value = null)
-    {
-        if (!is_array($key)) {
-            return $this->$key = $value;
-        }
-        foreach ($key as $k => $value) {
-            $this->$k = $value;
-        }
-    }
-
-    /**
-     * Adds to or modifies the current query string
-     *
-     * @param string $key   The name of the query param
-     * @param mixed $value  The value of the query param
-     * @access public
-     * @return void
-     */
-    public function query($key, $value = null)
-    {
-        $query = array();
-        if (isset($_SERVER['QUERY_STRING'])) {
-            parse_str($_SERVER['QUERY_STRING'], $query);
-        }
-        if (is_array($key)) {
-            $query = array_merge($query, $key);
-        } else {
-            $query[$key] = $value;
-        }
-
-        $request_uri = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '/';
-        if (strpos($request_uri, '?') !== false) {
-            $request_uri = strstr($request_uri, '?', true);
-        }
-        return $request_uri . (!empty($query) ? '?' . http_build_query($query) : null);
-    }
-
-    /**
-     * Set the view layout
-     *
-     * @param string $layout    The layout of the view
-     * @access public
-     * @return void
-     */
-    public function layout($layout)
-    {
-        $this->layout = $layout;
-    }
-
-    /**
-     * Renders the current view
-     *
-     * @access public
-     * @return void
-     */
-    public function yield()
-    {
-        require $this->view;
-    }
-
-    /**
-     * Renders a view + optional layout
-     *
-     * @param string $view  The view to render
-     * @param array $data   The data to render in the view
-     * @access public
-     * @return void
-     */
-    public function render($view, array $data = array())
-    {
-        $original_view = $this->view;
-
-        if (!empty($data)) {
-            $this->set($data);
-        }
-        $this->view = $view;
-        if (null === $this->layout) {
-            $this->yield();
-        } else {
-            require $this->layout;
-        }
-        if (false !== $this->chunked) {
-            $this->chunk();
-        }
-
-        // restore state for parent render()
-        $this->view = $original_view;
-    }
-
-    /**
-     * Renders a view without a layout
-     *
-     * @param string $view  The view to render
-     * @param array $data   The data to render in the view
-     * @access public
-     * @return void
-     */
-    public function partial($view, array $data = array())
-    {
-        $layout = $this->layout;
-        $this->layout = null;
-        $this->render($view, $data);
-        $this->layout = $layout;
-    }
-
-    /**
-     * Sets a session variable
-     *
-     * @param string $key   The name of the session variable
-     * @param mixed $value  The value to set in the session variable
-     * @access public
-     * @return mixed
-     */
-    public function session($key, $value = null)
-    {
-        startSession();
-        return $_SESSION[$key] = $value;
+        return $this;
     }
 
     /**
@@ -768,62 +500,6 @@ class Response
             $this->code(500);
             throw new ErrorException($err);
         }
-    }
-
-    /**
-     * Returns an escaped request paramater
-     *
-     * @todo .... what is this? Why is this here?
-     * @todo REMOVE this and document the API change
-     *
-     * @param string $param     The name of the parameter
-     * @param mixed $default    The default value of the parameter if its not set
-     * @access public
-     * @return void
-     */
-    public function param($param, $default = null)
-    {
-        return isset($_REQUEST[$param]) ?  htmlentities($_REQUEST[$param], ENT_QUOTES) : $default;
-    }
-
-    /**
-     * Returns and clears all flashes of optional $type
-     *
-     * @param string $type  The name of the flash message type
-     * @access public
-     * @return array
-     */
-    public function flashes($type = null)
-    {
-        startSession();
-        if (!isset($_SESSION['__flashes'])) {
-            return array();
-        }
-        if (null === $type) {
-            $flashes = $_SESSION['__flashes'];
-            unset($_SESSION['__flashes']);
-        } elseif (null !== $type) {
-            $flashes = array();
-            if (isset($_SESSION['__flashes'][$type])) {
-                $flashes = $_SESSION['__flashes'][$type];
-                unset($_SESSION['__flashes'][$type]);
-            }
-        }
-        return $flashes;
-    }
-
-    /**
-     * Escapes a string
-     *
-     * @todo This is so generic, it might work better in a Utils class...
-     *
-     * @param string $str   The string to escape
-     * @access public
-     * @return void
-     */
-    public function escape($str)
-    {
-        return htmlentities($str, ENT_QUOTES);
     }
 
     /**
@@ -878,6 +554,7 @@ class Response
         if (is_array($obj) || is_object($obj)) {
             $obj = print_r($obj, true);
         }
+
         echo '<pre>' .  htmlentities($obj, ENT_QUOTES) . "</pre><br />\n";
     }
 

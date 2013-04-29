@@ -67,6 +67,14 @@ class Klein
     protected $response;
 
     /**
+     * The service provider object passed to each matched route
+     *
+     * @var HttpServiceProvider
+     * @access protected
+     */
+    protected $service;
+
+    /**
      * A generic variable passed to each matched route
      *
      * @var mixed
@@ -85,13 +93,15 @@ class Klein
      * Create a new Klein instance with optionally injected dependencies
      * This DI allows for easy testing, object mocking, or class extension
      *
-     * @param mixed $app            An object that will be passed to each route callback, defaults to a new App instance
+     * @param HttpServiceProvider $service  Service provider object responsible for utilitarian behaviors
+     * @param mixed $app                    An object passed to each route callback, defaults to a new App instance
      * @access public
      */
-    public function __construct($app = null)
+    public function __construct(HttpServiceProvider $service = null, $app = null)
     {
         // Instanciate our routing objects
-        $this->app = $app ?: new App();
+        $this->service = $service ?: new HttpServiceProvider();
+        $this->app     = $app     ?: new App();
     }
 
     /**
@@ -114,6 +124,17 @@ class Klein
     public function response()
     {
         return $this->response;
+    }
+
+    /**
+     * Returns the service object
+     *
+     * @access public
+     * @return HttpServiceProvider
+     */
+    public function service()
+    {
+        return $this->service;
     }
 
     /**
@@ -271,6 +292,9 @@ class Klein
         $this->request = $request ?: Request::createFromGlobals();
         $this->response = $response ?: new Response();
 
+        // Bind our objects to our service
+        $this->service->bind($this->request, $this->response);
+
 
         // Grab some data from the request
         $uri = $this->request->uri(true); // Strip the query string
@@ -339,7 +363,15 @@ class Klein
                 // Easily handle 404's
 
                 try {
-                    call_user_func($callback, $this->request, $this->response, $this->app, $matched, $methods_matched);
+                    call_user_func(
+                        $callback,
+                        $this->request,
+                        $this->response,
+                        $this->service,
+                        $this->app,
+                        $matched,
+                        $methods_matched
+                    );
                 } catch (Exception $e) {
                     $this->response->error($e);
                 }
@@ -351,7 +383,15 @@ class Klein
                 // Easily handle 405's
 
                 try {
-                    call_user_func($callback, $this->request, $this->response, $this->app, $matched, $methods_matched);
+                    call_user_func(
+                        $callback,
+                        $this->request,
+                        $this->response,
+                        $this->service,
+                        $this->app,
+                        $matched,
+                        $methods_matched
+                    );
                 } catch (Exception $e) {
                     $this->response->error($e);
                 }
@@ -423,6 +463,7 @@ class Klein
                             $callback,
                             $this->request,
                             $this->response,
+                            $this->service,
                             $this->app,
                             $matched,
                             $methods_matched
