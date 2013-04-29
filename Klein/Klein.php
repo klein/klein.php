@@ -560,4 +560,23 @@ class Klein
     {
         Validator::$methods[strtolower($method)] = $callback;
     }
+
+    /**
+     * Magic "__call" method
+     *
+     * Allows the ability to arbitrarily call a method of our service provider's
+     * through an instance of this class
+     *
+     * @param callable $method  The callable method to execute
+     * @param array $args       The argument array to pass to our callback
+     * @access public
+     * @return mixed
+     */
+    public function __call($method, $args)
+    {
+        return call_user_func_array(
+            array($this->service, $method),
+            $args
+        );
+    }
 }
