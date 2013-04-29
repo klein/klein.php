@@ -419,8 +419,8 @@ class HttpServiceProvider
             require $this->layout;
         }
 
-        if (false !== $this->chunked) {
-            $this->chunk();
+        if (false !== $this->response->chunked) {
+            $this->response->chunk();
         }
 
         // restore state for parent render()
