@@ -873,10 +873,7 @@ class RoutesTest extends AbstractKleinTest
 
     public function test405DefaultRequest()
     {
-        // Echo our headers
-        $klein_app = new Klein(new HeadersEcho());
-
-        $klein_app->respond(
+        $this->klein_app->respond(
             array('GET', 'POST'),
             null,
             function () {
@@ -884,14 +881,12 @@ class RoutesTest extends AbstractKleinTest
             }
         );
 
-        $klein_app->dispatch(
+        $this->klein_app->dispatch(
             MockRequestFactory::create('/', 'DELETE')
         );
 
-        $this->expectOutputString(
-            'HTTP/1.1 405 Method Not Allowed' . "\n"
-            . 'Allow: GET, POST' . "\n"
-        );
+        $this->assertEquals('405 Method Not Allowed', $this->klein_app->response()->status()->getFormattedString());
+        $this->assertEquals('GET, POST', $this->klein_app->response()->headers()->get('Allow'));
     }
 
     public function test405Routes()
@@ -937,15 +932,12 @@ class RoutesTest extends AbstractKleinTest
 
     public function testOptionsDefaultRequest()
     {
-        // Echo our headers
-        $klein_app = new Klein(new HeadersEcho());
-
-        $klein_app->respond(
+        $this->klein_app->respond(
             function ($request, $response) {
                 $response->code(200);
             }
         );
-        $klein_app->respond(
+        $this->klein_app->respond(
             array('GET', 'POST'),
             null,
             function () {
@@ -953,22 +945,16 @@ class RoutesTest extends AbstractKleinTest
             }
         );
 
-        $klein_app->dispatch(
+        $this->klein_app->dispatch(
             MockRequestFactory::create('/', 'OPTIONS')
         );
 
-        $this->expectOutputString(
-            'HTTP/1.1 200 OK' . "\n"
-            . 'Allow: GET, POST' . "\n"
-        );
+        $this->assertEquals('200 OK', $this->klein_app->response()->status()->getFormattedString());
+        $this->assertEquals('GET, POST', $this->klein_app->response()->headers()->get('Allow'));
     }
 
     public function testOptionsRoutes()
     {
-        $header_values = array();
-
-        $klein_app = new Klein(new HeadersSave($header_values));
-
         $access_control_headers = array(
             array(
                 'key' => 'Access-Control-Allow-Origin',
@@ -980,21 +966,21 @@ class RoutesTest extends AbstractKleinTest
             ),
         );
 
-        $klein_app->respond(
+        $this->klein_app->respond(
             'GET',
             null,
             function () {
                 echo 'fail';
             }
         );
-        $klein_app->respond(
+        $this->klein_app->respond(
             array('GET', 'POST'),
             null,
             function () {
                 echo 'fail';
             }
         );
-        $klein_app->respond(
+        $this->klein_app->respond(
             'OPTIONS',
             null,
             function ($request, $response) use ($access_control_headers) {
@@ -1005,30 +991,21 @@ class RoutesTest extends AbstractKleinTest
             }
         );
 
-        $klein_app->dispatch(
+        $this->klein_app->dispatch(
             MockRequestFactory::create('/', 'OPTIONS')
         );
 
+
         // Assert headers were passed
-        $this->assertContains(
-            'Allow: GET, POST, OPTIONS' . "\n",
-            $header_values
-        );
+        $this->assertEquals('GET, POST, OPTIONS', $this->klein_app->response()->headers()->get('Allow'));
+
         foreach ($access_control_headers as $header) {
-            $this->assertContains(
-                sprintf('%s: %s', $header[ 'key' ], $header[ 'val' ]) . "\n",
-                $header_values
-            );
+            $this->assertEquals($header['val'], $this->klein_app->response()->headers()->get($header['key']));
         }
     }
 
     public function testHeadDefaultRequest()
     {
-        $header_values = array();
-
-        // Echo our headers
-        $klein_app = new Klein(new HeadersSave($header_values));
-
         $expected_headers = array(
             array(
                 'key' => 'X-Some-Random-Header',
@@ -1036,7 +1013,7 @@ class RoutesTest extends AbstractKleinTest
             ),
         );
 
-        $klein_app->respond(
+        $this->klein_app->respond(
             'GET',
             null,
             function ($request, $response) use ($expected_headers) {
@@ -1048,14 +1025,14 @@ class RoutesTest extends AbstractKleinTest
                 }
             }
         );
-        $klein_app->respond(
+        $this->klein_app->respond(
             'GET',
             '/',
             function () {
                 echo 'GET!';
             }
         );
-        $klein_app->respond(
+        $this->klein_app->respond(
             'POST',
             '/',
             function () {
@@ -1063,7 +1040,7 @@ class RoutesTest extends AbstractKleinTest
             }
         );
 
-        $klein_app->dispatch(
+        $this->klein_app->dispatch(
             MockRequestFactory::create('/', 'HEAD')
         );
 
@@ -1072,10 +1049,7 @@ class RoutesTest extends AbstractKleinTest
 
         // Assert headers were passed
         foreach ($expected_headers as $header) {
-            $this->assertContains(
-                sprintf('%s: %s', $header[ 'key' ], $header[ 'val' ]) . "\n",
-                $header_values
-            );
+            $this->assertEquals($header['val'], $this->klein_app->response()->headers()->get($header['key']));
         }
     }
 }

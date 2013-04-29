@@ -26,11 +26,6 @@ use \Klein\Tests\Mocks\MockRequestFactory;
 class ResponsesTest extends AbstractKleinTest
 {
 
-    /**
-     * Class properties
-     */
-    protected $header_vals = array();
-
     public function testJSON()
     {
         // Create a test object to be JSON encoded/decoded
@@ -44,16 +39,14 @@ class ResponsesTest extends AbstractKleinTest
             'uniqid' => uniqid(),
         );
 
-        $klein = new Klein(new HeadersSave($this->header_vals));
-
-        $klein->respond(
+        $this->klein_app->respond(
             '/json',
             function ($request, $response) use ($test_object) {
                 $response->json($test_object);
             }
         );
 
-        $klein->dispatch(
+        $this->klein_app->dispatch(
             MockRequestFactory::create('/json')
         );
 
@@ -63,17 +56,17 @@ class ResponsesTest extends AbstractKleinTest
         );
 
         // Assert headers were passed
-        $this->assertContains(
-            'Pragma: no-cache' . "\n",
-            $this->header_vals
+        $this->assertEquals(
+            'no-cache',
+            $this->klein_app->response()->headers()->get('Pragma')
         );
-        $this->assertContains(
-            'Cache-Control: no-store, no-cache' . "\n",
-            $this->header_vals
+        $this->assertEquals(
+            'no-store, no-cache',
+            $this->klein_app->response()->headers()->get('Cache-Control')
         );
-        $this->assertContains(
-            'Content-Type: application/json' . "\n",
-            $this->header_vals
+        $this->assertEquals(
+            'application/json',
+            $this->klein_app->response()->headers()->get('Content-Type')
         );
     }
 }
