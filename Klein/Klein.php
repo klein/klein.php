@@ -85,25 +85,46 @@ class Klein
      * Create a new Klein instance with optionally injected dependencies
      * This DI allows for easy testing, object mocking, or class extension
      *
-     * @param Headers $headers      A Headers object to be cloned to both the Request and Response objects
-     * @param Request $request      To contain all incoming request properties and related functions
-     * @param Response $response    To contain all outgoing response properties and related functions
      * @param mixed $app            An object that will be passed to each route callback, defaults to a new App instance
      * @access public
      */
-    public function __construct(
-        Headers $headers = null,
-        Request $request = null,
-        Response $response = null,
-        $app = null
-    ) {
-        // Create our base Headers object to be cloned
-        $headers        = $headers  ?: new Headers();
-
+    public function __construct($app = null)
+    {
         // Instanciate our routing objects
-        // $this->request  = $request  ?: new Request(clone $headers);
-        $this->response = $response ?: new Response(clone $headers);
-        $this->app      = $app      ?: new App();
+        $this->app = $app ?: new App();
+    }
+
+    /**
+     * Returns the request object
+     *
+     * @access public
+     * @return Request
+     */
+    public function request()
+    {
+        return $this->request;
+    }
+
+    /**
+     * Returns the response object
+     *
+     * @access public
+     * @return Response
+     */
+    public function response()
+    {
+        return $this->response;
+    }
+
+    /**
+     * Returns the app object
+     *
+     * @access public
+     * @return mixed
+     */
+    public function app()
+    {
+        return $this->app;
     }
 
     /**
@@ -236,19 +257,24 @@ class Klein
     /**
      * Dispatch the request to the approriate route(s)
      *
-     * @param Request $request      The request object to inject into the router
+     * Dispatch with optionally injected dependencies
+     * This DI allows for easy testing, object mocking, or class extension
+     *
+     * @param Request $request      The request object to give to each callback
+     * @param Response $response    The response object to give to each callback
      * @access public
      * @return void
      */
-    public function dispatch(Request $request = null)
+    public function dispatch(Request $request = null, Response $response = null)
     {
-        if (is_null($request)) {
-            $request = Request::createFromGlobals();
-        }
+        // Set/Initialize our objects to be sent in each callback
+        $this->request = $request ?: Request::createFromGlobals();
+        $this->response = $response ?: new Response();
+
 
         // Grab some data from the request
-        $uri = $request->uri(true); // Strip the query string
-        $req_method = $request->method();
+        $uri = $this->request->uri(true); // Strip the query string
+        $req_method = $this->request->method();
 
         // Set up some variables for matching
         $matched = 0;
@@ -313,7 +339,7 @@ class Klein
                 // Easily handle 404's
 
                 try {
-                    call_user_func($callback, $request, $this->response, $this->app, $matched, $methods_matched);
+                    call_user_func($callback, $this->request, $this->response, $this->app, $matched, $methods_matched);
                 } catch (Exception $e) {
                     $this->response->error($e);
                 }
@@ -325,7 +351,7 @@ class Klein
                 // Easily handle 405's
 
                 try {
-                    call_user_func($callback, $request, $this->response, $this->app, $matched, $methods_matched);
+                    call_user_func($callback, $this->request, $this->response, $this->app, $matched, $methods_matched);
                 } catch (Exception $e) {
                     $this->response->error($e);
                 }
@@ -388,14 +414,14 @@ class Klein
 
                 if ($possible_match) {
                     if (!empty($params)) {
-                        $request->paramsNamed()->merge($params);
+                        $this->request->paramsNamed()->merge($params);
                     }
 
                     // Try and call our route's callback
                     try {
                         call_user_func(
                             $callback,
-                            $request,
+                            $this->request,
                             $this->response,
                             $this->app,
                             $matched,
