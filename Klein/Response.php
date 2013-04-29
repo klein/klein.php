@@ -37,6 +37,14 @@ class Response
     protected static $default_status_code = 200;
 
     /**
+     * The HTTP version of the response
+     *
+     * @var string
+     * @access protected
+     */
+    protected $protocol_version = '1.1';
+
+    /**
      * The response body
      *
      * @var string
@@ -120,9 +128,35 @@ class Response
     {
         $status_code   = $status_code ?: static::$default_status_code;
 
-        $this->body    = $this->body($body);
-        $this->status  = $this->code($status_code);
+        // Set our body and code using our internal methods
+        $this->body($body);
+        $this->code($status_code);
+
         $this->headers = new HeaderDataCollection($headers);
+    }
+
+    /**
+     * Get (or set) the HTTP protocol version
+     *
+     * Simply calling this method without any arguments returns the current protocol version.
+     * Calling with an integer argument, however, attempts to set the protocol version to what
+     * was provided by the argument.
+     *
+     * @param string $protocol_version
+     * @access public
+     * @return string|Response
+     */
+    public function protocolVersion($protocol_version = null)
+    {
+        if (null !== $protocol_version) {
+            if (!$this->isLocked()) {
+                $this->protocol_version = (string) $protocol_version;
+            }
+
+            return $this;
+        }
+
+        return $this->protocol_version;
     }
 
     /**
@@ -279,12 +313,13 @@ class Response
     /**
      * Send our HTTP headers
      *
+     * @param mixed $override   Whether or not to override the check if headers have already been sent
      * @access public
      * @return Response
      */
-    public function sendHeaders()
+    public function sendHeaders($override = false)
     {
-        if (headers_sent()) {
+        if (headers_sent() && !$override) {
             return $this;
         }
 
@@ -348,7 +383,7 @@ class Response
     {
         if (false === $this->chunked) {
             $this->chunked = true;
-            $this->headers->header('Transfer-encoding: chunked');
+            $this->headers->header('Transfer-encoding', 'chunked');
             flush();
         }
         if (null !== $str) {
@@ -367,14 +402,14 @@ class Response
      * Sets a response header
      *
      * @param string $key       The name of the HTTP response header
-     * @param string $value     The value to set the header with
+     * @param mixed $value      The value to set the header with
      * @access public
      * @return void
      */
-    // public function header($key, $value = null)
-    // {
-    //     $this->headers->header($key, $value);
-    // }
+    public function header($key, $value)
+    {
+        $this->headers->set($key, $value);
+    }
 
     /**
      * Sets a response cookie
@@ -465,8 +500,8 @@ class Response
      */
     public function noCache()
     {
-        $this->header("Pragma: no-cache");
-        $this->header('Cache-Control: no-store, no-cache');
+        $this->header('Pragma', 'no-cache');
+        $this->header('Cache-Control', 'no-store, no-cache');
     }
 
     /**
@@ -491,7 +526,7 @@ class Response
         }
         $this->header('Content-type: ' . $mimetype);
         $this->header('Content-length: ' . filesize($path));
-        $this->header('Content-Disposition: attachment; filename="'.$filename.'"');
+        $this->header('Content-Disposition', 'attachment; filename="'.$filename.'"');
         readfile($path);
     }
 
@@ -510,10 +545,10 @@ class Response
         set_time_limit(1200);
         $json = json_encode($object);
         if (null !== $jsonp_prefix) {
-            $this->header('Content-Type: text/javascript'); // should ideally be application/json-p once adopted
+            $this->header('Content-Type', 'text/javascript'); // should ideally be application/json-p once adopted
             echo "$jsonp_prefix($json);";
         } else {
-            $this->header('Content-Type: application/json');
+            $this->header('Content-Type', 'application/json');
             echo $json;
         }
     }
