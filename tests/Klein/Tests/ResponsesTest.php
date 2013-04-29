@@ -41,8 +41,8 @@ class ResponsesTest extends AbstractKleinTest
 
         $this->klein_app->respond(
             '/json',
-            function ($request, $response) use ($test_object) {
-                $response->json($test_object);
+            function ($request, $response, $service) use ($test_object) {
+                $service->json($test_object);
             }
         );
 

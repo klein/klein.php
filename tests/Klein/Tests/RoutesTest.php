@@ -916,7 +916,7 @@ class RoutesTest extends AbstractKleinTest
         );
         $this->klein_app->respond(
             405,
-            function ($a, $b, $c, $d, $methods) use (&$resultArray) {
+            function ($a, $b, $c, $d, $e, $methods) use (&$resultArray) {
                 $resultArray = $methods;
             }
         );
