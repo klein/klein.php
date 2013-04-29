@@ -88,7 +88,7 @@ class HttpServiceProvider
      * @param Response $response    Object containing all HTTP response data and behaviors
      * @access public
      */
-    public function __construct(Request $request, Response $response)
+    public function __construct(Request $request = null, Response $response = null)
     {
         // Bind our objects
         $this->bind($request, $response);
@@ -251,7 +251,7 @@ class HttpServiceProvider
      */
     public function file($path, $filename = null, $mimetype = null)
     {
-        $this->discard();
+        $this->response->discard();
         $this->response->noCache();
 
         set_time_limit(1200);
@@ -263,9 +263,9 @@ class HttpServiceProvider
             $mimetype = finfo_file(finfo_open(FILEINFO_MIME_TYPE), $path);
         }
 
-        $this->header('Content-type: ' . $mimetype);
-        $this->header('Content-length: ' . filesize($path));
-        $this->header('Content-Disposition', 'attachment; filename="'.$filename.'"');
+        $this->response->header('Content-type: ' . $mimetype);
+        $this->response->header('Content-length: ' . filesize($path));
+        $this->response->header('Content-Disposition', 'attachment; filename="'.$filename.'"');
 
         readfile($path);
     }
@@ -280,7 +280,7 @@ class HttpServiceProvider
      */
     public function json($object, $jsonp_prefix = null)
     {
-        $this->discard(true);
+        $this->response->discard(true);
         $this->response->noCache();
 
         set_time_limit(1200);
@@ -288,10 +288,11 @@ class HttpServiceProvider
         $json = json_encode($object);
 
         if (null !== $jsonp_prefix) {
-            $this->header('Content-Type', 'text/javascript'); // should ideally be application/json-p once adopted
+            // Should ideally be application/json-p once adopted
+            $this->response->header('Content-Type', 'text/javascript');
             echo "$jsonp_prefix($json);";
         } else {
-            $this->header('Content-Type', 'application/json');
+            $this->response->header('Content-Type', 'application/json');
             echo $json;
         }
     }
