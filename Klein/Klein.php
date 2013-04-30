@@ -45,6 +45,14 @@ class Klein
      */
     protected $namespace;
 
+    /**
+     * An array of error callback callables
+     *
+     * @var array[callable]
+     * @access protected
+     */
+    protected $errorCallbacks = array();
+
 
     /**
      * Route objects
@@ -373,7 +381,7 @@ class Klein
                         $methods_matched
                     );
                 } catch (Exception $e) {
-                    $this->response->error($e);
+                    $this->error($e);
                 }
 
                 ++$matched;
@@ -393,7 +401,7 @@ class Klein
                         $methods_matched
                     );
                 } catch (Exception $e) {
-                    $this->response->error($e);
+                    $this->error($e);
                 }
 
                 ++$matched;
@@ -469,7 +477,7 @@ class Klein
                             $methods_matched
                         );
                     } catch (Exception $e) {
-                        $this->response->error($e);
+                        $this->error($e);
                     }
 
                     if ($_route !== '*') {
@@ -549,16 +557,52 @@ class Klein
     }
 
     /**
-     * Add a custom validator to validate request parameters against
+     * Adds an error callback to the stack of error handlers
      *
-     * @param string $method        The name of the validator method
-     * @param callable $callback    The callback to perform on validation
+     * @param callable $callback            The callable function to execute in the error handling chain
+     * @param boolean $allow_duplicates     Whether or not to allow duplicate callbacks to exist in the
+     *  error handling chain
+     * @access public
+     * @return boolean|void
+     */
+    public function onError($callback, $allow_duplicates = true)
+    {
+        if (!$allow_duplicates && in_array($callback, $this->errorCallbacks)) {
+            return false;
+        }
+
+        $this->errorCallbacks[] = $callback;
+    }
+
+    /**
+     * Routes an exception through the error callbacks
+     *
+     * @param Exception $err    The exception that occurred
      * @access public
      * @return void
      */
-    public function addValidator($method, $callback)
+    public function error(Exception $err)
     {
-        Validator::$methods[strtolower($method)] = $callback;
+        $type = get_class($err);
+        $msg = $err->getMessage();
+
+        if (count($this->errorCallbacks) > 0) {
+            foreach (array_reverse($this->errorCallbacks) as $callback) {
+                if (is_callable($callback)) {
+                    if ($callback($this, $msg, $type, $err)) {
+                        return;
+                    }
+                } else {
+                    if (null !== $this->service && null !== $this->response) {
+                        $this->service->flash($err);
+                        $this->response->redirect($callback);
+                    }
+                }
+            }
+        } else {
+            $this->code(500);
+            throw new ErrorException($err);
+        }
     }
 
     /**

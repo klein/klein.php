@@ -449,20 +449,6 @@ class Request
     }
 
     /**
-     * Start a validator chain for the specified parameter
-     * TODO: Move this to main Klein class
-     *
-     * @param string $param     The name of the parameter to validate
-     * @param string $err       The custom exception message to throw
-     * @access public
-     * @return Validator
-     */
-    public function validate($param, $err = null)
-    {
-        return new Validator($this->param($param), $err);
-    }
-
-    /**
      * Gets a unique ID for the request
      *
      * Generates one on the first call

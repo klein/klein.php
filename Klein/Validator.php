@@ -134,6 +134,20 @@ class Validator
     }
 
     /**
+     * Add a custom validator to our list of validation methods
+     *
+     * @param string $method        The name of the validator method
+     * @param callable $callback    The callback to perform on validation
+     * @static
+     * @access public
+     * @return void
+     */
+    public static function addValidator($method, $callback)
+    {
+        static::$methods[strtolower($method)] = $callback;
+    }
+
+    /**
      * Magic "__call" method
      *
      * Allows the ability to arbitrarily call a validator with an optional prefix

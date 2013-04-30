@@ -442,4 +442,43 @@ class HttpServiceProvider
         $this->render($view, $data);
         $this->layout = $layout;
     }
+
+    /**
+     * Add a custom validator for our validation method
+     *
+     * @param string $method        The name of the validator method
+     * @param callable $callback    The callback to perform on validation
+     * @access public
+     * @return void
+     */
+    public function addValidator($method, $callback)
+    {
+        Validator::addValidator($method, $callback);
+    }
+
+    /**
+     * Start a validator chain for the specified string
+     *
+     * @param string $string    The string to validate
+     * @param string $err       The custom exception message to throw
+     * @access public
+     * @return Validator
+     */
+    public function validate($string, $err = null)
+    {
+        return new Validator($string, $err);
+    }
+
+    /**
+     * Start a validator chain for the specified parameter
+     *
+     * @param string $param     The name of the parameter to validate
+     * @param string $err       The custom exception message to throw
+     * @access public
+     * @return Validator
+     */
+    public function validateParam($param, $err = null)
+    {
+        return $this->validate($this->request->param($param), $err);
+    }
 }

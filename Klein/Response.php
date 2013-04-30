@@ -85,14 +85,6 @@ class Response
      */
     public $chunked = false;
 
-    /**
-     * An array of error callback callables
-     *
-     * @var array[callable]
-     * @access protected
-     */
-    protected $errorCallbacks = array();
-
 
     /**
      * Methods
@@ -456,54 +448,9 @@ class Response
     }
 
     /**
-     * Adds an error callback to the stack of error handlers
-     *
-     * @param callable $callback            The callable function to execute in the error handling chain
-     * @param boolean $allow_duplicates     Whether or not to allow duplicate callbacks to exist in the
-     *  error handling chain
-     * @access public
-     * @return boolean | void
-     */
-    public function onError($callback, $allow_duplicates = true)
-    {
-        if (!$allow_duplicates && in_array($callback, $this->errorCallbacks)) {
-            return false;
-        }
-
-        $this->errorCallbacks[] = $callback;
-    }
-
-    /**
-     * Routes an exception through the error callbacks
-     *
-     * @param Exception $err    The exception that occurred
-     * @access public
-     * @return void
-     */
-    public function error(Exception $err)
-    {
-        $type = get_class($err);
-        $msg = $err->getMessage();
-
-        if (count($this->errorCallbacks) > 0) {
-            foreach (array_reverse($this->errorCallbacks) as $callback) {
-                if (is_callable($callback)) {
-                    if ($callback($this, $msg, $type, $err)) {
-                        return;
-                    }
-                } else {
-                    $this->flash($err);
-                    $this->redirect($callback);
-                }
-            }
-        } else {
-            $this->code(500);
-            throw new ErrorException($err);
-        }
-    }
-
-    /**
      * Discards the current output buffer and restarts it if passed a true boolean
+     *
+     * TODO: remove this
      *
      * @param boolean $restart_buffer   Whether or not to restart the output buffer after discarding it
      * @access public
@@ -523,6 +470,8 @@ class Response
     /**
      * Flushes the current output buffer
      *
+     * TODO: remove this
+     *
      * @access public
      * @return void
      */
@@ -533,6 +482,8 @@ class Response
 
     /**
      * Return the current output buffer as a string
+     *
+     * TODO: remove this
      *
      * @access public
      * @return string
@@ -560,6 +511,8 @@ class Response
 
     /**
      * Magic "__call" method
+     *
+     * TODO: remove this
      *
      * Allows the ability to arbitrarily call a property as a callable method
      * Allow callbacks to be assigned as properties and called like normal methods
