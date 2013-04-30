@@ -359,7 +359,7 @@ class Response
     {
         if (false === $this->chunked) {
             $this->chunked = true;
-            $this->headers->header('Transfer-encoding', 'chunked');
+            $this->header('Transfer-encoding', 'chunked');
             flush();
         }
         if (null !== $str) {
@@ -506,7 +506,7 @@ class Response
             $obj = print_r($obj, true);
         }
 
-        echo '<pre>' .  htmlentities($obj, ENT_QUOTES) . "</pre><br />\n";
+        $this->append('<pre>' .  htmlentities($obj, ENT_QUOTES) . "</pre><br />\n");
     }
 
     /**
