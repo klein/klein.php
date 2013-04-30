@@ -28,11 +28,7 @@ class ValidationsTest extends AbstractKleinTest
         parent::setUp();
 
         // Setup our error handler
-        $this->klein_app->respond(
-            function ($request, $response) {
-                $response->onError(array($this, 'errorHandler'), false);
-            }
-        );
+        $this->klein_app->onError(array($this, 'errorHandler'), false);
     }
 
     public function errorHandler($response, $message, $type, $exception)
@@ -50,8 +46,8 @@ class ValidationsTest extends AbstractKleinTest
 
         $this->klein_app->respond(
             '/[:test_param]',
-            function ($request) use ($custom_message) {
-                $request->validate('test_param', $custom_message)
+            function ($request, $response, $service) use ($custom_message) {
+                $service->validateParam('test_param', $custom_message)
                     ->notNull()
                     ->isLen(0);
 
@@ -74,8 +70,8 @@ class ValidationsTest extends AbstractKleinTest
     {
         $this->klein_app->respond(
             '/[:test_param]',
-            function ($request) {
-                $request->validate('test_param')
+            function ($request, $response, $service) {
+                $service->validateParam('test_param')
                     ->notNull()
                     ->isLen(2);
 
@@ -106,8 +102,8 @@ class ValidationsTest extends AbstractKleinTest
     {
         $this->klein_app->respond(
             '/[:test_param]',
-            function ($request) {
-                $request->validate('test_param')
+            function ($request, $response, $service) {
+                $service->validateParam('test_param')
                     ->notNull()
                     ->isLen(3, 5);
 
@@ -178,8 +174,8 @@ class ValidationsTest extends AbstractKleinTest
     {
         $this->klein_app->respond(
             '/[:test_param]',
-            function ($request) {
-                $request->validate('test_param')
+            function ($request, $response, $service) {
+                $service->validateParam('test_param')
                     ->notNull()
                     ->isInt();
 
@@ -250,8 +246,8 @@ class ValidationsTest extends AbstractKleinTest
     {
         $this->klein_app->respond(
             '/[:test_param]',
-            function ($request) {
-                $request->validate('test_param')
+            function ($request, $response, $service) {
+                $service->validateParam('test_param')
                     ->notNull()
                     ->isFloat();
 
@@ -330,8 +326,8 @@ class ValidationsTest extends AbstractKleinTest
     {
         $this->klein_app->respond(
             '/[:test_param]',
-            function ($request) {
-                $request->validate('test_param')
+            function ($request, $response, $service) {
+                $service->validateParam('test_param')
                     ->notNull()
                     ->isEmail();
 
@@ -386,8 +382,8 @@ class ValidationsTest extends AbstractKleinTest
     {
         $this->klein_app->respond(
             '/[:test_param]',
-            function ($request) {
-                $request->validate('test_param')
+            function ($request, $response, $service) {
+                $service->validateParam('test_param')
                     ->notNull()
                     ->isAlpha();
 
@@ -458,8 +454,8 @@ class ValidationsTest extends AbstractKleinTest
     {
         $this->klein_app->respond(
             '/[:test_param]',
-            function ($request) {
-                $request->validate('test_param')
+            function ($request, $response, $service) {
+                $service->validateParam('test_param')
                     ->notNull()
                     ->isAlnum();
 
@@ -530,8 +526,8 @@ class ValidationsTest extends AbstractKleinTest
     {
         $this->klein_app->respond(
             '/[:test_param]',
-            function ($request) {
-                $request->validate('test_param')
+            function ($request, $response, $service) {
+                $service->validateParam('test_param')
                     ->notNull()
                     ->contains('dog');
 
@@ -594,8 +590,8 @@ class ValidationsTest extends AbstractKleinTest
     {
         $this->klein_app->respond(
             '/[:test_param]',
-            function ($request) {
-                $request->validate('test_param')
+            function ($request, $response, $service) {
+                $service->validateParam('test_param')
                     ->notNull()
                     ->isChars('c-f');
 
@@ -650,8 +646,8 @@ class ValidationsTest extends AbstractKleinTest
     {
         $this->klein_app->respond(
             '/[:test_param]',
-            function ($request) {
-                $request->validate('test_param')
+            function ($request, $response, $service) {
+                $service->validateParam('test_param')
                     ->notNull()
                     ->isRegex('/cat-[dog|bear|thing]/');
 
@@ -722,8 +718,8 @@ class ValidationsTest extends AbstractKleinTest
     {
         $this->klein_app->respond(
             '/[:test_param]',
-            function ($request) {
-                $request->validate('test_param')
+            function ($request, $response, $service) {
+                $service->validateParam('test_param')
                     ->notNull()
                     ->notRegex('/cat-[dog|bear|thing]/');
 
@@ -793,7 +789,7 @@ class ValidationsTest extends AbstractKleinTest
     public function testCustomValidator()
     {
         // Add our custom validator
-        $this->klein_app->addValidator(
+        $this->klein_app->service()->addValidator(
             'donkey',
             function ($string, $color) {
                 $regex_str = $color . '[-_]?donkey';
@@ -804,8 +800,8 @@ class ValidationsTest extends AbstractKleinTest
 
         $this->klein_app->respond(
             '/[:test_param]',
-            function ($request) {
-                $request->validate('test_param')
+            function ($request, $response, $service) {
+                $service->validateParam('test_param')
                     ->notNull()
                     ->isDonkey('brown');
 
