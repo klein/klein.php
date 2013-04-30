@@ -96,19 +96,46 @@ class RoutesTest extends AbstractKleinTest
         );
     }
 
-    /**
-     * TODO!!!
-     *
-     * Dispatch output buffering will work differently in the future
-     * ... implement this!
-     */
     public function testDispatchOutput()
     {
-        // TODO
-        $this->markTestIncomplete(
-            'TODO!'
+        $expectedOutput = array(
+            'echoed' => 'echo!',
+            'returned1' => 'alright!',
+            'returned2' => 'woot!',
         );
 
+        $this->klein_app->respond(
+            function () use ($expectedOutput) {
+                echo $expectedOutput['echoed'];
+            }
+        );
+        $this->klein_app->respond(
+            function () use ($expectedOutput) {
+                return $expectedOutput['returned1'];
+            }
+        );
+        $this->klein_app->respond(
+            function () use ($expectedOutput) {
+                return $expectedOutput['returned2'];
+            }
+        );
+
+        $this->klein_app->dispatch();
+
+        // Expect our output to match our ECHO'd output
+        $this->expectOutputString(
+            $expectedOutput['echoed']
+        );
+
+        // Make sure our response body matches the concatenation of what we returned in each callback
+        $this->assertSame(
+            $expectedOutput['returned1'] . $expectedOutput['returned2'],
+            $this->klein_app->response()->body()
+        );
+    }
+
+    public function testDispatchOutputCaptured()
+    {
         $expectedOutput = array(
             'echoed' => 'yup',
             'returned' => 'nope',
@@ -125,11 +152,16 @@ class RoutesTest extends AbstractKleinTest
             }
         );
 
-        // $output = dispatch(null, null, null, true);
-        $output = $this->klein_app->dispatch();
+        $output = $this->klein_app->dispatch(null, null, true);
 
-        // Should only capture ECHO'd output (returned values are lost)
+        // Make sure nothing actually printed to the screen
+        $this->expectOutputString(null);
+
+        // Make sure our returned output matches what we ECHO'd
         $this->assertSame($expectedOutput['echoed'], $output);
+
+        // Make sure our response body matches what we returned
+        $this->assertSame($expectedOutput['returned'], $this->klein_app->response()->body());
     }
 
     public function testRespondReturn()

@@ -291,10 +291,11 @@ class Klein
      *
      * @param Request $request      The request object to give to each callback
      * @param Response $response    The response object to give to each callback
+     * @param boolean $capture      Whether or not to capture the output from each response callback
      * @access public
      * @return void
      */
-    public function dispatch(Request $request = null, Response $response = null)
+    public function dispatch(Request $request = null, Response $response = null, $capture = false)
     {
         // Set/Initialize our objects to be sent in each callback
         $this->request = $request ?: Request::createFromGlobals();
@@ -371,14 +372,16 @@ class Klein
                 // Easily handle 404's
 
                 try {
-                    call_user_func(
-                        $callback,
-                        $this->request,
-                        $this->response,
-                        $this->service,
-                        $this->app,
-                        $matched,
-                        $methods_matched
+                    $this->response->append(
+                        call_user_func(
+                            $callback,
+                            $this->request,
+                            $this->response,
+                            $this->service,
+                            $this->app,
+                            $matched,
+                            $methods_matched
+                        )
                     );
                 } catch (Exception $e) {
                     $this->error($e);
@@ -391,14 +394,16 @@ class Klein
                 // Easily handle 405's
 
                 try {
-                    call_user_func(
-                        $callback,
-                        $this->request,
-                        $this->response,
-                        $this->service,
-                        $this->app,
-                        $matched,
-                        $methods_matched
+                    $this->response->append(
+                        call_user_func(
+                            $callback,
+                            $this->request,
+                            $this->response,
+                            $this->service,
+                            $this->app,
+                            $matched,
+                            $methods_matched
+                        )
                     );
                 } catch (Exception $e) {
                     $this->error($e);
@@ -467,14 +472,16 @@ class Klein
 
                     // Try and call our route's callback
                     try {
-                        call_user_func(
-                            $callback,
-                            $this->request,
-                            $this->response,
-                            $this->service,
-                            $this->app,
-                            $matched,
-                            $methods_matched
+                        $this->response->append(
+                            call_user_func(
+                                $callback,
+                                $this->request,
+                                $this->response,
+                                $this->service,
+                                $this->app,
+                                $matched,
+                                $methods_matched
+                            )
                         );
                     } catch (Exception $e) {
                         $this->error($e);
@@ -500,11 +507,10 @@ class Klein
         // Test for HEAD request (like GET)
         if (strcasecmp($req_method, 'HEAD') === 0) {
             // HEAD requests shouldn't return a body
-            return ob_get_clean();
+            return ob_clean();
 
-        // TODO
-        // } elseif ($capture) {
-        //     return ob_get_clean();
+        } elseif ($capture) {
+            return ob_get_clean();
 
         } elseif ($this->response->chunked) {
             $this->response->chunk();
