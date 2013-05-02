@@ -77,7 +77,7 @@ class Klein
     /**
      * The service provider object passed to each matched route
      *
-     * @var HttpServiceProvider
+     * @var ServiceProvider
      * @access protected
      */
     protected $service;
@@ -101,14 +101,14 @@ class Klein
      * Create a new Klein instance with optionally injected dependencies
      * This DI allows for easy testing, object mocking, or class extension
      *
-     * @param HttpServiceProvider $service  Service provider object responsible for utilitarian behaviors
+     * @param ServiceProvider $service  Service provider object responsible for utilitarian behaviors
      * @param mixed $app                    An object passed to each route callback, defaults to a new App instance
      * @access public
      */
-    public function __construct(HttpServiceProvider $service = null, $app = null)
+    public function __construct(ServiceProvider $service = null, $app = null)
     {
         // Instanciate our routing objects
-        $this->service = $service ?: new HttpServiceProvider();
+        $this->service = $service ?: new ServiceProvider();
         $this->app     = $app     ?: new App();
     }
 
@@ -138,7 +138,7 @@ class Klein
      * Returns the service object
      *
      * @access public
-     * @return HttpServiceProvider
+     * @return ServiceProvider
      */
     public function service()
     {

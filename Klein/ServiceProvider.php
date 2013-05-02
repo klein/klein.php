@@ -14,14 +14,14 @@ namespace Klein;
 use \Klein\DataCollection\DataCollection;
 
 /**
- * HttpServiceProvider 
+ * ServiceProvider 
  *
  * Service provider class for handling logic extending between
  * a request's data and a response's behavior
  * 
  * @package     Klein
  */
-class HttpServiceProvider
+class ServiceProvider
 {
 
     /**
@@ -103,7 +103,7 @@ class HttpServiceProvider
      * @param Request $request      Object containing all HTTP request data and behaviors
      * @param Response $response    Object containing all HTTP response data and behaviors
      * @access public
-     * @return HttpServiceProvider
+     * @return ServiceProvider
      */
     public function bind(Request $request = null, Response $response = null)
     {
@@ -301,7 +301,7 @@ class HttpServiceProvider
      * Redirects the request to the current URL
      *
      * @access public
-     * @return HttpServiceProvider
+     * @return ServiceProvider
      */
     public function refresh()
     {
@@ -316,7 +316,7 @@ class HttpServiceProvider
      * Redirects the request back to the referrer
      *
      * @access public
-     * @return HttpServiceProvider
+     * @return ServiceProvider
      */
     public function back()
     {
@@ -371,7 +371,7 @@ class HttpServiceProvider
      *
      * @param string $layout    The layout of the view
      * @access public
-     * @return string|HttpServiceProvider
+     * @return string|ServiceProvider
      */
     public function layout($layout = null)
     {
