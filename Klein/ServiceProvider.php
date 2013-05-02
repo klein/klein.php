@@ -228,8 +228,6 @@ class ServiceProvider
     /**
      * Escapes a string
      *
-     * @todo This is so generic, it might work better in a Utils class...
-     *
      * @param string $str   The string to escape
      * @static
      * @access public
