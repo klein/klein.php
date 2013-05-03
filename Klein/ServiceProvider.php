@@ -264,7 +264,6 @@ class ServiceProvider
      */
     public function file($path, $filename = null, $mimetype = null)
     {
-        $this->response->discard();
         $this->response->noCache();
 
         set_time_limit(1200);
@@ -293,7 +292,6 @@ class ServiceProvider
      */
     public function json($object, $jsonp_prefix = null)
     {
-        $this->response->discard(true);
         $this->response->noCache();
 
         set_time_limit(1200);

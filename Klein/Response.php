@@ -450,52 +450,6 @@ class Response
     }
 
     /**
-     * Discards the current output buffer and restarts it if passed a true boolean
-     *
-     * TODO: remove this
-     *
-     * @param boolean $restart_buffer   Whether or not to restart the output buffer after discarding it
-     * @access public
-     * @return void
-     */
-    public function discard($restart_buffer = false)
-    {
-        $cleaned = ob_end_clean();
-
-        if ($restart_buffer) {
-            ob_start();
-        }
-
-        return $cleaned;
-    }
-
-    /**
-     * Flushes the current output buffer
-     *
-     * TODO: remove this
-     *
-     * @access public
-     * @return void
-     */
-    public function flush()
-    {
-        ob_end_flush();
-    }
-
-    /**
-     * Return the current output buffer as a string
-     *
-     * TODO: remove this
-     *
-     * @access public
-     * @return string
-     */
-    public function buffer()
-    {
-        return ob_get_contents();
-    }
-
-    /**
      * Dump a variable
      *
      * @param mixed $obj    The variable to dump
