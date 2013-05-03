@@ -256,4 +256,70 @@ class ServiceProviderTest extends AbstractKleinTest
         $this->assertGreaterThan(299, $this->klein_app->response()->code());
         $this->assertLessThan(400, $this->klein_app->response()->code());
     }
+
+    public function testQueryModify()
+    {
+        $query_string = 'search=string&page=2&per_page=3';
+        $test_one = '';
+        $test_two = '';
+
+        $request = new Request();
+        $request->server()->set('QUERY_STRING', $query_string);
+
+        $this->klein_app->respond(
+            function ($request, $response, $service) use (&$test_one, &$test_two) {
+                // Add a new var
+                $test_one = $service->query('test', 'dog');
+
+                // Modify a current var
+                $test_two = $service->query('page', 7);
+            }
+        );
+
+        $this->klein_app->dispatch($request);
+
+        $this->assertSame(
+            $this->klein_app->request()->uri() . '?' . $query_string . '&test=dog',
+            $test_one
+        );
+
+        $this->assertSame(
+            $this->klein_app->request()->uri() . '?' . str_replace('page=2', 'page=7', $query_string),
+            $test_two
+        );
+    }
+
+    public function testLayoutGetSet()
+    {
+        $test_layout = 'boom!! :D';
+
+        $service = new ServiceProvider();
+
+        $this->assertEmpty($service->layout());
+
+        $service->layout($test_layout);
+
+        $this->assertSame($test_layout, $service->layout());
+    }
+
+    public function testRender()
+    {
+        $this->klein_app->respond(
+            function ($request, $response, $service) {
+                $service->sharedData()->set('name', 'trevor suarez');
+
+                $service->render(
+                    __DIR__.'/views/test.php',
+                    array('verb' => 'woot')
+                );
+            }
+        );
+
+        $this->klein_app->dispatch();
+
+        $this->expectOutputString(
+            'My name is Trevor Suarez.' . PHP_EOL
+            .'WOOT!' . PHP_EOL
+        );
+    }
 }

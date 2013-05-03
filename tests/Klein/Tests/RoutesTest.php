@@ -288,7 +288,7 @@ class RoutesTest extends AbstractKleinTest
             }
         );
 
-        $this->klein_app->dispatch();
+        $this->klein_app->dispatch(null, null, false);
 
         $this->assertTrue(is_callable($return_one));
         $this->assertTrue(is_callable($return_two));
