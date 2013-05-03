@@ -339,14 +339,19 @@ class Klein
      * Dispatch with optionally injected dependencies
      * This DI allows for easy testing, object mocking, or class extension
      *
-     * @param Request $request      The request object to give to each callback
-     * @param Response $response    The response object to give to each callback
-     * @param int $capture          Specify a DISPATCH_* constant to change the output capturing behavior
+     * @param Request $request          The request object to give to each callback
+     * @param Response $response        The response object to give to each callback
+     * @param boolean $send_response    Whether or not to "send" the response after the last route has been matched
+     * @param int $capture              Specify a DISPATCH_* constant to change the output capturing behavior
      * @access public
      * @return void|string
      */
-    public function dispatch(Request $request = null, Response $response = null, $capture = self::DISPATCH_NO_CAPTURE)
-    {
+    public function dispatch(
+        Request $request = null,
+        Response $response = null,
+        $send_response = true,
+        $capture = self::DISPATCH_NO_CAPTURE
+    ) {
         // Set/Initialize our objects to be sent in each callback
         $this->request = $request ?: Request::createFromGlobals();
         $this->response = $response ?: new Response();
@@ -557,7 +562,7 @@ class Klein
         // Test for HEAD request (like GET)
         if (strcasecmp($req_method, 'HEAD') === 0) {
             // HEAD requests shouldn't return a body
-            return ob_clean();
+            ob_clean();
 
         } elseif ($this->response->chunked) {
             $this->response->chunk();
@@ -582,6 +587,10 @@ class Klein
                     ob_end_flush();
                     break;
             }
+        }
+
+        if ($send_response) {
+            $this->response->send();
         }
     }
 

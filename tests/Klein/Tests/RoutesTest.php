@@ -99,16 +99,10 @@ class RoutesTest extends AbstractKleinTest
     public function testDispatchOutput()
     {
         $expectedOutput = array(
-            'echoed' => 'echo!',
             'returned1' => 'alright!',
             'returned2' => 'woot!',
         );
 
-        $this->klein_app->respond(
-            function () use ($expectedOutput) {
-                echo $expectedOutput['echoed'];
-            }
-        );
         $this->klein_app->respond(
             function () use ($expectedOutput) {
                 return $expectedOutput['returned1'];
@@ -124,12 +118,30 @@ class RoutesTest extends AbstractKleinTest
 
         // Expect our output to match our ECHO'd output
         $this->expectOutputString(
-            $expectedOutput['echoed']
+            $expectedOutput['returned1'] . $expectedOutput['returned2']
         );
 
         // Make sure our response body matches the concatenation of what we returned in each callback
         $this->assertSame(
             $expectedOutput['returned1'] . $expectedOutput['returned2'],
+            $this->klein_app->response()->body()
+        );
+    }
+
+    public function testDispatchOutputNotSent()
+    {
+        $this->klein_app->respond(
+            function () {
+                return 'test output';
+            }
+        );
+
+        $this->klein_app->dispatch(null, null, false);
+
+        $this->expectOutputString('');
+
+        $this->assertSame(
+            'test output',
             $this->klein_app->response()->body()
         );
     }
@@ -152,10 +164,10 @@ class RoutesTest extends AbstractKleinTest
             }
         );
 
-        $output = $this->klein_app->dispatch(null, null, Klein::DISPATCH_CAPTURE_AND_RETURN);
+        $output = $this->klein_app->dispatch(null, null, true, Klein::DISPATCH_CAPTURE_AND_RETURN);
 
         // Make sure nothing actually printed to the screen
-        $this->expectOutputString(null);
+        $this->expectOutputString('');
 
         // Make sure our returned output matches what we ECHO'd
         $this->assertSame($expectedOutput['echoed'], $output);
@@ -182,10 +194,10 @@ class RoutesTest extends AbstractKleinTest
             }
         );
 
-        $this->klein_app->dispatch(null, null, Klein::DISPATCH_CAPTURE_AND_REPLACE);
+        $this->klein_app->dispatch(null, null, false, Klein::DISPATCH_CAPTURE_AND_REPLACE);
 
         // Make sure nothing actually printed to the screen
-        $this->expectOutputString(null);
+        $this->expectOutputString('');
 
         // Make sure our response body matches what we echoed
         $this->assertSame($expectedOutput['echoed'], $this->klein_app->response()->body());
@@ -215,10 +227,10 @@ class RoutesTest extends AbstractKleinTest
             }
         );
 
-        $this->klein_app->dispatch(null, null, Klein::DISPATCH_CAPTURE_AND_PREPEND);
+        $this->klein_app->dispatch(null, null, false, Klein::DISPATCH_CAPTURE_AND_PREPEND);
 
         // Make sure nothing actually printed to the screen
-        $this->expectOutputString(null);
+        $this->expectOutputString('');
 
         // Make sure our response body matches what we echoed
         $this->assertSame(
@@ -251,10 +263,10 @@ class RoutesTest extends AbstractKleinTest
             }
         );
 
-        $this->klein_app->dispatch(null, null, Klein::DISPATCH_CAPTURE_AND_APPEND);
+        $this->klein_app->dispatch(null, null, false, Klein::DISPATCH_CAPTURE_AND_APPEND);
 
         // Make sure nothing actually printed to the screen
-        $this->expectOutputString(null);
+        $this->expectOutputString('');
 
         // Make sure our response body matches what we echoed
         $this->assertSame(
