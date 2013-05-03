@@ -439,4 +439,31 @@ class ServiceProviderTest extends AbstractKleinTest
 
         $this->klein_app->dispatch();
     }
+
+    // Test ALL of the magic setter, getter, exists, and removal methods
+    public function testMagicGetSetExistsRemove()
+    {
+        $test_data = array(
+            'name' => 'huh?',
+        );
+
+        $service = new ServiceProvider();
+
+        $this->assertEmpty($service->sharedData()->all());
+        $this->assertNull($service->sharedData()->get('test_data'));
+        $this->assertNull($service->name);
+        $this->assertFalse(isset($service->name));
+
+        $service->name = $test_data['name'];
+
+        $this->assertTrue(isset($service->name));
+        $this->assertSame($test_data['name'], $service->name);
+
+        unset($service->name);
+
+        $this->assertEmpty($service->sharedData()->all());
+        $this->assertNull($service->sharedData()->get('test_data'));
+        $this->assertNull($service->name);
+        $this->assertFalse(isset($service->name));
+    }
 }

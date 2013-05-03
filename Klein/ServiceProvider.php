@@ -498,4 +498,66 @@ class ServiceProvider
     {
         return $this->validate($this->request->param($param), $err);
     }
+
+
+    /**
+     * Magic "__isset" method
+     *
+     * Allows the ability to arbitrarily check the existence of shared data
+     * from this instance while treating it as an instance property
+     *
+     * @param string $key     The name of the shared data
+     * @access public
+     * @return boolean
+     */
+    public function __isset($key)
+    {
+        return $this->shared_data->exists($key);
+    }
+
+    /**
+     * Magic "__get" method
+     *
+     * Allows the ability to arbitrarily request shared data from this instance
+     * while treating it as an instance property
+     *
+     * @param string $key     The name of the shared data
+     * @access public
+     * @return string
+     */
+    public function __get($key)
+    {
+        return $this->shared_data->get($key);
+    }
+
+    /**
+     * Magic "__set" method
+     *
+     * Allows the ability to arbitrarily set shared data from this instance
+     * while treating it as an instance property
+     *
+     * @param string $key     The name of the shared data
+     * @param mixed $value      The value of the shared data
+     * @access public
+     * @return void
+     */
+    public function __set($key, $value)
+    {
+        $this->shared_data->set($key, $value);
+    }
+
+    /**
+     * Magic "__unset" method
+     *
+     * Allows the ability to arbitrarily remove shared data from this instance
+     * while treating it as an instance property
+     *
+     * @param string $key     The name of the shared data
+     * @access public
+     * @return void
+     */
+    public function __unset($key)
+    {
+        $this->shared_data->remove($key);
+    }
 }
