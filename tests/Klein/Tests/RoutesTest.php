@@ -152,7 +152,7 @@ class RoutesTest extends AbstractKleinTest
             }
         );
 
-        $output = $this->klein_app->dispatch(null, null, true);
+        $output = $this->klein_app->dispatch(null, null, Klein::DISPATCH_CAPTURE_AND_RETURN);
 
         // Make sure nothing actually printed to the screen
         $this->expectOutputString(null);
@@ -162,6 +162,105 @@ class RoutesTest extends AbstractKleinTest
 
         // Make sure our response body matches what we returned
         $this->assertSame($expectedOutput['returned'], $this->klein_app->response()->body());
+    }
+
+    public function testDispatchOutputReplaced()
+    {
+        $expectedOutput = array(
+            'echoed' => 'yup',
+            'returned' => 'nope',
+        );
+
+        $this->klein_app->respond(
+            function () use ($expectedOutput) {
+                echo $expectedOutput['echoed'];
+            }
+        );
+        $this->klein_app->respond(
+            function () use ($expectedOutput) {
+                return $expectedOutput['returned'];
+            }
+        );
+
+        $this->klein_app->dispatch(null, null, Klein::DISPATCH_CAPTURE_AND_REPLACE);
+
+        // Make sure nothing actually printed to the screen
+        $this->expectOutputString(null);
+
+        // Make sure our response body matches what we echoed
+        $this->assertSame($expectedOutput['echoed'], $this->klein_app->response()->body());
+    }
+
+    public function testDispatchOutputPrepended()
+    {
+        $expectedOutput = array(
+            'echoed' => 'yup',
+            'returned' => 'nope',
+            'echoed2' => 'sure',
+        );
+
+        $this->klein_app->respond(
+            function () use ($expectedOutput) {
+                echo $expectedOutput['echoed'];
+            }
+        );
+        $this->klein_app->respond(
+            function () use ($expectedOutput) {
+                return $expectedOutput['returned'];
+            }
+        );
+        $this->klein_app->respond(
+            function () use ($expectedOutput) {
+                echo $expectedOutput['echoed2'];
+            }
+        );
+
+        $this->klein_app->dispatch(null, null, Klein::DISPATCH_CAPTURE_AND_PREPEND);
+
+        // Make sure nothing actually printed to the screen
+        $this->expectOutputString(null);
+
+        // Make sure our response body matches what we echoed
+        $this->assertSame(
+            $expectedOutput['echoed'] . $expectedOutput['echoed2'] . $expectedOutput['returned'],
+            $this->klein_app->response()->body()
+        );
+    }
+
+    public function testDispatchOutputAppended()
+    {
+        $expectedOutput = array(
+            'echoed' => 'yup',
+            'returned' => 'nope',
+            'echoed2' => 'sure',
+        );
+
+        $this->klein_app->respond(
+            function () use ($expectedOutput) {
+                echo $expectedOutput['echoed'];
+            }
+        );
+        $this->klein_app->respond(
+            function () use ($expectedOutput) {
+                return $expectedOutput['returned'];
+            }
+        );
+        $this->klein_app->respond(
+            function () use ($expectedOutput) {
+                echo $expectedOutput['echoed2'];
+            }
+        );
+
+        $this->klein_app->dispatch(null, null, Klein::DISPATCH_CAPTURE_AND_APPEND);
+
+        // Make sure nothing actually printed to the screen
+        $this->expectOutputString(null);
+
+        // Make sure our response body matches what we echoed
+        $this->assertSame(
+            $expectedOutput['returned'] . $expectedOutput['echoed'] . $expectedOutput['echoed2'],
+            $this->klein_app->response()->body()
+        );
     }
 
     public function testRespondReturn()

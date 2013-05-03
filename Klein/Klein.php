@@ -28,6 +28,56 @@ class Klein
      */
 
     /**
+     * Dispatch route output handling
+     *
+     * Don't capture anything. Behave as normal.
+     *
+     * @const int
+     */
+    const DISPATCH_NO_CAPTURE = 0;
+
+    /**
+     * Dispatch route output handling
+     *
+     * Capture all output and return it from dispatch
+     *
+     * @const int
+     */
+    const DISPATCH_CAPTURE_AND_RETURN = 1;
+
+    /**
+     * Dispatch route output handling
+     *
+     * Capture all output and replace the response body with it
+     *
+     * @const int
+     */
+    const DISPATCH_CAPTURE_AND_REPLACE = 2;
+
+    /**
+     * Dispatch route output handling
+     *
+     * Capture all output and prepend it to the response body
+     *
+     * @const int
+     */
+    const DISPATCH_CAPTURE_AND_PREPEND = 3;
+
+    /**
+     * Dispatch route output handling
+     *
+     * Capture all output and append it to the response body
+     *
+     * @const int
+     */
+    const DISPATCH_CAPTURE_AND_APPEND = 4;
+
+
+    /**
+     * Class properties
+     */
+
+    /**
      * Array of the routes to match on dispatch
      *
      * @var array
@@ -291,11 +341,11 @@ class Klein
      *
      * @param Request $request      The request object to give to each callback
      * @param Response $response    The response object to give to each callback
-     * @param boolean $capture      Whether or not to capture the output from each response callback
+     * @param int $capture          Specify a DISPATCH_* constant to change the output capturing behavior
      * @access public
-     * @return void
+     * @return void|string
      */
-    public function dispatch(Request $request = null, Response $response = null, $capture = false)
+    public function dispatch(Request $request = null, Response $response = null, $capture = self::DISPATCH_NO_CAPTURE)
     {
         // Set/Initialize our objects to be sent in each callback
         $this->request = $request ?: Request::createFromGlobals();
@@ -509,14 +559,29 @@ class Klein
             // HEAD requests shouldn't return a body
             return ob_clean();
 
-        } elseif ($capture) {
-            return ob_get_clean();
-
         } elseif ($this->response->chunked) {
             $this->response->chunk();
 
         } else {
-            ob_end_flush();
+            // Output capturing behavior
+            switch($capture) {
+                case self::DISPATCH_CAPTURE_AND_RETURN:
+                    return ob_get_clean();
+                    break;
+                case self::DISPATCH_CAPTURE_AND_REPLACE:
+                    $this->response->body(ob_get_clean());
+                    break;
+                case self::DISPATCH_CAPTURE_AND_PREPEND:
+                    $this->response->prepend(ob_get_clean());
+                    break;
+                case self::DISPATCH_CAPTURE_AND_APPEND:
+                    $this->response->append(ob_get_clean());
+                    break;
+                case self::DISPATCH_NO_CAPTURE:
+                default:
+                    ob_end_flush();
+                    break;
+            }
         }
     }
 
