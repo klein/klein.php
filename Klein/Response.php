@@ -480,39 +480,4 @@ class Response
 
         $this->append('<pre>' .  htmlentities($obj, ENT_QUOTES) . "</pre><br />\n");
     }
-
-    /**
-     * Magic "__call" method
-     *
-     * TODO: remove this
-     *
-     * Allows the ability to arbitrarily call a property as a callable method
-     * Allow callbacks to be assigned as properties and called like normal methods
-     *
-     * @param callable $method  The callable method to execute
-     * @param array $args       The argument array to pass to our callback
-     * @access public
-     * @return void
-     */
-    public function __call($method, $args)
-    {
-        if (!isset($this->$method) || !is_callable($this->$method)) {
-            throw new ErrorException("Unknown method $method()");
-        }
-
-        $callback = $this->$method;
-
-        switch (count($args)) {
-            case 1:
-                return $callback($args[0]);
-            case 2:
-                return $callback($args[0], $args[1]);
-            case 3:
-                return $callback($args[0], $args[1], $args[2]);
-            case 4:
-                return $callback($args[0], $args[1], $args[2], $args[3]);
-            default:
-                return call_user_func_array($callback, $args);
-        }
-    }
 }

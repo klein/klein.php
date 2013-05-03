@@ -160,6 +160,28 @@ class Request
     }
 
     /**
+     * Gets a unique ID for the request
+     *
+     * Generates one on the first call
+     *
+     * @param boolean $hash     Whether or not to hash the ID on creation
+     * @access public
+     * @return string
+     */
+    public function id($hash = true)
+    {
+        if (is_null($this->id)) {
+            $this->id = uniqid();
+
+            if ($hash) {
+                $this->id = sha1($this->id);
+            }
+        }
+
+        return $this->id;
+    }
+
+    /**
      * Returns the GET parameters collection
      *
      * @access public
@@ -234,6 +256,22 @@ class Request
     public function files()
     {
         return $this->files;
+    }
+
+    /**
+     * Gets the request body
+     *
+     * @access public
+     * @return string
+     */
+    public function body()
+    {
+        // Only get it once
+        if (is_null($this->body)) {
+            $this->body = @file_get_contents('php://input');
+        }
+
+        return $this->body;
     }
 
     /**
@@ -394,22 +432,6 @@ class Request
     }
 
     /**
-     * Gets the request body
-     *
-     * @access public
-     * @return string
-     */
-    public function body()
-    {
-        // Only get it once
-        if (is_null($this->body)) {
-            $this->body = @file_get_contents('php://input');
-        }
-
-        return $this->body;
-    }
-
-    /**
      * Gets the request method, or checks it against $is
      *
      * <code>
@@ -446,27 +468,5 @@ class Request
         }
 
         return $method;
-    }
-
-    /**
-     * Gets a unique ID for the request
-     *
-     * Generates one on the first call
-     *
-     * @param boolean $hash     Whether or not to hash the ID on creation
-     * @access public
-     * @return string
-     */
-    public function id($hash = true)
-    {
-        if (is_null($this->id)) {
-            $this->id = uniqid();
-
-            if ($hash) {
-                $this->id = sha1($this->id);
-            }
-        }
-
-        return $this->id;
     }
 }
