@@ -118,4 +118,13 @@ class ServiceProviderTest extends AbstractKleinTest
             ServiceProvider::escape('Hèèèllo! A&W root beer is now 20% off!!')
         );
     }
+
+    public function testCallServiceThroughKlein()
+    {
+        // Make sure the calls are the same
+        $this->assertSame(
+            $this->klein_app->sharedData(),
+            $this->klein_app->service()->sharedData()
+        );
+    }
 }

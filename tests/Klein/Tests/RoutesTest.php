@@ -74,19 +74,19 @@ class RoutesTest extends AbstractKleinTest
 
         $this->klein_app->respond(
             '/',
-            function ($r, $r, $a) {
+            function ($r, $r, $s, $a) {
                 $a->state = 'a';
             }
         );
         $this->klein_app->respond(
             '/',
-            function ($r, $r, $a) {
+            function ($r, $r, $s, $a) {
                 $a->state .= 'b';
             }
         );
         $this->klein_app->respond(
             '/',
-            function ($r, $r, $a) {
+            function ($r, $r, $s, $a) {
                 print $a->state;
             }
         );
