@@ -559,12 +559,7 @@ class Klein
             $this->response->code(404);
         }
 
-        // Test for HEAD request (like GET)
-        if (strcasecmp($req_method, 'HEAD') === 0) {
-            // HEAD requests shouldn't return a body
-            ob_clean();
-
-        } elseif ($this->response->chunked) {
+        if ($this->response->chunked) {
             $this->response->chunk();
 
         } else {
@@ -587,6 +582,13 @@ class Klein
                     ob_end_flush();
                     break;
             }
+        }
+
+        // Test for HEAD request (like GET)
+        if (strcasecmp($req_method, 'HEAD') === 0) {
+            // HEAD requests shouldn't return a body
+            $this->response->body('');
+            ob_clean();
         }
 
         if ($send_response) {

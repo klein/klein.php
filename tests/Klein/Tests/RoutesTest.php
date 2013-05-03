@@ -1173,6 +1173,7 @@ class RoutesTest extends AbstractKleinTest
             '/',
             function () {
                 echo 'GET!';
+                return 'more text';
             }
         );
         $this->klein_app->respond(
