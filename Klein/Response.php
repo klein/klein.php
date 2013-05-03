@@ -78,6 +78,14 @@ class Response
     protected $locked = false;
 
     /**
+     * Whether or not the response has been sent
+     *
+     * @var boolean
+     * @access protected
+     */
+    protected $sent = false;
+
+    /**
      * Whether the response has been chunked or not
      *
      * @var boolean
@@ -289,7 +297,7 @@ class Response
     /**
      * Send our HTTP headers
      *
-     * @param mixed $override   Whether or not to override the check if headers have already been sent
+     * @param boolean $override     Whether or not to override the check if headers have already been sent
      * @access public
      * @return Response
      */
@@ -326,17 +334,25 @@ class Response
     /**
      * Send the response and lock it
      *
+     * @param boolean $override     Whether or not to override the check if the response has already been sent
      * @access public
      * @return Response
      */
-    public function send()
+    public function send($override = false)
     {
+        if ($this->sent && !$override) {
+            return $this;
+        }
+
         // Send our response data
         $this->sendHeaders();
         $this->sendBody();
 
         // Lock the response from further modification
         $this->lock();
+
+        // Mark as sent
+        $this->sent = true;
 
         // If there running FPM, tell the process manager to finish the server request/response handling
         if (function_exists('fastcgi_finish_request')) {

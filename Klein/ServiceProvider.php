@@ -264,6 +264,7 @@ class ServiceProvider
      */
     public function file($path, $filename = null, $mimetype = null)
     {
+        $this->response->body('');
         $this->response->noCache();
 
         set_time_limit(1200);
@@ -279,6 +280,8 @@ class ServiceProvider
         $this->response->header('Content-length: ' . filesize($path));
         $this->response->header('Content-Disposition', 'attachment; filename="'.$filename.'"');
 
+        $this->response->send();
+
         readfile($path);
     }
 
@@ -292,6 +295,7 @@ class ServiceProvider
      */
     public function json($object, $jsonp_prefix = null)
     {
+        $this->response->body('');
         $this->response->noCache();
 
         set_time_limit(1200);
@@ -301,11 +305,13 @@ class ServiceProvider
         if (null !== $jsonp_prefix) {
             // Should ideally be application/json-p once adopted
             $this->response->header('Content-Type', 'text/javascript');
-            echo "$jsonp_prefix($json);";
+            $this->response->body("$jsonp_prefix($json);");
         } else {
             $this->response->header('Content-Type', 'application/json');
-            echo $json;
+            $this->response->body($json);
         }
+
+        $this->response->send();
     }
 
     /**
