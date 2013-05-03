@@ -338,4 +338,34 @@ class ServiceProviderTest extends AbstractKleinTest
             .'<div>footer</div>' . PHP_EOL
         );
     }
+
+    public function testPartial()
+    {
+        $test_data = array(
+            'name' => 'trevor suarez',
+            'title' => 'about',
+            'verb' => 'woot',
+        );
+ 
+        $this->klein_app->respond(
+            function ($request, $response, $service) use ($test_data) {
+                // Set our layout
+                $service->layout(__DIR__.'/views/layout.php');
+
+                // Render our view, and pass some MORE data
+                $service->partial(
+                    __DIR__.'/views/test.php',
+                    $test_data
+                );
+            }
+        );
+
+        $this->klein_app->dispatch();
+
+        // Make sure the layout doesn't get included
+        $this->expectOutputString(
+            'My name is Trevor Suarez.' . PHP_EOL
+            .'WOOT!' . PHP_EOL
+        );
+    }
 }
