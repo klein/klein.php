@@ -682,8 +682,8 @@ class Klein
                 }
             }
         } else {
-            $this->code(500);
-            throw new ErrorException($err);
+            $this->response->code(500);
+            throw new \ErrorException($err);
         }
     }
 
