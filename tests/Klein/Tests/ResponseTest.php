@@ -191,21 +191,24 @@ class ResponsesTest extends AbstractKleinTest
     public function testChunk()
     {
         $content = array(
+            'initial content',
             'more',
             'content',
         );
 
-        $response = new Response('initialll');
+        $response = new Response($content[0]);
 
         $response->chunk();
-        $response->chunk($content[0]);
         $response->chunk($content[1]);
+        $response->chunk($content[2]);
 
         $this->expectOutputString(
-            strlen($content[0])."\r\n"
+            dechex(strlen($content[0]))."\r\n"
             ."$content[0]\r\n"
-            .strlen($content[1])."\r\n"
+            .dechex(strlen($content[1]))."\r\n"
             ."$content[1]\r\n"
+            .dechex(strlen($content[2]))."\r\n"
+            ."$content[2]\r\n"
         );
     }
 

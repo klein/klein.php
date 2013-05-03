@@ -362,13 +362,15 @@ class Response
             $this->header('Transfer-encoding', 'chunked');
             flush();
         }
+
         if (null !== $str) {
             printf("%x\r\n", strlen($str));
             echo "$str\r\n";
             flush();
-        } elseif (($ob_length = ob_get_length()) > 0) {
+        } elseif (($ob_length = strlen($this->body)) > 0) {
             printf("%x\r\n", $ob_length);
-            ob_flush();
+            $this->sendBody();
+            $this->body('');
             echo "\r\n";
             flush();
         }
