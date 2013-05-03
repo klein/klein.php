@@ -276,8 +276,8 @@ class ServiceProvider
             $mimetype = finfo_file(finfo_open(FILEINFO_MIME_TYPE), $path);
         }
 
-        $this->response->header('Content-type: ' . $mimetype);
-        $this->response->header('Content-length: ' . filesize($path));
+        $this->response->header('Content-type', $mimetype);
+        $this->response->header('Content-length', filesize($path));
         $this->response->header('Content-Disposition', 'attachment; filename="'.$filename.'"');
 
         $this->response->send();
@@ -340,7 +340,7 @@ class ServiceProvider
         $referer = $this->request->server()->get('HTTP_REFERER');
 
         if (null !== $referer) {
-            $this->response->redirect($referer);
+            return $this->response->redirect($referer);
         }
 
         $this->refresh();
