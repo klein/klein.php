@@ -15,6 +15,7 @@ namespace Klein\Tests;
 use \Klein\Klein;
 use \Klein\Request;
 use \Klein\Response;
+use \Klein\Validator;
 use \Klein\ServiceProvider;
 use \Klein\DataCollection\DataCollection;
 
@@ -376,5 +377,66 @@ class ServiceProviderTest extends AbstractKleinTest
             'My name is Trevor Suarez.' . PHP_EOL
             .'WOOT!' . PHP_EOL
         );
+    }
+
+    public function testAddValidator()
+    {
+        $service = new ServiceProvider();
+
+        // Initially empty
+        $this->assertEmpty(Validator::$methods);
+
+        $test_callback = function () {
+            echo 'test';
+        };
+
+        $service->addValidator('awesome', $test_callback);
+
+        $this->assertNotEmpty(Validator::$methods);
+        $this->assertArrayHasKey('awesome', Validator::$methods);
+        $this->assertContains($test_callback, Validator::$methods);
+    }
+
+    /**
+     * @expectedException \Klein\Exceptions\ValidatorException
+     */
+    public function testValidate()
+    {
+        $this->klein_app->onError(
+            function ($a, $b, $c, $exception) {
+                throw $exception;
+            }
+        );
+
+        $this->klein_app->respond(
+            function ($request, $response, $service) {
+                $service->validate('thing')->isLen(3);
+            }
+        );
+
+        $this->klein_app->dispatch();
+    }
+
+    /**
+     * @expectedException \Klein\Exceptions\ValidatorException
+     */
+    public function testValidateParam()
+    {
+        $this->klein_app->onError(
+            function ($a, $b, $c, $exception) {
+                throw $exception;
+            }
+        );
+
+        $this->klein_app->respond(
+            function ($request, $response, $service) {
+                // Set a test param
+                $request->paramsNamed()->set('name', 'trevor');
+
+                $service->validateParam('name')->notNull()->isLen(3);
+            }
+        );
+
+        $this->klein_app->dispatch();
     }
 }
