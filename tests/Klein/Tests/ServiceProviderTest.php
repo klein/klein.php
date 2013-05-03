@@ -262,17 +262,21 @@ class ServiceProviderTest extends AbstractKleinTest
         $query_string = 'search=string&page=2&per_page=3';
         $test_one = '';
         $test_two = '';
+        $test_three = '';
 
         $request = new Request();
         $request->server()->set('QUERY_STRING', $query_string);
 
         $this->klein_app->respond(
-            function ($request, $response, $service) use (&$test_one, &$test_two) {
+            function ($request, $response, $service) use (&$test_one, &$test_two, &$test_three) {
                 // Add a new var
                 $test_one = $service->query('test', 'dog');
 
                 // Modify a current var
                 $test_two = $service->query('page', 7);
+
+                // Modify a current var
+                $test_three = $service->query(array('per_page' => 10));
             }
         );
 
@@ -286,6 +290,11 @@ class ServiceProviderTest extends AbstractKleinTest
         $this->assertSame(
             $this->klein_app->request()->uri() . '?' . str_replace('page=2', 'page=7', $query_string),
             $test_two
+        );
+
+        $this->assertSame(
+            $this->klein_app->request()->uri() . '?' . str_replace('per_page=3', 'per_page=10', $query_string),
+            $test_three
         );
     }
 
