@@ -367,8 +367,8 @@ class Response
             printf("%x\r\n", strlen($str));
             echo "$str\r\n";
             flush();
-        } elseif (($ob_length = strlen($this->body)) > 0) {
-            printf("%x\r\n", $ob_length);
+        } elseif (($body_length = strlen($this->body)) > 0) {
+            printf("%x\r\n", $body_length);
             $this->sendBody();
             $this->body('');
             echo "\r\n";
