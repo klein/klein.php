@@ -155,9 +155,20 @@ class ResponsesTest extends AbstractKleinTest
         $this->assertSame($code, $response->code());
     }
 
-    // TODO: How can we test this?
+    /**
+     * Testing headers is a pain in the ass. ;)
+     *
+     * Technically... we can't. So, yea.
+     */
     public function testSendHeaders()
     {
+        $response = new Response('woot!');
+        $response->headers()->set('test', 'sure');
+        $response->headers()->set('Authorization', 'Basic asdasd');
+
+        $response->sendHeaders();
+
+        $this->expectOutputString(null);
     }
 
     public function testSendBody()
