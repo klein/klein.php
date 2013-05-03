@@ -302,15 +302,29 @@ class ServiceProviderTest extends AbstractKleinTest
         $this->assertSame($test_layout, $service->layout());
     }
 
+    /**
+     * NOTE: Also tests "yield()"
+     */
     public function testRender()
     {
+        $test_data = array(
+            'name' => 'trevor suarez',
+            'title' => 'about',
+            'verb' => 'woot',
+        );
+ 
         $this->klein_app->respond(
-            function ($request, $response, $service) {
-                $service->sharedData()->set('name', 'trevor suarez');
+            function ($request, $response, $service) use ($test_data) {
+                // Set some data manually
+                $service->sharedData()->set('name', 'should be overwritten');
 
+                // Set our layout
+                $service->layout(__DIR__.'/views/layout.php');
+
+                // Render our view, and pass some MORE data
                 $service->render(
                     __DIR__.'/views/test.php',
-                    array('verb' => 'woot')
+                    $test_data
                 );
             }
         );
@@ -318,8 +332,10 @@ class ServiceProviderTest extends AbstractKleinTest
         $this->klein_app->dispatch();
 
         $this->expectOutputString(
-            'My name is Trevor Suarez.' . PHP_EOL
+            '<h1>About</h1>' . PHP_EOL
+            .'My name is Trevor Suarez.' . PHP_EOL
             .'WOOT!' . PHP_EOL
+            .'<div>footer</div>' . PHP_EOL
         );
     }
 }
