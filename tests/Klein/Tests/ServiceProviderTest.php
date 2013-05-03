@@ -77,12 +77,45 @@ class ServiceProviderTest extends AbstractKleinTest
         $this->assertTrue($service->sharedData() instanceof DataCollection);
     }
 
+
+    /*
+     * TODO: Missing all of the "session" tests
+     * (not quite sure how to do that yet..)
+     */
+
+
     public function testMarkdownParser()
     {
-        // TODO
-        $this->markTestIncomplete('TODO: More needed here...');
-        $markdown = ServiceProvider::markdown('**dog** and *cat*', 'huh');
+        // Test basic markdown conversion
+        $this->assertSame(
+            '<strong>dog</strong> <em>cat</em> <a href="src">name</a>',
+            ServiceProvider::markdown('**dog** *cat* [name](src)')
+        );
 
-        $this->assertNotNull($markdown);
+        // Test array arguments
+        $this->assertSame(
+            '<strong>huh</strong> <em>12</em> <strong>CD</strong>',
+            ServiceProvider::markdown('**%s** *%d* **%X**', array('huh', '12', 205))
+        );
+
+        // Test variable number of arguments
+        $this->assertSame(
+            '<strong>huh</strong> <em>12</em> <strong>CD</strong>',
+            ServiceProvider::markdown('**%s** *%d* **%X**', 'huh', '12', 205)
+        );
+
+        // Test second array argument overrides other arguments
+        $this->assertSame(
+            '<strong>huh</strong> <em>12</em> <strong>CD</strong>',
+            ServiceProvider::markdown('**%s** *%d* **%X**', array('huh', '12', 205), 'dog', 'cheese')
+        );
+    }
+
+    public function testEscapeCharacters()
+    {
+        $this->assertSame(
+            'H&egrave;&egrave;&egrave;llo! A&amp;W root beer is now 20% off!!',
+            ServiceProvider::escape('Hèèèllo! A&W root beer is now 20% off!!')
+        );
     }
 }

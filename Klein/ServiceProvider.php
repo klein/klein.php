@@ -201,27 +201,42 @@ class ServiceProvider
      *
      * Supports basic markdown syntax
      *
+     * Also, this method takes in EITHER an array of optional arguments (as the second parameter)
+     * ... OR this method will simply take a variable number of arguments (after the initial str arg)
+     *
      * @param string $str   The text string to parse
      * @param array $args   Optional arguments to be parsed by markdown
+     * @param mixed $...    Optional number of params...
      * @static
      * @access public
      * @return string
      */
     public static function markdown($str, $args = null)
     {
-        $args = func_get_args();
+        // Create our markdown parse/conversion regex's
         $md = array(
             '/\[([^\]]++)\]\(([^\)]++)\)/' => '<a href="$2">$1</a>',
             '/\*\*([^\*]++)\*\*/'          => '<strong>$1</strong>',
             '/\*([^\*]++)\*/'              => '<em>$1</em>'
         );
-        $str = array_shift($args);
-        if (is_array($args[0])) {
+
+        // Let's make our arguments more "magical"
+        $args = func_get_args(); // Grab all of our passed args
+        $str = array_shift($args); // Remove the initial arg from the array (and set the $str to it)
+        if (isset($args[0]) && is_array($args[0])) {
+            /**
+             * If our "second" argument (now the first array item is an array)
+             * just use the array as the arguments and forget the rest
+             */
             $args = $args[0];
         }
+
+        // Encode our args so we can insert them into an HTML string
         foreach ($args as &$arg) {
             $arg = htmlentities($arg, ENT_QUOTES);
         }
+
+        // Actually do our markdown conversion
         return vsprintf(preg_replace(array_keys($md), $md, $str), $args);
     }
 
