@@ -13,6 +13,8 @@ namespace Klein;
 
 use \Exception;
 
+use \Klein\Exceptions\UnhandledException;
+
 /**
  * Klein
  *
@@ -683,7 +685,7 @@ class Klein
             }
         } else {
             $this->response->code(500);
-            throw new \ErrorException($err);
+            throw new UnhandledException($err);
         }
     }
 
