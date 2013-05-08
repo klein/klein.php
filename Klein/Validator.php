@@ -13,7 +13,7 @@ namespace Klein;
 
 use \ErrorException;
 
-use \Klein\Exceptions\ValidatorException;
+use \Klein\Exceptions\ValidationException;
 
 /**
  * Validator 
@@ -200,7 +200,7 @@ class Validator
         if (false === $this->err) {
             return $result;
         } elseif (false === $result) {
-            throw new ValidatorException($this->err);
+            throw new ValidationException($this->err);
         }
         return $this;
     }

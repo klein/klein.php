@@ -11,14 +11,16 @@
 
 namespace Klein\Exceptions;
 
-use \Exception;
+use \UnexpectedValueException;
 
 /**
- * ValidatorException 
+ * ValidationException 
+ *
+ * Exception used for Validation errors
  * 
  * @uses       Exception
- * @package    Klein
+ * @package    Klein\Exceptions
  */
-class ValidatorException extends Exception
+class ValidationException extends UnexpectedValueException implements KleinExceptionInterface
 {
 }

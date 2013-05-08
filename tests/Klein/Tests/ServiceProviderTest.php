@@ -398,7 +398,7 @@ class ServiceProviderTest extends AbstractKleinTest
     }
 
     /**
-     * @expectedException \Klein\Exceptions\ValidatorException
+     * @expectedException \Klein\Exceptions\ValidationException
      */
     public function testValidate()
     {
@@ -418,7 +418,7 @@ class ServiceProviderTest extends AbstractKleinTest
     }
 
     /**
-     * @expectedException \Klein\Exceptions\ValidatorException
+     * @expectedException \Klein\Exceptions\ValidationException
      */
     public function testValidateParam()
     {
