@@ -299,54 +299,68 @@ echo $this->query(array('page' => 2))   // Modify the current query string
 
 ```php
 $request->
-    header($key, $default = null)       // Get a request header
-    cookie($key, $default = null)       // Get a cookie from the request
-    session($key, $default = null)      // Get a session variable
-    param($key, $default = null)        // Get a request parameter (get, post, named)
+    id($hash = true)                    // Get a unique ID for the request
+    paramsGet()                         // Return the GET parameter collection
+    paramsPost()                        // Return the POST parameter collection
+    paramsNamed()                       // Return the named parameter collection
+    cookies()                           // Return the cookies collection
+    server()                            // Return the server collection
+    headers()                           // Return the headers collection
+    files()                             // Return the files collection
+    body()                              // Get the request body
     params()                            // Return all parameters
     params($mask = null)                // Return all parameters that match the mask array - extract() friendly
-    validate($param, $err_msg = null)   // Start a validator chain
-    method()                            // Get the request method
-    method($method)                     // Check if the request method is $method, i.e. method('post') => true
-    isSecure($required = false)         // https? Redirect if $required is true and the request is not secure
-    id()                                // Get a unique ID for the request
+    param($key, $default = null)        // Get a request parameter (get, post, named)
+    isSecure()                          // Was the request sent via HTTPS?
     ip()                                // Get the request IP
     userAgent()                         // Get the request user agent
     uri()                               // Get the request URI
-    <param>                             // Get / Set (if assigned a value)a request parameter
+    method()                            // Get the request method
+    method($method)                     // Check if the request method is $method, i.e. method('post') => true
+    <param>                             // Get / Set (if assigned a value) a request parameter
 
 $response->
+    protocolVersion($protocol_version = null)       // Get the protocol version, or set it to the passed value
+    body($body = null)                              // Get the response body's content, or set it to the passed value
+    status()                                        // Get the response's status object
+    headers()                                       // Return the headers collection
+    code($code = null)                              // Return the HTTP response code, or set it to the passed value
+    prepend($content)                               // Prepend a string to the response body
+    append($content)                                // Append a string to the response body
+    isLocked()                                      // Check if the response is locked
+    lock()                                          // Lock the response from further modification
+    unlock()                                        // Unlock the response
+    sendHeaders($override = false)                  // Send the HTTP response headers
+    sendBody()                                      // Send the response body's content
+    send()                                          // Send the response and lock it
+    chunk($str = null)                              // Enable response chunking (see the wiki)
     header($key, $value = null)                     // Set a response header
     cookie($key, $value = null, $expiry = null)     // Set a cookie
     cookie($key, null)                              // Remove a cookie
-    session($key, $value = null)                    // Sets a session variable
-    flash($msg, $type = 'info', $params = array()   // Set a flash message
-    file($path, $filename = null)                   // Send a file
     noCache()                                       // Tell the browser not to cache the response
-    json($object, $jsonp_prefix = null)             // Send an object as JSON or JSONP by providing padding prefix
-    markdown($str, $args, ...)                      // Return a string formatted with markdown
-    code($code = null)                              // Return the HTTP response code, or send a new code
     redirect($url, $code = 302)                     // Redirect to the specified URL
+    dump($obj)                                      // Dump an object
+
+$service->
+    sharedData()                                    // Return the shared data collection
+    startSession()                                  // Start a session and return its ID
+    flash($msg, $type = 'info', $params = array()   // Set a flash message
+    flashes($type = null)                           // Retrieve and clears all flashes of $type
+    markdown($str, $args, ...)                      // Return a string formatted with markdown
+    escape($str)                                    // Escape a string
+    file($path, $filename = null)                   // Send a file
+    json($object, $jsonp_prefix = null)             // Send an object as JSON or JSONP by providing padding prefix
     refresh()                                       // Redirect to the current URL
     back()                                          // Redirect to the referer
-    render($view, $data = array())                  // Render a view or partial (in the scope of $response)
-    partial($view, $data = array())                 // Render a partial without a layout (in the scope of $response)
-    layout($layout)                                 // Set the view layout
-    yield()                                         // Call inside the layout to render the view content
-    error(Exception $err)                           // Routes an exception through the error callbacks
-    onError($callback, $allow_duplicates = true)    // $callback takes ($response, $msg, $err_type = null)
-    set($key, $value = null)                        // Set a view property or helper
-    set($arr)
-    escape($str)                                    // Escape a string
     query($key, $value = null)                      // Modify the current query string
     query($arr)
-    param($param, $default = null)                  // Get an escaped request parameter
-    flashes($type = null)                           // Retrieve and clears all flashes of $type
-    flush()                                         // Flush all open output buffers
-    discard($restart_buffer = false)                // Discard all open output buffers and optionally restart it
-    buffer()                                        // Return the contents of the output buffer as a string
-    chunk($str = null)                              // Enable response chunking (see the wiki)
-    dump($obj)                                      // Dump an object
+    layout($layout)                                 // Set the view layout
+    yield()                                         // Call inside the layout to render the view content
+    render($view, $data = array())                  // Render a view or partial (in the scope of $response)
+    partial($view, $data = array())                 // Render a partial without a layout (in the scope of $response)
+    addValidator($method, $callback)                // Add a custom validator method
+    validate($string, $err = null)                  // Validate a string (with a custom error message)
+    validateParam($param, $err = null)                  // Validate a param
     <callback>($arg1, ...)                          // Call a user-defined helper
     <property>                                      // Get a user-defined property
 
