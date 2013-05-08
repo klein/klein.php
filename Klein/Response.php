@@ -11,8 +11,6 @@
 
 namespace Klein;
 
-use \Exception;
-use \ErrorException;
 use \Klein\DataCollection\HeaderDataCollection;
 
 /**
