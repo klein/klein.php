@@ -11,7 +11,7 @@
 
 namespace Klein;
 
-use \ErrorException;
+use \BadMethodCallException;
 
 use \Klein\Exceptions\ValidationException;
 
@@ -173,7 +173,7 @@ class Validator
         $validator = strtolower($validator);
 
         if (!$validator || !isset(static::$methods[$validator])) {
-            throw new ErrorException("Unknown method $method()");
+            throw new BadMethodCallException('Unknown method '. $method .'()');
         }
         $validator = static::$methods[$validator];
         array_unshift($args, $this->str);

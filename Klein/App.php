@@ -11,6 +11,10 @@
 
 namespace Klein;
 
+use \BadMethodCallException;
+
+use \Klein\Exceptions\UnknownServiceException;
+use \Klein\Exceptions\DuplicateServiceException;
 
 /**
  * App 
@@ -48,9 +52,10 @@ class App
     public function __get($name)
     {
         if (!isset($this->services[$name])) {
-            throw new InvalidArgumentException("Unknown service $name");
+            throw new UnknownServiceException('Unknown service '. $name);
         }
         $service = $this->services[$name];
+
         return $service();
     }
 
@@ -68,8 +73,9 @@ class App
     public function __call($method, $args)
     {
         if (!isset($this->$method) || !is_callable($this->$method)) {
-            throw new ErrorException("Unknown method $method()");
+            throw new BadMethodCallException('Unknown method '. $method .'()');
         }
+
         return call_user_func_array($this->$method, $args);
     }
 
@@ -84,7 +90,7 @@ class App
     public function register($name, $closure)
     {
         if (isset($this->services[$name])) {
-            throw new Exception("A service is already registered under $name");
+            throw new DuplicateServiceException('A service is already registered under '. $name);
         }
 
         $this->services[$name] = function () use ($closure) {
@@ -92,6 +98,7 @@ class App
             if (null === $instance) {
                 $instance = $closure();
             }
+
             return $instance;
         };
     }
