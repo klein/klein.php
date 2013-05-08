@@ -30,7 +30,7 @@ require_once __DIR__ . '/vendor/autoload.php';
 $klein = new \Klein\Klein();
 
 $klein->respond('GET', '/hello-world', function () {
-    echo 'Hello World!';
+    return 'Hello World!';
 });
 
 $klein->dispatch();
@@ -40,7 +40,7 @@ $klein->dispatch();
 
 ```php
 $klein->respond(function () {
-    echo 'All the things';
+    return 'All the things';
 });
 ```
 
@@ -48,7 +48,7 @@ $klein->respond(function () {
 
 ```php
 $klein->respond('/[:name]', function ($request) {
-    echo 'Hello ' . $request->name;
+    return 'Hello ' . $request->name;
 });
 ```
 
@@ -187,7 +187,7 @@ $klein->respond(function ($request, $response, $service, $app) {
 $klein->respond('GET', '/posts', function ($request, $response, $service, $app) {
     // $db is initialised on first request
     // all subsequent calls will use the same instance
-    echo $app->lazyDb->name;
+    return $app->lazyDb->name;
 });
 ```
 
