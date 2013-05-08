@@ -75,38 +75,39 @@ $klein->respond('/posts/[create|edit:action]?/[i:id]?', function ($request, $res
 *Example 4* - Sending objects / files
 
 ```php
-$klein->respond(function ($request, $response) {
-    $response->xml = function ($object) {
+$klein->respond(function ($request, $response, $service) {
+    $service->xml = function ($object) {
         // Custom xml output function
     }
-    $response->csv = function ($object) {
+    $service->csv = function ($object) {
         // Custom csv output function
     }
 });
 
-$klein->respond('/report.[xml|csv|json:format]?', function ($reqest, $response) {
+$klein->respond('/report.[xml|csv|json:format]?', function ($reqest, $response, $service) {
     // Get the format or fallback to JSON as the default
     $send = $request->param('format', 'json');
-    $response->$send($report);
+    $service->$send($report);
 });
 
-$klein->respond('/report/latest', function ($request, $response) {
-    $response->file('/tmp/cached_report.zip');
+$klein->respond('/report/latest', function ($request, $response, $service) {
+    $service->file('/tmp/cached_report.zip');
 });
 ```
 
 *Example 5* - All together
 
 ```php
-$klein->respond(function ($request, $response, $app) {
+$klein->respond(function ($request, $response, $service, $app) {
     // Handle exceptions => flash the message and redirect to the referrer
-    $response->onError(function ($response, $err_msg) {
-        $response->flash($err_msg);
-        $response->back();
+    $response->onError(function ($klein, $err_msg) {
+        $klein->service()->flash($err_msg);
+        $klein->service()->back();
     });
 
     // The third parameter can be used to share scope and global objects
     $app->db = new PDO(...);
+
     // $app also can store lazy services, e.g. if you don't want to
     // instantiate a database connection on every response
     $app->register('db', function() {
@@ -114,20 +115,20 @@ $klein->respond(function ($request, $response, $app) {
     });
 });
 
-$klein->respond('POST', '/users/[i:id]/edit', function ($request, $response) {
+$klein->respond('POST', '/users/[i:id]/edit', function ($request, $response, $service, $app) {
     // Quickly validate input parameters
-    $request->validate('username', 'Please enter a valid username')->isLen(5, 64)->isChars('a-zA-Z0-9-');
-    $request->validate('password')->notNull();
+    $service->validateParam('username', 'Please enter a valid username')->isLen(5, 64)->isChars('a-zA-Z0-9-');
+    $service->validateParam('password')->notNull();
 
     $app->db->query(...); // etc.
 
     // Add view properties and helper methods
-    $response->title = 'foo';
-    $response->escape = function ($str) {
+    $service->title = 'foo';
+    $service->escape = function ($str) {
         return htmlentities($str); // Assign view helpers
     };
 
-    $response->render('myview.phtml');
+    $service->render('myview.phtml');
 });
 
 // myview.phtml:
@@ -173,7 +174,7 @@ first use.
 
 ``` php
 <?php
-$klein->respond(function ($request, $response, $app) {
+$klein->respond(function ($request, $response, $service, $app) {
     $app->register('lazyDb', function() {
         $db = new stdClass();
         $db->name = 'foo';
@@ -183,7 +184,7 @@ $klein->respond(function ($request, $response, $app) {
 
 //Later
 
-$klein->respond('GET', '/posts', function ($request, $response, $app) {
+$klein->respond('GET', '/posts', function ($request, $response, $service, $app) {
     // $db is initialised on first request
     // all subsequent calls will use the same instance
     echo $app->lazyDb->name;
@@ -195,7 +196,7 @@ $klein->respond('GET', '/posts', function ($request, $response, $app) {
 To add a custom validator use `addValidator($method, $callback)`
 
 ```php
-$klein->addValidator('hex', function ($str) {
+$service->addValidator('hex', function ($str) {
     return preg_match('/^[0-9a-f]++$/i', $str);
 });
 ```
@@ -203,13 +204,19 @@ $klein->addValidator('hex', function ($str) {
 You can validate parameters using `is<$method>()` or `not<$method>()`, e.g.
 
 ```php
-$request->validate('key')->isHex();
+$service->validateParam('key')->isHex();
+```
+
+Or you can validate any string using the same flow..
+
+```php
+$service->validate($username)->isLen(4,16);
 ```
 
 Validation methods are chainable, and a custom exception message can be specified for if/when validation fails
 
 ```php
-$request->validate('key', 'The key was invalid')->isHex()->isLen(32);
+$service->validateParam('key', 'The key was invalid')->isHex()->isLen(32);
 ```
 
 ## Routing
@@ -242,9 +249,9 @@ authentication or view layouts. e.g. as a basic example, the following
 code will wrap other routes with a header and footer
 
 ```php
-$klein->respond('*', function ($request, $response) { $response->render('header.phtml'; });
+$klein->respond('*', function ($request, $response, $service) { $service->render('header.phtml'; });
 //other routes
-$klein->respond('*', function ($request, $response) { $response->render('footer.phtml'; });
+$klein->respond('*', function ($request, $response, $service) { $service->render('footer.phtml'; });
 ```
 
 Routes automatically match the entire request URI. If you need to match
@@ -262,16 +269,16 @@ $klein->respond('!@^/admin/', ...
 ## Views
 
 You can send properties or helpers to the view by assigning them
-to the `$response` object, or by using the second arg of `$response->render()`
+to the `$service` object, or by using the second arg of `$service->render()`
 
 ```php
-$response->escape = function ($str) {
+$service->escape = function ($str) {
     return htmlentities($str);
 };
 
-$response->render('myview.phtml', array('title' => 'My View'));
+$service->render('myview.phtml', array('title' => 'My View'));
 
-// Or just: $response->title = 'My View';
+// Or just: $service->title = 'My View';
 ```
 
 *myview.phtml*
@@ -280,11 +287,11 @@ $response->render('myview.phtml', array('title' => 'My View'));
 <title><?php echo $this->escape($this->title) ?></title>
 ```
 
-Views are compiled and run in the scope of `$response` so all response methods can be accessed with `$this`
+Views are compiled and run in the scope of `$service` so all service methods can be accessed with `$this`
 
 ```php
 $this->render('partial.html')           // Render partials
-$this->param('myvar')                   // Access request parameters
+$this->sharedData()->get('myvar')       // Access stored service variables
 echo $this->query(array('page' => 2))   // Modify the current query string
 ```
 
