@@ -406,7 +406,7 @@ class ServiceProvider
      * @access public
      * @return void
      */
-    public function yield()
+    public function yieldView()
     {
         require $this->view;
     }
@@ -430,7 +430,7 @@ class ServiceProvider
         $this->view = $view;
 
         if (null === $this->layout) {
-            $this->yield();
+            $this->yieldView();
         } else {
             require $this->layout;
         }

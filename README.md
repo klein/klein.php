@@ -355,7 +355,7 @@ $service->
     query($key, $value = null)                      // Modify the current query string
     query($arr)
     layout($layout)                                 // Set the view layout
-    yield()                                         // Call inside the layout to render the view content
+    yieldView()                                     // Call inside the layout to render the view content
     render($view, $data = array())                  // Render a view or partial (in the scope of $response)
     partial($view, $data = array())                 // Render a partial without a layout (in the scope of $response)
     addValidator($method, $callback)                // Add a custom validator method
