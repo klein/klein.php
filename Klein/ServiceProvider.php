@@ -206,7 +206,6 @@ class ServiceProvider
      *
      * @param string $str   The text string to parse
      * @param array $args   Optional arguments to be parsed by markdown
-     * @param mixed $...    Optional number of params...
      * @static
      * @access public
      * @return string

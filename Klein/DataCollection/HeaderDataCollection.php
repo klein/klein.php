@@ -44,7 +44,12 @@ class HeaderDataCollection extends DataCollection
      * Get a header
      *
      * {@inheritdoc}
+     *
      * @see DataCollection::get()
+     * @param string $key           The name of the header to return
+     * @param mixed  $default_val   The default value of the header if it contains no value
+     * @access public
+     * @return mixed
      */
     public function get($key, $default_val = null)
     {
@@ -57,7 +62,12 @@ class HeaderDataCollection extends DataCollection
      * Set a header
      *
      * {@inheritdoc}
+     *
      * @see DataCollection::set()
+     * @param string $key   The name of the header to set
+     * @param mixed  $value The value of the header to set
+     * @access public
+     * @return HeaderDataCollection
      */
     public function set($key, $value)
     {
@@ -70,7 +80,11 @@ class HeaderDataCollection extends DataCollection
      * Check if a header exists
      *
      * {@inheritdoc}
+     *
      * @see DataCollection::exists()
+     * @param string $key   The name of the header
+     * @access public
+     * @return boolean
      */
     public function exists($key)
     {
@@ -83,7 +97,11 @@ class HeaderDataCollection extends DataCollection
      * Remove a header
      *
      * {@inheritdoc}
+     *
      * @see DataCollection::remove()
+     * @param string $key   The name of the header
+     * @access public
+     * @return void
      */
     public function remove($key)
     {
