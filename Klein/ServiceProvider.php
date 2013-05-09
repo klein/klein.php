@@ -232,7 +232,7 @@ class ServiceProvider
 
         // Encode our args so we can insert them into an HTML string
         foreach ($args as &$arg) {
-            $arg = htmlentities($arg, ENT_QUOTES);
+            $arg = htmlentities($arg, ENT_QUOTES, 'UTF-8');
         }
 
         // Actually do our markdown conversion
@@ -249,7 +249,7 @@ class ServiceProvider
      */
     public static function escape($str)
     {
-        return htmlentities($str, ENT_QUOTES);
+        return htmlentities($str, ENT_QUOTES, 'UTF-8');
     }
 
     /**
