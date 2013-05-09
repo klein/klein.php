@@ -55,6 +55,27 @@ abstract class AbstractKleinTest extends PHPUnit_Framework_TestCase
     }
 
     /**
+     * Quick method for dispatching and returning our output from our shared Klein instance
+     *
+     * This is mostly useful, since the tests would otherwise have to make a bunch of calls
+     * concerning the argument order and constants. DRY, bitch. ;)
+     *
+     * @param Request $request      Custom Klein "Request" object
+     * @param Response $response    Custom Klein "Response" object
+     * @access protected
+     * @return mixed The output of the dispatch call
+     */
+    protected function dispatchAndReturnOutput($request = null, $response = null)
+    {
+        return $this->klein_app->dispatch(
+            $request,
+            $response,
+            false,
+            Klein::DISPATCH_CAPTURE_AND_RETURN
+        );
+    }
+
+    /**
      * Runs a callable and asserts that the output from the executed callable
      * matches the passed in expected output
      * 

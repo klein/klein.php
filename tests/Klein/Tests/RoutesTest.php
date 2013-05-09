@@ -499,31 +499,24 @@ class RoutesTest extends AbstractKleinTest
             }
         );
 
-        $this_obj = $this;
 
-        $this->assertOutputSame(
+        $this->assertSame(
             'blue42',
-            function () use ($this_obj) {
-                $this_obj->klein_app->dispatch(
-                    MockRequestFactory::create('/blue42')
-                );
-            }
+            $this->dispatchAndReturnOutput(
+                MockRequestFactory::create('/blue42')
+            )
         );
-        $this->assertOutputSame(
+        $this->assertSame(
             '',
-            function () use ($this_obj) {
-                $this_obj->klein_app->dispatch(
-                    MockRequestFactory::create('/texas-29')
-                );
-            }
+            $this->dispatchAndReturnOutput(
+                MockRequestFactory::create('/texas-29')
+            )
         );
-        $this->assertOutputSame(
+        $this->assertSame(
             '',
-            function () use ($this_obj) {
-                $this_obj->klein_app->dispatch(
-                    MockRequestFactory::create('/texas29!')
-                );
-            }
+            $this->dispatchAndReturnOutput(
+                MockRequestFactory::create('/texas29!')
+            )
         );
     }
 
@@ -536,47 +529,36 @@ class RoutesTest extends AbstractKleinTest
             }
         );
 
-        $this_obj = $this;
 
-        $this->assertOutputSame(
+        $this->assertSame(
             '00f',
-            function () use ($this_obj) {
-                $this_obj->klein_app->dispatch(
-                    MockRequestFactory::create('/00f')
-                );
-            }
+            $this->dispatchAndReturnOutput(
+                MockRequestFactory::create('/00f')
+            )
         );
-        $this->assertOutputSame(
+        $this->assertSame(
             'abc123',
-            function () use ($this_obj) {
-                $this_obj->klein_app->dispatch(
-                    MockRequestFactory::create('/abc123')
-                );
-            }
+            $this->dispatchAndReturnOutput(
+                MockRequestFactory::create('/abc123')
+            )
         );
-        $this->assertOutputSame(
+        $this->assertSame(
             '',
-            function () use ($this_obj) {
-                $this_obj->klein_app->dispatch(
-                    MockRequestFactory::create('/876zih')
-                );
-            }
+            $this->dispatchAndReturnOutput(
+                MockRequestFactory::create('/876zih')
+            )
         );
-        $this->assertOutputSame(
+        $this->assertSame(
             '',
-            function () use ($this_obj) {
-                $this_obj->klein_app->dispatch(
-                    MockRequestFactory::create('/00g')
-                );
-            }
+            $this->dispatchAndReturnOutput(
+                MockRequestFactory::create('/00g')
+            )
         );
-        $this->assertOutputSame(
+        $this->assertSame(
             '',
-            function () use ($this_obj) {
-                $this_obj->klein_app->dispatch(
-                    MockRequestFactory::create('/hi23')
-                );
-            }
+            $this->dispatchAndReturnOutput(
+                MockRequestFactory::create('/hi23')
+            )
         );
     }
 
@@ -697,23 +679,17 @@ class RoutesTest extends AbstractKleinTest
             MockRequestFactory::create("/category1/categoryX/ABCD_E.php")
         );
 
-        $this_obj = $this;
-
-        $this->assertOutputSame(
+        $this->assertSame(
             'matchA:slug=ABCD_E--matchB:slug=ABCD_E--',
-            function () use ($this_obj) {
-                $this_obj->klein_app->dispatch(
-                    MockRequestFactory::create('/category1/categoryX/ABCD_E.php')
-                );
-            }
+            $this->dispatchAndReturnOutput(
+                MockRequestFactory::create('/category1/categoryX/ABCD_E.php')
+            )
         );
-        $this->assertOutputSame(
+        $this->assertSame(
             'matchB:slug=ABCD_E--',
-            function () use ($this_obj) {
-                $this_obj->klein_app->dispatch(
-                    MockRequestFactory::create('/category1/categoryX/ABCD_E')
-                );
-            }
+            $this->dispatchAndReturnOutput(
+                MockRequestFactory::create('/category1/categoryX/ABCD_E')
+            )
         );
     }
 
@@ -791,55 +767,42 @@ class RoutesTest extends AbstractKleinTest
             }
         );
 
-        $this_obj = $this;
 
-        $this->assertOutputSame(
+        $this->assertSame(
             'yup',
-            function () use ($this_obj) {
-                $this_obj->klein_app->dispatch(
-                    MockRequestFactory::create('/cat/dog')
-                );
-            }
+            $this->dispatchAndReturnOutput(
+                MockRequestFactory::create('/cat/dog')
+            )
         );
-        $this->assertOutputSame(
+        $this->assertSame(
             'yup',
-            function () use ($this_obj) {
-                $this_obj->klein_app->dispatch(
-                    MockRequestFactory::create('/cat/cheese/dog')
-                );
-            }
+            $this->dispatchAndReturnOutput(
+                MockRequestFactory::create('/cat/cheese/dog')
+            )
         );
-        $this->assertOutputSame(
+        $this->assertSame(
             'yup',
-            function () use ($this_obj) {
-                $this_obj->klein_app->dispatch(
-                    MockRequestFactory::create('/cat/ball/cheese/dog/')
-                );
-            }
+            $this->dispatchAndReturnOutput(
+                MockRequestFactory::create('/cat/ball/cheese/dog/')
+            )
         );
-        $this->assertOutputSame(
+        $this->assertSame(
             'yup',
-            function () use ($this_obj) {
-                $this_obj->klein_app->dispatch(
-                    MockRequestFactory::create('/cat/ball/cheese/dog')
-                );
-            }
+            $this->dispatchAndReturnOutput(
+                MockRequestFactory::create('/cat/ball/cheese/dog')
+            )
         );
-        $this->assertOutputSame(
+        $this->assertSame(
             'yup',
-            function () use ($this_obj) {
-                $this_obj->klein_app->dispatch(
-                    MockRequestFactory::create('cat/ball/cheese/dog/')
-                );
-            }
+            $this->dispatchAndReturnOutput(
+                MockRequestFactory::create('cat/ball/cheese/dog/')
+            )
         );
-        $this->assertOutputSame(
+        $this->assertSame(
             'yup',
-            function () use ($this_obj) {
-                $this_obj->klein_app->dispatch(
-                    MockRequestFactory::create('cat/ball/cheese/dog')
-                );
-            }
+            $this->dispatchAndReturnOutput(
+                MockRequestFactory::create('cat/ball/cheese/dog')
+            )
         );
     }
 
@@ -852,58 +815,52 @@ class RoutesTest extends AbstractKleinTest
             }
         );
 
-        $this_obj = $this;
 
-        $this->assertOutputSame(
+        $this->assertSame(
             'yup',
-            function () use ($this_obj) {
-                $this_obj->klein_app->dispatch(
-                    MockRequestFactory::create('/sub-dir/dog')
-                );
-            }
+            $this->dispatchAndReturnOutput(
+                MockRequestFactory::create('/sub-dir/dog')
+            )
         );
 
-        $this->assertOutputSame(
+        $this->assertSame(
             'yup',
-            function () use ($this_obj) {
-                $this_obj->klein_app->dispatch(
-                    MockRequestFactory::create('/sub-dir/cheese/dog')
-                );
-            }
+            $this->dispatchAndReturnOutput(
+                MockRequestFactory::create('/sub-dir/cheese/dog')
+            )
         );
 
-        $this->assertOutputSame(
+        $this->assertSame(
             'yup',
-            function () use ($this_obj) {
-                $this_obj->klein_app->dispatch(
-                    MockRequestFactory::create('/sub-dir/ball/cheese/dog/')
-                );
-            }
+            $this->dispatchAndReturnOutput(
+                MockRequestFactory::create('/sub-dir/ball/cheese/dog/')
+            )
         );
 
-        $this->assertOutputSame(
+        $this->assertSame(
             'yup',
-            function () use ($this_obj) {
-                $this_obj->klein_app->dispatch(
-                    MockRequestFactory::create('/sub-dir/ball/cheese/dog')
-                );
-            }
+            $this->dispatchAndReturnOutput(
+                MockRequestFactory::create('/sub-dir/ball/cheese/dog')
+            )
         );
     }
 
     public function testNSDispatch()
     {
+        // Create a duplicate context... yea, PHP 5.3 :/
+        $klein_app = $this->klein_app;
+
         $this->klein_app->with(
             '/u',
-            function () {
-                $this->klein_app->respond(
+            function () use ($klein_app) {
+                $klein_app->respond(
                     'GET',
                     '/?',
                     function ($request, $response) {
                         echo "slash";
                     }
                 );
-                $this->klein_app->respond(
+                $klein_app->respond(
                     'GET',
                     '/[:id]',
                     function ($request, $response) {
@@ -920,37 +877,29 @@ class RoutesTest extends AbstractKleinTest
         );
 
 
-        $this->assertOutputSame(
+        $this->assertSame(
             "slash",
-            function () {
-                $this->klein_app->dispatch(
-                    MockRequestFactory::create("/u")
-                );
-            }
+            $this->dispatchAndReturnOutput(
+                MockRequestFactory::create("/u")
+            )
         );
-        $this->assertOutputSame(
+        $this->assertSame(
             "slash",
-            function () {
-                $this->klein_app->dispatch(
-                    MockRequestFactory::create("/u/")
-                );
-            }
+            $this->dispatchAndReturnOutput(
+                MockRequestFactory::create("/u/")
+            )
         );
-        $this->assertOutputSame(
+        $this->assertSame(
             "id",
-            function () {
-                $this->klein_app->dispatch(
-                    MockRequestFactory::create("/u/35")
-                );
-            }
+            $this->dispatchAndReturnOutput(
+                MockRequestFactory::create("/u/35")
+            )
         );
-        $this->assertOutputSame(
+        $this->assertSame(
             "404",
-            function () {
-                $this->klein_app->dispatch(
-                    MockRequestFactory::create("/35")
-                );
-            }
+            $this->dispatchAndReturnOutput(
+                MockRequestFactory::create("/35")
+            )
         );
     }
 
@@ -967,22 +916,18 @@ class RoutesTest extends AbstractKleinTest
 
         foreach ($ext_namespaces as $namespace) {
 
-            $this->assertOutputSame(
+            $this->assertSame(
                 'yup',
-                function () use ($namespace) {
-                    $this->klein_app->dispatch(
-                        MockRequestFactory::create($namespace . '/')
-                    );
-                }
+                $this->dispatchAndReturnOutput(
+                    MockRequestFactory::create($namespace . '/')
+                )
             );
 
-            $this->assertOutputSame(
+            $this->assertSame(
                 'yup',
-                function () use ($namespace) {
-                    $this->klein_app->dispatch(
-                        MockRequestFactory::create($namespace . '/testing/')
-                    );
-                }
+                $this->dispatchAndReturnOutput(
+                    MockRequestFactory::create($namespace . '/testing/')
+                )
             );
         }
     }
@@ -1000,22 +945,18 @@ class RoutesTest extends AbstractKleinTest
 
         foreach ($ext_namespaces as $namespace) {
 
-            $this->assertOutputSame(
+            $this->assertSame(
                 'yup',
-                function () use ($namespace) {
-                    $this->klein_app->dispatch(
-                        MockRequestFactory::create($namespace . '/')
-                    );
-                }
+                $this->dispatchAndReturnOutput(
+                    MockRequestFactory::create($namespace . '/')
+                )
             );
 
-            $this->assertOutputSame(
+            $this->assertSame(
                 'yup',
-                function () use ($namespace) {
-                    $this->klein_app->dispatch(
-                        MockRequestFactory::create($namespace . '/testing/')
-                    );
-                }
+                $this->dispatchAndReturnOutput(
+                    MockRequestFactory::create($namespace . '/testing/')
+                )
             );
         }
     }
