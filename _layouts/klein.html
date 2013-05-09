@@ -10,9 +10,9 @@
         <meta name="description" content="Klein - klein.php - A lightning fast router for PHP">
         <meta name="viewport" content="width=device-width">
 
-        <link rel="stylesheet" href="css/normalize.css">
-        <link rel="stylesheet" href="css/main.css">
-        <script src="js/vendor/modernizr-2.6.2.min.js"></script>
+        <link rel="stylesheet" href="assets/styles/normalize.css">
+        <link rel="stylesheet" href="assets/styles/main.css">
+        <script src="assets/scripts/vendor_js/modernizr-2.6.2.min.js"></script>
     </head>
     <body>
 		<div id="page-wrapper">
@@ -20,18 +20,22 @@
 				<p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
 			<![endif]-->
 
-			<p>Hello world! This is HTML5 Boilerplate.</p>
 			<h1>{{ page.title }}</h1>
 
+			<!-- Main Content -->
 			<div id="main-content">
 				{{ content }}
 			</div>
 		</div>
+
+		<!-- GitHub Fork Ribbon -->
 		<a href="https://github.com/chriso/{{ page.github_name }}"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png" alt="Fork me on GitHub"></a>
 
+
+		<!-- Scripts -->
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-        <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.9.1.min.js"><\/script>')</script>
-        <script src="js/main.js"></script>
+        <script>window.jQuery || document.write('<script src="assets/scripts/vendor_js/jquery-1.9.1.min.js"><\/script>')</script>
+        <script src="assets/scripts/main.js"></script>
 
 
         <!-- Google Analytics -->
