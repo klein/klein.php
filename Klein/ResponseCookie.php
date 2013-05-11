@@ -95,13 +95,13 @@ class ResponseCookie
     /**
      * Constructor
      *
-     * @param string  $name
-     * @param string  $value
-     * @param int     $expire
-     * @param string  $path
-     * @param string  $domain
-     * @param boolean $secure
-     * @param boolean $http_only
+     * @param string  $name         The name of the cookie
+     * @param string  $value        The value to set the cookie with
+     * @param int     $expire       The time that the cookie should expire
+     * @param string  $path         The path of which to restrict the cookie
+     * @param string  $domain       The domain of which to restrict the cookie
+     * @param boolean $secure       Flag of whether the cookie should only be sent over a HTTPS connection
+     * @param boolean $http_only    Flag of whether the cookie should only be accessible over the HTTP protocol
      * @access public
      */
     public function __construct(
