@@ -12,6 +12,8 @@
 namespace Klein;
 
 use \Klein\DataCollection\HeaderDataCollection;
+use \Klein\DataCollection\ResponseCookieDataCollection;
+use \Klein\ResponseCookie;
 
 /**
  * Response 
@@ -67,6 +69,14 @@ class Response
     protected $headers;
 
     /**
+     * HTTP response cookies
+     *
+     * @var \Klein\DataCollection\ResponseCookieDataCollection
+     * @access protected
+     */
+    protected $cookies;
+
+    /**
      * Whether or not the response is "locked" from
      * any further modification
      *
@@ -115,6 +125,7 @@ class Response
         $this->code($status_code);
 
         $this->headers = new HeaderDataCollection($headers);
+        $this->cookies = new ResponseCookieDataCollection();
     }
 
     /**
@@ -184,6 +195,17 @@ class Response
     public function headers()
     {
         return $this->headers;
+    }
+
+    /**
+     * Returns the cookies collection
+     *
+     * @access public
+     * @return \Klein\DataCollection\ResponseCookieDataCollection
+     */
+    public function cookies()
+    {
+        return $this->cookies;
     }
 
     /**
@@ -295,11 +317,12 @@ class Response
     /**
      * Send our HTTP headers
      *
+     * @param boolean $cookies_also Whether or not to also send the cookies after sending the normal headers
      * @param boolean $override     Whether or not to override the check if headers have already been sent
      * @access public
      * @return Response
      */
-    public function sendHeaders($override = false)
+    public function sendHeaders($cookies_also = true, $override = false)
     {
         if (headers_sent() && !$override) {
             return $this;
@@ -311,6 +334,40 @@ class Response
         // Iterate through our Headers data collection and send each header
         foreach ($this->headers as $key => $value) {
             header($key .': '. $value, false);
+        }
+
+        if ($cookies_also) {
+            $this->sendCookies($override);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Send our HTTP response cookies
+     *
+     * @param boolean $override     Whether or not to override the check if headers have already been sent
+     * @access public
+     * @return Response
+     */
+    public function sendCookies($override = false)
+    {
+        if (headers_sent() && !$override) {
+            return $this;
+        }
+
+        // Iterate through our Cookies data collection and set each cookie natively
+        foreach ($this->cookies as $cookie) {
+            // Use the built-in PHP "setcookie" function
+            setcookie(
+                $cookie->getName(),
+                $cookie->getValue(),
+                $cookie->getExpire(),
+                $cookie->getPath(),
+                $cookie->getDomain(),
+                $cookie->getSecure(),
+                $cookie->getHttpOnly()
+            );
         }
 
         return $this;
@@ -396,11 +453,13 @@ class Response
      * @param string $key       The name of the HTTP response header
      * @param mixed $value      The value to set the header with
      * @access public
-     * @return void
+     * @return Response
      */
     public function header($key, $value)
     {
         $this->headers->set($key, $value);
+
+        return $this;
     }
 
     /**
@@ -414,7 +473,7 @@ class Response
      * @param boolean $secure       Flag of whether the cookie should only be sent over a HTTPS connection
      * @param boolean $httponly     Flag of whether the cookie should only be accessible over the HTTP protocol
      * @access public
-     * @return boolean
+     * @return Response
      */
     public function cookie(
         $key,
@@ -429,7 +488,12 @@ class Response
             $expiry = time() + (3600 * 24 * 30);
         }
 
-        return setcookie($key, $value, $expiry, $path, $domain, $secure, $httponly);
+        $this->cookies->set(
+            $key,
+            new ResponseCookie($key, $value, $expiry, $path, $domain, $secure, $httponly)
+        );
+
+        return $this;
     }
 
     /**
