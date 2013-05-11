@@ -16,6 +16,7 @@ use \Klein\Klein;
 use \Klein\Response;
 use \Klein\HttpStatus;
 use \Klein\DataCollection\HeaderDataCollection;
+use \Klein\DataCollection\ResponseCookieDataCollection;
 
 use \Klein\Tests\Mocks\MockRequestFactory;
 
@@ -101,6 +102,14 @@ class ResponsesTest extends AbstractKleinTest
         $this->assertTrue($response->headers() instanceof HeaderDataCollection);
     }
 
+    public function testCookiesGetter()
+    {
+        $response = new Response();
+
+        $this->assertInternalType('object', $response->cookies());
+        $this->assertTrue($response->cookies() instanceof ResponseCookieDataCollection);
+    }
+
     public function testPrepend()
     {
         $response = new Response('ein');
@@ -167,6 +176,21 @@ class ResponsesTest extends AbstractKleinTest
         $response->headers()->set('Authorization', 'Basic asdasd');
 
         $response->sendHeaders();
+
+        $this->expectOutputString(null);
+    }
+
+    /**
+     * Testing cookies is exactly like testing headers
+     * ... So, yea.
+     */
+    public function testSendCookies()
+    {
+        $response = new Response();
+        $response->cookies()->set('test', 'woot!');
+        $response->cookies()->set('Cookie name!', 'wtf?');
+
+        $response->sendCookies();
 
         $this->expectOutputString(null);
     }
