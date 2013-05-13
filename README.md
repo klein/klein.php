@@ -324,6 +324,7 @@ $response->
     body($body = null)                              // Get the response body's content, or set it to the passed value
     status()                                        // Get the response's status object
     headers()                                       // Return the headers collection
+    cookies()                                       // Return the cookies collection
     code($code = null)                              // Return the HTTP response code, or set it to the passed value
     prepend($content)                               // Prepend a string to the response body
     append($content)                                // Append a string to the response body
