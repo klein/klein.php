@@ -253,67 +253,6 @@ class ServiceProvider
     }
 
     /**
-     * Sends a file
-     *
-     * @param string $path      The path of the file to send
-     * @param string $filename  The file's name
-     * @param string $mimetype  The MIME type of the file
-     * @access public
-     * @return void
-     */
-    public function file($path, $filename = null, $mimetype = null)
-    {
-        $this->response->body('');
-        $this->response->noCache();
-
-        set_time_limit(1200);
-
-        if (null === $filename) {
-            $filename = basename($path);
-        }
-        if (null === $mimetype) {
-            $mimetype = finfo_file(finfo_open(FILEINFO_MIME_TYPE), $path);
-        }
-
-        $this->response->header('Content-type', $mimetype);
-        $this->response->header('Content-length', filesize($path));
-        $this->response->header('Content-Disposition', 'attachment; filename="'.$filename.'"');
-
-        $this->response->send();
-
-        readfile($path);
-    }
-
-    /**
-     * Sends an object as json or jsonp by providing the padding prefix
-     *
-     * @param mixed $object         The data to encode as JSON
-     * @param string $jsonp_prefix  The name of the JSON-P function prefix
-     * @access public
-     * @return void
-     */
-    public function json($object, $jsonp_prefix = null)
-    {
-        $this->response->body('');
-        $this->response->noCache();
-
-        set_time_limit(1200);
-
-        $json = json_encode($object);
-
-        if (null !== $jsonp_prefix) {
-            // Should ideally be application/json-p once adopted
-            $this->response->header('Content-Type', 'text/javascript');
-            $this->response->body("$jsonp_prefix($json);");
-        } else {
-            $this->response->header('Content-Type', 'application/json');
-            $this->response->body($json);
-        }
-
-        $this->response->send();
-    }
-
-    /**
      * Redirects the request to the current URL
      *
      * @access public
@@ -345,38 +284,6 @@ class ServiceProvider
         $this->refresh();
 
         return $this;
-    }
-
-    /**
-     * Adds to or modifies the current query string
-     *
-     * @param string $key   The name of the query param
-     * @param mixed $value  The value of the query param
-     * @access public
-     * @return string
-     */
-    public function query($key, $value = null)
-    {
-        $query = array();
-
-        parse_str(
-            $this->request->server()->get('QUERY_STRING'),
-            $query
-        );
-
-        if (is_array($key)) {
-            $query = array_merge($query, $key);
-        } else {
-            $query[$key] = $value;
-        }
-
-        $request_uri = $this->request->uri();
-
-        if (strpos($request_uri, '?') !== false) {
-            $request_uri = strstr($request_uri, '?', true);
-        }
-
-        return $request_uri . (!empty($query) ? '?' . http_build_query($query) : null);
     }
 
     /**

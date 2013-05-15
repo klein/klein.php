@@ -13,7 +13,9 @@ namespace Klein;
 
 use \Exception;
 
+use \Klein\Exceptions\LockedResponseException;
 use \Klein\Exceptions\UnhandledException;
+use \Klein\Exceptions\ResponseAlreadySentException;
 
 /**
  * Klein
@@ -323,19 +325,6 @@ class Klein
     }
 
     /**
-     * Start a PHP session
-     *
-     * @access public
-     * @return void
-     */
-    public function startSession()
-    {
-        if (session_id() === '') {
-            session_start();
-        }
-    }
-
-    /**
      * Dispatch the request to the approriate route(s)
      *
      * Dispatch with optionally injected dependencies
@@ -429,17 +418,21 @@ class Klein
                 // Easily handle 404's
 
                 try {
-                    $this->response->append(
-                        call_user_func(
-                            $callback,
-                            $this->request,
-                            $this->response,
-                            $this->service,
-                            $this->app,
-                            $matched,
-                            $methods_matched
-                        )
-                    );
+                    try {
+                        $this->response->append(
+                            call_user_func(
+                                $callback,
+                                $this->request,
+                                $this->response,
+                                $this->service,
+                                $this->app,
+                                $matched,
+                                $methods_matched
+                            )
+                        );
+                    } catch (LockedResponseException $e) {
+                        // Do nothing, since this is an automated behavior
+                    }
                 } catch (Exception $e) {
                     $this->error($e);
                 }
@@ -451,17 +444,21 @@ class Klein
                 // Easily handle 405's
 
                 try {
-                    $this->response->append(
-                        call_user_func(
-                            $callback,
-                            $this->request,
-                            $this->response,
-                            $this->service,
-                            $this->app,
-                            $matched,
-                            $methods_matched
-                        )
-                    );
+                    try {
+                        $this->response->append(
+                            call_user_func(
+                                $callback,
+                                $this->request,
+                                $this->response,
+                                $this->service,
+                                $this->app,
+                                $matched,
+                                $methods_matched
+                            )
+                        );
+                    } catch (LockedResponseException $e) {
+                        // Do nothing, since this is an automated behavior
+                    }
                 } catch (Exception $e) {
                     $this->error($e);
                 }
@@ -529,17 +526,21 @@ class Klein
 
                     // Try and call our route's callback
                     try {
-                        $this->response->append(
-                            call_user_func(
-                                $callback,
-                                $this->request,
-                                $this->response,
-                                $this->service,
-                                $this->app,
-                                $matched,
-                                $methods_matched
-                            )
-                        );
+                        try {
+                            $this->response->append(
+                                call_user_func(
+                                    $callback,
+                                    $this->request,
+                                    $this->response,
+                                    $this->service,
+                                    $this->app,
+                                    $matched,
+                                    $methods_matched
+                                )
+                            );
+                        } catch (LockedResponseException $e) {
+                            // Do nothing, since this is an automated behavior
+                        }
                     } catch (Exception $e) {
                         $this->error($e);
                     }
@@ -551,49 +552,53 @@ class Klein
             }
         }
 
-        if (!$matched && count($methods_matched) > 0) {
-            if (strcasecmp($req_method, 'OPTIONS') !== 0) {
-                $this->response->code(405);
+        try {
+            if (!$matched && count($methods_matched) > 0) {
+                if (strcasecmp($req_method, 'OPTIONS') !== 0) {
+                    $this->response->code(405);
+                }
+
+                $this->response->header('Allow', implode(', ', $methods_matched));
+            } elseif (!$matched) {
+                $this->response->code(404);
             }
 
-            $this->response->header('Allow', implode(', ', $methods_matched));
-        } elseif (!$matched) {
-            $this->response->code(404);
-        }
+            if ($this->response->chunked) {
+                $this->response->chunk();
 
-        if ($this->response->chunked) {
-            $this->response->chunk();
-
-        } else {
-            // Output capturing behavior
-            switch($capture) {
-                case self::DISPATCH_CAPTURE_AND_RETURN:
-                    return ob_get_clean();
-                    break;
-                case self::DISPATCH_CAPTURE_AND_REPLACE:
-                    $this->response->body(ob_get_clean());
-                    break;
-                case self::DISPATCH_CAPTURE_AND_PREPEND:
-                    $this->response->prepend(ob_get_clean());
-                    break;
-                case self::DISPATCH_CAPTURE_AND_APPEND:
-                    $this->response->append(ob_get_clean());
-                    break;
-                case self::DISPATCH_NO_CAPTURE:
-                default:
-                    ob_end_flush();
-                    break;
+            } else {
+                // Output capturing behavior
+                switch($capture) {
+                    case self::DISPATCH_CAPTURE_AND_RETURN:
+                        return ob_get_clean();
+                        break;
+                    case self::DISPATCH_CAPTURE_AND_REPLACE:
+                        $this->response->body(ob_get_clean());
+                        break;
+                    case self::DISPATCH_CAPTURE_AND_PREPEND:
+                        $this->response->prepend(ob_get_clean());
+                        break;
+                    case self::DISPATCH_CAPTURE_AND_APPEND:
+                        $this->response->append(ob_get_clean());
+                        break;
+                    case self::DISPATCH_NO_CAPTURE:
+                    default:
+                        ob_end_flush();
+                        break;
+                }
             }
+
+            // Test for HEAD request (like GET)
+            if (strcasecmp($req_method, 'HEAD') === 0) {
+                // HEAD requests shouldn't return a body
+                $this->response->body('');
+                ob_clean();
+            }
+        } catch (LockedResponseException $e) {
+            // Do nothing, since this is an automated behavior
         }
 
-        // Test for HEAD request (like GET)
-        if (strcasecmp($req_method, 'HEAD') === 0) {
-            // HEAD requests shouldn't return a body
-            $this->response->body('');
-            ob_clean();
-        }
-
-        if ($send_response) {
+        if ($send_response && !$this->response->isSent()) {
             $this->response->send();
         }
     }
@@ -602,10 +607,10 @@ class Klein
      * Compiles a route string to a regular expression
      *
      * @param string $route     The route string to compile
-     * @access public
+     * @access protected
      * @return void
      */
-    public function compileRoute($route)
+    protected function compileRoute($route)
     {
         if (preg_match_all('`(/|\.|)\[([^:\]]*+)(?::([^:\]]*+))?\](\?|)`', $route, $matches, PREG_SET_ORDER)) {
             $match_types = array(
@@ -644,17 +649,11 @@ class Klein
      * Adds an error callback to the stack of error handlers
      *
      * @param callable $callback            The callable function to execute in the error handling chain
-     * @param boolean $allow_duplicates     Whether or not to allow duplicate callbacks to exist in the
-     *  error handling chain
      * @access public
      * @return boolean|void
      */
-    public function onError($callback, $allow_duplicates = true)
+    public function onError($callback)
     {
-        if (!$allow_duplicates && in_array($callback, $this->errorCallbacks)) {
-            return false;
-        }
-
         $this->errorCallbacks[] = $callback;
     }
 
@@ -662,10 +661,10 @@ class Klein
      * Routes an exception through the error callbacks
      *
      * @param Exception $err    The exception that occurred
-     * @access public
+     * @access protected
      * @return void
      */
-    public function error(Exception $err)
+    protected function error(Exception $err)
     {
         $type = get_class($err);
         $msg = $err->getMessage();
@@ -693,24 +692,5 @@ class Klein
             $this->response->code(500);
             throw new UnhandledException($err);
         }
-    }
-
-    /**
-     * Magic "__call" method
-     *
-     * Allows the ability to arbitrarily call a method of our service provider's
-     * through an instance of this class
-     *
-     * @param callable $method  The callable method to execute
-     * @param array $args       The argument array to pass to our callback
-     * @access public
-     * @return mixed
-     */
-    public function __call($method, $args)
-    {
-        return call_user_func_array(
-            array($this->service, $method),
-            $args
-        );
     }
 }

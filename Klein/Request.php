@@ -415,18 +415,26 @@ class Request
     /**
      * Gets the request URI
      *
-     * @param boolean $strip_query_string Whether or not to strip the query string from the URI
      * @access public
      * @return string
      */
-    public function uri($strip_query_string = false)
+    public function uri()
     {
-        $uri = $this->server->get('REQUEST_URI', '/');
+        return $this->server->get('REQUEST_URI', '/');
+    }
 
-        // Should we strip the query string?
-        if ($strip_query_string) {
-            $uri = strstr($uri, '?', true) ?: $uri;
-        }
+    /**
+     * Get the request's pathname
+     *
+     * @access public
+     * @return string
+     */
+    public function pathname()
+    {
+        $uri = $this->uri();
+
+        // Strip the query string from the URI
+        $uri = strstr($uri, '?', true) ?: $uri;
 
         return $uri;
     }
@@ -468,5 +476,37 @@ class Request
         }
 
         return $method;
+    }
+
+    /**
+     * Adds to or modifies the current query string
+     *
+     * @param string $key   The name of the query param
+     * @param mixed $value  The value of the query param
+     * @access public
+     * @return string
+     */
+    public function query($key, $value = null)
+    {
+        $query = array();
+
+        parse_str(
+            $this->server()->get('QUERY_STRING'),
+            $query
+        );
+
+        if (is_array($key)) {
+            $query = array_merge($query, $key);
+        } else {
+            $query[$key] = $value;
+        }
+
+        $request_uri = $this->uri();
+
+        if (strpos($request_uri, '?') !== false) {
+            $request_uri = strstr($request_uri, '?', true);
+        }
+
+        return $request_uri . (!empty($query) ? '?' . http_build_query($query) : null);
     }
 }

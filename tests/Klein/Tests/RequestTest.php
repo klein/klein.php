@@ -163,7 +163,18 @@ class RequestTest extends AbstractKleinTest
         $request->server()->set('REQUEST_URI', $uri.$query);
 
         $this->assertSame($uri.$query, $request->uri());
-        $this->assertSame($uri, $request->uri(true));
+    }
+
+    public function testPathname()
+    {
+        // Test data
+        $uri = 'localhostofthingsandstuff';
+        $query = '?q=search';
+
+        $request = new Request();
+        $request->server()->set('REQUEST_URI', $uri.$query);
+
+        $this->assertSame($uri, $request->pathname());
     }
 
     public function testBody()
@@ -210,6 +221,47 @@ class RequestTest extends AbstractKleinTest
         $this->assertSame($weird_override_method, $request->method());
         $this->assertTrue($request->method($weird_override_method));
         $this->assertTrue($request->method(strtolower($weird_override_method)));
+    }
+
+    public function testQueryModify()
+    {
+        $query_string = 'search=string&page=2&per_page=3';
+        $test_one = '';
+        $test_two = '';
+        $test_three = '';
+
+        $request = new Request();
+        $request->server()->set('QUERY_STRING', $query_string);
+
+        $this->klein_app->respond(
+            function ($request, $response, $service) use (&$test_one, &$test_two, &$test_three) {
+                // Add a new var
+                $test_one = $request->query('test', 'dog');
+
+                // Modify a current var
+                $test_two = $request->query('page', 7);
+
+                // Modify a current var
+                $test_three = $request->query(array('per_page' => 10));
+            }
+        );
+
+        $this->klein_app->dispatch($request);
+
+        $this->assertSame(
+            $this->klein_app->request()->uri() . '?' . $query_string . '&test=dog',
+            $test_one
+        );
+
+        $this->assertSame(
+            $this->klein_app->request()->uri() . '?' . str_replace('page=2', 'page=7', $query_string),
+            $test_two
+        );
+
+        $this->assertSame(
+            $this->klein_app->request()->uri() . '?' . str_replace('per_page=3', 'per_page=10', $query_string),
+            $test_three
+        );
     }
 
     public function testId()

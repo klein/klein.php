@@ -14,6 +14,8 @@ namespace Klein;
 use \Klein\DataCollection\HeaderDataCollection;
 use \Klein\DataCollection\ResponseCookieDataCollection;
 use \Klein\ResponseCookie;
+use \Klein\Exceptions\LockedResponseException;
+use \Klein\Exceptions\ResponseAlreadySentException;
 
 /**
  * Response 
@@ -142,9 +144,10 @@ class Response
     public function protocolVersion($protocol_version = null)
     {
         if (null !== $protocol_version) {
-            if (!$this->isLocked()) {
-                $this->protocol_version = (string) $protocol_version;
-            }
+            // Require that the response be unlocked before changing it
+            $this->requireUnlocked();
+
+            $this->protocol_version = (string) $protocol_version;
 
             return $this;
         }
@@ -165,9 +168,10 @@ class Response
     public function body($body = null)
     {
         if (null !== $body) {
-            if (!$this->isLocked()) {
-                $this->body = (string) $body;
-            }
+            // Require that the response be unlocked before changing it
+            $this->requireUnlocked();
+
+            $this->body = (string) $body;
 
             return $this;
         }
@@ -222,9 +226,10 @@ class Response
     public function code($code = null)
     {
         if (null !== $code) {
-            if (!$this->isLocked()) {
-                $this->status = new HttpStatus($code);
-            }
+            // Require that the response be unlocked before changing it
+            $this->requireUnlocked();
+
+            $this->status = new HttpStatus($code);
 
             return $this;
         }
@@ -241,9 +246,10 @@ class Response
      */
     public function prepend($content)
     {
-        if (!$this->isLocked()) {
-            $this->body = $content . $this->body;
-        }
+        // Require that the response be unlocked before changing it
+        $this->requireUnlocked();
+
+        $this->body = $content . $this->body;
 
         return $this;
     }
@@ -257,9 +263,10 @@ class Response
      */
     public function append($content)
     {
-        if (!$this->isLocked()) {
-            $this->body .= $content;
-        }
+        // Require that the response be unlocked before changing it
+        $this->requireUnlocked();
+
+        $this->body .= $content;
 
         return $this;
     }
@@ -273,6 +280,25 @@ class Response
     public function isLocked()
     {
         return $this->locked;
+    }
+
+    /**
+     * Require that the response is unlocked
+     *
+     * Throws an exception if the response is locked,
+     * preventing any methods from mutating the response
+     * when its locked
+     *
+     * @access public
+     * @return Response
+     */
+    public function requireUnlocked()
+    {
+        if ($this->isLocked()) {
+            throw new LockedResponseException('Response is locked');
+        }
+
+        return $this;
     }
 
     /**
@@ -396,7 +422,7 @@ class Response
     public function send($override = false)
     {
         if ($this->sent && !$override) {
-            return $this;
+            throw new ResponseAlreadySentException('Response has already been sent');
         }
 
         // Send our response data
@@ -415,6 +441,17 @@ class Response
         }
 
         return $this;
+    }
+
+    /**
+     * Check if the response has been sent
+     *
+     * @access public
+     * @return boolean
+     */
+    public function isSent()
+    {
+        return $this->sent;
     }
 
     /**
@@ -541,5 +578,66 @@ class Response
         }
 
         $this->append('<pre>' .  htmlentities($obj, ENT_QUOTES) . "</pre><br />\n");
+    }
+
+    /**
+     * Sends a file
+     *
+     * @param string $path      The path of the file to send
+     * @param string $filename  The file's name
+     * @param string $mimetype  The MIME type of the file
+     * @access public
+     * @return void
+     */
+    public function file($path, $filename = null, $mimetype = null)
+    {
+        $this->body('');
+        $this->noCache();
+
+        set_time_limit(1200);
+
+        if (null === $filename) {
+            $filename = basename($path);
+        }
+        if (null === $mimetype) {
+            $mimetype = finfo_file(finfo_open(FILEINFO_MIME_TYPE), $path);
+        }
+
+        $this->header('Content-type', $mimetype);
+        $this->header('Content-length', filesize($path));
+        $this->header('Content-Disposition', 'attachment; filename="'.$filename.'"');
+
+        $this->send();
+
+        readfile($path);
+    }
+
+    /**
+     * Sends an object as json or jsonp by providing the padding prefix
+     *
+     * @param mixed $object         The data to encode as JSON
+     * @param string $jsonp_prefix  The name of the JSON-P function prefix
+     * @access public
+     * @return void
+     */
+    public function json($object, $jsonp_prefix = null)
+    {
+        $this->body('');
+        $this->noCache();
+
+        set_time_limit(1200);
+
+        $json = json_encode($object);
+
+        if (null !== $jsonp_prefix) {
+            // Should ideally be application/json-p once adopted
+            $this->header('Content-Type', 'text/javascript');
+            $this->body("$jsonp_prefix($json);");
+        } else {
+            $this->header('Content-Type', 'application/json');
+            $this->body($json);
+        }
+
+        $this->send();
     }
 }
