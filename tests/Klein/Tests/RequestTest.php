@@ -163,7 +163,18 @@ class RequestTest extends AbstractKleinTest
         $request->server()->set('REQUEST_URI', $uri.$query);
 
         $this->assertSame($uri.$query, $request->uri());
-        $this->assertSame($uri, $request->uri(true));
+    }
+
+    public function testPathname()
+    {
+        // Test data
+        $uri = 'localhostofthingsandstuff';
+        $query = '?q=search';
+
+        $request = new Request();
+        $request->server()->set('REQUEST_URI', $uri.$query);
+
+        $this->assertSame($uri, $request->pathname());
     }
 
     public function testBody()
