@@ -13,6 +13,7 @@ namespace Klein;
 
 use \Exception;
 
+use \Klein\Exceptions\LockedResponseException;
 use \Klein\Exceptions\UnhandledException;
 
 /**
@@ -416,17 +417,21 @@ class Klein
                 // Easily handle 404's
 
                 try {
-                    $this->response->append(
-                        call_user_func(
-                            $callback,
-                            $this->request,
-                            $this->response,
-                            $this->service,
-                            $this->app,
-                            $matched,
-                            $methods_matched
-                        )
-                    );
+                    try {
+                        $this->response->append(
+                            call_user_func(
+                                $callback,
+                                $this->request,
+                                $this->response,
+                                $this->service,
+                                $this->app,
+                                $matched,
+                                $methods_matched
+                            )
+                        );
+                    } catch (LockedResponseException $e) {
+                        // Do nothing, since this is an automated behavior
+                    }
                 } catch (Exception $e) {
                     $this->error($e);
                 }
@@ -438,17 +443,21 @@ class Klein
                 // Easily handle 405's
 
                 try {
-                    $this->response->append(
-                        call_user_func(
-                            $callback,
-                            $this->request,
-                            $this->response,
-                            $this->service,
-                            $this->app,
-                            $matched,
-                            $methods_matched
-                        )
-                    );
+                    try {
+                        $this->response->append(
+                            call_user_func(
+                                $callback,
+                                $this->request,
+                                $this->response,
+                                $this->service,
+                                $this->app,
+                                $matched,
+                                $methods_matched
+                            )
+                        );
+                    } catch (LockedResponseException $e) {
+                        // Do nothing, since this is an automated behavior
+                    }
                 } catch (Exception $e) {
                     $this->error($e);
                 }
@@ -516,17 +525,21 @@ class Klein
 
                     // Try and call our route's callback
                     try {
-                        $this->response->append(
-                            call_user_func(
-                                $callback,
-                                $this->request,
-                                $this->response,
-                                $this->service,
-                                $this->app,
-                                $matched,
-                                $methods_matched
-                            )
-                        );
+                        try {
+                            $this->response->append(
+                                call_user_func(
+                                    $callback,
+                                    $this->request,
+                                    $this->response,
+                                    $this->service,
+                                    $this->app,
+                                    $matched,
+                                    $methods_matched
+                                )
+                            );
+                        } catch (LockedResponseException $e) {
+                            // Do nothing, since this is an automated behavior
+                        }
                     } catch (Exception $e) {
                         $this->error($e);
                     }
@@ -538,46 +551,50 @@ class Klein
             }
         }
 
-        if (!$matched && count($methods_matched) > 0) {
-            if (strcasecmp($req_method, 'OPTIONS') !== 0) {
-                $this->response->code(405);
+        try {
+            if (!$matched && count($methods_matched) > 0) {
+                if (strcasecmp($req_method, 'OPTIONS') !== 0) {
+                    $this->response->code(405);
+                }
+
+                $this->response->header('Allow', implode(', ', $methods_matched));
+            } elseif (!$matched) {
+                $this->response->code(404);
             }
 
-            $this->response->header('Allow', implode(', ', $methods_matched));
-        } elseif (!$matched) {
-            $this->response->code(404);
-        }
+            if ($this->response->chunked) {
+                $this->response->chunk();
 
-        if ($this->response->chunked) {
-            $this->response->chunk();
-
-        } else {
-            // Output capturing behavior
-            switch($capture) {
-                case self::DISPATCH_CAPTURE_AND_RETURN:
-                    return ob_get_clean();
-                    break;
-                case self::DISPATCH_CAPTURE_AND_REPLACE:
-                    $this->response->body(ob_get_clean());
-                    break;
-                case self::DISPATCH_CAPTURE_AND_PREPEND:
-                    $this->response->prepend(ob_get_clean());
-                    break;
-                case self::DISPATCH_CAPTURE_AND_APPEND:
-                    $this->response->append(ob_get_clean());
-                    break;
-                case self::DISPATCH_NO_CAPTURE:
-                default:
-                    ob_end_flush();
-                    break;
+            } else {
+                // Output capturing behavior
+                switch($capture) {
+                    case self::DISPATCH_CAPTURE_AND_RETURN:
+                        return ob_get_clean();
+                        break;
+                    case self::DISPATCH_CAPTURE_AND_REPLACE:
+                        $this->response->body(ob_get_clean());
+                        break;
+                    case self::DISPATCH_CAPTURE_AND_PREPEND:
+                        $this->response->prepend(ob_get_clean());
+                        break;
+                    case self::DISPATCH_CAPTURE_AND_APPEND:
+                        $this->response->append(ob_get_clean());
+                        break;
+                    case self::DISPATCH_NO_CAPTURE:
+                    default:
+                        ob_end_flush();
+                        break;
+                }
             }
-        }
 
-        // Test for HEAD request (like GET)
-        if (strcasecmp($req_method, 'HEAD') === 0) {
-            // HEAD requests shouldn't return a body
-            $this->response->body('');
-            ob_clean();
+            // Test for HEAD request (like GET)
+            if (strcasecmp($req_method, 'HEAD') === 0) {
+                // HEAD requests shouldn't return a body
+                $this->response->body('');
+                ob_clean();
+            }
+        } catch (LockedResponseException $e) {
+            // Do nothing, since this is an automated behavior
         }
 
         if ($send_response) {

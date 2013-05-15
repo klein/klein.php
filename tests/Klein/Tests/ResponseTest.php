@@ -17,6 +17,7 @@ use \Klein\Response;
 use \Klein\HttpStatus;
 use \Klein\DataCollection\HeaderDataCollection;
 use \Klein\DataCollection\ResponseCookieDataCollection;
+use \Klein\Exceptions\LockedResponseException;
 
 use \Klein\Tests\Mocks\MockRequestFactory;
 
@@ -152,11 +153,31 @@ class ResponsesTest extends AbstractKleinTest
         $code = $response->code();
 
         // Attempt to modify
-        $response->protocolVersion('2.0');
-        $response->body('WOOT!');
-        $response->code(204);
-        $response->prepend('cat');
-        $response->append('dog');
+        try {
+            $response->protocolVersion('2.0');
+        } catch (LockedResponseException $e) {
+        }
+
+        try {
+            $response->body('WOOT!');
+        } catch (LockedResponseException $e) {
+        }
+
+        try {
+            $response->code(204);
+        } catch (LockedResponseException $e) {
+        }
+
+        try {
+            $response->prepend('cat');
+        } catch (LockedResponseException $e) {
+        }
+
+        try {
+            $response->append('dog');
+        } catch (LockedResponseException $e) {
+        }
+
 
         // Assert nothing has changed
         $this->assertSame($protocol_version, $response->protocolVersion());
