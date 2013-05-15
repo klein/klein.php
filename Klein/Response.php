@@ -15,6 +15,7 @@ use \Klein\DataCollection\HeaderDataCollection;
 use \Klein\DataCollection\ResponseCookieDataCollection;
 use \Klein\ResponseCookie;
 use \Klein\Exceptions\LockedResponseException;
+use \Klein\Exceptions\ResponseAlreadySentException;
 
 /**
  * Response 
@@ -294,7 +295,7 @@ class Response
     public function requireUnlocked()
     {
         if ($this->isLocked()) {
-            throw new LockedResponseException();
+            throw new LockedResponseException('Response is locked');
         }
 
         return $this;
@@ -421,7 +422,7 @@ class Response
     public function send($override = false)
     {
         if ($this->sent && !$override) {
-            return $this;
+            throw new ResponseAlreadySentException('Response has already been sent');
         }
 
         // Send our response data
@@ -440,6 +441,17 @@ class Response
         }
 
         return $this;
+    }
+
+    /**
+     * Check if the response has been sent
+     *
+     * @access public
+     * @return boolean
+     */
+    public function isSent()
+    {
+        return $this->sent;
     }
 
     /**
