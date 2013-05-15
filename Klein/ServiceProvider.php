@@ -287,38 +287,6 @@ class ServiceProvider
     }
 
     /**
-     * Adds to or modifies the current query string
-     *
-     * @param string $key   The name of the query param
-     * @param mixed $value  The value of the query param
-     * @access public
-     * @return string
-     */
-    public function query($key, $value = null)
-    {
-        $query = array();
-
-        parse_str(
-            $this->request->server()->get('QUERY_STRING'),
-            $query
-        );
-
-        if (is_array($key)) {
-            $query = array_merge($query, $key);
-        } else {
-            $query[$key] = $value;
-        }
-
-        $request_uri = $this->request->uri();
-
-        if (strpos($request_uri, '?') !== false) {
-            $request_uri = strstr($request_uri, '?', true);
-        }
-
-        return $request_uri . (!empty($query) ? '?' . http_build_query($query) : null);
-    }
-
-    /**
      * Get (or set) the view's layout
      *
      * Simply calling this method without any arguments returns the current layout.
