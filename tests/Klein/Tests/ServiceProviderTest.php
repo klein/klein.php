@@ -128,15 +128,6 @@ class ServiceProviderTest extends AbstractKleinTest
         );
     }
 
-    public function testCallServiceThroughKlein()
-    {
-        // Make sure the calls are the same
-        $this->assertSame(
-            $this->klein_app->sharedData(),
-            $this->klein_app->service()->sharedData()
-        );
-    }
-
     public function testFileSend()
     {
         $file_name = 'testing';
