@@ -143,7 +143,7 @@ class ResponseCookie
      */
     public function setName($name)
     {
-        (string) $this->name = $name;
+        $this->name = (string) $name;
 
         return $this;
     }
@@ -169,7 +169,7 @@ class ResponseCookie
     public function setValue($value)
     {
         if (null !== $value) {
-            (string) $this->value = $value;
+            $this->value = (string) $value;
         } else {
             $this->value = $value;
         }
@@ -201,7 +201,7 @@ class ResponseCookie
     public function setExpire($expire)
     {
         if (null !== $expire) {
-            (int) $this->expire = $expire;
+            $this->expire = (int) $expire;
         } else {
             $this->expire = $expire;
         }
@@ -230,7 +230,7 @@ class ResponseCookie
     public function setPath($path)
     {
         if (null !== $path) {
-            (string) $this->path = $path;
+            $this->path = (string) $path;
         } else {
             $this->path = $path;
         }
@@ -259,7 +259,7 @@ class ResponseCookie
     public function setDomain($domain)
     {
         if (null !== $domain) {
-            (string) $this->domain = $domain;
+            $this->domain = (string) $domain;
         } else {
             $this->domain = $domain;
         }
@@ -287,7 +287,7 @@ class ResponseCookie
      */
     public function setSecure($secure)
     {
-        (boolean) $this->secure = $secure;
+        $this->secure = (boolean) $secure;
 
         return $this;
     }
@@ -312,7 +312,7 @@ class ResponseCookie
      */
     public function setHttpOnly($http_only)
     {
-        (boolean) $this->http_only = $http_only;
+        $this->http_only = (boolean) $http_only;
 
         return $this;
     }
