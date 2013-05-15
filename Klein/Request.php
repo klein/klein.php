@@ -415,18 +415,26 @@ class Request
     /**
      * Gets the request URI
      *
-     * @param boolean $strip_query_string Whether or not to strip the query string from the URI
      * @access public
      * @return string
      */
-    public function uri($strip_query_string = false)
+    public function uri()
     {
-        $uri = $this->server->get('REQUEST_URI', '/');
+        return $this->server->get('REQUEST_URI', '/');
+    }
 
-        // Should we strip the query string?
-        if ($strip_query_string) {
-            $uri = strstr($uri, '?', true) ?: $uri;
-        }
+    /**
+     * Get the request's pathname
+     *
+     * @access public
+     * @return string
+     */
+    public function pathname()
+    {
+        $uri = $this->uri();
+
+        // Strip the query string from the URI
+        $uri = strstr($uri, '?', true) ?: $uri;
 
         return $uri;
     }
