@@ -1143,4 +1143,100 @@ class RoutesTest extends AbstractKleinTest
             $this->assertEquals($header['val'], $this->klein_app->response()->headers()->get($header['key']));
         }
     }
+
+    public function testGetAlias()
+    {
+        $this->expectOutputString('1,2,');
+
+        // With path
+        $this->klein_app->get(
+            '/',
+            function () {
+                echo '1,';
+            }
+        );
+
+        // Without path
+        $this->klein_app->get(
+            function () {
+                echo '2,';
+            }
+        );
+
+        $this->klein_app->dispatch(
+            MockRequestFactory::create('/')
+        );
+    }
+
+    public function testPostAlias()
+    {
+        $this->expectOutputString('1,2,');
+
+        // With path
+        $this->klein_app->post(
+            '/',
+            function () {
+                echo '1,';
+            }
+        );
+
+        // Without path
+        $this->klein_app->post(
+            function () {
+                echo '2,';
+            }
+        );
+
+        $this->klein_app->dispatch(
+            MockRequestFactory::create('/', 'POST')
+        );
+    }
+
+    public function testPutAlias()
+    {
+        $this->expectOutputString('1,2,');
+
+        // With path
+        $this->klein_app->put(
+            '/',
+            function () {
+                echo '1,';
+            }
+        );
+
+        // Without path
+        $this->klein_app->put(
+            function () {
+                echo '2,';
+            }
+        );
+
+        $this->klein_app->dispatch(
+            MockRequestFactory::create('/', 'PUT')
+        );
+    }
+
+    public function testDeleteAlias()
+    {
+        $this->expectOutputString('1,2,');
+
+        // With path
+        $this->klein_app->delete(
+            '/',
+            function () {
+                echo '1,';
+            }
+        );
+
+        // Without path
+        $this->klein_app->delete(
+            function () {
+                echo '2,';
+            }
+        );
+
+        $this->klein_app->dispatch(
+            MockRequestFactory::create('/', 'DELETE')
+        );
+    }
 }
