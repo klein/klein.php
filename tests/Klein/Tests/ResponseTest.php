@@ -298,6 +298,39 @@ class ResponsesTest extends AbstractKleinTest
         $this->assertContains('test', $response->body());
     }
 
+    public function testFileSend()
+    {
+        $file_name = 'testing';
+        $file_mime = 'text/plain';
+
+        $this->klein_app->respond(
+            function ($request, $response, $service) use ($file_name, $file_mime) {
+                $response->file(__FILE__, $file_name, $file_mime);
+            }
+        );
+
+        $this->klein_app->dispatch();
+
+        // Expect our output to match our json encoded test object
+        $this->expectOutputString(
+            file_get_contents(__FILE__)
+        );
+
+        // Assert headers were passed
+        $this->assertEquals(
+            $file_mime,
+            $this->klein_app->response()->headers()->get('Content-Type')
+        );
+        $this->assertEquals(
+            filesize(__FILE__),
+            $this->klein_app->response()->headers()->get('Content-Length')
+        );
+        $this->assertContains(
+            $file_name,
+            $this->klein_app->response()->headers()->get('Content-Disposition')
+        );
+    }
+
     public function testJSON()
     {
         // Create a test object to be JSON encoded/decoded
@@ -312,15 +345,12 @@ class ResponsesTest extends AbstractKleinTest
         );
 
         $this->klein_app->respond(
-            '/json',
             function ($request, $response, $service) use ($test_object) {
-                $service->json($test_object);
+                $response->json($test_object);
             }
         );
 
-        $this->klein_app->dispatch(
-            MockRequestFactory::create('/json')
-        );
+        $this->klein_app->dispatch();
 
         // Expect our output to match our json encoded test object
         $this->expectOutputString(
