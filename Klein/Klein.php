@@ -15,6 +15,7 @@ use \Exception;
 
 use \Klein\Exceptions\LockedResponseException;
 use \Klein\Exceptions\UnhandledException;
+use \Klein\Exceptions\ResponseAlreadySentException;
 
 /**
  * Klein
@@ -597,7 +598,7 @@ class Klein
             // Do nothing, since this is an automated behavior
         }
 
-        if ($send_response) {
+        if ($send_response && !$this->response->isSent()) {
             $this->response->send();
         }
     }
