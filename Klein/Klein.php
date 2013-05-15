@@ -693,4 +693,77 @@ class Klein
             throw new UnhandledException($err);
         }
     }
+
+
+    /**
+     * Method aliases
+     */
+
+    /**
+     * GET alias for "respond()"
+     *
+     * @param string $route
+     * @param callable $callback
+     * @access public
+     * @return callable
+     */
+    public function get($route = '*', $callback = null)
+    {
+        $args = func_get_args();
+        $callback = array_pop($args);
+        $route = array_pop($args);
+
+        return $this->respond('GET', $route, $callback);
+    }
+
+    /**
+     * POST alias for "respond()"
+     *
+     * @param string $route
+     * @param callable $callback
+     * @access public
+     * @return callable
+     */
+    public function post($route = '*', $callback = null)
+    {
+        $args = func_get_args();
+        $callback = array_pop($args);
+        $route = array_pop($args);
+
+        return $this->respond('POST', $route, $callback);
+    }
+
+    /**
+     * PUT alias for "respond()"
+     *
+     * @param string $route
+     * @param callable $callback
+     * @access public
+     * @return callable
+     */
+    public function put($route = '*', $callback = null)
+    {
+        $args = func_get_args();
+        $callback = array_pop($args);
+        $route = array_pop($args);
+
+        return $this->respond('PUT', $route, $callback);
+    }
+
+    /**
+     * DELETE alias for "respond()"
+     *
+     * @param string $route
+     * @param callable $callback
+     * @access public
+     * @return callable
+     */
+    public function delete($route = '*', $callback = null)
+    {
+        $args = func_get_args();
+        $callback = array_pop($args);
+        $route = array_pop($args);
+
+        return $this->respond('DELETE', $route, $callback);
+    }
 }
