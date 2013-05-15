@@ -63,9 +63,6 @@ class ServerDataCollection extends DataCollection
     /**
      * Quickly check if a string has a passed prefix
      *
-     * Use the more convoluted "substr" method, as its
-     * slightly faster than using the "strpos" method
-     *
      * @param string $string    The string to check
      * @param string $prefix    The prefix to test
      * @static
@@ -74,7 +71,7 @@ class ServerDataCollection extends DataCollection
      */
     public static function hasPrefix($string, $prefix)
     {
-        if (substr($string, 0, strlen($prefix)) === $prefix) {
+        if (strpos($string, $prefix) === 0) {
             return true;
         }
 
