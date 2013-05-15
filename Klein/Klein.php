@@ -589,10 +589,10 @@ class Klein
      * Compiles a route string to a regular expression
      *
      * @param string $route     The route string to compile
-     * @access public
+     * @access protected
      * @return void
      */
-    public function compileRoute($route)
+    protected function compileRoute($route)
     {
         if (preg_match_all('`(/|\.|)\[([^:\]]*+)(?::([^:\]]*+))?\](\?|)`', $route, $matches, PREG_SET_ORDER)) {
             $match_types = array(
@@ -649,10 +649,10 @@ class Klein
      * Routes an exception through the error callbacks
      *
      * @param Exception $err    The exception that occurred
-     * @access public
+     * @access protected
      * @return void
      */
-    public function error(Exception $err)
+    protected function error(Exception $err)
     {
         $type = get_class($err);
         $msg = $err->getMessage();
