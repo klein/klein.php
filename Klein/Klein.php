@@ -323,19 +323,6 @@ class Klein
     }
 
     /**
-     * Start a PHP session
-     *
-     * @access public
-     * @return void
-     */
-    public function startSession()
-    {
-        if (session_id() === '') {
-            session_start();
-        }
-    }
-
-    /**
      * Dispatch the request to the approriate route(s)
      *
      * Dispatch with optionally injected dependencies
