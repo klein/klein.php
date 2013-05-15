@@ -14,6 +14,7 @@ namespace Klein;
 use \Klein\DataCollection\HeaderDataCollection;
 use \Klein\DataCollection\ResponseCookieDataCollection;
 use \Klein\ResponseCookie;
+use \Klein\Exceptions\LockedResponseException;
 
 /**
  * Response 
@@ -142,9 +143,10 @@ class Response
     public function protocolVersion($protocol_version = null)
     {
         if (null !== $protocol_version) {
-            if (!$this->isLocked()) {
-                $this->protocol_version = (string) $protocol_version;
-            }
+            // Require that the response be unlocked before changing it
+            $this->requireUnlocked();
+
+            $this->protocol_version = (string) $protocol_version;
 
             return $this;
         }
@@ -165,9 +167,10 @@ class Response
     public function body($body = null)
     {
         if (null !== $body) {
-            if (!$this->isLocked()) {
-                $this->body = (string) $body;
-            }
+            // Require that the response be unlocked before changing it
+            $this->requireUnlocked();
+
+            $this->body = (string) $body;
 
             return $this;
         }
@@ -222,9 +225,10 @@ class Response
     public function code($code = null)
     {
         if (null !== $code) {
-            if (!$this->isLocked()) {
-                $this->status = new HttpStatus($code);
-            }
+            // Require that the response be unlocked before changing it
+            $this->requireUnlocked();
+
+            $this->status = new HttpStatus($code);
 
             return $this;
         }
@@ -241,9 +245,10 @@ class Response
      */
     public function prepend($content)
     {
-        if (!$this->isLocked()) {
-            $this->body = $content . $this->body;
-        }
+        // Require that the response be unlocked before changing it
+        $this->requireUnlocked();
+
+        $this->body = $content . $this->body;
 
         return $this;
     }
@@ -257,9 +262,10 @@ class Response
      */
     public function append($content)
     {
-        if (!$this->isLocked()) {
-            $this->body .= $content;
-        }
+        // Require that the response be unlocked before changing it
+        $this->requireUnlocked();
+
+        $this->body .= $content;
 
         return $this;
     }
@@ -273,6 +279,25 @@ class Response
     public function isLocked()
     {
         return $this->locked;
+    }
+
+    /**
+     * Require that the response is unlocked
+     *
+     * Throws an exception if the response is locked,
+     * preventing any methods from mutating the response
+     * when its locked
+     *
+     * @access public
+     * @return Response
+     */
+    public function requireUnlocked()
+    {
+        if ($this->isLocked()) {
+            throw new LockedResponseException();
+        }
+
+        return $this;
     }
 
     /**
