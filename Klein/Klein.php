@@ -631,17 +631,11 @@ class Klein
      * Adds an error callback to the stack of error handlers
      *
      * @param callable $callback            The callable function to execute in the error handling chain
-     * @param boolean $allow_duplicates     Whether or not to allow duplicate callbacks to exist in the
-     *  error handling chain
      * @access public
      * @return boolean|void
      */
-    public function onError($callback, $allow_duplicates = true)
+    public function onError($callback)
     {
-        if (!$allow_duplicates && in_array($callback, $this->errorCallbacks)) {
-            return false;
-        }
-
         $this->errorCallbacks[] = $callback;
     }
 
