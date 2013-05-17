@@ -1,2 +1,5 @@
 # Composer
 composer.lock
+
+# Auto-generated documentation directory (phpDocumentor)
+docs/

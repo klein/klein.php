@@ -1,4 +1,0 @@
-all:
-
-test:
-	phpunit tests
