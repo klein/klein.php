@@ -13,6 +13,7 @@ namespace Klein\Tests;
 
 use \Klein\Klein;
 use \Klein\Tests\Mocks\MockRequestFactory;
+use \Klein\Validator;
 
 /**
  * ValidationsTest 
@@ -38,6 +39,11 @@ class ValidationsTest extends AbstractKleinTest
         } else {
             echo 'fail';
         }
+    }
+
+    protected function validator($string, $error_message = null)
+    {
+        return new Validator($string, $error_message);
     }
 
     public function testCustomValidationMessage()
@@ -316,6 +322,72 @@ class ValidationsTest extends AbstractKleinTest
                 MockRequestFactory::create('/2 5')
             )
         );
+    }
+
+    public function testUrl()
+    {
+        // Is
+        $this->validator('http://www.test.com/path/file.ext?query=param#anchor')->isUrl();
+        $this->validator('http://www.test.com/path/file.ext?query=param')->isUrl();
+        $this->validator('http://www.test.com/path/file.ext#anchor')->isUrl();
+        $this->validator('http://www.test.com/path/file.ext')->isUrl();
+        $this->validator('http://www.test.com/path/')->isUrl();
+        $this->validator('http://www.test.com/file.ext')->isUrl();
+        $this->validator('http://www.test.com/page')->isUrl();
+        $this->validator('http://test.com/')->isUrl();
+        $this->validator('http://test.com')->isUrl();
+
+        // Not
+        $this->validator('test.com')->notUrl();
+        $this->validator('test')->notUrl();
+        $this->validator('www.com')->notUrl();
+    }
+
+    public function testIp()
+    {
+        // Is
+        $this->validator('0000:0000:0000:0000:0000:0000:0000:0001')->isIp();
+        $this->validator('2001:0db8:0000:0000:0000:ff00:0042:8329')->isIp();
+        $this->validator('2001:db8:0:0:0:ff00:42:8329')->isIp();
+        $this->validator('2001:db8::ff00:42:8329')->isIp();
+        $this->validator('::ffff:192.0.2.128')->isIp();
+        $this->validator('192.168.1.1')->isIp();
+        $this->validator('192.168.0.1')->isIp();
+        $this->validator('10.0.0.1')->isIp();
+        $this->validator('169.254.0.0')->isIp();
+        $this->validator('127.0.0.1')->isIp();
+        $this->validator('0.0.0.0')->isIp();
+
+        // Not
+        $this->validator('0')->notIp();
+        $this->validator('10')->notIp();
+        $this->validator('10,000')->notIp();
+        $this->validator('string')->notIp();
+    }
+
+    public function testRemoteIp()
+    {
+        // Is
+        $this->validator('2001:0db5:86a3:0000:0000:8a2e:0370:7335')->isRemoteIp();
+        $this->validator('ff02:0:0:0:0:1:ff00::')->isRemoteIp();
+        $this->validator('2001:db8::ff00:42:8329')->isRemoteIp();
+        $this->validator('::ffff:192.0.2.128')->isRemoteIp();
+        $this->validator('74.125.226.192')->isRemoteIp();
+        $this->validator('204.232.175.90')->isRemoteIp();
+        $this->validator('98.139.183.24')->isRemoteIp();
+        $this->validator('205.186.173.52')->isRemoteIp();
+
+        // Not
+        $this->validator('192.168.1.1')->notRemoteIp();
+        $this->validator('192.168.0.1')->notRemoteIp();
+        $this->validator('10.0.0.1')->notRemoteIp();
+        $this->validator('169.254.0.0')->notRemoteIp();
+        $this->validator('127.0.0.1')->notRemoteIp();
+        $this->validator('0.0.0.0')->notRemoteIp();
+        $this->validator('0')->notRemoteIp();
+        $this->validator('10')->notRemoteIp();
+        $this->validator('10,000')->notRemoteIp();
+        $this->validator('string')->notRemoteIp();
     }
 
     public function testAlpha()
