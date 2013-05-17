@@ -399,7 +399,7 @@ class Klein
             }
 
             // If the method was matched or if it wasn't even passed (in the route callback)
-            $possible_match = is_null($method_match) || $method_match;
+            $possible_match = (null === $method_match) || $method_match;
 
             // ! is used to negate a match
             if (isset($_route[0]) && $_route[0] === '!') {

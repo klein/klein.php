@@ -73,7 +73,7 @@ class DataCollection implements IteratorAggregate, ArrayAccess, Countable
      */
     public function all($mask = null)
     {
-        if (!is_null($mask)) {
+        if (null !== $mask) {
             // Support a more "magical" call
             if (!is_array($mask)) {
                 $mask = func_get_args();

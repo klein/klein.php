@@ -170,7 +170,7 @@ class Request
      */
     public function id($hash = true)
     {
-        if (is_null($this->id)) {
+        if (null === $this->id) {
             $this->id = uniqid();
 
             if ($hash) {
@@ -267,7 +267,7 @@ class Request
     public function body()
     {
         // Only get it once
-        if (is_null($this->body)) {
+        if (null === $this->body) {
             $this->body = @file_get_contents('php://input');
         }
 
