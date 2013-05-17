@@ -352,7 +352,7 @@ class Klein
 
 
         // Grab some data from the request
-        $uri = $this->request->uri(true); // Strip the query string
+        $uri = $this->request->pathname();
         $req_method = $this->request->method();
 
         // Set up some variables for matching
