@@ -111,7 +111,7 @@ class HttpStatus
     {
         $this->setCode($code);
 
-        if (is_null($message)) {
+        if (null === $message) {
             $message = static::getMessageFromCode($code);
         }
 
@@ -176,7 +176,7 @@ class HttpStatus
     {
         $string = (string) $this->code;
 
-        if (!is_null($this->message)) {
+        if (null !== $this->message) {
             $string = $string . ' ' . $this->message;
         }
 
