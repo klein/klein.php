@@ -418,21 +418,19 @@ class Klein
                 // Easily handle 404's
 
                 try {
-                    try {
-                        $this->response->append(
-                            call_user_func(
-                                $callback,
-                                $this->request,
-                                $this->response,
-                                $this->service,
-                                $this->app,
-                                $matched,
-                                $methods_matched
-                            )
-                        );
-                    } catch (LockedResponseException $e) {
-                        // Do nothing, since this is an automated behavior
-                    }
+                    $this->response->append(
+                        call_user_func(
+                            $callback,
+                            $this->request,
+                            $this->response,
+                            $this->service,
+                            $this->app,
+                            $matched,
+                            $methods_matched
+                        )
+                    );
+                } catch (LockedResponseException $e) {
+                    // Do nothing, since this is an automated behavior
                 } catch (Exception $e) {
                     $this->error($e);
                 }
@@ -444,21 +442,19 @@ class Klein
                 // Easily handle 405's
 
                 try {
-                    try {
-                        $this->response->append(
-                            call_user_func(
-                                $callback,
-                                $this->request,
-                                $this->response,
-                                $this->service,
-                                $this->app,
-                                $matched,
-                                $methods_matched
-                            )
-                        );
-                    } catch (LockedResponseException $e) {
-                        // Do nothing, since this is an automated behavior
-                    }
+                    $this->response->append(
+                        call_user_func(
+                            $callback,
+                            $this->request,
+                            $this->response,
+                            $this->service,
+                            $this->app,
+                            $matched,
+                            $methods_matched
+                        )
+                    );
+                } catch (LockedResponseException $e) {
+                    // Do nothing, since this is an automated behavior
                 } catch (Exception $e) {
                     $this->error($e);
                 }
@@ -526,21 +522,19 @@ class Klein
 
                     // Try and call our route's callback
                     try {
-                        try {
-                            $this->response->append(
-                                call_user_func(
-                                    $callback,
-                                    $this->request,
-                                    $this->response,
-                                    $this->service,
-                                    $this->app,
-                                    $matched,
-                                    $methods_matched
-                                )
-                            );
-                        } catch (LockedResponseException $e) {
-                            // Do nothing, since this is an automated behavior
-                        }
+                        $this->response->append(
+                            call_user_func(
+                                $callback,
+                                $this->request,
+                                $this->response,
+                                $this->service,
+                                $this->app,
+                                $matched,
+                                $methods_matched
+                            )
+                        );
+                    } catch (LockedResponseException $e) {
+                        // Do nothing, since this is an automated behavior
                     } catch (Exception $e) {
                         $this->error($e);
                     }
