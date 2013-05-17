@@ -8,14 +8,21 @@
       {
          "name": "Chris O'Hara",
          "email": "cohara87@gmail.com",
-         "homepage": "http://chris6f.com/"
+         "homepage": "http://chris6f.com/",
+         "role": "Creator/Developer"
+      },
+      {
+         "name": "Trevor Suarez",
+         "email": "rican7@gmail.com",
+         "homepage": "http://about.me/tnsuarez",
+         "role": "Contributor/Developer"
       }
    ],
    "require": {
       "php": ">=5.3.0"
    },
    "autoload": {
-      "files": ["klein.php"]
+      "psr-0": { "Klein": "." }
    },
    "require-dev": {
       "phpunit/phpunit": "3.7.x"

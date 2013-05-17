@@ -1,50 +1,71 @@
+# Klein.php
+
 **klein.php** is a lightning fast router for PHP 5.3+
 
 * Flexible regular expression routing (inspired by [Sinatra](http://www.sinatrarb.com/))
-* A set of [boilerplate methods](https://github.com/chriso/klein.php/wiki/API) for rapidly building web apps
+* A set of [boilerplate methods](#api) for rapidly building web apps
 * Almost no overhead => [2500+ requests/second](https://gist.github.com/878833)
 
 ## Getting started
 
 1. PHP 5.3.x is required
-2. Setup [URL rewriting](https://gist.github.com/874000) so that all requests are handled by **index.php**
-3. Add `<?php require 'klein.php';` as your first line and `dispatch();` as your last
+2. Install Klein using [Composer](#composer-installation) (recommended) or manually
+3. Setup [URL rewriting](https://gist.github.com/874000) so that all requests are handled by **index.php**
 4. (Optional) Throw in some [APC](http://pecl.php.net/package/APC) for good measure
 
+## Composer Installation
+
+1. Get [Composer](http://getcomposer.org/)
+2. Require Klein with `php composer.phar require klein/klein v2.0.x`
+3. Install dependencies with `php composer.phar install`
+
 ## Example
+
+*Hello World* - Obligatory hello world example
+
+```php
+<?php
+require_once __DIR__ . '/vendor/autoload.php';
+
+$klein = new \Klein\Klein();
+
+$klein->respond('GET', '/hello-world', function () {
+    return 'Hello World!';
+});
+
+$klein->dispatch();
+```
 
 *Example 1* - Respond to all requests
 
 ```php
-<?php
-respond(function () {
-    echo 'Hello World!';
+$klein->respond(function () {
+    return 'All the things';
 });
 ```
 
 *Example 2* - Named parameters
 
 ```php
-<?php
-respond('/[:name]', function ($request) {
-    echo 'Hello ' . $request->name;
+$klein->respond('/[:name]', function ($request) {
+    return 'Hello ' . $request->name;
 });
 ```
 
 *Example 3* - [So RESTful](http://bit.ly/g93B1s)
 
 ```php
-<?php
-respond('GET', '/posts', $callback);
-respond('POST', '/posts/create', $callback);
-respond('PUT', '/posts/[i:id]', $callback);
-respond('DELETE', '/posts/[i:id]', $callback);
+$klein->respond('GET', '/posts', $callback);
+$klein->respond('POST', '/posts/create', $callback);
+$klein->respond('PUT', '/posts/[i:id]', $callback);
+$klein->respond('DELETE', '/posts/[i:id]', $callback);
+$klein->respond('OPTIONS', null, $callback);
 
 // To match multiple request methods:
-respond(array('POST','GET'), $route, $callback);
+$klein->respond(array('POST','GET'), $route, $callback);
 
 // Or you might want to handle the requests in the same place
-respond('/posts/[create|edit:action]?/[i:id]?', function ($request, $response) {
+$klein->respond('/posts/[create|edit:action]?/[i:id]?', function ($request, $response) {
     switch ($request->action) {
         //
     }
@@ -54,40 +75,39 @@ respond('/posts/[create|edit:action]?/[i:id]?', function ($request, $response) {
 *Example 4* - Sending objects / files
 
 ```php
-<?php
-respond(function ($request, $response) {
-    $response->xml = function ($object) {
+$klein->respond(function ($request, $response, $service) {
+    $service->xml = function ($object) {
         // Custom xml output function
     }
-    $response->csv = function ($object) {
+    $service->csv = function ($object) {
         // Custom csv output function
     }
 });
 
-respond('/report.[xml|csv|json:format]?', function ($reqest, $response) {
+$klein->respond('/report.[xml|csv|json:format]?', function ($reqest, $response, $service) {
     // Get the format or fallback to JSON as the default
     $send = $request->param('format', 'json');
-    $response->$send($report);
+    $service->$send($report);
 });
 
-respond('/report/latest', function ($request, $response) {
-    $response->file('/tmp/cached_report.zip');
+$klein->respond('/report/latest', function ($request, $response, $service) {
+    $service->file('/tmp/cached_report.zip');
 });
 ```
 
 *Example 5* - All together
 
 ```php
-<?php
-respond(function ($request, $response, $app) {
+$klein->respond(function ($request, $response, $service, $app) {
     // Handle exceptions => flash the message and redirect to the referrer
-    $response->onError(function ($response, $err_msg) {
-        $response->flash($err_msg);
-        $response->back();
+    $response->onError(function ($klein, $err_msg) {
+        $klein->service()->flash($err_msg);
+        $klein->service()->back();
     });
 
     // The third parameter can be used to share scope and global objects
     $app->db = new PDO(...);
+
     // $app also can store lazy services, e.g. if you don't want to
     // instantiate a database connection on every response
     $app->register('db', function() {
@@ -95,20 +115,20 @@ respond(function ($request, $response, $app) {
     });
 });
 
-respond('POST', '/users/[i:id]/edit', function ($request, $response) {
+$klein->respond('POST', '/users/[i:id]/edit', function ($request, $response, $service, $app) {
     // Quickly validate input parameters
-    $request->validate('username', 'Please enter a valid username')->isLen(5, 64)->isChars('a-zA-Z0-9-');
-    $request->validate('password')->notNull();
+    $service->validateParam('username', 'Please enter a valid username')->isLen(5, 64)->isChars('a-zA-Z0-9-');
+    $service->validateParam('password')->notNull();
 
     $app->db->query(...); // etc.
 
     // Add view properties and helper methods
-    $response->title = 'foo';
-    $response->escape = function ($str) {
+    $service->title = 'foo';
+    $service->escape = function ($str) {
         return htmlentities($str); // Assign view helpers
     };
 
-    $response->render('myview.phtml');
+    $service->render('myview.phtml');
 });
 
 // myview.phtml:
@@ -118,22 +138,33 @@ respond('POST', '/users/[i:id]/edit', function ($request, $response) {
 ## Route namespaces
 
 ```php
-<?php
-with('/users', function () {
+$klein->with('/users', function () use ($klein) {
 
-    respond('GET', '/?', function ($request, $response) {
+    $klein->respond('GET', '/?', function ($request, $response) {
         // Show all users
     });
 
-    respond('GET', '/[:id]', function ($request, $response) {
+    $klein->respond('GET', '/[:id]', function ($request, $response) {
         // Show a single user
     });
 
 });
 
 foreach(array('projects', 'posts') as $controller) {
-    with("/$controller", "controllers/$controller.php");
+    // Include all routes defined in a file under a given namespace
+    $klein->with("/$controller", "controllers/$controller.php");
 }
+```
+
+Included files are run in the scope of Klein (`$klein`) so all Klein
+methods/properties can be accessed with `$this`
+
+_Example file for: "controllers/projects.php"_
+```php
+// Routes to "/projects/?"
+$this->respond('GET', '/?', function ($request, $response) {
+    // Show all projects
+});
 ```
 
 ## Lazy services
@@ -143,7 +174,7 @@ first use.
 
 ``` php
 <?php
-respond(function ($request, $response, $app) {
+$klein->respond(function ($request, $response, $service, $app) {
     $app->register('lazyDb', function() {
         $db = new stdClass();
         $db->name = 'foo';
@@ -153,10 +184,10 @@ respond(function ($request, $response, $app) {
 
 //Later
 
-respond('GET', '/posts', function ($request, $response, $app) {
+$klein->respond('GET', '/posts', function ($request, $response, $service, $app) {
     // $db is initialised on first request
     // all subsequent calls will use the same instance
-    echo $app->lazyDb->name;
+    return $app->lazyDb->name;
 });
 ```
 
@@ -165,8 +196,7 @@ respond('GET', '/posts', function ($request, $response, $app) {
 To add a custom validator use `addValidator($method, $callback)`
 
 ```php
-<?php
-addValidator('hex', function ($str) {
+$service->addValidator('hex', function ($str) {
     return preg_match('/^[0-9a-f]++$/i', $str);
 });
 ```
@@ -174,13 +204,19 @@ addValidator('hex', function ($str) {
 You can validate parameters using `is<$method>()` or `not<$method>()`, e.g.
 
 ```php
-$request->validate('key')->isHex();
+$service->validateParam('key')->isHex();
+```
+
+Or you can validate any string using the same flow..
+
+```php
+$service->validate($username)->isLen(4,16);
 ```
 
 Validation methods are chainable, and a custom exception message can be specified for if/when validation fails
 
 ```php
-$request->validate('key', 'The key was invalid')->isHex()->isLen(32);
+$service->validateParam('key', 'The key was invalid')->isHex()->isLen(32);
 ```
 
 ## Routing
@@ -213,9 +249,9 @@ authentication or view layouts. e.g. as a basic example, the following
 code will wrap other routes with a header and footer
 
 ```php
-respond('*', function ($request, $response) { $response->render('header.phtml'; });
+$klein->respond('*', function ($request, $response, $service) { $service->render('header.phtml'; });
 //other routes
-respond('*', function ($request, $response) { $response->render('footer.phtml'; });
+$klein->respond('*', function ($request, $response, $service) { $service->render('footer.phtml'; });
 ```
 
 Routes automatically match the entire request URI. If you need to match
@@ -224,26 +260,25 @@ negate a route, use the `!` operator
 
 ```php
 // Match all requests that end with '.json' or '.csv'
-respond('@\.(json|csv)$', ...
+$klein->respond('@\.(json|csv)$', ...
 
 // Match all requests that _don't_ start with /admin
-respond('!@^/admin/', ...
+$klein->respond('!@^/admin/', ...
 ```
 
 ## Views
 
 You can send properties or helpers to the view by assigning them
-to the `$response` object, or by using the second arg of `$response->render()`
+to the `$service` object, or by using the second arg of `$service->render()`
 
 ```php
-<?php
-$response->escape = function ($str) {
+$service->escape = function ($str) {
     return htmlentities($str);
 };
 
-$response->render('myview.phtml', array('title' => 'My View'));
+$service->render('myview.phtml', array('title' => 'My View'));
 
-// Or just: $response->title = 'My View';
+// Or just: $service->title = 'My View';
 ```
 
 *myview.phtml*
@@ -252,68 +287,81 @@ $response->render('myview.phtml', array('title' => 'My View'));
 <title><?php echo $this->escape($this->title) ?></title>
 ```
 
-Views are compiled and run in the scope of `$response` so all response methods can be accessed with `$this`
+Views are compiled and run in the scope of `$service` so all service methods can be accessed with `$this`
 
 ```php
-<?php
 $this->render('partial.html')           // Render partials
-$this->param('myvar')                   // Access request parameters
+$this->sharedData()->get('myvar')       // Access stored service variables
 echo $this->query(array('page' => 2))   // Modify the current query string
 ```
 
 ## API
 
 ```php
-<?php
 $request->
-    header($key, $default = null)       // Get a request header
-    cookie($key, $default = null)       // Get a cookie from the request
-    session($key, $default = null)      // Get a session variable
-    param($key, $default = null)        // Get a request parameter (get, post, named)
+    id($hash = true)                    // Get a unique ID for the request
+    paramsGet()                         // Return the GET parameter collection
+    paramsPost()                        // Return the POST parameter collection
+    paramsNamed()                       // Return the named parameter collection
+    cookies()                           // Return the cookies collection
+    server()                            // Return the server collection
+    headers()                           // Return the headers collection
+    files()                             // Return the files collection
+    body()                              // Get the request body
     params()                            // Return all parameters
     params($mask = null)                // Return all parameters that match the mask array - extract() friendly
-    validate($param, $err_msg = null)   // Start a validator chain
-    method()                            // Get the request method
-    method($method)                     // Check if the request method is $method, i.e. method('post') => true
-    isSecure($required = false)         // https? Redirect if $required is true and the request is not secure
-    id()                                // Get a unique ID for the request
+    param($key, $default = null)        // Get a request parameter (get, post, named)
+    isSecure()                          // Was the request sent via HTTPS?
     ip()                                // Get the request IP
     userAgent()                         // Get the request user agent
     uri()                               // Get the request URI
-    <param>                             // Get / Set (if assigned a value)a request parameter
+    method()                            // Get the request method
+    method($method)                     // Check if the request method is $method, i.e. method('post') => true
+    <param>                             // Get / Set (if assigned a value) a request parameter
 
 $response->
+    protocolVersion($protocol_version = null)       // Get the protocol version, or set it to the passed value
+    body($body = null)                              // Get the response body's content, or set it to the passed value
+    status()                                        // Get the response's status object
+    headers()                                       // Return the headers collection
+    cookies()                                       // Return the cookies collection
+    code($code = null)                              // Return the HTTP response code, or set it to the passed value
+    prepend($content)                               // Prepend a string to the response body
+    append($content)                                // Append a string to the response body
+    isLocked()                                      // Check if the response is locked
+    lock()                                          // Lock the response from further modification
+    unlock()                                        // Unlock the response
+    sendHeaders($override = false)                  // Send the HTTP response headers
+    sendBody()                                      // Send the response body's content
+    send()                                          // Send the response and lock it
+    chunk($str = null)                              // Enable response chunking (see the wiki)
     header($key, $value = null)                     // Set a response header
     cookie($key, $value = null, $expiry = null)     // Set a cookie
     cookie($key, null)                              // Remove a cookie
-    session($key, $value = null)                    // Sets a session variable
-    flash($msg, $type = 'info', $params = array()   // Set a flash message
-    file($path, $filename = null)                   // Send a file
     noCache()                                       // Tell the browser not to cache the response
-    json($object, $jsonp_prefix = null)             // Send an object as JSON or JSONP by providing padding prefix
-    markdown($str, $args, ...)                      // Return a string formatted with markdown
-    code($code = null)                              // Return the HTTP response code, or send a new code
     redirect($url, $code = 302)                     // Redirect to the specified URL
+    dump($obj)                                      // Dump an object
+
+$service->
+    sharedData()                                    // Return the shared data collection
+    startSession()                                  // Start a session and return its ID
+    flash($msg, $type = 'info', $params = array()   // Set a flash message
+    flashes($type = null)                           // Retrieve and clears all flashes of $type
+    markdown($str, $args, ...)                      // Return a string formatted with markdown
+    escape($str)                                    // Escape a string
+    file($path, $filename = null)                   // Send a file
+    json($object, $jsonp_prefix = null)             // Send an object as JSON or JSONP by providing padding prefix
     refresh()                                       // Redirect to the current URL
     back()                                          // Redirect to the referer
-    render($view, $data = array())                  // Render a view or partial (in the scope of $response)
-    partial($view, $data = array())                 // Render a partial without a layout (in the scope of $response)
-    layout($layout)                                 // Set the view layout
-    yield()                                         // Call inside the layout to render the view content
-    error(Exception $err)                           // Routes an exception through the error callbacks
-    onError($callback)                              // $callback takes ($response, $msg, $err_type = null)
-    set($key, $value = null)                        // Set a view property or helper
-    set($arr)
-    escape($str)                                    // Escape a string
     query($key, $value = null)                      // Modify the current query string
     query($arr)
-    param($param, $default = null)                  // Get an escaped request parameter
-    flashes($type = null)                           // Retrieve and clears all flashes of $type
-    flush()                                         // Flush all open output buffers
-    discard($restart_buffer = false)                // Discard all open output buffers and optionally restart it
-    buffer()                                        // Return the contents of the output buffer as a string
-    chunk($str = null)                              // Enable response chunking (see the wiki)
-    dump($obj)                                      // Dump an object
+    layout($layout)                                 // Set the view layout
+    yieldView()                                     // Call inside the layout to render the view content
+    render($view, $data = array())                  // Render a view or partial (in the scope of $response)
+    partial($view, $data = array())                 // Render a partial without a layout (in the scope of $response)
+    addValidator($method, $callback)                // Add a custom validator method
+    validate($string, $err = null)                  // Validate a string (with a custom error message)
+    validateParam($param, $err = null)                  // Validate a param
     <callback>($arg1, ...)                          // Call a user-defined helper
     <property>                                      // Get a user-defined property
 
@@ -339,6 +387,37 @@ $validator->
     not<Validator>()                    // The validator can't match
     <Validator>()                       // Alias for is<Validator>()
 ```
+
+## Unit Testing
+
+Unit tests are a crucial part of developing a routing engine such as Klein.
+Added features or bug-fixes can have adverse effects that are hard to find
+without a lot of testing, hence the importance of unit testing.
+
+This project uses [PHPUnit](https://github.com/sebastianbergmann/phpunit/) as
+its unit testing framework.
+
+The tests all live in `/tests` and each test extends an abstract class
+`AbstractKleinTest`
+
+To test the project, simply run `php composer.phar install --dev` to download
+a common version of PHPUnit with composer and run the tests from the main
+directory with `./vendor/bin/phpunit`
+
+## Contributing
+
+Contributing is absolutely encouraged, but a few things should be taken into
+account:
+
+- Always test any bug-fixes or changes with [unit testing](#unit-testing)
+- When adding or changing a feature, make sure to write a **new** [unit test](#unit-testing)
+- Please try to adhere to the standards made obvious in the class source files
+   - This project uses ["soft tabs"](http://vim.wikia.com/wiki/Converting_tabs_to_spaces), 
+   please don't use any hard tabbing
+   - Make sure to document your code with the 
+   [PHPDoc syntax](http://www.phpdoc.org/docs/latest/for-users/phpdoc-reference.html)
+- When creating pull requests, make sure to have checked your code for styling
+  and create useful/verbose PR messages
 
 ## More information
 
