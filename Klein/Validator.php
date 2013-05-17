@@ -114,6 +114,9 @@ class Validator
         static::$methods['ip'] = function ($str) {
             return filter_var($str, FILTER_VALIDATE_IP) !== false;
         };
+        static::$methods['remoteip'] = function ($str) {
+            return filter_var($str, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE) !== false;
+        };
         static::$methods['alnum'] = function ($str) {
             return ctype_alnum($str);
         };
