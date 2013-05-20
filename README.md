@@ -406,18 +406,7 @@ directory with `./vendor/bin/phpunit`
 
 ## Contributing
 
-Contributing is absolutely encouraged, but a few things should be taken into
-account:
-
-- Always test any bug-fixes or changes with [unit testing](#unit-testing)
-- When adding or changing a feature, make sure to write a **new** [unit test](#unit-testing)
-- Please try to adhere to the standards made obvious in the class source files
-   - This project uses ["soft tabs"](http://vim.wikia.com/wiki/Converting_tabs_to_spaces), 
-   please don't use any hard tabbing
-   - Make sure to document your code with the 
-   [PHPDoc syntax](http://www.phpdoc.org/docs/latest/for-users/phpdoc-reference.html)
-- When creating pull requests, make sure to have checked your code for styling
-  and create useful/verbose PR messages
+See the [contributing guide](CONTRIBUTING.md) for more info
 
 ## More information
 
