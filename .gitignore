@@ -1,0 +1,9 @@
+# Jekyll
+_site/
+
+# Node/Grunt
+node_modules/
+
+# Misc depends
+vendor/
+composer.*
