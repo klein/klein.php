@@ -34,8 +34,16 @@ module.exports = function(grunt) {
          }
       },
       watch: {
+         sass: {
+            files: 'assets/styles/**/*.scss',
+            tasks: ['sass']
+         },
          scripts: {
-            files: 'assets/scripts/!(klein-pages-built).js',
+            files: [
+               'assets/styles/h5bp/!(h5bp-built).css',
+               'assets/styles/!(klein-pages-built).css',
+               'assets/scripts/!(klein-pages-built).js',
+            ],
             tasks: ['concat']
          },
          jekyllSiteFiles: {
@@ -46,7 +54,8 @@ module.exports = function(grunt) {
                '_posts/**',
                '_includes/**',
                'assets/**/(h5bp-built).*',
-               'assets/**/(klein-pages-built).*'
+               'assets/**/(klein-pages-built).*',
+               'assets/styles/main.css'
             ],
             tasks: 'shell:jekyll'
          }
