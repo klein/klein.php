@@ -10,24 +10,40 @@
         <meta name="description" content="Klein - klein.php - A lightning fast router for PHP">
         <meta name="viewport" content="width=device-width">
 
-        <link rel="stylesheet" href="assets/styles/normalize.css">
-        <link rel="stylesheet" href="assets/styles/default.css">
-        <link rel="stylesheet" href="assets/styles/syntax.css">
+        <link rel="stylesheet" href="assets/styles/h5bp/h5bp-built.css">
         <link rel="stylesheet" href="assets/styles/main.css">
         <script src="assets/scripts/vendor_js/modernizr-2.6.2.min.js"></script>
     </head>
     <body>
 		<div id="page-wrapper">
+			<header>
+				<h1>Klein</h1>
+			</header>
+			<nav>
+				<ul>
+					<li><a href="./">Home</a></li>
+					<li><a href="./about">About</a></li>
+					<li><a href="./docs/">Documentation</a></li>
+				</ul>
+			</nav>
+
 			<!--[if lt IE 7]>
 				<p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
 			<![endif]-->
 
-			<h1>{{ page.title }}</h1>
+			<main>
+				<article>
+					<header>
+						<h1>{{ page.title }}</h1>
+					</header>
 
-			<!-- Main Content -->
-			<div id="main-content">
-				{{ content }}
-			</div>
+					{{ content }}
+
+				</article>
+			</main>
+
+			<footer>
+			</footer>
 		</div>
 
 		<!-- GitHub Fork Ribbon -->
