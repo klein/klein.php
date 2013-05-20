@@ -1,5 +1,7 @@
 # Klein.php
 
+[![Build Status](https://travis-ci.org/chriso/klein.php.png?branch=master)](https://travis-ci.org/chriso/klein.php)
+
 **klein.php** is a lightning fast router for PHP 5.3+
 
 * Flexible regular expression routing (inspired by [Sinatra](http://www.sinatrarb.com/))
