@@ -1,0 +1,631 @@
+<!DOCTYPE html><html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+<meta charset="utf-8">
+<title>Klein » \Klein\Response</title>
+<meta name="author" content="Mike van Riel">
+<meta name="description" content="">
+<link href="../css/template.css" rel="stylesheet" media="all">
+<script src="../js/jquery-1.7.1.min.js" type="text/javascript"></script><script src="../js/jquery-ui-1.8.2.custom.min.js" type="text/javascript"></script><script src="../js/jquery.mousewheel.min.js" type="text/javascript"></script><script src="../js/bootstrap.js" type="text/javascript"></script><script src="../js/template.js" type="text/javascript"></script><script src="../js/prettify/prettify.min.js" type="text/javascript"></script><link rel="shortcut icon" href="../img/favicon.ico">
+<link rel="apple-touch-icon" href="../img/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="72x72" href="../img/apple-touch-icon-72x72.png">
+<link rel="apple-touch-icon" sizes="114x114" href="../img/apple-touch-icon-114x114.png">
+</head>
+<body>
+<div class="navbar navbar-fixed-top">
+<div class="navbar-inner"><div class="container">
+<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></a><a class="brand" href="../index.html">Klein</a><div class="nav-collapse"><ul class="nav">
+<li class="dropdown">
+<a href="#api" class="dropdown-toggle" data-toggle="dropdown">
+                                    API Documentation <b class="caret"></b></a><ul class="dropdown-menu">
+<li><a>Namespaces</a></li>
+<li><a href="../namespaces/Klein.html"><i class="icon-th"></i> Klein</a></li>
+<li><a>Packages</a></li>
+<li><a href="../packages/Klein.html"><i class="icon-folder-open"></i> Klein</a></li>
+</ul>
+</li>
+<li class="dropdown" id="charts-menu">
+<a href="#charts" class="dropdown-toggle" data-toggle="dropdown">
+                                    Charts <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="../graph_class.html"><i class="icon-list-alt"></i> Class hierarchy diagram</a></li></ul>
+</li>
+<li class="dropdown" id="reports-menu">
+<a href="#reports" class="dropdown-toggle" data-toggle="dropdown">
+                                    Reports <b class="caret"></b></a><ul class="dropdown-menu">
+<li><a href="../errors.html"><i class="icon-remove-sign"></i> Errors 
+                <span class="label label-info">0</span></a></li>
+<li><a href="../markers.html"><i class="icon-map-marker"></i> Markers 
+                <ul></ul></a></li>
+<li><a href="../deprecated.html"><i class="icon-stop"></i> Deprecated elements 
+                <span class="label label-info">0</span></a></li>
+</ul>
+</li>
+</ul></div>
+</div></div>
+<div class="go_to_top"><a href="#___" style="color: inherit">Back to top  <i class="icon-upload icon-white"></i></a></div>
+</div>
+<div id="___" class="container">
+<noscript><div class="alert alert-warning">
+                            Javascript is disabled; several features are only available
+                            if Javascript is enabled.
+                        </div></noscript>
+<div class="row">
+<div class="span4">
+<span class="btn-group visibility" data-toggle="buttons-checkbox"><button class="btn public active" title="Show public elements">Public</button><button class="btn protected" title="Show protected elements">Protected</button><button class="btn private" title="Show private elements">Private</button><button class="btn inherited active" title="Show inherited elements">Inherited</button></span><div class="btn-group view pull-right" data-toggle="buttons-radio">
+<button class="btn details" title="Show descriptions and method names"><i class="icon-list"></i></button><button class="btn simple" title="Show only method names"><i class="icon-align-justify"></i></button>
+</div>
+<ul class="side-nav nav nav-list">
+<li class="nav-header">
+<i class="icon-custom icon-method"></i> Methods
+                    <ul>
+<li class="method public "><a href="#method___construct" title="__construct :: Constructor"><span class="description">Constructor</span><pre>__construct()</pre></a></li>
+<li class="method public "><a href="#method_append" title="append :: Append a string to the response's content body"><span class="description">Append a string to the response's content body</span><pre>append()</pre></a></li>
+<li class="method public "><a href="#method_body" title="body :: Get (or set) the response's body content"><span class="description">Get (or set) the response's body content</span><pre>body()</pre></a></li>
+<li class="method public "><a href="#method_chunk" title="chunk :: Enable response chunking"><span class="description">Enable response chunking</span><pre>chunk()</pre></a></li>
+<li class="method public "><a href="#method_code" title="code :: Get (or set) the HTTP response code"><span class="description">Get (or set) the HTTP response code</span><pre>code()</pre></a></li>
+<li class="method public "><a href="#method_cookie" title="cookie :: Sets a response cookie"><span class="description">Sets a response cookie</span><pre>cookie()</pre></a></li>
+<li class="method public "><a href="#method_dump" title="dump :: Dump a variable"><span class="description">Dump a variable</span><pre>dump()</pre></a></li>
+<li class="method public "><a href="#method_header" title="header :: Sets a response header"><span class="description">Sets a response header</span><pre>header()</pre></a></li>
+<li class="method public "><a href="#method_headers" title="headers :: Returns the headers collection"><span class="description">Returns the headers collection</span><pre>headers()</pre></a></li>
+<li class="method public "><a href="#method_isLocked" title="isLocked :: Check if the response is locked"><span class="description">Check if the response is locked</span><pre>isLocked()</pre></a></li>
+<li class="method public "><a href="#method_lock" title="lock :: Lock the response from further modification"><span class="description">Lock the response from further modification</span><pre>lock()</pre></a></li>
+<li class="method public "><a href="#method_noCache" title="noCache :: Tell the browser not to cache the response"><span class="description">Tell the browser not to cache the response</span><pre>noCache()</pre></a></li>
+<li class="method public "><a href="#method_prepend" title="prepend :: Prepend a string to the response's content body"><span class="description">Prepend a string to the response's content body</span><pre>prepend()</pre></a></li>
+<li class="method public "><a href="#method_protocolVersion" title="protocolVersion :: Get (or set) the HTTP protocol version"><span class="description">Get (or set) the HTTP protocol version</span><pre>protocolVersion()</pre></a></li>
+<li class="method public "><a href="#method_redirect" title="redirect :: Redirects the request to another URL"><span class="description">Redirects the request to another URL</span><pre>redirect()</pre></a></li>
+<li class="method public "><a href="#method_send" title="send :: Send the response and lock it"><span class="description">Send the response and lock it</span><pre>send()</pre></a></li>
+<li class="method public "><a href="#method_sendBody" title="sendBody :: Send our body's contents"><span class="description">Send our body's contents</span><pre>sendBody()</pre></a></li>
+<li class="method public "><a href="#method_sendHeaders" title="sendHeaders :: Send our HTTP headers"><span class="description">Send our HTTP headers</span><pre>sendHeaders()</pre></a></li>
+<li class="method public "><a href="#method_status" title="status :: Returns the status object"><span class="description">Returns the status object</span><pre>status()</pre></a></li>
+<li class="method public "><a href="#method_unlock" title="unlock :: Unlock the response from further modification"><span class="description">Unlock the response from further modification</span><pre>unlock()</pre></a></li>
+</ul>
+</li>
+<li class="nav-header protected">» Protected
+                    <ul><li class="method protected "><a href="#method_httpStatusLine" title="httpStatusLine :: Generates an HTTP compatible status header line string"><span class="description">Generates an HTTP compatible status header line string</span><pre>httpStatusLine()</pre></a></li></ul>
+</li>
+<li class="nav-header">
+<i class="icon-custom icon-property"></i> Properties
+                    <ul><li class="property public "><a href="#property_chunked" title="$chunked :: Whether the response has been chunked or not"><span class="description"></span><pre>$chunked</pre></a></li></ul>
+</li>
+<li class="nav-header protected">» Protected
+                    <ul>
+<li class="property protected "><a href="#property_body" title="$body :: The response body"><span class="description"></span><pre>$body</pre></a></li>
+<li class="property protected "><a href="#property_default_status_code" title="$default_status_code :: The default response HTTP status code"><span class="description"></span><pre>$default_status_code</pre></a></li>
+<li class="property protected "><a href="#property_headers" title="$headers :: HTTP response headers"><span class="description"></span><pre>$headers</pre></a></li>
+<li class="property protected "><a href="#property_locked" title='$locked :: Whether or not the response is "locked" from
+any further modification'><span class="description"></span><pre>$locked</pre></a></li>
+<li class="property protected "><a href="#property_protocol_version" title="$protocol_version :: The HTTP version of the response"><span class="description"></span><pre>$protocol_version</pre></a></li>
+<li class="property protected "><a href="#property_sent" title="$sent :: Whether or not the response has been sent"><span class="description"></span><pre>$sent</pre></a></li>
+<li class="property protected "><a href="#property_status" title="$status :: HTTP response status"><span class="description"></span><pre>$status</pre></a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="span8">
+<a id="\Klein\Response"></a><ul class="breadcrumb">
+<li>
+<a href="../index.html"><i class="icon-custom icon-class"></i></a><span class="divider">\</span>
+</li>
+<li><a href="../namespaces/Klein.html">Klein</a></li>
+<li class="active">
+<span class="divider">\</span><a href="../classes/Klein.Response.html">Response</a>
+</li>
+</ul>
+<div class="element class">
+<p class="short_description">Response</p>
+<div class="details">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>package</th>
+<td><a href="../packages/Klein.html">Klein</a></td>
+</tr></table>
+<h3>
+<i class="icon-custom icon-method"></i> Methods</h3>
+<a id="method___construct"></a><div class="element clickable method public method___construct" data-toggle="collapse" data-target=".method___construct .collapse">
+<h2>Constructor</h2>
+<pre>__construct(string $body, int $status_code, array $headers) </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"><p>Create a new Response object with a dependency injected Headers instance</p></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>public</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$body</h4>
+<code>string</code><p>The response body's content</p>
+</div>
+<div class="subelement argument">
+<h4>$status_code</h4>
+<code>int</code><p>The status code</p></div>
+<div class="subelement argument">
+<h4>$headers</h4>
+<code>array</code><p>The response header "hash"</p>
+</div>
+</div></div>
+</div>
+<a id="method_append"></a><div class="element clickable method public method_append" data-toggle="collapse" data-target=".method_append .collapse">
+<h2>Append a string to the response's content body</h2>
+<pre>append(string $content) : <a href="../classes/Klein.Response.html">\Klein\Response</a></pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>public</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$content</h4>
+<code>string</code><p>The string to append</p></div>
+<h3>Returns</h3>
+<div class="subelement response"><code><a href="../classes/Klein.Response.html">\Klein\Response</a></code></div>
+</div></div>
+</div>
+<a id="method_body"></a><div class="element clickable method public method_body" data-toggle="collapse" data-target=".method_body .collapse">
+<h2>Get (or set) the response's body content</h2>
+<pre>body(string $body) : string | <a href="../classes/Klein.Response.html">\Klein\Response</a></pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"><p>Simply calling this method without any arguments returns the current response body.
+Calling with an argument, however, sets the response body to what was provided by the argument.</p></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>public</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$body</h4>
+<code>string</code><p>The body content string</p></div>
+<h3>Returns</h3>
+<div class="subelement response">
+<code>string</code><code><a href="../classes/Klein.Response.html">\Klein\Response</a></code>
+</div>
+</div></div>
+</div>
+<a id="method_chunk"></a><div class="element clickable method public method_chunk" data-toggle="collapse" data-target=".method_chunk .collapse">
+<h2>Enable response chunking</h2>
+<pre>chunk(string $str) : void</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered">
+<tr>
+<th>link</th>
+<td><a href="https://github.com/chriso/klein.php/wiki/Response-Chunking">https://github.com/chriso/klein.php/wiki/Response-Chunking</a></td>
+</tr>
+<tr>
+<th>link</th>
+<td><a href="http://bit.ly/hg3gHb">http://bit.ly/hg3gHb</a></td>
+</tr>
+<tr>
+<th>access</th>
+<td>public</td>
+</tr>
+</table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$str</h4>
+<code>string</code><p>An optional string to send as a response "chunk"</p>
+</div>
+</div></div>
+</div>
+<a id="method_code"></a><div class="element clickable method public method_code" data-toggle="collapse" data-target=".method_code .collapse">
+<h2>Get (or set) the HTTP response code</h2>
+<pre>code(int $code) : int | <a href="../classes/Klein.Response.html">\Klein\Response</a></pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"><p>Simply calling this method without any arguments returns the current response code.
+Calling with an integer argument, however, attempts to set the response code to what
+was provided by the argument.</p></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>public</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$code</h4>
+<code>int</code><p>The HTTP status code to send</p></div>
+<h3>Returns</h3>
+<div class="subelement response">
+<code>int</code><code><a href="../classes/Klein.Response.html">\Klein\Response</a></code>
+</div>
+</div></div>
+</div>
+<a id="method_cookie"></a><div class="element clickable method public method_cookie" data-toggle="collapse" data-target=".method_cookie .collapse">
+<h2>Sets a response cookie</h2>
+<pre>cookie(string $key, string $value, int $expiry, string $path, string $domain, boolean $secure, boolean $httponly) : boolean</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>public</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$key</h4>
+<code>string</code><p>The name of the cookie</p></div>
+<div class="subelement argument">
+<h4>$value</h4>
+<code>string</code><p>The value to set the cookie with</p></div>
+<div class="subelement argument">
+<h4>$expiry</h4>
+<code>int</code><p>The time that the cookie should expire</p></div>
+<div class="subelement argument">
+<h4>$path</h4>
+<code>string</code><p>The path of which to restrict the cookie</p></div>
+<div class="subelement argument">
+<h4>$domain</h4>
+<code>string</code><p>The domain of which to restrict the cookie</p></div>
+<div class="subelement argument">
+<h4>$secure</h4>
+<code>boolean</code><p>Flag of whether the cookie should only be sent over a HTTPS connection</p></div>
+<div class="subelement argument">
+<h4>$httponly</h4>
+<code>boolean</code><p>Flag of whether the cookie should only be accessible over the HTTP protocol</p></div>
+<h3>Returns</h3>
+<div class="subelement response"><code>boolean</code></div>
+</div></div>
+</div>
+<a id="method_dump"></a><div class="element clickable method public method_dump" data-toggle="collapse" data-target=".method_dump .collapse">
+<h2>Dump a variable</h2>
+<pre>dump(mixed $obj) : void</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>public</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$obj</h4>
+<code>mixed</code><p>The variable to dump</p></div>
+</div></div>
+</div>
+<a id="method_header"></a><div class="element clickable method public method_header" data-toggle="collapse" data-target=".method_header .collapse">
+<h2>Sets a response header</h2>
+<pre>header(string $key, mixed $value) : void</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>public</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$key</h4>
+<code>string</code><p>The name of the HTTP response header</p></div>
+<div class="subelement argument">
+<h4>$value</h4>
+<code>mixed</code><p>The value to set the header with</p></div>
+</div></div>
+</div>
+<a id="method_headers"></a><div class="element clickable method public method_headers" data-toggle="collapse" data-target=".method_headers .collapse">
+<h2>Returns the headers collection</h2>
+<pre>headers() : <a href="../classes/Klein.DataCollection.HeaderDataCollection.html">\Klein\DataCollection\HeaderDataCollection</a></pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>public</td>
+</tr></table>
+<h3>Returns</h3>
+<div class="subelement response"><code><a href="../classes/Klein.DataCollection.HeaderDataCollection.html">\Klein\DataCollection\HeaderDataCollection</a></code></div>
+</div></div>
+</div>
+<a id="method_isLocked"></a><div class="element clickable method public method_isLocked" data-toggle="collapse" data-target=".method_isLocked .collapse">
+<h2>Check if the response is locked</h2>
+<pre>isLocked() : boolean</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>public</td>
+</tr></table>
+<h3>Returns</h3>
+<div class="subelement response"><code>boolean</code></div>
+</div></div>
+</div>
+<a id="method_lock"></a><div class="element clickable method public method_lock" data-toggle="collapse" data-target=".method_lock .collapse">
+<h2>Lock the response from further modification</h2>
+<pre>lock() : <a href="../classes/Klein.Response.html">\Klein\Response</a></pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>public</td>
+</tr></table>
+<h3>Returns</h3>
+<div class="subelement response"><code><a href="../classes/Klein.Response.html">\Klein\Response</a></code></div>
+</div></div>
+</div>
+<a id="method_noCache"></a><div class="element clickable method public method_noCache" data-toggle="collapse" data-target=".method_noCache .collapse">
+<h2>Tell the browser not to cache the response</h2>
+<pre>noCache() : <a href="../classes/Klein.Response.html">\Klein\Response</a></pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>public</td>
+</tr></table>
+<h3>Returns</h3>
+<div class="subelement response"><code><a href="../classes/Klein.Response.html">\Klein\Response</a></code></div>
+</div></div>
+</div>
+<a id="method_prepend"></a><div class="element clickable method public method_prepend" data-toggle="collapse" data-target=".method_prepend .collapse">
+<h2>Prepend a string to the response's content body</h2>
+<pre>prepend(string $content) : <a href="../classes/Klein.Response.html">\Klein\Response</a></pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>public</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$content</h4>
+<code>string</code><p>The string to prepend</p></div>
+<h3>Returns</h3>
+<div class="subelement response"><code><a href="../classes/Klein.Response.html">\Klein\Response</a></code></div>
+</div></div>
+</div>
+<a id="method_protocolVersion"></a><div class="element clickable method public method_protocolVersion" data-toggle="collapse" data-target=".method_protocolVersion .collapse">
+<h2>Get (or set) the HTTP protocol version</h2>
+<pre>protocolVersion(string $protocol_version) : string | <a href="../classes/Klein.Response.html">\Klein\Response</a></pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"><p>Simply calling this method without any arguments returns the current protocol version.
+Calling with an integer argument, however, attempts to set the protocol version to what
+was provided by the argument.</p></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>public</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$protocol_version</h4>
+<code>string</code>
+</div>
+<h3>Returns</h3>
+<div class="subelement response">
+<code>string</code><code><a href="../classes/Klein.Response.html">\Klein\Response</a></code>
+</div>
+</div></div>
+</div>
+<a id="method_redirect"></a><div class="element clickable method public method_redirect" data-toggle="collapse" data-target=".method_redirect .collapse">
+<h2>Redirects the request to another URL</h2>
+<pre>redirect(string $url, int $code) : <a href="../classes/Klein.Response.html">\Klein\Response</a></pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>public</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$url</h4>
+<code>string</code><p>The URL to redirect to</p></div>
+<div class="subelement argument">
+<h4>$code</h4>
+<code>int</code><p>The HTTP status code to use for redirection</p></div>
+<h3>Returns</h3>
+<div class="subelement response"><code><a href="../classes/Klein.Response.html">\Klein\Response</a></code></div>
+</div></div>
+</div>
+<a id="method_send"></a><div class="element clickable method public method_send" data-toggle="collapse" data-target=".method_send .collapse">
+<h2>Send the response and lock it</h2>
+<pre>send(boolean $override) : <a href="../classes/Klein.Response.html">\Klein\Response</a></pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>public</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$override</h4>
+<code>boolean</code><p>Whether or not to override the check if the response has already been sent</p></div>
+<h3>Returns</h3>
+<div class="subelement response"><code><a href="../classes/Klein.Response.html">\Klein\Response</a></code></div>
+</div></div>
+</div>
+<a id="method_sendBody"></a><div class="element clickable method public method_sendBody" data-toggle="collapse" data-target=".method_sendBody .collapse">
+<h2>Send our body's contents</h2>
+<pre>sendBody() : <a href="../classes/Klein.Response.html">\Klein\Response</a></pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>public</td>
+</tr></table>
+<h3>Returns</h3>
+<div class="subelement response"><code><a href="../classes/Klein.Response.html">\Klein\Response</a></code></div>
+</div></div>
+</div>
+<a id="method_sendHeaders"></a><div class="element clickable method public method_sendHeaders" data-toggle="collapse" data-target=".method_sendHeaders .collapse">
+<h2>Send our HTTP headers</h2>
+<pre>sendHeaders(boolean $override) : <a href="../classes/Klein.Response.html">\Klein\Response</a></pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>public</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$override</h4>
+<code>boolean</code><p>Whether or not to override the check if headers have already been sent</p></div>
+<h3>Returns</h3>
+<div class="subelement response"><code><a href="../classes/Klein.Response.html">\Klein\Response</a></code></div>
+</div></div>
+</div>
+<a id="method_status"></a><div class="element clickable method public method_status" data-toggle="collapse" data-target=".method_status .collapse">
+<h2>Returns the status object</h2>
+<pre>status() : <a href="../classes/Klein.HttpStatus.html">\Klein\HttpStatus</a></pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>public</td>
+</tr></table>
+<h3>Returns</h3>
+<div class="subelement response"><code><a href="../classes/Klein.HttpStatus.html">\Klein\HttpStatus</a></code></div>
+</div></div>
+</div>
+<a id="method_unlock"></a><div class="element clickable method public method_unlock" data-toggle="collapse" data-target=".method_unlock .collapse">
+<h2>Unlock the response from further modification</h2>
+<pre>unlock() : <a href="../classes/Klein.Response.html">\Klein\Response</a></pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>public</td>
+</tr></table>
+<h3>Returns</h3>
+<div class="subelement response"><code><a href="../classes/Klein.Response.html">\Klein\Response</a></code></div>
+</div></div>
+</div>
+<a id="method_httpStatusLine"></a><div class="element clickable method protected method_httpStatusLine" data-toggle="collapse" data-target=".method_httpStatusLine .collapse">
+<h2>Generates an HTTP compatible status header line string</h2>
+<pre>httpStatusLine() : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"><p>Creates the string based off of the response's properties</p></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>protected</td>
+</tr></table>
+<h3>Returns</h3>
+<div class="subelement response"><code>string</code></div>
+</div></div>
+</div>
+<h3>
+<i class="icon-custom icon-property"></i> Properties</h3>
+<a id="property_chunked"> </a><div class="element clickable property public property_chunked" data-toggle="collapse" data-target=".property_chunked .collapse">
+<h2></h2>
+<pre>$chunked : boolean</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>public</td>
+</tr></table>
+</div></div>
+</div>
+<a id="property_body"> </a><div class="element clickable property protected property_body" data-toggle="collapse" data-target=".property_body .collapse">
+<h2></h2>
+<pre>$body : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>protected</td>
+</tr></table>
+</div></div>
+</div>
+<a id="property_default_status_code"> </a><div class="element clickable property protected property_default_status_code" data-toggle="collapse" data-target=".property_default_status_code .collapse">
+<h2></h2>
+<pre>$default_status_code : int</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered">
+<tr>
+<th>static</th>
+<td></td>
+</tr>
+<tr>
+<th>access</th>
+<td>protected</td>
+</tr>
+</table>
+</div></div>
+</div>
+<a id="property_headers"> </a><div class="element clickable property protected property_headers" data-toggle="collapse" data-target=".property_headers .collapse">
+<h2></h2>
+<pre>$headers : <a href="../classes/Klein.DataCollection.HeaderDataCollection.html">\Klein\DataCollection\HeaderDataCollection</a></pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>protected</td>
+</tr></table>
+</div></div>
+</div>
+<a id="property_locked"> </a><div class="element clickable property protected property_locked" data-toggle="collapse" data-target=".property_locked .collapse">
+<h2></h2>
+<pre>$locked : boolean</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>protected</td>
+</tr></table>
+</div></div>
+</div>
+<a id="property_protocol_version"> </a><div class="element clickable property protected property_protocol_version" data-toggle="collapse" data-target=".property_protocol_version .collapse">
+<h2></h2>
+<pre>$protocol_version : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>protected</td>
+</tr></table>
+</div></div>
+</div>
+<a id="property_sent"> </a><div class="element clickable property protected property_sent" data-toggle="collapse" data-target=".property_sent .collapse">
+<h2></h2>
+<pre>$sent : boolean</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>protected</td>
+</tr></table>
+</div></div>
+</div>
+<a id="property_status"> </a><div class="element clickable property protected property_status" data-toggle="collapse" data-target=".property_status .collapse">
+<h2></h2>
+<pre>$status : <a href="../classes/Klein.HttpStatus.html">\Klein\HttpStatus</a></pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>protected</td>
+</tr></table>
+</div></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="row"><footer class="span12">
+            Template is built using <a href="http://twitter.github.com/bootstrap/">Twitter Bootstrap 2</a> and icons provided by <a href="http://glyphicons.com/">Glyphicons</a>.<br>
+            Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor 2.0.0a12</a> and<br>
+            generated on 2013-05-08T03:28:14-04:00.<br></footer></div>
+</div>
+</body>
+</html>

@@ -1,0 +1,645 @@
+<!DOCTYPE html><html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+<meta charset="utf-8">
+<title>Klein » \Klein\Request</title>
+<meta name="author" content="Mike van Riel">
+<meta name="description" content="">
+<link href="../css/template.css" rel="stylesheet" media="all">
+<script src="../js/jquery-1.7.1.min.js" type="text/javascript"></script><script src="../js/jquery-ui-1.8.2.custom.min.js" type="text/javascript"></script><script src="../js/jquery.mousewheel.min.js" type="text/javascript"></script><script src="../js/bootstrap.js" type="text/javascript"></script><script src="../js/template.js" type="text/javascript"></script><script src="../js/prettify/prettify.min.js" type="text/javascript"></script><link rel="shortcut icon" href="../img/favicon.ico">
+<link rel="apple-touch-icon" href="../img/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="72x72" href="../img/apple-touch-icon-72x72.png">
+<link rel="apple-touch-icon" sizes="114x114" href="../img/apple-touch-icon-114x114.png">
+</head>
+<body>
+<div class="navbar navbar-fixed-top">
+<div class="navbar-inner"><div class="container">
+<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></a><a class="brand" href="../index.html">Klein</a><div class="nav-collapse"><ul class="nav">
+<li class="dropdown">
+<a href="#api" class="dropdown-toggle" data-toggle="dropdown">
+                                    API Documentation <b class="caret"></b></a><ul class="dropdown-menu">
+<li><a>Namespaces</a></li>
+<li><a href="../namespaces/Klein.html"><i class="icon-th"></i> Klein</a></li>
+<li><a>Packages</a></li>
+<li><a href="../packages/Klein.html"><i class="icon-folder-open"></i> Klein</a></li>
+</ul>
+</li>
+<li class="dropdown" id="charts-menu">
+<a href="#charts" class="dropdown-toggle" data-toggle="dropdown">
+                                    Charts <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="../graph_class.html"><i class="icon-list-alt"></i> Class hierarchy diagram</a></li></ul>
+</li>
+<li class="dropdown" id="reports-menu">
+<a href="#reports" class="dropdown-toggle" data-toggle="dropdown">
+                                    Reports <b class="caret"></b></a><ul class="dropdown-menu">
+<li><a href="../errors.html"><i class="icon-remove-sign"></i> Errors 
+                <span class="label label-info">0</span></a></li>
+<li><a href="../markers.html"><i class="icon-map-marker"></i> Markers 
+                <ul></ul></a></li>
+<li><a href="../deprecated.html"><i class="icon-stop"></i> Deprecated elements 
+                <span class="label label-info">0</span></a></li>
+</ul>
+</li>
+</ul></div>
+</div></div>
+<div class="go_to_top"><a href="#___" style="color: inherit">Back to top  <i class="icon-upload icon-white"></i></a></div>
+</div>
+<div id="___" class="container">
+<noscript><div class="alert alert-warning">
+                            Javascript is disabled; several features are only available
+                            if Javascript is enabled.
+                        </div></noscript>
+<div class="row">
+<div class="span4">
+<span class="btn-group visibility" data-toggle="buttons-checkbox"><button class="btn public active" title="Show public elements">Public</button><button class="btn protected" title="Show protected elements">Protected</button><button class="btn private" title="Show private elements">Private</button><button class="btn inherited active" title="Show inherited elements">Inherited</button></span><div class="btn-group view pull-right" data-toggle="buttons-radio">
+<button class="btn details" title="Show descriptions and method names"><i class="icon-list"></i></button><button class="btn simple" title="Show only method names"><i class="icon-align-justify"></i></button>
+</div>
+<ul class="side-nav nav nav-list">
+<li class="nav-header">
+<i class="icon-custom icon-method"></i> Methods
+                    <ul>
+<li class="method public "><a href="#method___construct" title="__construct :: Constructor"><span class="description">Constructor</span><pre>__construct()</pre></a></li>
+<li class="method public "><a href="#method___get" title='__get :: Magic "__get" method'><span class="description">Magic "__get" method</span><pre>__get()</pre></a></li>
+<li class="method public "><a href="#method___isset" title='__isset :: Magic "__isset" method'><span class="description">Magic "__isset" method</span><pre>__isset()</pre></a></li>
+<li class="method public "><a href="#method___set" title='__set :: Magic "__set" method'><span class="description">Magic "__set" method</span><pre>__set()</pre></a></li>
+<li class="method public "><a href="#method___unset" title='__unset :: Magic "__unset" method'><span class="description">Magic "__unset" method</span><pre>__unset()</pre></a></li>
+<li class="method public "><a href="#method_body" title="body :: Gets the request body"><span class="description">Gets the request body</span><pre>body()</pre></a></li>
+<li class="method public "><a href="#method_cookies" title="cookies :: Returns the cookies collection"><span class="description">Returns the cookies collection</span><pre>cookies()</pre></a></li>
+<li class="method public "><a href="#method_createFromGlobals" title='createFromGlobals :: Create a new request object using the built-in "superglobals"'><span class="description">Create a new request object using the built-in "superglobals"</span><pre>createFromGlobals()</pre></a></li>
+<li class="method public "><a href="#method_files" title="files :: Returns the files collection"><span class="description">Returns the files collection</span><pre>files()</pre></a></li>
+<li class="method public "><a href="#method_headers" title="headers :: Returns the headers collection"><span class="description">Returns the headers collection</span><pre>headers()</pre></a></li>
+<li class="method public "><a href="#method_id" title="id :: Gets a unique ID for the request"><span class="description">Gets a unique ID for the request</span><pre>id()</pre></a></li>
+<li class="method public "><a href="#method_ip" title="ip :: Gets the request IP address"><span class="description">Gets the request IP address</span><pre>ip()</pre></a></li>
+<li class="method public "><a href="#method_isSecure" title="isSecure :: Is the request secure?"><span class="description">Is the request secure?</span><pre>isSecure()</pre></a></li>
+<li class="method public "><a href="#method_method" title="method :: Gets the request method, or checks it against $is"><span class="description">Gets the request method, or checks it against $is</span><pre>method()</pre></a></li>
+<li class="method public "><a href="#method_param" title="param :: Return a request parameter, or $default if it doesn't exist"><span class="description">Return a request parameter, or $default if it doesn't exist</span><pre>param()</pre></a></li>
+<li class="method public "><a href="#method_params" title="params :: Returns all parameters (GET, POST, named, and cookies) that match the mask"><span class="description">Returns all parameters (GET, POST, named, and cookies) that match the mask</span><pre>params()</pre></a></li>
+<li class="method public "><a href="#method_paramsGet" title="paramsGet :: Returns the GET parameters collection"><span class="description">Returns the GET parameters collection</span><pre>paramsGet()</pre></a></li>
+<li class="method public "><a href="#method_paramsNamed" title="paramsNamed :: Returns the named parameters collection"><span class="description">Returns the named parameters collection</span><pre>paramsNamed()</pre></a></li>
+<li class="method public "><a href="#method_paramsPost" title="paramsPost :: Returns the POST parameters collection"><span class="description">Returns the POST parameters collection</span><pre>paramsPost()</pre></a></li>
+<li class="method public "><a href="#method_server" title="server :: Returns the server collection"><span class="description">Returns the server collection</span><pre>server()</pre></a></li>
+<li class="method public "><a href="#method_uri" title="uri :: Gets the request URI"><span class="description">Gets the request URI</span><pre>uri()</pre></a></li>
+<li class="method public "><a href="#method_userAgent" title="userAgent :: Gets the request user agent"><span class="description">Gets the request user agent</span><pre>userAgent()</pre></a></li>
+</ul>
+</li>
+<li class="nav-header">
+<i class="icon-custom icon-property"></i> Properties
+                    <ul></ul>
+</li>
+<li class="nav-header protected">» Protected
+                    <ul>
+<li class="property protected "><a href="#property_body" title="$body :: The request body"><span class="description"></span><pre>$body</pre></a></li>
+<li class="property protected "><a href="#property_cookies" title="$cookies :: Client cookie data"><span class="description"></span><pre>$cookies</pre></a></li>
+<li class="property protected "><a href="#property_files" title="$files :: Uploaded temporary files"><span class="description"></span><pre>$files</pre></a></li>
+<li class="property protected "><a href="#property_headers" title="$headers :: HTTP request headers"><span class="description"></span><pre>$headers</pre></a></li>
+<li class="property protected "><a href="#property_id" title="$id :: Unique identifier for the request"><span class="description"></span><pre>$id</pre></a></li>
+<li class="property protected "><a href="#property_params_get" title="$params_get :: GET (query) parameters"><span class="description"></span><pre>$params_get</pre></a></li>
+<li class="property protected "><a href="#property_params_named" title="$params_named :: Named parameters"><span class="description"></span><pre>$params_named</pre></a></li>
+<li class="property protected "><a href="#property_params_post" title="$params_post :: POST parameters"><span class="description"></span><pre>$params_post</pre></a></li>
+<li class="property protected "><a href="#property_server" title="$server :: Server created attributes"><span class="description"></span><pre>$server</pre></a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="span8">
+<a id="\Klein\Request"></a><ul class="breadcrumb">
+<li>
+<a href="../index.html"><i class="icon-custom icon-class"></i></a><span class="divider">\</span>
+</li>
+<li><a href="../namespaces/Klein.html">Klein</a></li>
+<li class="active">
+<span class="divider">\</span><a href="../classes/Klein.Request.html">Request</a>
+</li>
+</ul>
+<div class="element class">
+<p class="short_description">Request</p>
+<div class="details">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>package</th>
+<td><a href="../packages/Klein.html">Klein</a></td>
+</tr></table>
+<h3>
+<i class="icon-custom icon-method"></i> Methods</h3>
+<a id="method___construct"></a><div class="element clickable method public method___construct" data-toggle="collapse" data-target=".method___construct .collapse">
+<h2>Constructor</h2>
+<pre>__construct(array $params_get, array $params_post, array $cookies, array $server, array $files, string $body) </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"><p>Create a new Request object and define all of its request data</p></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>public</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$params_get</h4>
+<code>array</code>
+</div>
+<div class="subelement argument">
+<h4>$params_post</h4>
+<code>array</code>
+</div>
+<div class="subelement argument">
+<h4>$cookies</h4>
+<code>array</code>
+</div>
+<div class="subelement argument">
+<h4>$server</h4>
+<code>array</code>
+</div>
+<div class="subelement argument">
+<h4>$files</h4>
+<code>array</code>
+</div>
+<div class="subelement argument">
+<h4>$body</h4>
+<code>string</code>
+</div>
+</div></div>
+</div>
+<a id="method___get"></a><div class="element clickable method public method___get" data-toggle="collapse" data-target=".method___get .collapse">
+<h2>Magic "__get" method</h2>
+<pre>__get(string $param) : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"><p>Allows the ability to arbitrarily request a parameter from this instance
+while treating it as an instance property</p></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>public</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$param</h4>
+<code>string</code><p>The name of the parameter</p></div>
+<h3>Returns</h3>
+<div class="subelement response"><code>string</code></div>
+</div></div>
+</div>
+<a id="method___isset"></a><div class="element clickable method public method___isset" data-toggle="collapse" data-target=".method___isset .collapse">
+<h2>Magic "__isset" method</h2>
+<pre>__isset(string $param) : boolean</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"><p>Allows the ability to arbitrarily check the existence of a parameter
+from this instance while treating it as an instance property</p></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>public</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$param</h4>
+<code>string</code><p>The name of the parameter</p></div>
+<h3>Returns</h3>
+<div class="subelement response"><code>boolean</code></div>
+</div></div>
+</div>
+<a id="method___set"></a><div class="element clickable method public method___set" data-toggle="collapse" data-target=".method___set .collapse">
+<h2>Magic "__set" method</h2>
+<pre>__set(string $param, mixed $value) : void</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"><p>Allows the ability to arbitrarily set a parameter from this instance
+while treating it as an instance property</p>
+
+<p>NOTE: This currently sets the "named" parameters, since that's the
+one collection that we have the most sane control over</p></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>public</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$param</h4>
+<code>string</code><p>The name of the parameter</p></div>
+<div class="subelement argument">
+<h4>$value</h4>
+<code>mixed</code><p>The value of the parameter</p></div>
+</div></div>
+</div>
+<a id="method___unset"></a><div class="element clickable method public method___unset" data-toggle="collapse" data-target=".method___unset .collapse">
+<h2>Magic "__unset" method</h2>
+<pre>__unset(string $param) : void</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"><p>Allows the ability to arbitrarily remove a parameter from this instance
+while treating it as an instance property</p></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>public</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$param</h4>
+<code>string</code><p>The name of the parameter</p></div>
+</div></div>
+</div>
+<a id="method_body"></a><div class="element clickable method public method_body" data-toggle="collapse" data-target=".method_body .collapse">
+<h2>Gets the request body</h2>
+<pre>body() : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>public</td>
+</tr></table>
+<h3>Returns</h3>
+<div class="subelement response"><code>string</code></div>
+</div></div>
+</div>
+<a id="method_cookies"></a><div class="element clickable method public method_cookies" data-toggle="collapse" data-target=".method_cookies .collapse">
+<h2>Returns the cookies collection</h2>
+<pre>cookies() : <a href="../classes/Klein.DataCollection.DataCollection.html">\Klein\DataCollection\DataCollection</a></pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>public</td>
+</tr></table>
+<h3>Returns</h3>
+<div class="subelement response"><code><a href="../classes/Klein.DataCollection.DataCollection.html">\Klein\DataCollection\DataCollection</a></code></div>
+</div></div>
+</div>
+<a id="method_createFromGlobals"></a><div class="element clickable method public method_createFromGlobals" data-toggle="collapse" data-target=".method_createFromGlobals .collapse">
+<h2>Create a new request object using the built-in "superglobals"</h2>
+<pre>createFromGlobals() : <a href="../classes/Klein.Request.html">\Klein\Request</a></pre>
+<div class="labels"><span class="label">Static</span></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered">
+<tr>
+<th>link</th>
+<td><a href="http://php.net/manual/en/language.variables.superglobals.php">http://php.net/manual/en/language.variables.superglobals.php</a></td>
+</tr>
+<tr>
+<th>static</th>
+<td></td>
+</tr>
+<tr>
+<th>access</th>
+<td>public</td>
+</tr>
+</table>
+<h3>Returns</h3>
+<div class="subelement response"><code><a href="../classes/Klein.Request.html">\Klein\Request</a></code></div>
+</div></div>
+</div>
+<a id="method_files"></a><div class="element clickable method public method_files" data-toggle="collapse" data-target=".method_files .collapse">
+<h2>Returns the files collection</h2>
+<pre>files() : <a href="../classes/Klein.DataCollection.DataCollection.html">\Klein\DataCollection\DataCollection</a></pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>public</td>
+</tr></table>
+<h3>Returns</h3>
+<div class="subelement response"><code><a href="../classes/Klein.DataCollection.DataCollection.html">\Klein\DataCollection\DataCollection</a></code></div>
+</div></div>
+</div>
+<a id="method_headers"></a><div class="element clickable method public method_headers" data-toggle="collapse" data-target=".method_headers .collapse">
+<h2>Returns the headers collection</h2>
+<pre>headers() : <a href="../classes/Klein.DataCollection.HeaderDataCollection.html">\Klein\DataCollection\HeaderDataCollection</a></pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>public</td>
+</tr></table>
+<h3>Returns</h3>
+<div class="subelement response"><code><a href="../classes/Klein.DataCollection.HeaderDataCollection.html">\Klein\DataCollection\HeaderDataCollection</a></code></div>
+</div></div>
+</div>
+<a id="method_id"></a><div class="element clickable method public method_id" data-toggle="collapse" data-target=".method_id .collapse">
+<h2>Gets a unique ID for the request</h2>
+<pre>id(boolean $hash) : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"><p>Generates one on the first call</p></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>public</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$hash</h4>
+<code>boolean</code><p>Whether or not to hash the ID on creation</p></div>
+<h3>Returns</h3>
+<div class="subelement response"><code>string</code></div>
+</div></div>
+</div>
+<a id="method_ip"></a><div class="element clickable method public method_ip" data-toggle="collapse" data-target=".method_ip .collapse">
+<h2>Gets the request IP address</h2>
+<pre>ip() : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>public</td>
+</tr></table>
+<h3>Returns</h3>
+<div class="subelement response"><code>string</code></div>
+</div></div>
+</div>
+<a id="method_isSecure"></a><div class="element clickable method public method_isSecure" data-toggle="collapse" data-target=".method_isSecure .collapse">
+<h2>Is the request secure?</h2>
+<pre>isSecure() : boolean</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>public</td>
+</tr></table>
+<h3>Returns</h3>
+<div class="subelement response"><code>boolean</code></div>
+</div></div>
+</div>
+<a id="method_method"></a><div class="element clickable method public method_method" data-toggle="collapse" data-target=".method_method .collapse">
+<h2>Gets the request method, or checks it against $is</h2>
+<pre>method(string $is, boolean $allow_override) : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"><pre><code>// POST request example
+$request->method() // returns 'POST'
+$request->method('post') // returns true
+$request->method('get') // returns false
+</code></pre></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>public</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$is</h4>
+<code>string</code><p>The method to check the current request method against</p></div>
+<div class="subelement argument">
+<h4>$allow_override</h4>
+<code>boolean</code><p>Whether or not to allow HTTP method overriding via header or params</p></div>
+<h3>Returns</h3>
+<div class="subelement response">
+<code>string</code>| boolean</div>
+</div></div>
+</div>
+<a id="method_param"></a><div class="element clickable method public method_param" data-toggle="collapse" data-target=".method_param .collapse">
+<h2>Return a request parameter, or $default if it doesn't exist</h2>
+<pre>param(string $key, mixed $default) : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>public</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$key</h4>
+<code>string</code><p>The name of the parameter to return</p></div>
+<div class="subelement argument">
+<h4>$default</h4>
+<code>mixed</code><p>The default value of the parameter if it contains no value</p></div>
+<h3>Returns</h3>
+<div class="subelement response"><code>string</code></div>
+</div></div>
+</div>
+<a id="method_params"></a><div class="element clickable method public method_params" data-toggle="collapse" data-target=".method_params .collapse">
+<h2>Returns all parameters (GET, POST, named, and cookies) that match the mask</h2>
+<pre>params(array $mask) : array</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"><p>Takes an optional mask param that contains the names of any params
+you'd like this method to exclude in the returned array</p></div>
+<table class="table table-bordered">
+<tr>
+<th>see</th>
+<td><a href="DataCollection.DataCollection.html#%5CKlein%5CDataCollection%5CDataCollection::all()">\Klein\DataCollection\DataCollection::all()</a></td>
+</tr>
+<tr>
+<th>access</th>
+<td>public</td>
+</tr>
+</table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$mask</h4>
+<code>array</code><p>The parameter mask array</p></div>
+<h3>Returns</h3>
+<div class="subelement response"><code>array</code></div>
+</div></div>
+</div>
+<a id="method_paramsGet"></a><div class="element clickable method public method_paramsGet" data-toggle="collapse" data-target=".method_paramsGet .collapse">
+<h2>Returns the GET parameters collection</h2>
+<pre>paramsGet() : <a href="../classes/Klein.DataCollection.DataCollection.html">\Klein\DataCollection\DataCollection</a></pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>public</td>
+</tr></table>
+<h3>Returns</h3>
+<div class="subelement response"><code><a href="../classes/Klein.DataCollection.DataCollection.html">\Klein\DataCollection\DataCollection</a></code></div>
+</div></div>
+</div>
+<a id="method_paramsNamed"></a><div class="element clickable method public method_paramsNamed" data-toggle="collapse" data-target=".method_paramsNamed .collapse">
+<h2>Returns the named parameters collection</h2>
+<pre>paramsNamed() : <a href="../classes/Klein.DataCollection.DataCollection.html">\Klein\DataCollection\DataCollection</a></pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>public</td>
+</tr></table>
+<h3>Returns</h3>
+<div class="subelement response"><code><a href="../classes/Klein.DataCollection.DataCollection.html">\Klein\DataCollection\DataCollection</a></code></div>
+</div></div>
+</div>
+<a id="method_paramsPost"></a><div class="element clickable method public method_paramsPost" data-toggle="collapse" data-target=".method_paramsPost .collapse">
+<h2>Returns the POST parameters collection</h2>
+<pre>paramsPost() : <a href="../classes/Klein.DataCollection.DataCollection.html">\Klein\DataCollection\DataCollection</a></pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>public</td>
+</tr></table>
+<h3>Returns</h3>
+<div class="subelement response"><code><a href="../classes/Klein.DataCollection.DataCollection.html">\Klein\DataCollection\DataCollection</a></code></div>
+</div></div>
+</div>
+<a id="method_server"></a><div class="element clickable method public method_server" data-toggle="collapse" data-target=".method_server .collapse">
+<h2>Returns the server collection</h2>
+<pre>server() : <a href="../classes/Klein.DataCollection.DataCollection.html">\Klein\DataCollection\DataCollection</a></pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>public</td>
+</tr></table>
+<h3>Returns</h3>
+<div class="subelement response"><code><a href="../classes/Klein.DataCollection.DataCollection.html">\Klein\DataCollection\DataCollection</a></code></div>
+</div></div>
+</div>
+<a id="method_uri"></a><div class="element clickable method public method_uri" data-toggle="collapse" data-target=".method_uri .collapse">
+<h2>Gets the request URI</h2>
+<pre>uri(boolean $strip_query_string) : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>public</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$strip_query_string</h4>
+<code>boolean</code><p>Whether or not to strip the query string from the URI</p></div>
+<h3>Returns</h3>
+<div class="subelement response"><code>string</code></div>
+</div></div>
+</div>
+<a id="method_userAgent"></a><div class="element clickable method public method_userAgent" data-toggle="collapse" data-target=".method_userAgent .collapse">
+<h2>Gets the request user agent</h2>
+<pre>userAgent() : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>public</td>
+</tr></table>
+<h3>Returns</h3>
+<div class="subelement response"><code>string</code></div>
+</div></div>
+</div>
+<h3>
+<i class="icon-custom icon-property"></i> Properties</h3>
+<a id="property_body"> </a><div class="element clickable property protected property_body" data-toggle="collapse" data-target=".property_body .collapse">
+<h2></h2>
+<pre>$body : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>protected</td>
+</tr></table>
+</div></div>
+</div>
+<a id="property_cookies"> </a><div class="element clickable property protected property_cookies" data-toggle="collapse" data-target=".property_cookies .collapse">
+<h2></h2>
+<pre>$cookies : <a href="../classes/Klein.DataCollection.DataCollection.html">\Klein\DataCollection\DataCollection</a></pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>protected</td>
+</tr></table>
+</div></div>
+</div>
+<a id="property_files"> </a><div class="element clickable property protected property_files" data-toggle="collapse" data-target=".property_files .collapse">
+<h2></h2>
+<pre>$files : <a href="../classes/Klein.DataCollection.DataCollection.html">\Klein\DataCollection\DataCollection</a></pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>protected</td>
+</tr></table>
+</div></div>
+</div>
+<a id="property_headers"> </a><div class="element clickable property protected property_headers" data-toggle="collapse" data-target=".property_headers .collapse">
+<h2></h2>
+<pre>$headers : <a href="../classes/Klein.DataCollection.HeaderDataCollection.html">\Klein\DataCollection\HeaderDataCollection</a></pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>protected</td>
+</tr></table>
+</div></div>
+</div>
+<a id="property_id"> </a><div class="element clickable property protected property_id" data-toggle="collapse" data-target=".property_id .collapse">
+<h2></h2>
+<pre>$id : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>protected</td>
+</tr></table>
+</div></div>
+</div>
+<a id="property_params_get"> </a><div class="element clickable property protected property_params_get" data-toggle="collapse" data-target=".property_params_get .collapse">
+<h2></h2>
+<pre>$params_get : <a href="../classes/Klein.DataCollection.DataCollection.html">\Klein\DataCollection\DataCollection</a></pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>protected</td>
+</tr></table>
+</div></div>
+</div>
+<a id="property_params_named"> </a><div class="element clickable property protected property_params_named" data-toggle="collapse" data-target=".property_params_named .collapse">
+<h2></h2>
+<pre>$params_named : <a href="../classes/Klein.DataCollection.DataCollection.html">\Klein\DataCollection\DataCollection</a></pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>protected</td>
+</tr></table>
+</div></div>
+</div>
+<a id="property_params_post"> </a><div class="element clickable property protected property_params_post" data-toggle="collapse" data-target=".property_params_post .collapse">
+<h2></h2>
+<pre>$params_post : <a href="../classes/Klein.DataCollection.DataCollection.html">\Klein\DataCollection\DataCollection</a></pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>protected</td>
+</tr></table>
+</div></div>
+</div>
+<a id="property_server"> </a><div class="element clickable property protected property_server" data-toggle="collapse" data-target=".property_server .collapse">
+<h2></h2>
+<pre>$server : <a href="../classes/Klein.DataCollection.ServerDataCollection.html">\Klein\DataCollection\ServerDataCollection</a></pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>protected</td>
+</tr></table>
+</div></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="row"><footer class="span12">
+            Template is built using <a href="http://twitter.github.com/bootstrap/">Twitter Bootstrap 2</a> and icons provided by <a href="http://glyphicons.com/">Glyphicons</a>.<br>
+            Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor 2.0.0a12</a> and<br>
+            generated on 2013-05-08T03:28:14-04:00.<br></footer></div>
+</div>
+</body>
+</html>

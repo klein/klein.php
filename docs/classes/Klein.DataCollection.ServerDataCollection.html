@@ -1,0 +1,737 @@
+<!DOCTYPE html><html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+<meta charset="utf-8">
+<title>Klein » \Klein\DataCollection\ServerDataCollection</title>
+<meta name="author" content="Mike van Riel">
+<meta name="description" content="">
+<link href="../css/template.css" rel="stylesheet" media="all">
+<script src="../js/jquery-1.7.1.min.js" type="text/javascript"></script><script src="../js/jquery-ui-1.8.2.custom.min.js" type="text/javascript"></script><script src="../js/jquery.mousewheel.min.js" type="text/javascript"></script><script src="../js/bootstrap.js" type="text/javascript"></script><script src="../js/template.js" type="text/javascript"></script><script src="../js/prettify/prettify.min.js" type="text/javascript"></script><link rel="shortcut icon" href="../img/favicon.ico">
+<link rel="apple-touch-icon" href="../img/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="72x72" href="../img/apple-touch-icon-72x72.png">
+<link rel="apple-touch-icon" sizes="114x114" href="../img/apple-touch-icon-114x114.png">
+</head>
+<body>
+<div class="navbar navbar-fixed-top">
+<div class="navbar-inner"><div class="container">
+<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></a><a class="brand" href="../index.html">Klein</a><div class="nav-collapse"><ul class="nav">
+<li class="dropdown">
+<a href="#api" class="dropdown-toggle" data-toggle="dropdown">
+                                    API Documentation <b class="caret"></b></a><ul class="dropdown-menu">
+<li><a>Namespaces</a></li>
+<li><a href="../namespaces/Klein.html"><i class="icon-th"></i> Klein</a></li>
+<li><a>Packages</a></li>
+<li><a href="../packages/Klein.html"><i class="icon-folder-open"></i> Klein</a></li>
+</ul>
+</li>
+<li class="dropdown" id="charts-menu">
+<a href="#charts" class="dropdown-toggle" data-toggle="dropdown">
+                                    Charts <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="../graph_class.html"><i class="icon-list-alt"></i> Class hierarchy diagram</a></li></ul>
+</li>
+<li class="dropdown" id="reports-menu">
+<a href="#reports" class="dropdown-toggle" data-toggle="dropdown">
+                                    Reports <b class="caret"></b></a><ul class="dropdown-menu">
+<li><a href="../errors.html"><i class="icon-remove-sign"></i> Errors 
+                <span class="label label-info">0</span></a></li>
+<li><a href="../markers.html"><i class="icon-map-marker"></i> Markers 
+                <ul></ul></a></li>
+<li><a href="../deprecated.html"><i class="icon-stop"></i> Deprecated elements 
+                <span class="label label-info">0</span></a></li>
+</ul>
+</li>
+</ul></div>
+</div></div>
+<div class="go_to_top"><a href="#___" style="color: inherit">Back to top  <i class="icon-upload icon-white"></i></a></div>
+</div>
+<div id="___" class="container">
+<noscript><div class="alert alert-warning">
+                            Javascript is disabled; several features are only available
+                            if Javascript is enabled.
+                        </div></noscript>
+<div class="row">
+<div class="span4">
+<span class="btn-group visibility" data-toggle="buttons-checkbox"><button class="btn public active" title="Show public elements">Public</button><button class="btn protected" title="Show protected elements">Protected</button><button class="btn private" title="Show private elements">Private</button><button class="btn inherited active" title="Show inherited elements">Inherited</button></span><div class="btn-group view pull-right" data-toggle="buttons-radio">
+<button class="btn details" title="Show descriptions and method names"><i class="icon-list"></i></button><button class="btn simple" title="Show only method names"><i class="icon-align-justify"></i></button>
+</div>
+<ul class="side-nav nav nav-list">
+<li class="nav-header">
+<i class="icon-custom icon-method"></i> Methods
+                    <ul>
+<li class="method public inherited"><a href="#method___construct" title="__construct :: Constructor"><span class="description">Constructor</span><pre>__construct()</pre></a></li>
+<li class="method public inherited"><a href="#method___get" title='__get :: Magic "__get" method'><span class="description">Magic "__get" method</span><pre>__get()</pre></a></li>
+<li class="method public inherited"><a href="#method___isset" title='__isset :: Magic "__isset" method'><span class="description">Magic "__isset" method</span><pre>__isset()</pre></a></li>
+<li class="method public inherited"><a href="#method___set" title='__set :: Magic "__set" method'><span class="description">Magic "__set" method</span><pre>__set()</pre></a></li>
+<li class="method public inherited"><a href="#method___unset" title='__unset :: Magic "__unset" method'><span class="description">Magic "__unset" method</span><pre>__unset()</pre></a></li>
+<li class="method public inherited"><a href="#method_all" title="all :: Returns all of the attributes in the collection"><span class="description">Returns all of the attributes in the collection</span><pre>all()</pre></a></li>
+<li class="method public inherited"><a href="#method_count" title='count :: Count the attributes via a simple "count" call'><span class="description">Count the attributes via a simple "count" call</span><pre>count()</pre></a></li>
+<li class="method public inherited"><a href="#method_exists" title="exists :: See if an attribute exists in the collection"><span class="description">See if an attribute exists in the collection</span><pre>exists()</pre></a></li>
+<li class="method public inherited"><a href="#method_get" title="get :: Return an attribute of the collection"><span class="description">Return an attribute of the collection</span><pre>get()</pre></a></li>
+<li class="method public "><a href="#method_getHeaders" title="getHeaders :: Get our headers from our server data collection"><span class="description">Get our headers from our server data collection</span><pre>getHeaders()</pre></a></li>
+<li class="method public inherited"><a href="#method_getIterator" title="getIterator :: Get the aggregate iterator"><span class="description">Get the aggregate iterator</span><pre>getIterator()</pre></a></li>
+<li class="method public "><a href="#method_hasPrefix" title="hasPrefix :: Quickly check if a string has a passed prefix"><span class="description">Quickly check if a string has a passed prefix</span><pre>hasPrefix()</pre></a></li>
+<li class="method public inherited"><a href="#method_merge" title="merge :: Merge attributes with the collection's attributes"><span class="description">Merge attributes with the collection's attributes</span><pre>merge()</pre></a></li>
+<li class="method public inherited"><a href="#method_offsetExists" title="offsetExists :: Check existence an attribute via array syntax"><span class="description">Check existence an attribute via array syntax</span><pre>offsetExists()</pre></a></li>
+<li class="method public inherited"><a href="#method_offsetGet" title="offsetGet :: Get an attribute via array syntax"><span class="description">Get an attribute via array syntax</span><pre>offsetGet()</pre></a></li>
+<li class="method public inherited"><a href="#method_offsetSet" title="offsetSet :: Set an attribute via array syntax"><span class="description">Set an attribute via array syntax</span><pre>offsetSet()</pre></a></li>
+<li class="method public inherited"><a href="#method_offsetUnset" title="offsetUnset :: Remove an attribute via array syntax"><span class="description">Remove an attribute via array syntax</span><pre>offsetUnset()</pre></a></li>
+<li class="method public inherited"><a href="#method_remove" title="remove :: Remove an attribute from the collection"><span class="description">Remove an attribute from the collection</span><pre>remove()</pre></a></li>
+<li class="method public inherited"><a href="#method_replace" title="replace :: Replace the collection's attributes"><span class="description">Replace the collection's attributes</span><pre>replace()</pre></a></li>
+<li class="method public inherited"><a href="#method_set" title="set :: Set an attribute of the collection"><span class="description">Set an attribute of the collection</span><pre>set()</pre></a></li>
+</ul>
+</li>
+<li class="nav-header">
+<i class="icon-custom icon-property"></i> Properties
+                    <ul></ul>
+</li>
+<li class="nav-header protected">» Protected
+                    <ul>
+<li class="property protected inherited"><a href="#property_attributes" title="$attributes :: Collection of data attributes"><span class="description"></span><pre>$attributes</pre></a></li>
+<li class="property protected "><a href="#property_http_header_prefix" title="$http_header_prefix :: The prefix of HTTP headers normally
+stored in the Server data"><span class="description"></span><pre>$http_header_prefix</pre></a></li>
+<li class="property protected "><a href="#property_http_nonprefixed_headers" title="$http_nonprefixed_headers :: The list of HTTP headers that for some
+reason aren't prefixed in PHP."><span class="description"></span><pre>$http_nonprefixed_headers</pre></a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="span8">
+<a id="\Klein\DataCollection\ServerDataCollection"></a><ul class="breadcrumb">
+<li>
+<a href="../index.html"><i class="icon-custom icon-class"></i></a><span class="divider">\</span>
+</li>
+<li><a href="../namespaces/Klein.html">Klein</a></li>
+<li>
+<span class="divider">\</span><a href="../namespaces/Klein.DataCollection.html">DataCollection</a>
+</li>
+<li class="active">
+<span class="divider">\</span><a href="../classes/Klein.DataCollection.ServerDataCollection.html">ServerDataCollection</a>
+</li>
+</ul>
+<div class="element class">
+<p class="short_description">ServerDataCollection</p>
+<div class="details">
+<div class="long_description"><p>A DataCollection for "$_SERVER" like data</p>
+
+<p>Look familiar?</p>
+
+<p>Inspired by @fabpot's Symfony 2's HttpFoundation</p></div>
+<table class="table table-bordered">
+<tr>
+<th>link</th>
+<td><a href="https://github.com/symfony/HttpFoundation/blob/master/ServerBag.php">https://github.com/symfony/HttpFoundation/blob/master/ServerBag.php</a></td>
+</tr>
+<tr>
+<th>uses</th>
+<td>\Klein\DataCollection\DataCollection</td>
+</tr>
+<tr>
+<th>package</th>
+<td><a href="../packages/Klein.DataCollection.html">Klein\DataCollection</a></td>
+</tr>
+</table>
+<h3>
+<i class="icon-custom icon-method"></i> Methods</h3>
+<a id="method___construct"></a><div class="element clickable method public method___construct" data-toggle="collapse" data-target=".method___construct .collapse">
+<h2>Constructor</h2>
+<pre>__construct(array $attributes) </pre>
+<div class="labels"><span class="label">Inherited</span></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered">
+<tr>
+<th>access</th>
+<td>public</td>
+</tr>
+<tr>
+<th>inherited_from</th>
+<td>\Klein\DataCollection\DataCollection::__construct()</td>
+</tr>
+</table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$attributes</h4>
+<code>array</code><p>The data attributes of this collection</p></div>
+</div></div>
+</div>
+<a id="method___get"></a><div class="element clickable method public method___get" data-toggle="collapse" data-target=".method___get .collapse">
+<h2>Magic "__get" method</h2>
+<pre>__get(string $key) : mixed</pre>
+<div class="labels"><span class="label">Inherited</span></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"><p>Allows the ability to arbitrarily request an attribute from
+this instance while treating it as an instance property</p></div>
+<table class="table table-bordered">
+<tr>
+<th>see</th>
+<td><a href="">\Klein\DataCollection\get()</a></td>
+</tr>
+<tr>
+<th>access</th>
+<td>public</td>
+</tr>
+<tr>
+<th>inherited_from</th>
+<td>\Klein\DataCollection\DataCollection::__get()</td>
+</tr>
+</table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$key</h4>
+<code>string</code><p>The name of the parameter to return</p></div>
+<h3>Returns</h3>
+<div class="subelement response"><code>mixed</code></div>
+</div></div>
+</div>
+<a id="method___isset"></a><div class="element clickable method public method___isset" data-toggle="collapse" data-target=".method___isset .collapse">
+<h2>Magic "__isset" method</h2>
+<pre>__isset(string $key) : boolean</pre>
+<div class="labels"><span class="label">Inherited</span></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"><p>Allows the ability to arbitrarily check the existence of an attribute
+from this instance while treating it as an instance property</p></div>
+<table class="table table-bordered">
+<tr>
+<th>see</th>
+<td><a href="">\Klein\DataCollection\exists()</a></td>
+</tr>
+<tr>
+<th>access</th>
+<td>public</td>
+</tr>
+<tr>
+<th>inherited_from</th>
+<td>\Klein\DataCollection\DataCollection::__isset()</td>
+</tr>
+</table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$key</h4>
+<code>string</code><p>The name of the parameter</p></div>
+<h3>Returns</h3>
+<div class="subelement response"><code>boolean</code></div>
+</div></div>
+</div>
+<a id="method___set"></a><div class="element clickable method public method___set" data-toggle="collapse" data-target=".method___set .collapse">
+<h2>Magic "__set" method</h2>
+<pre>__set(string $key, mixed $value) : void</pre>
+<div class="labels"><span class="label">Inherited</span></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"><p>Allows the ability to arbitrarily set an attribute from
+this instance while treating it as an instance property</p></div>
+<table class="table table-bordered">
+<tr>
+<th>see</th>
+<td><a href="">\Klein\DataCollection\set()</a></td>
+</tr>
+<tr>
+<th>access</th>
+<td>public</td>
+</tr>
+<tr>
+<th>inherited_from</th>
+<td>\Klein\DataCollection\DataCollection::__set()</td>
+</tr>
+</table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$key</h4>
+<code>string</code><p>The name of the parameter to set</p></div>
+<div class="subelement argument">
+<h4>$value</h4>
+<code>mixed</code><p>The value of the parameter to set</p></div>
+</div></div>
+</div>
+<a id="method___unset"></a><div class="element clickable method public method___unset" data-toggle="collapse" data-target=".method___unset .collapse">
+<h2>Magic "__unset" method</h2>
+<pre>__unset(string $key) : void</pre>
+<div class="labels"><span class="label">Inherited</span></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"><p>Allows the ability to arbitrarily remove an attribute from
+this instance while treating it as an instance property</p></div>
+<table class="table table-bordered">
+<tr>
+<th>see</th>
+<td><a href="">\Klein\DataCollection\remove()</a></td>
+</tr>
+<tr>
+<th>access</th>
+<td>public</td>
+</tr>
+<tr>
+<th>inherited_from</th>
+<td>\Klein\DataCollection\DataCollection::__unset()</td>
+</tr>
+</table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$key</h4>
+<code>string</code><p>The name of the parameter</p></div>
+</div></div>
+</div>
+<a id="method_all"></a><div class="element clickable method public method_all" data-toggle="collapse" data-target=".method_all .collapse">
+<h2>Returns all of the attributes in the collection</h2>
+<pre>all(array $mask) : array</pre>
+<div class="labels"><span class="label">Inherited</span></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"><p>If an optional mask array is passed, this only
+returns the keys that match the mask</p></div>
+<table class="table table-bordered">
+<tr>
+<th>access</th>
+<td>public</td>
+</tr>
+<tr>
+<th>inherited_from</th>
+<td>\Klein\DataCollection\DataCollection::all()</td>
+</tr>
+</table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$mask</h4>
+<code>array</code><p>The parameter mask array</p></div>
+<h3>Returns</h3>
+<div class="subelement response"><code>array</code></div>
+</div></div>
+</div>
+<a id="method_count"></a><div class="element clickable method public method_count" data-toggle="collapse" data-target=".method_count .collapse">
+<h2>Count the attributes via a simple "count" call</h2>
+<pre>count() : int</pre>
+<div class="labels"><span class="label">Inherited</span></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"><p>Allows the use of the "count" function (or any internal counters)
+to simply count the number of attributes in the collection.</p></div>
+<table class="table table-bordered">
+<tr>
+<th>see</th>
+<td><a href="">\Countable::count()</a></td>
+</tr>
+<tr>
+<th>access</th>
+<td>public</td>
+</tr>
+<tr>
+<th>inherited_from</th>
+<td>\Klein\DataCollection\DataCollection::count()</td>
+</tr>
+</table>
+<h3>Returns</h3>
+<div class="subelement response"><code>int</code></div>
+</div></div>
+</div>
+<a id="method_exists"></a><div class="element clickable method public method_exists" data-toggle="collapse" data-target=".method_exists .collapse">
+<h2>See if an attribute exists in the collection</h2>
+<pre>exists(string $key) : boolean</pre>
+<div class="labels"><span class="label">Inherited</span></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered">
+<tr>
+<th>access</th>
+<td>public</td>
+</tr>
+<tr>
+<th>inherited_from</th>
+<td>\Klein\DataCollection\DataCollection::exists()</td>
+</tr>
+</table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$key</h4>
+<code>string</code><p>The name of the parameter</p></div>
+<h3>Returns</h3>
+<div class="subelement response"><code>boolean</code></div>
+</div></div>
+</div>
+<a id="method_get"></a><div class="element clickable method public method_get" data-toggle="collapse" data-target=".method_get .collapse">
+<h2>Return an attribute of the collection</h2>
+<pre>get(string $key, mixed $default_val) : mixed</pre>
+<div class="labels"><span class="label">Inherited</span></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"><p>Return a default value if the key doesn't exist</p></div>
+<table class="table table-bordered">
+<tr>
+<th>access</th>
+<td>public</td>
+</tr>
+<tr>
+<th>inherited_from</th>
+<td>\Klein\DataCollection\DataCollection::get()</td>
+</tr>
+</table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$key</h4>
+<code>string</code><p>The name of the parameter to return</p></div>
+<div class="subelement argument">
+<h4>$default_val</h4>
+<code>mixed</code><p>The default value of the parameter if it contains no value</p></div>
+<h3>Returns</h3>
+<div class="subelement response"><code>mixed</code></div>
+</div></div>
+</div>
+<a id="method_getHeaders"></a><div class="element clickable method public method_getHeaders" data-toggle="collapse" data-target=".method_getHeaders .collapse">
+<h2>Get our headers from our server data collection</h2>
+<pre>getHeaders() : array</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"><p>PHP is weird... it puts all of the HTTP request
+headers in the $_SERVER array. This handles that</p></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>public</td>
+</tr></table>
+<h3>Returns</h3>
+<div class="subelement response"><code>array</code></div>
+</div></div>
+</div>
+<a id="method_getIterator"></a><div class="element clickable method public method_getIterator" data-toggle="collapse" data-target=".method_getIterator .collapse">
+<h2>Get the aggregate iterator</h2>
+<pre>getIterator() : <a href="http://php.net/manual/en/class.arrayiterator.php">\ArrayIterator</a></pre>
+<div class="labels"><span class="label">Inherited</span></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"><p>IteratorAggregate interface required method</p></div>
+<table class="table table-bordered">
+<tr>
+<th>see</th>
+<td><a href="">\IteratorAggregate::getIterator()</a></td>
+</tr>
+<tr>
+<th>access</th>
+<td>public</td>
+</tr>
+<tr>
+<th>inherited_from</th>
+<td>\Klein\DataCollection\DataCollection::getIterator()</td>
+</tr>
+</table>
+<h3>Returns</h3>
+<div class="subelement response"><code><a href="http://php.net/manual/en/class.arrayiterator.php">\ArrayIterator</a></code></div>
+</div></div>
+</div>
+<a id="method_hasPrefix"></a><div class="element clickable method public method_hasPrefix" data-toggle="collapse" data-target=".method_hasPrefix .collapse">
+<h2>Quickly check if a string has a passed prefix</h2>
+<pre>hasPrefix(string $string, string $prefix) : boolean</pre>
+<div class="labels"><span class="label">Static</span></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"><p>Use the more convoluted "substr" method, as its
+slightly faster than using the "strpos" method</p></div>
+<table class="table table-bordered">
+<tr>
+<th>static</th>
+<td></td>
+</tr>
+<tr>
+<th>access</th>
+<td>public</td>
+</tr>
+</table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$string</h4>
+<code>string</code><p>The string to check</p></div>
+<div class="subelement argument">
+<h4>$prefix</h4>
+<code>string</code><p>The prefix to test</p></div>
+<h3>Returns</h3>
+<div class="subelement response"><code>boolean</code></div>
+</div></div>
+</div>
+<a id="method_merge"></a><div class="element clickable method public method_merge" data-toggle="collapse" data-target=".method_merge .collapse">
+<h2>Merge attributes with the collection's attributes</h2>
+<pre>merge(array $attributes, boolean $hard) : <a href="../classes/Klein.DataCollection.DataCollection.html">\Klein\DataCollection\DataCollection</a></pre>
+<div class="labels"><span class="label">Inherited</span></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"><p>Optionally allows a second boolean parameter to merge the attributes
+into the collection in a "hard" manner, using the "array_replace"
+method instead of the usual "array_merge" method</p></div>
+<table class="table table-bordered">
+<tr>
+<th>access</th>
+<td>public</td>
+</tr>
+<tr>
+<th>inherited_from</th>
+<td>\Klein\DataCollection\DataCollection::merge()</td>
+</tr>
+</table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$attributes</h4>
+<code>array</code><p>The attributes to merge into the collection</p></div>
+<div class="subelement argument">
+<h4>$hard</h4>
+<code>boolean</code><p>Whether or not to make the merge "hard"</p>
+</div>
+<h3>Returns</h3>
+<div class="subelement response"><code><a href="../classes/Klein.DataCollection.DataCollection.html">\Klein\DataCollection\DataCollection</a></code></div>
+</div></div>
+</div>
+<a id="method_offsetExists"></a><div class="element clickable method public method_offsetExists" data-toggle="collapse" data-target=".method_offsetExists .collapse">
+<h2>Check existence an attribute via array syntax</h2>
+<pre>offsetExists(string $key) : boolean</pre>
+<div class="labels"><span class="label">Inherited</span></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"><p>Allows the access of attributes of this instance while treating it like an array</p></div>
+<table class="table table-bordered">
+<tr>
+<th>see</th>
+<td><a href="">\ArrayAccess::offsetExists()</a></td>
+</tr>
+<tr>
+<th>see</th>
+<td><a href="">\Klein\DataCollection\exists()</a></td>
+</tr>
+<tr>
+<th>access</th>
+<td>public</td>
+</tr>
+<tr>
+<th>inherited_from</th>
+<td>\Klein\DataCollection\DataCollection::offsetExists()</td>
+</tr>
+</table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$key</h4>
+<code>string</code><p>The name of the parameter</p></div>
+<h3>Returns</h3>
+<div class="subelement response"><code>boolean</code></div>
+</div></div>
+</div>
+<a id="method_offsetGet"></a><div class="element clickable method public method_offsetGet" data-toggle="collapse" data-target=".method_offsetGet .collapse">
+<h2>Get an attribute via array syntax</h2>
+<pre>offsetGet(string $key) : mixed</pre>
+<div class="labels"><span class="label">Inherited</span></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"><p>Allows the access of attributes of this instance while treating it like an array</p></div>
+<table class="table table-bordered">
+<tr>
+<th>see</th>
+<td><a href="">\ArrayAccess::offsetGet()</a></td>
+</tr>
+<tr>
+<th>see</th>
+<td><a href="">\Klein\DataCollection\get()</a></td>
+</tr>
+<tr>
+<th>access</th>
+<td>public</td>
+</tr>
+<tr>
+<th>inherited_from</th>
+<td>\Klein\DataCollection\DataCollection::offsetGet()</td>
+</tr>
+</table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$key</h4>
+<code>string</code><p>The name of the parameter to return</p></div>
+<h3>Returns</h3>
+<div class="subelement response"><code>mixed</code></div>
+</div></div>
+</div>
+<a id="method_offsetSet"></a><div class="element clickable method public method_offsetSet" data-toggle="collapse" data-target=".method_offsetSet .collapse">
+<h2>Set an attribute via array syntax</h2>
+<pre>offsetSet(string $key, mixed $value) : void</pre>
+<div class="labels"><span class="label">Inherited</span></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"><p>Allows the access of attributes of this instance while treating it like an array</p></div>
+<table class="table table-bordered">
+<tr>
+<th>see</th>
+<td><a href="">\ArrayAccess::offsetSet()</a></td>
+</tr>
+<tr>
+<th>see</th>
+<td><a href="">\Klein\DataCollection\set()</a></td>
+</tr>
+<tr>
+<th>access</th>
+<td>public</td>
+</tr>
+<tr>
+<th>inherited_from</th>
+<td>\Klein\DataCollection\DataCollection::offsetSet()</td>
+</tr>
+</table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$key</h4>
+<code>string</code><p>The name of the parameter to set</p></div>
+<div class="subelement argument">
+<h4>$value</h4>
+<code>mixed</code><p>The value of the parameter to set</p></div>
+</div></div>
+</div>
+<a id="method_offsetUnset"></a><div class="element clickable method public method_offsetUnset" data-toggle="collapse" data-target=".method_offsetUnset .collapse">
+<h2>Remove an attribute via array syntax</h2>
+<pre>offsetUnset(string $key) : void</pre>
+<div class="labels"><span class="label">Inherited</span></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"><p>Allows the access of attributes of this instance while treating it like an array</p></div>
+<table class="table table-bordered">
+<tr>
+<th>see</th>
+<td><a href="">\ArrayAccess::offsetUnset()</a></td>
+</tr>
+<tr>
+<th>see</th>
+<td><a href="">\Klein\DataCollection\remove()</a></td>
+</tr>
+<tr>
+<th>access</th>
+<td>public</td>
+</tr>
+<tr>
+<th>inherited_from</th>
+<td>\Klein\DataCollection\DataCollection::offsetUnset()</td>
+</tr>
+</table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$key</h4>
+<code>string</code><p>The name of the parameter</p></div>
+</div></div>
+</div>
+<a id="method_remove"></a><div class="element clickable method public method_remove" data-toggle="collapse" data-target=".method_remove .collapse">
+<h2>Remove an attribute from the collection</h2>
+<pre>remove(string $key) : void</pre>
+<div class="labels"><span class="label">Inherited</span></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered">
+<tr>
+<th>access</th>
+<td>public</td>
+</tr>
+<tr>
+<th>inherited_from</th>
+<td>\Klein\DataCollection\DataCollection::remove()</td>
+</tr>
+</table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$key</h4>
+<code>string</code><p>The name of the parameter</p></div>
+</div></div>
+</div>
+<a id="method_replace"></a><div class="element clickable method public method_replace" data-toggle="collapse" data-target=".method_replace .collapse">
+<h2>Replace the collection's attributes</h2>
+<pre>replace(array $attributes) : <a href="../classes/Klein.DataCollection.DataCollection.html">\Klein\DataCollection\DataCollection</a></pre>
+<div class="labels"><span class="label">Inherited</span></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered">
+<tr>
+<th>access</th>
+<td>public</td>
+</tr>
+<tr>
+<th>inherited_from</th>
+<td>\Klein\DataCollection\DataCollection::replace()</td>
+</tr>
+</table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$attributes</h4>
+<code>array</code><p>The attributes to replace the collection's with</p>
+</div>
+<h3>Returns</h3>
+<div class="subelement response"><code><a href="../classes/Klein.DataCollection.DataCollection.html">\Klein\DataCollection\DataCollection</a></code></div>
+</div></div>
+</div>
+<a id="method_set"></a><div class="element clickable method public method_set" data-toggle="collapse" data-target=".method_set .collapse">
+<h2>Set an attribute of the collection</h2>
+<pre>set(string $key, mixed $value) : <a href="../classes/Klein.DataCollection.DataCollection.html">\Klein\DataCollection\DataCollection</a></pre>
+<div class="labels"><span class="label">Inherited</span></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered">
+<tr>
+<th>access</th>
+<td>public</td>
+</tr>
+<tr>
+<th>inherited_from</th>
+<td>\Klein\DataCollection\DataCollection::set()</td>
+</tr>
+</table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$key</h4>
+<code>string</code><p>The name of the parameter to set</p></div>
+<div class="subelement argument">
+<h4>$value</h4>
+<code>mixed</code><p>The value of the parameter to set</p></div>
+<h3>Returns</h3>
+<div class="subelement response"><code><a href="../classes/Klein.DataCollection.DataCollection.html">\Klein\DataCollection\DataCollection</a></code></div>
+</div></div>
+</div>
+<h3>
+<i class="icon-custom icon-property"></i> Properties</h3>
+<a id="property_attributes"> </a><div class="element clickable property protected property_attributes" data-toggle="collapse" data-target=".property_attributes .collapse">
+<h2></h2>
+<pre>$attributes : array</pre>
+<div class="labels"><span class="label">Inherited</span></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered">
+<tr>
+<th>access</th>
+<td>protected</td>
+</tr>
+<tr>
+<th>inherited_from</th>
+<td>\Klein\DataCollection\DataCollection::$$attributes</td>
+</tr>
+</table>
+</div></div>
+</div>
+<a id="property_http_header_prefix"> </a><div class="element clickable property protected property_http_header_prefix" data-toggle="collapse" data-target=".property_http_header_prefix .collapse">
+<h2></h2>
+<pre>$http_header_prefix : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered">
+<tr>
+<th>static</th>
+<td></td>
+</tr>
+<tr>
+<th>access</th>
+<td>protected</td>
+</tr>
+</table>
+</div></div>
+</div>
+<a id="property_http_nonprefixed_headers"> </a><div class="element clickable property protected property_http_nonprefixed_headers" data-toggle="collapse" data-target=".property_http_nonprefixed_headers .collapse">
+<h2></h2>
+<pre>$http_nonprefixed_headers : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"><p>..</p></div>
+<table class="table table-bordered">
+<tr>
+<th>static</th>
+<td></td>
+</tr>
+<tr>
+<th>access</th>
+<td>protected</td>
+</tr>
+</table>
+</div></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="row"><footer class="span12">
+            Template is built using <a href="http://twitter.github.com/bootstrap/">Twitter Bootstrap 2</a> and icons provided by <a href="http://glyphicons.com/">Glyphicons</a>.<br>
+            Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor 2.0.0a12</a> and<br>
+            generated on 2013-05-08T03:28:14-04:00.<br></footer></div>
+</div>
+</body>
+</html>

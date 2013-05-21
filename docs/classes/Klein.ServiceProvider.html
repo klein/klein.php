@@ -1,0 +1,669 @@
+<!DOCTYPE html><html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+<meta charset="utf-8">
+<title>Klein » \Klein\ServiceProvider</title>
+<meta name="author" content="Mike van Riel">
+<meta name="description" content="">
+<link href="../css/template.css" rel="stylesheet" media="all">
+<script src="../js/jquery-1.7.1.min.js" type="text/javascript"></script><script src="../js/jquery-ui-1.8.2.custom.min.js" type="text/javascript"></script><script src="../js/jquery.mousewheel.min.js" type="text/javascript"></script><script src="../js/bootstrap.js" type="text/javascript"></script><script src="../js/template.js" type="text/javascript"></script><script src="../js/prettify/prettify.min.js" type="text/javascript"></script><link rel="shortcut icon" href="../img/favicon.ico">
+<link rel="apple-touch-icon" href="../img/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="72x72" href="../img/apple-touch-icon-72x72.png">
+<link rel="apple-touch-icon" sizes="114x114" href="../img/apple-touch-icon-114x114.png">
+</head>
+<body>
+<div class="navbar navbar-fixed-top">
+<div class="navbar-inner"><div class="container">
+<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></a><a class="brand" href="../index.html">Klein</a><div class="nav-collapse"><ul class="nav">
+<li class="dropdown">
+<a href="#api" class="dropdown-toggle" data-toggle="dropdown">
+                                    API Documentation <b class="caret"></b></a><ul class="dropdown-menu">
+<li><a>Namespaces</a></li>
+<li><a href="../namespaces/Klein.html"><i class="icon-th"></i> Klein</a></li>
+<li><a>Packages</a></li>
+<li><a href="../packages/Klein.html"><i class="icon-folder-open"></i> Klein</a></li>
+</ul>
+</li>
+<li class="dropdown" id="charts-menu">
+<a href="#charts" class="dropdown-toggle" data-toggle="dropdown">
+                                    Charts <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="../graph_class.html"><i class="icon-list-alt"></i> Class hierarchy diagram</a></li></ul>
+</li>
+<li class="dropdown" id="reports-menu">
+<a href="#reports" class="dropdown-toggle" data-toggle="dropdown">
+                                    Reports <b class="caret"></b></a><ul class="dropdown-menu">
+<li><a href="../errors.html"><i class="icon-remove-sign"></i> Errors 
+                <span class="label label-info">0</span></a></li>
+<li><a href="../markers.html"><i class="icon-map-marker"></i> Markers 
+                <ul></ul></a></li>
+<li><a href="../deprecated.html"><i class="icon-stop"></i> Deprecated elements 
+                <span class="label label-info">0</span></a></li>
+</ul>
+</li>
+</ul></div>
+</div></div>
+<div class="go_to_top"><a href="#___" style="color: inherit">Back to top  <i class="icon-upload icon-white"></i></a></div>
+</div>
+<div id="___" class="container">
+<noscript><div class="alert alert-warning">
+                            Javascript is disabled; several features are only available
+                            if Javascript is enabled.
+                        </div></noscript>
+<div class="row">
+<div class="span4">
+<span class="btn-group visibility" data-toggle="buttons-checkbox"><button class="btn public active" title="Show public elements">Public</button><button class="btn protected" title="Show protected elements">Protected</button><button class="btn private" title="Show private elements">Private</button><button class="btn inherited active" title="Show inherited elements">Inherited</button></span><div class="btn-group view pull-right" data-toggle="buttons-radio">
+<button class="btn details" title="Show descriptions and method names"><i class="icon-list"></i></button><button class="btn simple" title="Show only method names"><i class="icon-align-justify"></i></button>
+</div>
+<ul class="side-nav nav nav-list">
+<li class="nav-header">
+<i class="icon-custom icon-method"></i> Methods
+                    <ul>
+<li class="method public "><a href="#method___construct" title="__construct :: Constructor"><span class="description">Constructor</span><pre>__construct()</pre></a></li>
+<li class="method public "><a href="#method___get" title='__get :: Magic "__get" method'><span class="description">Magic "__get" method</span><pre>__get()</pre></a></li>
+<li class="method public "><a href="#method___isset" title='__isset :: Magic "__isset" method'><span class="description">Magic "__isset" method</span><pre>__isset()</pre></a></li>
+<li class="method public "><a href="#method___set" title='__set :: Magic "__set" method'><span class="description">Magic "__set" method</span><pre>__set()</pre></a></li>
+<li class="method public "><a href="#method___unset" title='__unset :: Magic "__unset" method'><span class="description">Magic "__unset" method</span><pre>__unset()</pre></a></li>
+<li class="method public "><a href="#method_addValidator" title="addValidator :: Add a custom validator for our validation method"><span class="description">Add a custom validator for our validation method</span><pre>addValidator()</pre></a></li>
+<li class="method public "><a href="#method_back" title="back :: Redirects the request back to the referrer"><span class="description">Redirects the request back to the referrer</span><pre>back()</pre></a></li>
+<li class="method public "><a href="#method_bind" title="bind :: Bind object instances to this service"><span class="description">Bind object instances to this service</span><pre>bind()</pre></a></li>
+<li class="method public "><a href="#method_escape" title="escape :: Escapes a string"><span class="description">Escapes a string</span><pre>escape()</pre></a></li>
+<li class="method public "><a href="#method_file" title="file :: Sends a file"><span class="description">Sends a file</span><pre>file()</pre></a></li>
+<li class="method public "><a href="#method_flash" title="flash :: Stores a flash message of $type"><span class="description">Stores a flash message of $type</span><pre>flash()</pre></a></li>
+<li class="method public "><a href="#method_flashes" title="flashes :: Returns and clears all flashes of optional $type"><span class="description">Returns and clears all flashes of optional $type</span><pre>flashes()</pre></a></li>
+<li class="method public "><a href="#method_json" title="json :: Sends an object as json or jsonp by providing the padding prefix"><span class="description">Sends an object as json or jsonp by providing the padding prefix</span><pre>json()</pre></a></li>
+<li class="method public "><a href="#method_layout" title="layout :: Get (or set) the view's layout"><span class="description">Get (or set) the view's layout</span><pre>layout()</pre></a></li>
+<li class="method public "><a href="#method_markdown" title="markdown :: Render a text string as markdown"><span class="description">Render a text string as markdown</span><pre>markdown()</pre></a></li>
+<li class="method public "><a href="#method_partial" title="partial :: Renders a view without a layout"><span class="description">Renders a view without a layout</span><pre>partial()</pre></a></li>
+<li class="method public "><a href="#method_query" title="query :: Adds to or modifies the current query string"><span class="description">Adds to or modifies the current query string</span><pre>query()</pre></a></li>
+<li class="method public "><a href="#method_refresh" title="refresh :: Redirects the request to the current URL"><span class="description">Redirects the request to the current URL</span><pre>refresh()</pre></a></li>
+<li class="method public "><a href="#method_render" title="render :: Renders a view + optional layout"><span class="description">Renders a view + optional layout</span><pre>render()</pre></a></li>
+<li class="method public "><a href="#method_sharedData" title="sharedData :: Returns the shared data collection object"><span class="description">Returns the shared data collection object</span><pre>sharedData()</pre></a></li>
+<li class="method public "><a href="#method_startSession" title="startSession :: Get the current session's ID"><span class="description">Get the current session's ID</span><pre>startSession()</pre></a></li>
+<li class="method public "><a href="#method_validate" title="validate :: Start a validator chain for the specified string"><span class="description">Start a validator chain for the specified string</span><pre>validate()</pre></a></li>
+<li class="method public "><a href="#method_validateParam" title="validateParam :: Start a validator chain for the specified parameter"><span class="description">Start a validator chain for the specified parameter</span><pre>validateParam()</pre></a></li>
+<li class="method public "><a href="#method_yield" title="yield :: Renders the current view"><span class="description">Renders the current view</span><pre>yield()</pre></a></li>
+</ul>
+</li>
+<li class="nav-header">
+<i class="icon-custom icon-property"></i> Properties
+                    <ul></ul>
+</li>
+<li class="nav-header protected">» Protected
+                    <ul>
+<li class="property protected "><a href="#property_layout" title="$layout :: The view layout"><span class="description"></span><pre>$layout</pre></a></li>
+<li class="property protected "><a href="#property_request" title="$request :: The Request instance containing HTTP request data and behaviors"><span class="description"></span><pre>$request</pre></a></li>
+<li class="property protected "><a href="#property_response" title="$response :: The Response instance containing HTTP response data and behaviors"><span class="description"></span><pre>$response</pre></a></li>
+<li class="property protected "><a href="#property_session_id" title="$session_id :: The id of the current PHP session"><span class="description"></span><pre>$session_id</pre></a></li>
+<li class="property protected "><a href="#property_shared_data" title="$shared_data :: Shared data collection"><span class="description"></span><pre>$shared_data</pre></a></li>
+<li class="property protected "><a href="#property_view" title="$view :: The view to render"><span class="description"></span><pre>$view</pre></a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="span8">
+<a id="\Klein\ServiceProvider"></a><ul class="breadcrumb">
+<li>
+<a href="../index.html"><i class="icon-custom icon-class"></i></a><span class="divider">\</span>
+</li>
+<li><a href="../namespaces/Klein.html">Klein</a></li>
+<li class="active">
+<span class="divider">\</span><a href="../classes/Klein.ServiceProvider.html">ServiceProvider</a>
+</li>
+</ul>
+<div class="element class">
+<p class="short_description">ServiceProvider</p>
+<div class="details">
+<div class="long_description"><p>Service provider class for handling logic extending between
+a request's data and a response's behavior</p></div>
+<table class="table table-bordered"><tr>
+<th>package</th>
+<td><a href="../packages/Klein.html">Klein</a></td>
+</tr></table>
+<h3>
+<i class="icon-custom icon-method"></i> Methods</h3>
+<a id="method___construct"></a><div class="element clickable method public method___construct" data-toggle="collapse" data-target=".method___construct .collapse">
+<h2>Constructor</h2>
+<pre>__construct(\Klein\Request $request, \Klein\Response $response) </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>public</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$request</h4>
+<code><a href="../classes/Klein.Request.html">\Klein\Request</a></code><p>Object containing all HTTP request data and behaviors</p></div>
+<div class="subelement argument">
+<h4>$response</h4>
+<code><a href="../classes/Klein.Response.html">\Klein\Response</a></code><p>Object containing all HTTP response data and behaviors</p></div>
+</div></div>
+</div>
+<a id="method___get"></a><div class="element clickable method public method___get" data-toggle="collapse" data-target=".method___get .collapse">
+<h2>Magic "__get" method</h2>
+<pre>__get(string $key) : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"><p>Allows the ability to arbitrarily request shared data from this instance
+while treating it as an instance property</p></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>public</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$key</h4>
+<code>string</code><p>The name of the shared data</p></div>
+<h3>Returns</h3>
+<div class="subelement response"><code>string</code></div>
+</div></div>
+</div>
+<a id="method___isset"></a><div class="element clickable method public method___isset" data-toggle="collapse" data-target=".method___isset .collapse">
+<h2>Magic "__isset" method</h2>
+<pre>__isset(string $key) : boolean</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"><p>Allows the ability to arbitrarily check the existence of shared data
+from this instance while treating it as an instance property</p></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>public</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$key</h4>
+<code>string</code><p>The name of the shared data</p></div>
+<h3>Returns</h3>
+<div class="subelement response"><code>boolean</code></div>
+</div></div>
+</div>
+<a id="method___set"></a><div class="element clickable method public method___set" data-toggle="collapse" data-target=".method___set .collapse">
+<h2>Magic "__set" method</h2>
+<pre>__set(string $key, mixed $value) : void</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"><p>Allows the ability to arbitrarily set shared data from this instance
+while treating it as an instance property</p></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>public</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$key</h4>
+<code>string</code><p>The name of the shared data</p></div>
+<div class="subelement argument">
+<h4>$value</h4>
+<code>mixed</code><p>The value of the shared data</p></div>
+</div></div>
+</div>
+<a id="method___unset"></a><div class="element clickable method public method___unset" data-toggle="collapse" data-target=".method___unset .collapse">
+<h2>Magic "__unset" method</h2>
+<pre>__unset(string $key) : void</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"><p>Allows the ability to arbitrarily remove shared data from this instance
+while treating it as an instance property</p></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>public</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$key</h4>
+<code>string</code><p>The name of the shared data</p></div>
+</div></div>
+</div>
+<a id="method_addValidator"></a><div class="element clickable method public method_addValidator" data-toggle="collapse" data-target=".method_addValidator .collapse">
+<h2>Add a custom validator for our validation method</h2>
+<pre>addValidator(string $method, callable $callback) : void</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>public</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$method</h4>
+<code>string</code><p>The name of the validator method</p></div>
+<div class="subelement argument">
+<h4>$callback</h4>
+<code>callable</code><p>The callback to perform on validation</p></div>
+</div></div>
+</div>
+<a id="method_back"></a><div class="element clickable method public method_back" data-toggle="collapse" data-target=".method_back .collapse">
+<h2>Redirects the request back to the referrer</h2>
+<pre>back() : <a href="../classes/Klein.ServiceProvider.html">\Klein\ServiceProvider</a></pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>public</td>
+</tr></table>
+<h3>Returns</h3>
+<div class="subelement response"><code><a href="../classes/Klein.ServiceProvider.html">\Klein\ServiceProvider</a></code></div>
+</div></div>
+</div>
+<a id="method_bind"></a><div class="element clickable method public method_bind" data-toggle="collapse" data-target=".method_bind .collapse">
+<h2>Bind object instances to this service</h2>
+<pre>bind(\Klein\Request $request, \Klein\Response $response) : <a href="../classes/Klein.ServiceProvider.html">\Klein\ServiceProvider</a></pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>public</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$request</h4>
+<code><a href="../classes/Klein.Request.html">\Klein\Request</a></code><p>Object containing all HTTP request data and behaviors</p></div>
+<div class="subelement argument">
+<h4>$response</h4>
+<code><a href="../classes/Klein.Response.html">\Klein\Response</a></code><p>Object containing all HTTP response data and behaviors</p></div>
+<h3>Returns</h3>
+<div class="subelement response"><code><a href="../classes/Klein.ServiceProvider.html">\Klein\ServiceProvider</a></code></div>
+</div></div>
+</div>
+<a id="method_escape"></a><div class="element clickable method public method_escape" data-toggle="collapse" data-target=".method_escape .collapse">
+<h2>Escapes a string</h2>
+<pre>escape(string $str) : void</pre>
+<div class="labels"><span class="label">Static</span></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered">
+<tr>
+<th>static</th>
+<td></td>
+</tr>
+<tr>
+<th>access</th>
+<td>public</td>
+</tr>
+</table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$str</h4>
+<code>string</code><p>The string to escape</p></div>
+</div></div>
+</div>
+<a id="method_file"></a><div class="element clickable method public method_file" data-toggle="collapse" data-target=".method_file .collapse">
+<h2>Sends a file</h2>
+<pre>file(string $path, string $filename, string $mimetype) : void</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>public</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$path</h4>
+<code>string</code><p>The path of the file to send</p></div>
+<div class="subelement argument">
+<h4>$filename</h4>
+<code>string</code><p>The file's name</p>
+</div>
+<div class="subelement argument">
+<h4>$mimetype</h4>
+<code>string</code><p>The MIME type of the file</p></div>
+</div></div>
+</div>
+<a id="method_flash"></a><div class="element clickable method public method_flash" data-toggle="collapse" data-target=".method_flash .collapse">
+<h2>Stores a flash message of $type</h2>
+<pre>flash(string $msg, string $type, array $params) : void</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>public</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$msg</h4>
+<code>string</code><p>The message to flash</p></div>
+<div class="subelement argument">
+<h4>$type</h4>
+<code>string</code><p>The flash message type</p></div>
+<div class="subelement argument">
+<h4>$params</h4>
+<code>array</code><p>Optional params to be parsed by markdown</p></div>
+</div></div>
+</div>
+<a id="method_flashes"></a><div class="element clickable method public method_flashes" data-toggle="collapse" data-target=".method_flashes .collapse">
+<h2>Returns and clears all flashes of optional $type</h2>
+<pre>flashes(string $type) : array</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>public</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$type</h4>
+<code>string</code><p>The name of the flash message type</p></div>
+<h3>Returns</h3>
+<div class="subelement response"><code>array</code></div>
+</div></div>
+</div>
+<a id="method_json"></a><div class="element clickable method public method_json" data-toggle="collapse" data-target=".method_json .collapse">
+<h2>Sends an object as json or jsonp by providing the padding prefix</h2>
+<pre>json(mixed $object, string $jsonp_prefix) : void</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>public</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$object</h4>
+<code>mixed</code><p>The data to encode as JSON</p></div>
+<div class="subelement argument">
+<h4>$jsonp_prefix</h4>
+<code>string</code><p>The name of the JSON-P function prefix</p>
+</div>
+</div></div>
+</div>
+<a id="method_layout"></a><div class="element clickable method public method_layout" data-toggle="collapse" data-target=".method_layout .collapse">
+<h2>Get (or set) the view's layout</h2>
+<pre>layout(string $layout) : string | <a href="../classes/Klein.ServiceProvider.html">\Klein\ServiceProvider</a></pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"><p>Simply calling this method without any arguments returns the current layout.
+Calling with an argument, however, sets the layout to what was provided by the argument.</p></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>public</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$layout</h4>
+<code>string</code><p>The layout of the view</p></div>
+<h3>Returns</h3>
+<div class="subelement response">
+<code>string</code><code><a href="../classes/Klein.ServiceProvider.html">\Klein\ServiceProvider</a></code>
+</div>
+</div></div>
+</div>
+<a id="method_markdown"></a><div class="element clickable method public method_markdown" data-toggle="collapse" data-target=".method_markdown .collapse">
+<h2>Render a text string as markdown</h2>
+<pre>markdown(string $str, array $args) : string</pre>
+<div class="labels"><span class="label">Static</span></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"><p>Supports basic markdown syntax</p>
+
+<p>Also, this method takes in EITHER an array of optional arguments (as the second parameter)
+... OR this method will simply take a variable number of arguments (after the initial str arg)</p></div>
+<table class="table table-bordered">
+<tr>
+<th>static</th>
+<td></td>
+</tr>
+<tr>
+<th>access</th>
+<td>public</td>
+</tr>
+</table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$str</h4>
+<code>string</code><p>The text string to parse</p></div>
+<div class="subelement argument">
+<h4>$args</h4>
+<code>array</code><p>Optional arguments to be parsed by markdown</p></div>
+<h3>Returns</h3>
+<div class="subelement response"><code>string</code></div>
+</div></div>
+</div>
+<a id="method_partial"></a><div class="element clickable method public method_partial" data-toggle="collapse" data-target=".method_partial .collapse">
+<h2>Renders a view without a layout</h2>
+<pre>partial(string $view, array $data) : void</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>public</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$view</h4>
+<code>string</code><p>The view to render</p></div>
+<div class="subelement argument">
+<h4>$data</h4>
+<code>array</code><p>The data to render in the view</p></div>
+</div></div>
+</div>
+<a id="method_query"></a><div class="element clickable method public method_query" data-toggle="collapse" data-target=".method_query .collapse">
+<h2>Adds to or modifies the current query string</h2>
+<pre>query(string $key, mixed $value) : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>public</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$key</h4>
+<code>string</code><p>The name of the query param</p></div>
+<div class="subelement argument">
+<h4>$value</h4>
+<code>mixed</code><p>The value of the query param</p></div>
+<h3>Returns</h3>
+<div class="subelement response"><code>string</code></div>
+</div></div>
+</div>
+<a id="method_refresh"></a><div class="element clickable method public method_refresh" data-toggle="collapse" data-target=".method_refresh .collapse">
+<h2>Redirects the request to the current URL</h2>
+<pre>refresh() : <a href="../classes/Klein.ServiceProvider.html">\Klein\ServiceProvider</a></pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>public</td>
+</tr></table>
+<h3>Returns</h3>
+<div class="subelement response"><code><a href="../classes/Klein.ServiceProvider.html">\Klein\ServiceProvider</a></code></div>
+</div></div>
+</div>
+<a id="method_render"></a><div class="element clickable method public method_render" data-toggle="collapse" data-target=".method_render .collapse">
+<h2>Renders a view + optional layout</h2>
+<pre>render(string $view, array $data) : void</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>public</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$view</h4>
+<code>string</code><p>The view to render</p></div>
+<div class="subelement argument">
+<h4>$data</h4>
+<code>array</code><p>The data to render in the view</p></div>
+</div></div>
+</div>
+<a id="method_sharedData"></a><div class="element clickable method public method_sharedData" data-toggle="collapse" data-target=".method_sharedData .collapse">
+<h2>Returns the shared data collection object</h2>
+<pre>sharedData() : <a href="../classes/Klein.DataCollection.DataCollection.html">\Klein\DataCollection\DataCollection</a></pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>public</td>
+</tr></table>
+<h3>Returns</h3>
+<div class="subelement response"><code><a href="../classes/Klein.DataCollection.DataCollection.html">\Klein\DataCollection\DataCollection</a></code></div>
+</div></div>
+</div>
+<a id="method_startSession"></a><div class="element clickable method public method_startSession" data-toggle="collapse" data-target=".method_startSession .collapse">
+<h2>Get the current session's ID</h2>
+<pre>startSession() : string | false</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"><p>This will start a session if the current session id is null</p></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>public</td>
+</tr></table>
+<h3>Returns</h3>
+<div class="subelement response">
+<code>string</code><code>false</code>
+</div>
+</div></div>
+</div>
+<a id="method_validate"></a><div class="element clickable method public method_validate" data-toggle="collapse" data-target=".method_validate .collapse">
+<h2>Start a validator chain for the specified string</h2>
+<pre>validate(string $string, string $err) : <a href="../classes/Klein.Validator.html">\Klein\Validator</a></pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>public</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$string</h4>
+<code>string</code><p>The string to validate</p></div>
+<div class="subelement argument">
+<h4>$err</h4>
+<code>string</code><p>The custom exception message to throw</p></div>
+<h3>Returns</h3>
+<div class="subelement response"><code><a href="../classes/Klein.Validator.html">\Klein\Validator</a></code></div>
+</div></div>
+</div>
+<a id="method_validateParam"></a><div class="element clickable method public method_validateParam" data-toggle="collapse" data-target=".method_validateParam .collapse">
+<h2>Start a validator chain for the specified parameter</h2>
+<pre>validateParam(string $param, string $err) : <a href="../classes/Klein.Validator.html">\Klein\Validator</a></pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>public</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$param</h4>
+<code>string</code><p>The name of the parameter to validate</p></div>
+<div class="subelement argument">
+<h4>$err</h4>
+<code>string</code><p>The custom exception message to throw</p></div>
+<h3>Returns</h3>
+<div class="subelement response"><code><a href="../classes/Klein.Validator.html">\Klein\Validator</a></code></div>
+</div></div>
+</div>
+<a id="method_yield"></a><div class="element clickable method public method_yield" data-toggle="collapse" data-target=".method_yield .collapse">
+<h2>Renders the current view</h2>
+<pre>yield() : void</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>public</td>
+</tr></table>
+</div></div>
+</div>
+<h3>
+<i class="icon-custom icon-property"></i> Properties</h3>
+<a id="property_layout"> </a><div class="element clickable property protected property_layout" data-toggle="collapse" data-target=".property_layout .collapse">
+<h2></h2>
+<pre>$layout : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>protected</td>
+</tr></table>
+</div></div>
+</div>
+<a id="property_request"> </a><div class="element clickable property protected property_request" data-toggle="collapse" data-target=".property_request .collapse">
+<h2></h2>
+<pre>$request : <a href="../classes/Klein.Request.html">\Klein\Request</a></pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>protected</td>
+</tr></table>
+</div></div>
+</div>
+<a id="property_response"> </a><div class="element clickable property protected property_response" data-toggle="collapse" data-target=".property_response .collapse">
+<h2></h2>
+<pre>$response : <a href="../classes/Klein.Response.html">\Klein\Response</a></pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>protected</td>
+</tr></table>
+</div></div>
+</div>
+<a id="property_session_id"> </a><div class="element clickable property protected property_session_id" data-toggle="collapse" data-target=".property_session_id .collapse">
+<h2></h2>
+<pre>$session_id : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>protected</td>
+</tr></table>
+</div></div>
+</div>
+<a id="property_shared_data"> </a><div class="element clickable property protected property_shared_data" data-toggle="collapse" data-target=".property_shared_data .collapse">
+<h2></h2>
+<pre>$shared_data : <a href="../classes/Klein.DataCollection.DataCollection.html">\Klein\DataCollection\DataCollection</a></pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>protected</td>
+</tr></table>
+</div></div>
+</div>
+<a id="property_view"> </a><div class="element clickable property protected property_view" data-toggle="collapse" data-target=".property_view .collapse">
+<h2></h2>
+<pre>$view : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>protected</td>
+</tr></table>
+</div></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="row"><footer class="span12">
+            Template is built using <a href="http://twitter.github.com/bootstrap/">Twitter Bootstrap 2</a> and icons provided by <a href="http://glyphicons.com/">Glyphicons</a>.<br>
+            Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor 2.0.0a12</a> and<br>
+            generated on 2013-05-08T03:28:14-04:00.<br></footer></div>
+</div>
+</body>
+</html>

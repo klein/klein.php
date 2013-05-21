@@ -1,0 +1,556 @@
+<!DOCTYPE html><html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+<meta charset="utf-8">
+<title>Klein » \Klein\Klein</title>
+<meta name="author" content="Mike van Riel">
+<meta name="description" content="">
+<link href="../css/template.css" rel="stylesheet" media="all">
+<script src="../js/jquery-1.7.1.min.js" type="text/javascript"></script><script src="../js/jquery-ui-1.8.2.custom.min.js" type="text/javascript"></script><script src="../js/jquery.mousewheel.min.js" type="text/javascript"></script><script src="../js/bootstrap.js" type="text/javascript"></script><script src="../js/template.js" type="text/javascript"></script><script src="../js/prettify/prettify.min.js" type="text/javascript"></script><link rel="shortcut icon" href="../img/favicon.ico">
+<link rel="apple-touch-icon" href="../img/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="72x72" href="../img/apple-touch-icon-72x72.png">
+<link rel="apple-touch-icon" sizes="114x114" href="../img/apple-touch-icon-114x114.png">
+</head>
+<body>
+<div class="navbar navbar-fixed-top">
+<div class="navbar-inner"><div class="container">
+<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></a><a class="brand" href="../index.html">Klein</a><div class="nav-collapse"><ul class="nav">
+<li class="dropdown">
+<a href="#api" class="dropdown-toggle" data-toggle="dropdown">
+                                    API Documentation <b class="caret"></b></a><ul class="dropdown-menu">
+<li><a>Namespaces</a></li>
+<li><a href="../namespaces/Klein.html"><i class="icon-th"></i> Klein</a></li>
+<li><a>Packages</a></li>
+<li><a href="../packages/Klein.html"><i class="icon-folder-open"></i> Klein</a></li>
+</ul>
+</li>
+<li class="dropdown" id="charts-menu">
+<a href="#charts" class="dropdown-toggle" data-toggle="dropdown">
+                                    Charts <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="../graph_class.html"><i class="icon-list-alt"></i> Class hierarchy diagram</a></li></ul>
+</li>
+<li class="dropdown" id="reports-menu">
+<a href="#reports" class="dropdown-toggle" data-toggle="dropdown">
+                                    Reports <b class="caret"></b></a><ul class="dropdown-menu">
+<li><a href="../errors.html"><i class="icon-remove-sign"></i> Errors 
+                <span class="label label-info">0</span></a></li>
+<li><a href="../markers.html"><i class="icon-map-marker"></i> Markers 
+                <ul></ul></a></li>
+<li><a href="../deprecated.html"><i class="icon-stop"></i> Deprecated elements 
+                <span class="label label-info">0</span></a></li>
+</ul>
+</li>
+</ul></div>
+</div></div>
+<div class="go_to_top"><a href="#___" style="color: inherit">Back to top  <i class="icon-upload icon-white"></i></a></div>
+</div>
+<div id="___" class="container">
+<noscript><div class="alert alert-warning">
+                            Javascript is disabled; several features are only available
+                            if Javascript is enabled.
+                        </div></noscript>
+<div class="row">
+<div class="span4">
+<span class="btn-group visibility" data-toggle="buttons-checkbox"><button class="btn public active" title="Show public elements">Public</button><button class="btn protected" title="Show protected elements">Protected</button><button class="btn private" title="Show private elements">Private</button><button class="btn inherited active" title="Show inherited elements">Inherited</button></span><div class="btn-group view pull-right" data-toggle="buttons-radio">
+<button class="btn details" title="Show descriptions and method names"><i class="icon-list"></i></button><button class="btn simple" title="Show only method names"><i class="icon-align-justify"></i></button>
+</div>
+<ul class="side-nav nav nav-list">
+<li class="nav-header">
+<i class="icon-custom icon-method"></i> Methods
+                    <ul>
+<li class="method public "><a href="#method___call" title='__call :: Magic "__call" method'><span class="description">Magic "__call" method</span><pre>__call()</pre></a></li>
+<li class="method public "><a href="#method___construct" title="__construct :: Constructor"><span class="description">Constructor</span><pre>__construct()</pre></a></li>
+<li class="method public "><a href="#method_app" title="app :: Returns the app object"><span class="description">Returns the app object</span><pre>app()</pre></a></li>
+<li class="method public "><a href="#method_compileRoute" title="compileRoute :: Compiles a route string to a regular expression"><span class="description">Compiles a route string to a regular expression</span><pre>compileRoute()</pre></a></li>
+<li class="method public "><a href="#method_dispatch" title="dispatch :: Dispatch the request to the approriate route(s)"><span class="description">Dispatch the request to the approriate route(s)</span><pre>dispatch()</pre></a></li>
+<li class="method public "><a href="#method_error" title="error :: Routes an exception through the error callbacks"><span class="description">Routes an exception through the error callbacks</span><pre>error()</pre></a></li>
+<li class="method public "><a href="#method_onError" title="onError :: Adds an error callback to the stack of error handlers"><span class="description">Adds an error callback to the stack of error handlers</span><pre>onError()</pre></a></li>
+<li class="method public "><a href="#method_request" title="request :: Returns the request object"><span class="description">Returns the request object</span><pre>request()</pre></a></li>
+<li class="method public "><a href="#method_respond" title="respond :: Add a new route to be matched on dispatch"><span class="description">Add a new route to be matched on dispatch</span><pre>respond()</pre></a></li>
+<li class="method public "><a href="#method_response" title="response :: Returns the response object"><span class="description">Returns the response object</span><pre>response()</pre></a></li>
+<li class="method public "><a href="#method_service" title="service :: Returns the service object"><span class="description">Returns the service object</span><pre>service()</pre></a></li>
+<li class="method public "><a href="#method_startSession" title="startSession :: Start a PHP session"><span class="description">Start a PHP session</span><pre>startSession()</pre></a></li>
+<li class="method public "><a href="#method_with" title="with :: Collect a set of routes under a common namespace"><span class="description">Collect a set of routes under a common namespace</span><pre>with()</pre></a></li>
+</ul>
+</li>
+<li class="nav-header">
+<i class="icon-custom icon-property"></i> Properties
+                    <ul></ul>
+</li>
+<li class="nav-header protected">» Protected
+                    <ul>
+<li class="property protected "><a href="#property_app" title="$app :: A generic variable passed to each matched route"><span class="description"></span><pre>$app</pre></a></li>
+<li class="property protected "><a href="#property_errorCallbacks" title="$errorCallbacks :: An array of error callback callables"><span class="description"></span><pre>$errorCallbacks</pre></a></li>
+<li class="property protected "><a href="#property_namespace" title="$namespace :: The namespace of which to collect the routes in
+when matching, so you can define routes under a
+common endpoint"><span class="description"></span><pre>$namespace</pre></a></li>
+<li class="property protected "><a href="#property_request" title="$request :: The Request object passed to each matched route"><span class="description"></span><pre>$request</pre></a></li>
+<li class="property protected "><a href="#property_response" title="$response :: The Response object passed to each matched route"><span class="description"></span><pre>$response</pre></a></li>
+<li class="property protected "><a href="#property_routes" title="$routes :: Array of the routes to match on dispatch"><span class="description"></span><pre>$routes</pre></a></li>
+<li class="property protected "><a href="#property_service" title="$service :: The service provider object passed to each matched route"><span class="description"></span><pre>$service</pre></a></li>
+</ul>
+</li>
+<li class="nav-header">
+<i class="icon-custom icon-constant"></i> Constants
+                    <ul>
+<li class="constant  "><a href="#constant_DISPATCH_CAPTURE_AND_APPEND" title="DISPATCH_CAPTURE_AND_APPEND :: Dispatch route output handling"><span class="description">Dispatch route output handling</span><pre>DISPATCH_CAPTURE_AND_APPEND</pre></a></li>
+<li class="constant  "><a href="#constant_DISPATCH_CAPTURE_AND_PREPEND" title="DISPATCH_CAPTURE_AND_PREPEND :: Dispatch route output handling"><span class="description">Dispatch route output handling</span><pre>DISPATCH_CAPTURE_AND_PREPEND</pre></a></li>
+<li class="constant  "><a href="#constant_DISPATCH_CAPTURE_AND_REPLACE" title="DISPATCH_CAPTURE_AND_REPLACE :: Dispatch route output handling"><span class="description">Dispatch route output handling</span><pre>DISPATCH_CAPTURE_AND_REPLACE</pre></a></li>
+<li class="constant  "><a href="#constant_DISPATCH_CAPTURE_AND_RETURN" title="DISPATCH_CAPTURE_AND_RETURN :: Dispatch route output handling"><span class="description">Dispatch route output handling</span><pre>DISPATCH_CAPTURE_AND_RETURN</pre></a></li>
+<li class="constant  "><a href="#constant_DISPATCH_NO_CAPTURE" title="DISPATCH_NO_CAPTURE :: Dispatch route output handling"><span class="description">Dispatch route output handling</span><pre>DISPATCH_NO_CAPTURE</pre></a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="span8">
+<a id="\Klein\Klein"></a><ul class="breadcrumb">
+<li>
+<a href="../index.html"><i class="icon-custom icon-class"></i></a><span class="divider">\</span>
+</li>
+<li><a href="../namespaces/Klein.html">Klein</a></li>
+<li class="active">
+<span class="divider">\</span><a href="../classes/Klein.Klein.html">Klein</a>
+</li>
+</ul>
+<div class="element class">
+<p class="short_description">Klein</p>
+<div class="details">
+<div class="long_description"><p>Main Klein router class</p></div>
+<table class="table table-bordered"><tr>
+<th>package</th>
+<td><a href="../packages/Klein.html">Klein</a></td>
+</tr></table>
+<h3>
+<i class="icon-custom icon-method"></i> Methods</h3>
+<a id="method___call"></a><div class="element clickable method public method___call" data-toggle="collapse" data-target=".method___call .collapse">
+<h2>Magic "__call" method</h2>
+<pre>__call(callable $method, array $args) : mixed</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"><p>Allows the ability to arbitrarily call a method of our service provider's
+through an instance of this class</p></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>public</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$method</h4>
+<code>callable</code><p>The callable method to execute</p></div>
+<div class="subelement argument">
+<h4>$args</h4>
+<code>array</code><p>The argument array to pass to our callback</p></div>
+<h3>Returns</h3>
+<div class="subelement response"><code>mixed</code></div>
+</div></div>
+</div>
+<a id="method___construct"></a><div class="element clickable method public method___construct" data-toggle="collapse" data-target=".method___construct .collapse">
+<h2>Constructor</h2>
+<pre>__construct(\Klein\ServiceProvider $service, mixed $app) </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"><p>Create a new Klein instance with optionally injected dependencies
+This DI allows for easy testing, object mocking, or class extension</p></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>public</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$service</h4>
+<code><a href="../classes/Klein.ServiceProvider.html">\Klein\ServiceProvider</a></code><p>Service provider object responsible for utilitarian behaviors</p></div>
+<div class="subelement argument">
+<h4>$app</h4>
+<code>mixed</code><p>An object passed to each route callback, defaults to a new App instance</p></div>
+</div></div>
+</div>
+<a id="method_app"></a><div class="element clickable method public method_app" data-toggle="collapse" data-target=".method_app .collapse">
+<h2>Returns the app object</h2>
+<pre>app() : mixed</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>public</td>
+</tr></table>
+<h3>Returns</h3>
+<div class="subelement response"><code>mixed</code></div>
+</div></div>
+</div>
+<a id="method_compileRoute"></a><div class="element clickable method public method_compileRoute" data-toggle="collapse" data-target=".method_compileRoute .collapse">
+<h2>Compiles a route string to a regular expression</h2>
+<pre>compileRoute(string $route) : void</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>public</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$route</h4>
+<code>string</code><p>The route string to compile</p></div>
+</div></div>
+</div>
+<a id="method_dispatch"></a><div class="element clickable method public method_dispatch" data-toggle="collapse" data-target=".method_dispatch .collapse">
+<h2>Dispatch the request to the approriate route(s)</h2>
+<pre>dispatch(\Klein\Request $request, \Klein\Response $response, boolean $send_response, int $capture) : void | string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"><p>Dispatch with optionally injected dependencies
+This DI allows for easy testing, object mocking, or class extension</p></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>public</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$request</h4>
+<code><a href="../classes/Klein.Request.html">\Klein\Request</a></code><p>The request object to give to each callback</p></div>
+<div class="subelement argument">
+<h4>$response</h4>
+<code><a href="../classes/Klein.Response.html">\Klein\Response</a></code><p>The response object to give to each callback</p></div>
+<div class="subelement argument">
+<h4>$send_response</h4>
+<code>boolean</code><p>Whether or not to "send" the response after the last route has been matched</p>
+</div>
+<div class="subelement argument">
+<h4>$capture</h4>
+<code>int</code><p>Specify a DISPATCH_* constant to change the output capturing behavior</p>
+</div>
+<h3>Returns</h3>
+<div class="subelement response">
+<code>void</code><code>string</code>
+</div>
+</div></div>
+</div>
+<a id="method_error"></a><div class="element clickable method public method_error" data-toggle="collapse" data-target=".method_error .collapse">
+<h2>Routes an exception through the error callbacks</h2>
+<pre>error(\Exception $err) : void</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>public</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$err</h4>
+<code><a href="http://php.net/manual/en/class.exception.php">\Exception</a></code><p>The exception that occurred</p></div>
+</div></div>
+</div>
+<a id="method_onError"></a><div class="element clickable method public method_onError" data-toggle="collapse" data-target=".method_onError .collapse">
+<h2>Adds an error callback to the stack of error handlers</h2>
+<pre>onError(callable $callback, boolean $allow_duplicates) : boolean | void</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>public</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$callback</h4>
+<code>callable</code><p>The callable function to execute in the error handling chain</p></div>
+<div class="subelement argument">
+<h4>$allow_duplicates</h4>
+<code>boolean</code><p>Whether or not to allow duplicate callbacks to exist in the
+ error handling chain</p></div>
+<h3>Returns</h3>
+<div class="subelement response">
+<code>boolean</code><code>void</code>
+</div>
+</div></div>
+</div>
+<a id="method_request"></a><div class="element clickable method public method_request" data-toggle="collapse" data-target=".method_request .collapse">
+<h2>Returns the request object</h2>
+<pre>request() : <a href="../classes/Klein.Request.html">\Klein\Request</a></pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>public</td>
+</tr></table>
+<h3>Returns</h3>
+<div class="subelement response"><code><a href="../classes/Klein.Request.html">\Klein\Request</a></code></div>
+</div></div>
+</div>
+<a id="method_respond"></a><div class="element clickable method public method_respond" data-toggle="collapse" data-target=".method_respond .collapse">
+<h2>Add a new route to be matched on dispatch</h2>
+<pre>respond(string $method, string $route, callable $callback) : callable</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"><p>This method takes its arguments in a very loose format
+The only "required" parameter is the callback (which is very strange considering the argument definition order)</p>
+
+<pre><code>$router = new Klein();
+
+$router->respond( function() {
+    echo 'this works';
+});
+$router->respond( '/endpoint', function() {
+    echo 'this also works';
+});
+$router->respond( 'POST', '/endpoint', function() {
+    echo 'this also works!!!!';
+});
+</code></pre></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>public</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$method</h4>
+<code>string</code><p>| array $method    HTTP Method to match</p>
+</div>
+<div class="subelement argument">
+<h4>$route</h4>
+<code>string</code><p>Route URI to match</p></div>
+<div class="subelement argument">
+<h4>$callback</h4>
+<code>callable</code><p>Callable callback method to execute on route match</p></div>
+<h3>Returns</h3>
+<div class="subelement response">
+<code>callable</code>$callback</div>
+</div></div>
+</div>
+<a id="method_response"></a><div class="element clickable method public method_response" data-toggle="collapse" data-target=".method_response .collapse">
+<h2>Returns the response object</h2>
+<pre>response() : <a href="../classes/Klein.Response.html">\Klein\Response</a></pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>public</td>
+</tr></table>
+<h3>Returns</h3>
+<div class="subelement response"><code><a href="../classes/Klein.Response.html">\Klein\Response</a></code></div>
+</div></div>
+</div>
+<a id="method_service"></a><div class="element clickable method public method_service" data-toggle="collapse" data-target=".method_service .collapse">
+<h2>Returns the service object</h2>
+<pre>service() : <a href="../classes/Klein.ServiceProvider.html">\Klein\ServiceProvider</a></pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>public</td>
+</tr></table>
+<h3>Returns</h3>
+<div class="subelement response"><code><a href="../classes/Klein.ServiceProvider.html">\Klein\ServiceProvider</a></code></div>
+</div></div>
+</div>
+<a id="method_startSession"></a><div class="element clickable method public method_startSession" data-toggle="collapse" data-target=".method_startSession .collapse">
+<h2>Start a PHP session</h2>
+<pre>startSession() : void</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>public</td>
+</tr></table>
+</div></div>
+</div>
+<a id="method_with"></a><div class="element clickable method public method_with" data-toggle="collapse" data-target=".method_with .collapse">
+<h2>Collect a set of routes under a common namespace</h2>
+<pre>with(string $namespace, callable $routes) : void</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"><p>The routes may be passed in as either a callable (which holds the route definitions),
+or as a string of a filename, of which to "include" under the Klein router scope</p>
+
+<pre><code>$router = new Klein();
+
+$router->with('/users', function() use ( $router) {
+    $router->respond( '/', function() {
+        // do something interesting
+    });
+    $router->respond( '/[i:id]', function() {
+        // do something different
+    });
+});
+
+$router->with('/cars', __DIR__ . '/routes/cars.php');
+</code></pre></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>public</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$namespace</h4>
+<code>string</code><p>The namespace under which to collect the routes</p></div>
+<div class="subelement argument">
+<h4>$routes</h4>
+<code>callable</code><p>| string[filename] $routes   The defined routes to collect under the namespace</p>
+</div>
+</div></div>
+</div>
+<h3>
+<i class="icon-custom icon-property"></i> Properties</h3>
+<a id="property_app"> </a><div class="element clickable property protected property_app" data-toggle="collapse" data-target=".property_app .collapse">
+<h2></h2>
+<pre>$app : mixed</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>protected</td>
+</tr></table>
+</div></div>
+</div>
+<a id="property_errorCallbacks"> </a><div class="element clickable property protected property_errorCallbacks" data-toggle="collapse" data-target=".property_errorCallbacks .collapse">
+<h2></h2>
+<pre>$errorCallbacks : \Klein\array[callable]</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>protected</td>
+</tr></table>
+</div></div>
+</div>
+<a id="property_namespace"> </a><div class="element clickable property protected property_namespace" data-toggle="collapse" data-target=".property_namespace .collapse">
+<h2></h2>
+<pre>$namespace : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>protected</td>
+</tr></table>
+</div></div>
+</div>
+<a id="property_request"> </a><div class="element clickable property protected property_request" data-toggle="collapse" data-target=".property_request .collapse">
+<h2></h2>
+<pre>$request : <a href="../classes/Klein.Request.html">\Klein\Request</a></pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>protected</td>
+</tr></table>
+</div></div>
+</div>
+<a id="property_response"> </a><div class="element clickable property protected property_response" data-toggle="collapse" data-target=".property_response .collapse">
+<h2></h2>
+<pre>$response : <a href="../classes/Klein.Response.html">\Klein\Response</a></pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>protected</td>
+</tr></table>
+</div></div>
+</div>
+<a id="property_routes"> </a><div class="element clickable property protected property_routes" data-toggle="collapse" data-target=".property_routes .collapse">
+<h2></h2>
+<pre>$routes : array</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>protected</td>
+</tr></table>
+</div></div>
+</div>
+<a id="property_service"> </a><div class="element clickable property protected property_service" data-toggle="collapse" data-target=".property_service .collapse">
+<h2></h2>
+<pre>$service : <a href="../classes/Klein.ServiceProvider.html">\Klein\ServiceProvider</a></pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>protected</td>
+</tr></table>
+</div></div>
+</div>
+<h3>
+<i class="icon-custom icon-constant"></i> Constants</h3>
+<a id="constant_DISPATCH_CAPTURE_AND_APPEND"> </a><div class="element clickable constant  constant_DISPATCH_CAPTURE_AND_APPEND" data-toggle="collapse" data-target=".constant_DISPATCH_CAPTURE_AND_APPEND .collapse">
+<h2>Dispatch route output handling</h2>
+<pre>DISPATCH_CAPTURE_AND_APPEND </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"><p>Capture all output and append it to the response body</p></div>
+<table class="table table-bordered"><tr>
+<th>const</th>
+<td>int</td>
+</tr></table>
+</div></div>
+</div>
+<a id="constant_DISPATCH_CAPTURE_AND_PREPEND"> </a><div class="element clickable constant  constant_DISPATCH_CAPTURE_AND_PREPEND" data-toggle="collapse" data-target=".constant_DISPATCH_CAPTURE_AND_PREPEND .collapse">
+<h2>Dispatch route output handling</h2>
+<pre>DISPATCH_CAPTURE_AND_PREPEND </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"><p>Capture all output and prepend it to the response body</p></div>
+<table class="table table-bordered"><tr>
+<th>const</th>
+<td>int</td>
+</tr></table>
+</div></div>
+</div>
+<a id="constant_DISPATCH_CAPTURE_AND_REPLACE"> </a><div class="element clickable constant  constant_DISPATCH_CAPTURE_AND_REPLACE" data-toggle="collapse" data-target=".constant_DISPATCH_CAPTURE_AND_REPLACE .collapse">
+<h2>Dispatch route output handling</h2>
+<pre>DISPATCH_CAPTURE_AND_REPLACE </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"><p>Capture all output and replace the response body with it</p></div>
+<table class="table table-bordered"><tr>
+<th>const</th>
+<td>int</td>
+</tr></table>
+</div></div>
+</div>
+<a id="constant_DISPATCH_CAPTURE_AND_RETURN"> </a><div class="element clickable constant  constant_DISPATCH_CAPTURE_AND_RETURN" data-toggle="collapse" data-target=".constant_DISPATCH_CAPTURE_AND_RETURN .collapse">
+<h2>Dispatch route output handling</h2>
+<pre>DISPATCH_CAPTURE_AND_RETURN </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"><p>Capture all output and return it from dispatch</p></div>
+<table class="table table-bordered"><tr>
+<th>const</th>
+<td>int</td>
+</tr></table>
+</div></div>
+</div>
+<a id="constant_DISPATCH_NO_CAPTURE"> </a><div class="element clickable constant  constant_DISPATCH_NO_CAPTURE" data-toggle="collapse" data-target=".constant_DISPATCH_NO_CAPTURE .collapse">
+<h2>Dispatch route output handling</h2>
+<pre>DISPATCH_NO_CAPTURE </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"><p>Don't capture anything. Behave as normal.</p></div>
+<table class="table table-bordered"><tr>
+<th>const</th>
+<td>int</td>
+</tr></table>
+</div></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="row"><footer class="span12">
+            Template is built using <a href="http://twitter.github.com/bootstrap/">Twitter Bootstrap 2</a> and icons provided by <a href="http://glyphicons.com/">Glyphicons</a>.<br>
+            Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor 2.0.0a12</a> and<br>
+            generated on 2013-05-08T03:28:14-04:00.<br></footer></div>
+</div>
+</body>
+</html>
