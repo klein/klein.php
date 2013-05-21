@@ -38,7 +38,7 @@ module.exports = function(grunt) {
             files: 'assets/styles/**/*.scss',
             tasks: ['sass']
          },
-         scripts: {
+         stylesAndScripts: {
             files: [
                'assets/styles/h5bp/!(h5bp-built).css',
                'assets/styles/!(klein-pages-built).css',
@@ -54,8 +54,7 @@ module.exports = function(grunt) {
                '_posts/**',
                '_includes/**',
                'assets/**/(h5bp-built).*',
-               'assets/**/(klein-pages-built).*',
-               'assets/styles/main.css'
+               'assets/**/*(klein-pages-built).*'
             ],
             tasks: 'shell:jekyll'
          }
