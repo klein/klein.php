@@ -1,4 +1,7 @@
 /* Global Variables */
+/* Colors */
+/* Styles */
+/* Media Queries */
 /* Global Styles */
 body {
   background-color: #ffffff;
@@ -9,12 +12,18 @@ body {
     color: #349bc2; }
   body a:hover {
     color: #427b91; }
+  @media only screen and (max-width: 720px) {
+    body {
+      font-size: 0.8em; } }
 
 div#page-wrapper {
   width: 960px;
   margin: 0px auto;
   overflow: hidden;
   background-color: white; }
+  @media only screen and (max-width: 720px) {
+    div#page-wrapper {
+      width: 100%; } }
   div#page-wrapper header#masthead {
     width: 100%;
     height: 200px;
@@ -67,6 +76,9 @@ div#page-wrapper {
     padding-bottom: 0px;
     border-top: 1px solid #111111;
     text-align: center; }
+    @media only screen and (max-width: 720px) {
+      div#page-wrapper footer#page-footer {
+        font-size: 0.8em; } }
     div#page-wrapper footer#page-footer p {
       margin: 3px 0px; }
     div#page-wrapper footer#page-footer nav#footer-links {
@@ -79,6 +91,14 @@ div#page-wrapper {
           display: inline-block; }
         div#page-wrapper footer#page-footer nav#footer-links ul li.separator {
           margin: 0px 10px; }
+        @media only screen and (max-width: 480px) {
+          div#page-wrapper footer#page-footer nav#footer-links ul {
+            font-size: 1.1em; }
+            div#page-wrapper footer#page-footer nav#footer-links ul li {
+              display: block;
+              clear: both; }
+            div#page-wrapper footer#page-footer nav#footer-links ul li.separator {
+              display: none; } }
 
 /* Generic content styles */
 code {
