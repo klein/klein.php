@@ -11,6 +11,8 @@
 
 namespace Klein;
 
+use \BadMethodCallException;
+
 use \Klein\DataCollection\DataCollection;
 
 /**
@@ -465,5 +467,25 @@ class ServiceProvider
     public function __unset($key)
     {
         $this->shared_data->remove($key);
+    }
+
+    /**
+     * Magic "__call" method
+     *
+     * Allows the ability to arbitrarily call a property as a callable method
+     * Allow callbacks to be assigned as properties and called like normal methods
+     *
+     * @param callable $method  The callable method to execute
+     * @param array $args       The argument array to pass to our callback
+     * @access public
+     * @return void
+     */
+    public function __call($method, $args)
+    {
+        if (!isset($this->$method) || !is_callable($this->$method)) {
+            throw new BadMethodCallException('Unknown method '. $method .'()');
+        }
+
+        return call_user_func_array($this->$method, $args);
     }
 }

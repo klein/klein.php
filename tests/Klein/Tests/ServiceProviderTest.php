@@ -11,6 +11,7 @@
 
 namespace Klein\Tests;
 
+use \BadFunctionCallException;
 
 use \Klein\Klein;
 use \Klein\Request;
@@ -341,5 +342,34 @@ class ServiceProviderTest extends AbstractKleinTest
         $this->assertNull($service->sharedData()->get('test_data'));
         $this->assertNull($service->name);
         $this->assertFalse(isset($service->name));
+    }
+
+    // Test custom method definition
+    public function testCustomMethodDefinition()
+    {
+        $service = new ServiceProvider();
+
+        $service->customMethod = function() {
+            return "CUSTOM";
+        };
+        $service->otherMethod = function() {
+            return "OTHER";
+        };
+
+        $this->assertSame($service->customMethod(), "CUSTOM");
+
+        // test error thrown
+        try {
+            $service->undefinedMethod();
+        } catch (BadFunctionCallException $e) {
+        }
+
+        $this->assertSame(get_class($e), "BadMethodCallException");
+
+        // test redefining a custom method
+        $service->customMethod = function() use ($service) {
+            return $service->otherMethod();
+        };
+        $this->assertSame($service->customMethod(), "OTHER");
     }
 }

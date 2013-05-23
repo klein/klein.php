@@ -11,6 +11,8 @@
 
 namespace Klein\Tests;
 
+use \BadFunctionCallException;
+
 use \Klein\Request;
 use \Klein\Tests\Mocks\MockRequestFactory;
 
@@ -318,5 +320,34 @@ class RequestTest extends AbstractKleinTest
         $this->assertContains($server[0], $request->server()->all());
         $this->assertSame($files, $request->files()->all());
         $this->assertSame($body, $request->body());
+    }
+
+    // Test custom method definition
+    public function testCustomMethodDefinition()
+    {
+        $request = new Request();
+
+        $request->customMethod = function() {
+            return "CUSTOM";
+        };
+        $request->otherMethod = function() {
+            return "OTHER";
+        };
+
+        $this->assertSame($request->customMethod(), "CUSTOM");
+
+        // test error thrown
+        try {
+            $request->undefinedMethod();
+        } catch (BadFunctionCallException $e) {
+        }
+
+        $this->assertSame(get_class($e), "BadMethodCallException");
+
+        // test redefining a custom method
+        $request->customMethod = function() use ($request) {
+            return $request->otherMethod();
+        };
+        $this->assertSame($request->customMethod(), "OTHER");
     }
 }
