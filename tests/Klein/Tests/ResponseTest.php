@@ -11,6 +11,7 @@
 
 namespace Klein\Tests;
 
+use \BadFunctionCallException;
 
 use \Klein\Klein;
 use \Klein\Response;
@@ -391,5 +392,34 @@ class ResponsesTest extends AbstractKleinTest
             'application/json',
             $this->klein_app->response()->headers()->get('Content-Type')
         );
+    }
+
+    // Test custom method definition
+    public function testCustomMethodDefinition()
+    {
+        $response = new Response();
+
+        $response->customMethod = function() {
+            return "CUSTOM";
+        };
+        $response->otherMethod = function() {
+            return "OTHER";
+        };
+
+        $this->assertSame($response->customMethod(), "CUSTOM");
+
+        // test error thrown
+        try {
+            $response->undefinedMethod();
+        } catch (BadFunctionCallException $e) {
+        }
+
+        $this->assertSame(get_class($e), "BadMethodCallException");
+
+        // test redefining a custom method
+        $response->customMethod = function() use ($response) {
+            return $response->otherMethod();
+        };
+        $this->assertSame($response->customMethod(), "OTHER");
     }
 }
