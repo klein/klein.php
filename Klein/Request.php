@@ -281,18 +281,31 @@ class Request
      * you'd like this method to exclude in the returned array
      *
      * @see \Klein\DataCollection\DataCollection::all()
-     * @param array $mask  The parameter mask array
+     * @param array $mask               The parameter mask array
+     * @param boolean $fill_with_nulls  Whether or not to fill the returned array
+     *  with null values to match the given mask
      * @access public
      * @return array
      */
-    public function params($mask = null)
+    public function params($mask = null, $fill_with_nulls = true)
     {
+        /*
+         * Make sure that each key in the mask has at least a
+         * null value, since the user will expect the key to exist
+         */
+        if (null !== $mask && $fill_with_nulls) {
+            $attributes = array_fill_keys($mask, null);
+        } else {
+            $attributes = array();
+        }
+
         // Merge our params in the get, post, cookies, named order
         return array_merge(
-            $this->params_get->all($mask),
-            $this->params_post->all($mask),
-            $this->cookies->all($mask),
-            $this->params_named->all($mask) // Add our named params last
+            $attributes,
+            $this->params_get->all($mask, false),
+            $this->params_post->all($mask, false),
+            $this->cookies->all($mask, false),
+            $this->params_named->all($mask, false) // Add our named params last
         );
     }
 

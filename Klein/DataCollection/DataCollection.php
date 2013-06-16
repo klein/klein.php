@@ -67,11 +67,13 @@ class DataCollection implements IteratorAggregate, ArrayAccess, Countable
      * If an optional mask array is passed, this only
      * returns the keys that match the mask
      *
-     * @param array $mask  The parameter mask array
+     * @param array $mask               The parameter mask array
+     * @param boolean $fill_with_nulls  Whether or not to fill the returned array
+     *  with null values to match the given mask
      * @access public
      * @return array
      */
-    public function all($mask = null)
+    public function all($mask = null, $fill_with_nulls = true)
     {
         if (null !== $mask) {
             // Support a more "magical" call
@@ -80,25 +82,26 @@ class DataCollection implements IteratorAggregate, ArrayAccess, Countable
             }
 
             /*
-             * Remove all of the keys from the attributes
-             * that aren't in the passed mask
-             */
-            $attributes = array_intersect_key(
-                $this->attributes,
-                array_flip($mask)
-            );
-
-            /*
              * Make sure that each key in the mask has at least a
              * null value, since the user will expect the key to exist
              */
-            foreach ($mask as $key) {
-                if (!isset($attributes[$key])) {
-                    $attributes[$key] = null;
-                }
+            if ($fill_with_nulls) {
+                $attributes = array_fill_keys($mask, null);
+            } else {
+                $attributes = array();
             }
 
-            return $attributes;
+            /*
+             * Remove all of the keys from the attributes
+             * that aren't in the passed mask
+             */
+            return array_merge(
+                $attributes,
+                array_intersect_key(
+                    $this->attributes,
+                    array_flip($mask)
+                )
+            );
         }
 
         return $this->attributes;

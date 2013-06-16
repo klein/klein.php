@@ -101,6 +101,27 @@ class RequestTest extends AbstractKleinTest
         $this->assertSame(null, $request->param('thisdoesntexist'));
     }
 
+    public function testUniversalParamsWithFilter()
+    {
+        // Test data
+        $params_get  = array('page' => 2, 'per_page' => 10, 'num' => 1);
+        $params_post = array('first_name' => 'Trevor', 'last_name' => 'Suarez', 'num' => 2);
+        $cookies     = array('user' => 'Rican7', 'PHPSESSID' => 'randomstring', 'num' => 3);
+
+        // Create our filter and expected results
+        $filter      = array('page', 'user', 'num', 'this-key-never-showed-up-anywhere');
+        $expected    = array('page' => 2, 'user' => 'Rican7', 'num' => 3, 'this-key-never-showed-up-anywhere' => null);
+
+        // Create the request
+        $request = new Request(
+            $params_get,
+            $params_post,
+            $cookies
+        );
+
+        $this->assertSame($expected, $request->params($filter));
+    }
+
     public function testMagic()
     {
         // Test data
