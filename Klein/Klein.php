@@ -586,8 +586,10 @@ class Klein
             if (strcasecmp($req_method, 'HEAD') === 0) {
                 // HEAD requests shouldn't return a body
                 $this->response->body('');
-                if(ob_get_level())
+
+                if (ob_get_level()) {
                     ob_clean();
+                }
             }
         } catch (LockedResponseException $e) {
             // Do nothing, since this is an automated behavior
