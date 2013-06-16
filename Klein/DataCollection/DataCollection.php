@@ -95,13 +95,10 @@ class DataCollection implements IteratorAggregate, ArrayAccess, Countable
              * Remove all of the keys from the attributes
              * that aren't in the passed mask
              */
-            return array_merge(
-                $attributes,
-                array_intersect_key(
-                    $this->attributes,
-                    array_flip($mask)
-                )
-            );
+            return array_intersect_key(
+                $this->attributes,
+                array_flip($mask)
+            ) + $attributes;
         }
 
         return $this->attributes;

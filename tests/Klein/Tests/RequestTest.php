@@ -78,9 +78,9 @@ class RequestTest extends AbstractKleinTest
     public function testUniversalParams()
     {
         // Test data
-        $params_get  = array('page' => 2, 'per_page' => 10, 'num' => 1);
-        $params_post = array('first_name' => 'Trevor', 'last_name' => 'Suarez', 'num' => 2);
-        $cookies     = array('user' => 'Rican7', 'PHPSESSID' => 'randomstring', 'num' => 3);
+        $params_get  = array('page' => 2, 'per_page' => 10, 'num' => 1, 5 => 'ok', 'empty' => null, 'blank' => '');
+        $params_post = array('first_name' => 'Trevor', 'last_name' => 'Suarez', 'num' => 2, 3 => 'hmm', 4 => 'thing');
+        $cookies     = array('user' => 'Rican7', 'PHPSESSID' => 'randomstring', 'num' => 3, 4 => 'dog');
         $named       = array('id' => '1f8ae', 'num' => 4);
 
         // Create the request
@@ -104,9 +104,9 @@ class RequestTest extends AbstractKleinTest
     public function testUniversalParamsWithFilter()
     {
         // Test data
-        $params_get  = array('page' => 2, 'per_page' => 10, 'num' => 1);
-        $params_post = array('first_name' => 'Trevor', 'last_name' => 'Suarez', 'num' => 2);
-        $cookies     = array('user' => 'Rican7', 'PHPSESSID' => 'randomstring', 'num' => 3);
+        $params_get  = array('page' => 2, 'per_page' => 10, 'num' => 1, 5 => 'ok', 'empty' => null, 'blank' => '');
+        $params_post = array('first_name' => 'Trevor', 'last_name' => 'Suarez', 'num' => 2, 3 => 'hmm', 4 => 'thing');
+        $cookies     = array('user' => 'Rican7', 'PHPSESSID' => 'randomstring', 'num' => 3, 4 => 'dog');
 
         // Create our filter and expected results
         $filter      = array('page', 'user', 'num', 'this-key-never-showed-up-anywhere');
