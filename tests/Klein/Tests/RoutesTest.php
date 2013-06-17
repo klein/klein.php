@@ -1148,57 +1148,60 @@ class RoutesTest extends AbstractKleinTest
     {
         $this->expectOutputString('2,4,7,8,');
 
+        // Create a duplicate context... yea, PHP 5.3 :/
+        $klein_app = $this->klein_app;
+
         $this->klein_app->respond(
-            function () {
-                $this->klein_app->skipThis();
+            function () use ($klein_app) {
+                $klein_app->skipThis();
                 echo '1,';
             }
         );
         $this->klein_app->respond(
-            function () {
+            function () use ($klein_app) {
                 echo '2,';
-                $this->klein_app->skipNext();
+                $klein_app->skipNext();
             }
         );
         $this->klein_app->respond(
-            function () {
+            function () use ($klein_app) {
                 echo '3,';
             }
         );
         $this->klein_app->respond(
-            function () {
+            function () use ($klein_app) {
                 echo '4,';
-                $this->klein_app->skipNext(2);
+                $klein_app->skipNext(2);
             }
         );
         $this->klein_app->respond(
-            function () {
+            function () use ($klein_app) {
                 echo '5,';
             }
         );
         $this->klein_app->respond(
-            function () {
+            function () use ($klein_app) {
                 echo '6,';
             }
         );
         $this->klein_app->respond(
-            function () {
+            function () use ($klein_app) {
                 echo '7,';
             }
         );
         $this->klein_app->respond(
-            function () {
+            function () use ($klein_app) {
                 echo '8,';
-                $this->klein_app->skipRest();
+                $klein_app->skipRest();
             }
         );
         $this->klein_app->respond(
-            function () {
+            function () use ($klein_app) {
                 echo '9,';
             }
         );
         $this->klein_app->respond(
-            function () {
+            function () use ($klein_app) {
                 echo '10,';
             }
         );
