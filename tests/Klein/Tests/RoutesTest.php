@@ -1144,6 +1144,68 @@ class RoutesTest extends AbstractKleinTest
         }
     }
 
+    public function testDispatchHalt()
+    {
+        $this->expectOutputString('2,4,7,8,');
+
+        $this->klein_app->respond(
+            function () {
+                $this->klein_app->skipThis();
+                echo '1,';
+            }
+        );
+        $this->klein_app->respond(
+            function () {
+                echo '2,';
+                $this->klein_app->skipNext();
+            }
+        );
+        $this->klein_app->respond(
+            function () {
+                echo '3,';
+            }
+        );
+        $this->klein_app->respond(
+            function () {
+                echo '4,';
+                $this->klein_app->skipNext(2);
+            }
+        );
+        $this->klein_app->respond(
+            function () {
+                echo '5,';
+            }
+        );
+        $this->klein_app->respond(
+            function () {
+                echo '6,';
+            }
+        );
+        $this->klein_app->respond(
+            function () {
+                echo '7,';
+            }
+        );
+        $this->klein_app->respond(
+            function () {
+                echo '8,';
+                $this->klein_app->skipRest();
+            }
+        );
+        $this->klein_app->respond(
+            function () {
+                echo '9,';
+            }
+        );
+        $this->klein_app->respond(
+            function () {
+                echo '10,';
+            }
+        );
+
+        $this->klein_app->dispatch();
+    }
+
     public function testGetAlias()
     {
         $this->expectOutputString('1,2,');
