@@ -1192,7 +1192,7 @@ class RoutesTest extends AbstractKleinTest
         $this->klein_app->respond(
             function () use ($klein_app) {
                 echo '8,';
-                $klein_app->skipRest();
+                $klein_app->skipRemaining();
             }
         );
         $this->klein_app->respond(

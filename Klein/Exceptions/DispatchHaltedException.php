@@ -29,20 +29,6 @@ class DispatchHaltedException extends RuntimeException implements KleinException
      */
 
     /**
-     * Halt the dispatch process indefinitely 
-     *
-     * @const int
-     */
-    const HALT = 0;
-
-    /**
-     * Stop matching. HALT alias
-     *
-     * @const int
-     */
-    const STOP_MATCHING = 0;
-
-    /**
      * Skip this current match/callback
      *
      * @const int
@@ -57,11 +43,11 @@ class DispatchHaltedException extends RuntimeException implements KleinException
     const SKIP_NEXT = 2;
 
     /**
-     * Skip the rest of the matches. HALT alias
+     * Skip the rest of the matches
      *
      * @const int
      */
-    const SKIP_REST = 0;
+    const SKIP_REMAINING = 0;
 
 
     /**

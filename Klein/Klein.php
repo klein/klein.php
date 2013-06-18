@@ -508,7 +508,7 @@ class Klein
                             case DispatchHaltedException::SKIP_NEXT:
                                 $skip_num = $e->getNumberOfSkips();
                                 break;
-                            case DispatchHaltedException::SKIP_REST:
+                            case DispatchHaltedException::SKIP_REMAINING:
                                 break 2;
                             default:
                                 throw $e;
@@ -735,14 +735,14 @@ class Klein
     }
 
     /**
-     * Quick alias to stop the rest of the callbacks/route methods from executing
+     * Quick alias to stop the remaining callbacks/route methods from executing
      *
      * @access public
      * @return void
      */
-    public function skipRest()
+    public function skipRemaining()
     {
-        throw new DispatchHaltedException(null, DispatchHaltedException::SKIP_REST);
+        throw new DispatchHaltedException(null, DispatchHaltedException::SKIP_REMAINING);
     }
 
     /**
