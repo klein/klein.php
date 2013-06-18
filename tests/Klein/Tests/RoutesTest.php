@@ -1209,6 +1209,35 @@ class RoutesTest extends AbstractKleinTest
         $this->klein_app->dispatch();
     }
 
+    public function testDispatchAbort()
+    {
+        $this->expectOutputString('1,');
+
+        // Create a duplicate reference... yea, PHP 5.3 :/
+        $klein_app = $this->klein_app;
+
+        $this->klein_app->respond(
+            function () use ($klein_app) {
+                echo '1,';
+            }
+        );
+        $this->klein_app->respond(
+            function () use ($klein_app) {
+                $klein_app->abort(404);
+                echo '2,';
+            }
+        );
+        $this->klein_app->respond(
+            function () use ($klein_app) {
+                echo '3,';
+            }
+        );
+
+        $this->klein_app->dispatch();
+
+        $this->assertSame(404, $this->klein_app->response()->code());
+    }
+
     public function testGetAlias()
     {
         $this->expectOutputString('1,2,');
