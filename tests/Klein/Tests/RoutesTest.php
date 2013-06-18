@@ -847,7 +847,7 @@ class RoutesTest extends AbstractKleinTest
 
     public function testNSDispatch()
     {
-        // Create a duplicate context... yea, PHP 5.3 :/
+        // Create a duplicate reference... yea, PHP 5.3 :/
         $klein_app = $this->klein_app;
 
         $this->klein_app->with(
@@ -1148,7 +1148,7 @@ class RoutesTest extends AbstractKleinTest
     {
         $this->expectOutputString('2,4,7,8,');
 
-        // Create a duplicate context... yea, PHP 5.3 :/
+        // Create a duplicate reference... yea, PHP 5.3 :/
         $klein_app = $this->klein_app;
 
         $this->klein_app->respond(
