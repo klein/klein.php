@@ -630,7 +630,7 @@ class Klein
      * @access protected
      * @return void
      */
-    protected function handleResponseCallback(&$callback, &$matched, &$methods_matched)
+    protected function handleResponseCallback($callback, $matched, $methods_matched)
     {
         // Handle the callback
         try {
