@@ -847,7 +847,7 @@ class RoutesTest extends AbstractKleinTest
 
     public function testNSDispatch()
     {
-        // Create a duplicate context... yea, PHP 5.3 :/
+        // Create a duplicate reference... yea, PHP 5.3 :/
         $klein_app = $this->klein_app;
 
         $this->klein_app->with(
@@ -1142,6 +1142,100 @@ class RoutesTest extends AbstractKleinTest
         foreach ($expected_headers as $header) {
             $this->assertEquals($header['val'], $this->klein_app->response()->headers()->get($header['key']));
         }
+    }
+
+    public function testDispatchHalt()
+    {
+        $this->expectOutputString('2,4,7,8,');
+
+        // Create a duplicate reference... yea, PHP 5.3 :/
+        $klein_app = $this->klein_app;
+
+        $this->klein_app->respond(
+            function () use ($klein_app) {
+                $klein_app->skipThis();
+                echo '1,';
+            }
+        );
+        $this->klein_app->respond(
+            function () use ($klein_app) {
+                echo '2,';
+                $klein_app->skipNext();
+            }
+        );
+        $this->klein_app->respond(
+            function () use ($klein_app) {
+                echo '3,';
+            }
+        );
+        $this->klein_app->respond(
+            function () use ($klein_app) {
+                echo '4,';
+                $klein_app->skipNext(2);
+            }
+        );
+        $this->klein_app->respond(
+            function () use ($klein_app) {
+                echo '5,';
+            }
+        );
+        $this->klein_app->respond(
+            function () use ($klein_app) {
+                echo '6,';
+            }
+        );
+        $this->klein_app->respond(
+            function () use ($klein_app) {
+                echo '7,';
+            }
+        );
+        $this->klein_app->respond(
+            function () use ($klein_app) {
+                echo '8,';
+                $klein_app->skipRemaining();
+            }
+        );
+        $this->klein_app->respond(
+            function () use ($klein_app) {
+                echo '9,';
+            }
+        );
+        $this->klein_app->respond(
+            function () use ($klein_app) {
+                echo '10,';
+            }
+        );
+
+        $this->klein_app->dispatch();
+    }
+
+    public function testDispatchAbort()
+    {
+        $this->expectOutputString('1,');
+
+        // Create a duplicate reference... yea, PHP 5.3 :/
+        $klein_app = $this->klein_app;
+
+        $this->klein_app->respond(
+            function () use ($klein_app) {
+                echo '1,';
+            }
+        );
+        $this->klein_app->respond(
+            function () use ($klein_app) {
+                $klein_app->abort(404);
+                echo '2,';
+            }
+        );
+        $this->klein_app->respond(
+            function () use ($klein_app) {
+                echo '3,';
+            }
+        );
+
+        $this->klein_app->dispatch();
+
+        $this->assertSame(404, $this->klein_app->response()->code());
     }
 
     public function testGetAlias()
