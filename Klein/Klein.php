@@ -746,6 +746,25 @@ class Klein
     }
 
     /**
+     * Alias to set a response code, lock the response, and halt the route matching/dispatching
+     *
+     * @param int $code     Optional HTTP status code to send
+     * @access public
+     * @return void
+     */
+    public function abort($code = null)
+    {
+        if (null !== $code) {
+            $this->response->code($code);
+        }
+
+        // Disallow further response modification
+        $this->response->lock();
+
+        throw new DispatchHaltedException();
+    }
+
+    /**
      * GET alias for "respond()"
      *
      * @param string $route
