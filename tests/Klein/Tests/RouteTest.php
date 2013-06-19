@@ -121,4 +121,20 @@ class RouteTest extends AbstractKleinTest
 
         $this->assertSame($test_count_match, $route->getCountMatch());
     }
+
+    public function testInvokeMethod()
+    {
+        // Test data
+        $test_callable = function ($id, $name) {
+            return array($id, $name);
+        };
+        $test_arguments = array(7, 'Trevor');
+
+        $route = new Route($test_callable);
+
+        $this->assertSame(
+            call_user_func_array($test_callable, $test_arguments),
+            call_user_func_array($route, $test_arguments)
+        );
+    }
 }

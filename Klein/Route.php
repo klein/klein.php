@@ -195,4 +195,24 @@ class Route
 
         return $this;
     }
+
+
+    /**
+     * Magic "__invoke" method
+     *
+     * Allows the ability to arbitrarily call this instance like a function
+     *
+     * @param mixed $args Generic arguments, magically accepted
+     * @access public
+     * @return mixed
+     */
+    public function __invoke($args = null)
+    {
+        $args = func_get_args();
+
+        return call_user_func_array(
+            $this->callback,
+            $args
+        );
+    }
 }
