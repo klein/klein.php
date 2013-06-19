@@ -280,9 +280,10 @@ class Klein
             $route = $this->namespace . $route;
         }
 
-        $this->routes[] = new Route($callback, $route, $method, $count_match);
+        $route = new Route($callback, $route, $method, $count_match);
+        $this->routes[] = $route;
 
-        return $callback;
+        return $route;
     }
 
     /**
