@@ -232,55 +232,56 @@ class Klein
      * </code>
      *
      * @param string | array $method    HTTP Method to match
-     * @param string $route             Route URI to match
+     * @param string $path              Route URI path to match
      * @param callable $callback        Callable callback method to execute on route match
      * @access public
      * @return callable $callback
      */
-    public function respond($method, $route = '*', $callback = null)
+    public function respond($method, $path = '*', $callback = null)
     {
         $args = func_get_args();
         $callback = array_pop($args);
-        $route = array_pop($args);
+        $path = array_pop($args);
         $method = array_pop($args);
 
-        if (null === $route) {
-            $route = '*';
+        if (null === $path) {
+            $path = '*';
         }
 
         // only consider a request to be matched when not using matchall
-        $count_match = ($route !== '*');
+        $count_match = ($path !== '*');
 
-        if ($this->namespace && $route[0] === '@' || ($route[0] === '!' && $route[1] === '@')) {
-            if ($route[0] === '!') {
+        if ($this->namespace && $path[0] === '@' || ($path[0] === '!' && $path[1] === '@')) {
+            if ($path[0] === '!') {
                 $negate = true;
-                $route = substr($route, 2);
+                $path = substr($path, 2);
             } else {
                 $negate = false;
-                $route = substr($route, 1);
+                $path = substr($path, 1);
             }
 
             // regex anchored to front of string
-            if ($route[0] === '^') {
-                $route = substr($route, 1);
+            if ($path[0] === '^') {
+                $path = substr($path, 1);
             } else {
-                $route = '.*' . $route;
+                $path = '.*' . $path;
             }
 
             if ($negate) {
-                $route = '@^' . $this->namespace . '(?!' . $route . ')';
+                $path = '@^' . $this->namespace . '(?!' . $path . ')';
             } else {
-                $route = '@^' . $this->namespace . $route;
+                $path = '@^' . $this->namespace . $path;
             }
 
-        } elseif ($this->namespace && ('*' === $route)) {
+        } elseif ($this->namespace && ('*' === $path)) {
             // empty route with namespace is a match-all
-            $route = '@^' . $this->namespace . '(/|$)';
+            $path = '@^' . $this->namespace . '(/|$)';
         } else {
-            $route = $this->namespace . $route;
+            $path = $this->namespace . $path;
         }
 
-        $route = new Route($callback, $route, $method, $count_match);
+        $route = new Route($callback, $path, $method, $count_match);
+
         $this->routes[] = $route;
 
         return $route;
