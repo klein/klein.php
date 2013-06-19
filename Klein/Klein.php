@@ -280,7 +280,7 @@ class Klein
             $route = $this->namespace . $route;
         }
 
-        $this->routes[] = array($method, $route, $callback, $count_match);
+        $this->routes[] = new Route($callback, $route, $method, $count_match);
 
         return $callback;
     }
@@ -372,7 +372,11 @@ class Klein
                 continue;
             }
 
-            list($method, $_route, $callback, $count_match) = $handler;
+            // Grab the properties of the route handler
+            $method = $handler->getMethod();
+            $_route = $handler->getPath();
+            $callback = $handler->getCallback();
+            $count_match = $handler->getCountMatch();
 
             // Keep track of whether this specific request method was matched
             $method_match = null;
