@@ -19,20 +19,13 @@ use \Klein\Tests\Mocks\HeadersSave;
 use \Klein\Tests\Mocks\MockRequestFactory;
 
 /**
- * RoutesTest 
+ * RoutingTest
  * 
  * @uses AbstractKleinTest
  * @package Klein\Tests
  */
-class RoutesTest extends AbstractKleinTest
+class RoutingTest extends AbstractKleinTest
 {
-
-    protected function setUp()
-    {
-        parent::setUp();
-
-        $_SERVER['SERVER_PROTOCOL'] = 'HTTP/1.1';
-    }
 
     public function testBasic()
     {
