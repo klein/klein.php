@@ -16,6 +16,7 @@ use \Exception;
 use \Klein\Exceptions\LockedResponseException;
 use \Klein\Exceptions\UnhandledException;
 use \Klein\Exceptions\ResponseAlreadySentException;
+use \Klein\Exceptions\DispatchHaltedException;
 
 /**
  * Klein
@@ -356,6 +357,7 @@ class Klein
         $req_method = $this->request->method();
 
         // Set up some variables for matching
+        $skip_num = 0;
         $matched = 0;
         $methods_matched = array();
         $params = array();
@@ -364,6 +366,12 @@ class Klein
         ob_start();
 
         foreach ($this->routes as $handler) {
+            // Are we skipping any matches?
+            if ($skip_num > 0) {
+                $skip_num--;
+                continue;
+            }
+
             list($method, $_route, $callback, $count_match) = $handler;
 
             // Keep track of whether this specific request method was matched
@@ -417,23 +425,7 @@ class Klein
             } elseif ($_route === '404' && !$matched && count($methods_matched) <= 0) {
                 // Easily handle 404's
 
-                try {
-                    $this->response->append(
-                        call_user_func(
-                            $callback,
-                            $this->request,
-                            $this->response,
-                            $this->service,
-                            $this->app,
-                            $matched,
-                            $methods_matched
-                        )
-                    );
-                } catch (LockedResponseException $e) {
-                    // Do nothing, since this is an automated behavior
-                } catch (Exception $e) {
-                    $this->error($e);
-                }
+                $this->handleResponseCallback($callback, $matched, $methods_matched);
 
                 ++$matched;
                 continue;
@@ -441,23 +433,7 @@ class Klein
             } elseif ($_route === '405' && !$matched && count($methods_matched) > 0) {
                 // Easily handle 405's
 
-                try {
-                    $this->response->append(
-                        call_user_func(
-                            $callback,
-                            $this->request,
-                            $this->response,
-                            $this->service,
-                            $this->app,
-                            $matched,
-                            $methods_matched
-                        )
-                    );
-                } catch (LockedResponseException $e) {
-                    // Do nothing, since this is an automated behavior
-                } catch (Exception $e) {
-                    $this->error($e);
-                }
+                $this->handleResponseCallback($callback, $matched, $methods_matched);
 
                 ++$matched;
                 continue;
@@ -520,23 +496,23 @@ class Klein
                         $this->request->paramsNamed()->merge($params);
                     }
 
-                    // Try and call our route's callback
+                    // Handle our response callback
                     try {
-                        $this->response->append(
-                            call_user_func(
-                                $callback,
-                                $this->request,
-                                $this->response,
-                                $this->service,
-                                $this->app,
-                                $matched,
-                                $methods_matched
-                            )
-                        );
-                    } catch (LockedResponseException $e) {
-                        // Do nothing, since this is an automated behavior
-                    } catch (Exception $e) {
-                        $this->error($e);
+                        $this->handleResponseCallback($callback, $matched, $methods_matched);
+
+                    } catch (DispatchHaltedException $e) {
+                        switch ($e->getCode()) {
+                            case DispatchHaltedException::SKIP_THIS:
+                                continue;
+                                break;
+                            case DispatchHaltedException::SKIP_NEXT:
+                                $skip_num = $e->getNumberOfSkips();
+                                break;
+                            case DispatchHaltedException::SKIP_REMAINING:
+                                break 2;
+                            default:
+                                throw $e;
+                        }
                     }
 
                     if ($_route !== '*') {
@@ -643,6 +619,42 @@ class Klein
     }
 
     /**
+     * Handle a response callback
+     *
+     * This handles common exceptions and their output
+     * to keep the "dispatch()" method DRY
+     *
+     * @param callable $callback
+     * @param int $matched
+     * @param int $methods_matched
+     * @access protected
+     * @return void
+     */
+    protected function handleResponseCallback($callback, $matched, $methods_matched)
+    {
+        // Handle the callback
+        try {
+            $this->response->append(
+                call_user_func(
+                    $callback,
+                    $this->request,
+                    $this->response,
+                    $this->service,
+                    $this->app,
+                    $matched,
+                    $methods_matched
+                )
+            );
+        } catch (LockedResponseException $e) {
+            // Do nothing, since this is an automated behavior
+        } catch (DispatchHaltedException $e) {
+            throw $e;
+        } catch (Exception $e) {
+            $this->error($e);
+        }
+    }
+
+    /**
      * Adds an error callback to the stack of error handlers
      *
      * @param callable $callback            The callable function to execute in the error handling chain
@@ -695,6 +707,62 @@ class Klein
     /**
      * Method aliases
      */
+
+    /**
+     * Quick alias to skip the current callback/route method from executing
+     *
+     * @access public
+     * @return void
+     */
+    public function skipThis()
+    {
+        throw new DispatchHaltedException(null, DispatchHaltedException::SKIP_THIS);
+    }
+
+    /**
+     * Quick alias to skip the next callback/route method from executing
+     *
+     * @param int $num The number of next matches to skip
+     * @access public
+     * @return void
+     */
+    public function skipNext($num = 1)
+    {
+        $skip = new DispatchHaltedException(null, DispatchHaltedException::SKIP_NEXT);
+        $skip->setNumberOfSkips($num);
+
+        throw $skip;
+    }
+
+    /**
+     * Quick alias to stop the remaining callbacks/route methods from executing
+     *
+     * @access public
+     * @return void
+     */
+    public function skipRemaining()
+    {
+        throw new DispatchHaltedException(null, DispatchHaltedException::SKIP_REMAINING);
+    }
+
+    /**
+     * Alias to set a response code, lock the response, and halt the route matching/dispatching
+     *
+     * @param int $code     Optional HTTP status code to send
+     * @access public
+     * @return void
+     */
+    public function abort($code = null)
+    {
+        if (null !== $code) {
+            $this->response->code($code);
+        }
+
+        // Disallow further response modification
+        $this->response->lock();
+
+        throw new DispatchHaltedException();
+    }
 
     /**
      * GET alias for "respond()"
