@@ -287,6 +287,22 @@ class RoutingTest extends AbstractKleinTest
         $this->assertTrue(is_callable($return_two));
     }
 
+    public function testRespondReturnChaining()
+    {
+        $return_one = $this->klein_app->respond(
+            function () {
+                return 1337;
+            }
+        );
+        $return_two = $this->klein_app->respond(
+            function () {
+                return 1337;
+            }
+        )->getPath();
+
+        $this->assertSame($return_one->getPath(), $return_two);
+    }
+
     public function testCatchallImplicit()
     {
         $this->expectOutputString('b');
