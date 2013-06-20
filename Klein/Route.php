@@ -11,6 +11,8 @@
 
 namespace Klein;
 
+use InvalidArgumentException;
+
 /**
  * Route
  *
@@ -116,6 +118,10 @@ class Route
      */
     public function setCallback($callback)
     {
+        if (!is_callable($callback)) {
+            throw new InvalidArgumentException('Expected a callable. Got a '. gettype($callback));
+        }
+
         $this->callback = $callback;
 
         return $this;
@@ -166,6 +172,11 @@ class Route
      */
     public function setMethod($method)
     {
+        // Allow null, otherwise expect an array or a string
+        if (null !== $method && !is_array($method) && !is_string($method)) {
+            throw new InvalidArgumentException('Expected an array or string. Got a '. gettype($method));
+        }
+
         $this->method = $method;
 
         return $this;
