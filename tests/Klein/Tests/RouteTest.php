@@ -44,7 +44,7 @@ class RouteTest extends AbstractKleinTest
         $this->assertInternalType('callable', $route->getCallback());
 
         // Callback set in method
-        $route = new Route('dog');
+        $route = new Route($test_callable);
         $route->setCallback($test_class_callable);
 
         $this->assertSame($test_class_callable, $route->getCallback());
@@ -103,7 +103,7 @@ class RouteTest extends AbstractKleinTest
     {
         // Test data
         $test_callable = $this->getTestCallable();
-        $test_count_match = true;
+        $test_count_match = false;
 
         // Empty constructor
         $route = new Route($test_callable);
@@ -111,7 +111,7 @@ class RouteTest extends AbstractKleinTest
         $this->assertTrue($route->getCountMatch());
 
         // Set in constructor
-        $route = new Route($test_callable, null, $test_count_match);
+        $route = new Route($test_callable, null, null, $test_count_match);
 
         $this->assertSame($test_count_match, $route->getCountMatch());
 
