@@ -19,20 +19,13 @@ use \Klein\Tests\Mocks\HeadersSave;
 use \Klein\Tests\Mocks\MockRequestFactory;
 
 /**
- * RoutesTest 
+ * RoutingTest
  * 
  * @uses AbstractKleinTest
  * @package Klein\Tests
  */
-class RoutesTest extends AbstractKleinTest
+class RoutingTest extends AbstractKleinTest
 {
-
-    protected function setUp()
-    {
-        parent::setUp();
-
-        $_SERVER['SERVER_PROTOCOL'] = 'HTTP/1.1';
-    }
 
     public function testBasic()
     {
@@ -292,6 +285,22 @@ class RoutesTest extends AbstractKleinTest
 
         $this->assertTrue(is_callable($return_one));
         $this->assertTrue(is_callable($return_two));
+    }
+
+    public function testRespondReturnChaining()
+    {
+        $return_one = $this->klein_app->respond(
+            function () {
+                return 1337;
+            }
+        );
+        $return_two = $this->klein_app->respond(
+            function () {
+                return 1337;
+            }
+        )->getPath();
+
+        $this->assertSame($return_one->getPath(), $return_two);
     }
 
     public function testCatchallImplicit()
