@@ -13,6 +13,7 @@ namespace Klein;
 
 use \Exception;
 
+use \Klein\DataCollection\RouteCollection;
 use \Klein\Exceptions\LockedResponseException;
 use \Klein\Exceptions\UnhandledException;
 use \Klein\Exceptions\ResponseAlreadySentException;
@@ -83,9 +84,9 @@ class Klein
      */
 
     /**
-     * Array of the routes to match on dispatch
+     * Collection of the routes to match on dispatch
      *
-     * @var array
+     * @var RouteCollection
      * @access protected
      */
     protected $routes;
@@ -157,14 +158,27 @@ class Klein
      * This DI allows for easy testing, object mocking, or class extension
      *
      * @param ServiceProvider $service  Service provider object responsible for utilitarian behaviors
-     * @param mixed $app                    An object passed to each route callback, defaults to a new App instance
+     * @param mixed $app                An object passed to each route callback, defaults to a new App instance
+     * @param RouteCollection $routes   Collection object responsible for containing all of the route instances
      * @access public
      */
-    public function __construct(ServiceProvider $service = null, $app = null)
+    public function __construct(ServiceProvider $service = null, $app = null, RouteCollection $routes = null)
     {
-        // Instanciate our routing objects
+        // Instanciate and fall back to defaults
         $this->service = $service ?: new ServiceProvider();
         $this->app     = $app     ?: new App();
+        $this->routes  = $routes  ?: new RouteCollection();
+    }
+
+    /**
+     * Returns the routes object
+     *
+     * @access public
+     * @return RouteCollection
+     */
+    public function routes()
+    {
+        return $this->routes;
     }
 
     /**
@@ -232,57 +246,59 @@ class Klein
      * </code>
      *
      * @param string | array $method    HTTP Method to match
-     * @param string $route             Route URI to match
+     * @param string $path              Route URI path to match
      * @param callable $callback        Callable callback method to execute on route match
      * @access public
      * @return callable $callback
      */
-    public function respond($method, $route = '*', $callback = null)
+    public function respond($method, $path = '*', $callback = null)
     {
         $args = func_get_args();
         $callback = array_pop($args);
-        $route = array_pop($args);
+        $path = array_pop($args);
         $method = array_pop($args);
 
-        if (null === $route) {
-            $route = '*';
+        if (null === $path) {
+            $path = '*';
         }
 
         // only consider a request to be matched when not using matchall
-        $count_match = ($route !== '*');
+        $count_match = ($path !== '*');
 
-        if ($this->namespace && $route[0] === '@' || ($route[0] === '!' && $route[1] === '@')) {
-            if ($route[0] === '!') {
+        if ($this->namespace && $path[0] === '@' || ($path[0] === '!' && $path[1] === '@')) {
+            if ($path[0] === '!') {
                 $negate = true;
-                $route = substr($route, 2);
+                $path = substr($path, 2);
             } else {
                 $negate = false;
-                $route = substr($route, 1);
+                $path = substr($path, 1);
             }
 
             // regex anchored to front of string
-            if ($route[0] === '^') {
-                $route = substr($route, 1);
+            if ($path[0] === '^') {
+                $path = substr($path, 1);
             } else {
-                $route = '.*' . $route;
+                $path = '.*' . $path;
             }
 
             if ($negate) {
-                $route = '@^' . $this->namespace . '(?!' . $route . ')';
+                $path = '@^' . $this->namespace . '(?!' . $path . ')';
             } else {
-                $route = '@^' . $this->namespace . $route;
+                $path = '@^' . $this->namespace . $path;
             }
 
-        } elseif ($this->namespace && ('*' === $route)) {
+        } elseif ($this->namespace && ('*' === $path)) {
             // empty route with namespace is a match-all
-            $route = '@^' . $this->namespace . '(/|$)';
+            $path = '@^' . $this->namespace . '(/|$)';
         } else {
-            $route = $this->namespace . $route;
+            $path = $this->namespace . $path;
         }
 
-        $this->routes[] = array($method, $route, $callback, $count_match);
+        $route = new Route($callback, $path, $method, $count_match);
 
-        return $callback;
+        $this->routes->add($route);
+
+        return $route;
     }
 
     /**
@@ -372,7 +388,11 @@ class Klein
                 continue;
             }
 
-            list($method, $_route, $callback, $count_match) = $handler;
+            // Grab the properties of the route handler
+            $method = $handler->getMethod();
+            $_route = $handler->getPath();
+            $callback = $handler->getCallback();
+            $count_match = $handler->getCountMatch();
 
             // Keep track of whether this specific request method was matched
             $method_match = null;
