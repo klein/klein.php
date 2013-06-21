@@ -13,6 +13,7 @@ namespace Klein;
 
 use \Exception;
 
+use \Klein\DataCollection\RouteCollection;
 use \Klein\Exceptions\LockedResponseException;
 use \Klein\Exceptions\UnhandledException;
 use \Klein\Exceptions\ResponseAlreadySentException;
@@ -83,9 +84,9 @@ class Klein
      */
 
     /**
-     * Array of the routes to match on dispatch
+     * Collection of the routes to match on dispatch
      *
-     * @var array
+     * @var RouteCollection
      * @access protected
      */
     protected $routes;
@@ -157,14 +158,27 @@ class Klein
      * This DI allows for easy testing, object mocking, or class extension
      *
      * @param ServiceProvider $service  Service provider object responsible for utilitarian behaviors
-     * @param mixed $app                    An object passed to each route callback, defaults to a new App instance
+     * @param mixed $app                An object passed to each route callback, defaults to a new App instance
+     * @param RouteCollection $routes   Collection object responsible for containing all of the route instances
      * @access public
      */
-    public function __construct(ServiceProvider $service = null, $app = null)
+    public function __construct(ServiceProvider $service = null, $app = null, RouteCollection $routes = null)
     {
-        // Instanciate our routing objects
+        // Instanciate and fall back to defaults
         $this->service = $service ?: new ServiceProvider();
         $this->app     = $app     ?: new App();
+        $this->routes  = $routes  ?: new RouteCollection();
+    }
+
+    /**
+     * Returns the routes object
+     *
+     * @access public
+     * @return RouteCollection
+     */
+    public function routes()
+    {
+        return $this->routes;
     }
 
     /**
@@ -282,7 +296,7 @@ class Klein
 
         $route = new Route($callback, $path, $method, $count_match);
 
-        $this->routes[] = $route;
+        $this->routes->add($route);
 
         return $route;
     }
