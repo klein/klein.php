@@ -689,7 +689,8 @@ class Klein
     /**
      * Routes an exception through the error callbacks
      *
-     * @param Exception $err    The exception that occurred
+     * @param Exception $err        The exception that occurred
+     * @throws UnhandledException   If the error/exception isn't handled by an error callback
      * @access protected
      * @return void
      */
@@ -731,6 +732,7 @@ class Klein
     /**
      * Quick alias to skip the current callback/route method from executing
      *
+     * @throws DispatchHaltedException To halt/skip the current dispatch loop
      * @access public
      * @return void
      */
@@ -743,6 +745,7 @@ class Klein
      * Quick alias to skip the next callback/route method from executing
      *
      * @param int $num The number of next matches to skip
+     * @throws DispatchHaltedException To halt/skip the current dispatch loop
      * @access public
      * @return void
      */
@@ -757,6 +760,7 @@ class Klein
     /**
      * Quick alias to stop the remaining callbacks/route methods from executing
      *
+     * @throws DispatchHaltedException To halt/skip the current dispatch loop
      * @access public
      * @return void
      */
@@ -769,6 +773,7 @@ class Klein
      * Alias to set a response code, lock the response, and halt the route matching/dispatching
      *
      * @param int $code     Optional HTTP status code to send
+     * @throws DispatchHaltedException To halt/skip the current dispatch loop
      * @access public
      * @return void
      */

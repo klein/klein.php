@@ -289,6 +289,7 @@ class Response
      * preventing any methods from mutating the response
      * when its locked
      *
+     * @throws LockedResponseException  If the response is locked
      * @access public
      * @return Response
      */
@@ -415,7 +416,8 @@ class Response
     /**
      * Send the response and lock it
      *
-     * @param boolean $override     Whether or not to override the check if the response has already been sent
+     * @param boolean $override             Whether or not to override the check if the response has already been sent
+     * @throws ResponseAlreadySentException If the response has already been sent
      * @access public
      * @return Response
      */

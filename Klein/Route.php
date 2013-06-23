@@ -113,6 +113,7 @@ class Route
      * Set the callback
      *
      * @param callable $callback
+     * @throws InvalidArgumentException If the callback isn't a callable
      * @access public
      * @return Route
      */
@@ -167,6 +168,7 @@ class Route
      * Set the method
      *
      * @param string|array $method
+     * @throws InvalidArgumentException If a non-string or non-array type is passed
      * @access public
      * @return Route
      */
