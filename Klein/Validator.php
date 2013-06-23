@@ -156,8 +156,10 @@ class Validator
      * Allows the ability to arbitrarily call a validator with an optional prefix
      * of "is" or "not" by simply calling an instance property like a callback
      *
-     * @param callable $method  The callable method to execute
-     * @param array $args       The argument array to pass to our callback
+     * @param callable $method          The callable method to execute
+     * @param array $args               The argument array to pass to our callback
+     * @throws BadMethodCallException   If an attempt was made to call a validator modifier that doesn't exist
+     * @throws ValidationException      If the validation check returns false
      * @access public
      * @return Validator
      */
@@ -173,11 +175,13 @@ class Validator
             $validator = substr($method, 3);
             $reverse = true;
         }
+
         $validator = strtolower($validator);
 
         if (!$validator || !isset(static::$methods[$validator])) {
             throw new BadMethodCallException('Unknown method '. $method .'()');
         }
+
         $validator = static::$methods[$validator];
         array_unshift($args, $this->str);
 
@@ -200,11 +204,13 @@ class Validator
         }
 
         $result = (bool)($result ^ $reverse);
+
         if (false === $this->err) {
             return $result;
         } elseif (false === $result) {
             throw new ValidationException($this->err);
         }
+
         return $this;
     }
 }
