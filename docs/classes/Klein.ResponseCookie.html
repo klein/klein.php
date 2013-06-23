@@ -1,0 +1,481 @@
+<!DOCTYPE html><html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+<meta charset="utf-8">
+<title>Klein » \Klein\ResponseCookie</title>
+<meta name="author" content="Mike van Riel">
+<meta name="description" content="">
+<link href="../css/template.css" rel="stylesheet" media="all">
+<script src="../js/jquery-1.7.1.min.js" type="text/javascript"></script><script src="../js/jquery-ui-1.8.2.custom.min.js" type="text/javascript"></script><script src="../js/jquery.mousewheel.min.js" type="text/javascript"></script><script src="../js/bootstrap.js" type="text/javascript"></script><script src="../js/template.js" type="text/javascript"></script><script src="../js/prettify/prettify.min.js" type="text/javascript"></script><link rel="shortcut icon" href="../img/favicon.ico">
+<link rel="apple-touch-icon" href="../img/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="72x72" href="../img/apple-touch-icon-72x72.png">
+<link rel="apple-touch-icon" sizes="114x114" href="../img/apple-touch-icon-114x114.png">
+</head>
+<body>
+<div class="navbar navbar-fixed-top">
+<div class="navbar-inner"><div class="container">
+<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></a><a class="brand" href="../index.html">Klein</a><div class="nav-collapse"><ul class="nav">
+<li class="dropdown">
+<a href="#api" class="dropdown-toggle" data-toggle="dropdown">
+                                    API Documentation <b class="caret"></b></a><ul class="dropdown-menu">
+<li><a>Namespaces</a></li>
+<li><a href="../namespaces/Klein.html"><i class="icon-th"></i> Klein</a></li>
+<li><a>Packages</a></li>
+<li><a href="../packages/Klein.html"><i class="icon-folder-open"></i> Klein</a></li>
+</ul>
+</li>
+<li class="dropdown" id="charts-menu">
+<a href="#charts" class="dropdown-toggle" data-toggle="dropdown">
+                                    Charts <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="../graph_class.html"><i class="icon-list-alt"></i> Class hierarchy diagram</a></li></ul>
+</li>
+<li class="dropdown" id="reports-menu">
+<a href="#reports" class="dropdown-toggle" data-toggle="dropdown">
+                                    Reports <b class="caret"></b></a><ul class="dropdown-menu">
+<li><a href="../errors.html"><i class="icon-remove-sign"></i> Errors 
+                <span class="label label-info">0</span></a></li>
+<li><a href="../markers.html"><i class="icon-map-marker"></i> Markers 
+                <ul></ul></a></li>
+<li><a href="../deprecated.html"><i class="icon-stop"></i> Deprecated elements 
+                <span class="label label-info">0</span></a></li>
+</ul>
+</li>
+</ul></div>
+</div></div>
+<div class="go_to_top"><a href="#___" style="color: inherit">Back to top  <i class="icon-upload icon-white"></i></a></div>
+</div>
+<div id="___" class="container">
+<noscript><div class="alert alert-warning">
+                            Javascript is disabled; several features are only available
+                            if Javascript is enabled.
+                        </div></noscript>
+<div class="row">
+<div class="span4">
+<span class="btn-group visibility" data-toggle="buttons-checkbox"><button class="btn public active" title="Show public elements">Public</button><button class="btn protected" title="Show protected elements">Protected</button><button class="btn private" title="Show private elements">Private</button><button class="btn inherited active" title="Show inherited elements">Inherited</button></span><div class="btn-group view pull-right" data-toggle="buttons-radio">
+<button class="btn details" title="Show descriptions and method names"><i class="icon-list"></i></button><button class="btn simple" title="Show only method names"><i class="icon-align-justify"></i></button>
+</div>
+<ul class="side-nav nav nav-list">
+<li class="nav-header">
+<i class="icon-custom icon-method"></i> Methods
+                    <ul>
+<li class="method public "><a href="#method___construct" title="__construct :: Constructor"><span class="description">Constructor</span><pre>__construct()</pre></a></li>
+<li class="method public "><a href="#method_getDomain" title="getDomain :: Gets the cookie's domain"><span class="description">Gets the cookie's domain</span><pre>getDomain()</pre></a></li>
+<li class="method public "><a href="#method_getExpire" title="getExpire :: Gets the cookie's expire time"><span class="description">Gets the cookie's expire time</span><pre>getExpire()</pre></a></li>
+<li class="method public "><a href="#method_getHttpOnly" title="getHttpOnly :: Gets the cookie's HTTP only flag"><span class="description">Gets the cookie's HTTP only flag</span><pre>getHttpOnly()</pre></a></li>
+<li class="method public "><a href="#method_getName" title="getName :: Gets the cookie's name"><span class="description">Gets the cookie's name</span><pre>getName()</pre></a></li>
+<li class="method public "><a href="#method_getPath" title="getPath :: Gets the cookie's path"><span class="description">Gets the cookie's path</span><pre>getPath()</pre></a></li>
+<li class="method public "><a href="#method_getSecure" title="getSecure :: Gets the cookie's secure only flag"><span class="description">Gets the cookie's secure only flag</span><pre>getSecure()</pre></a></li>
+<li class="method public "><a href="#method_getValue" title="getValue :: Gets the cookie's value"><span class="description">Gets the cookie's value</span><pre>getValue()</pre></a></li>
+<li class="method public "><a href="#method_setDomain" title="setDomain :: Sets the cookie's domain"><span class="description">Sets the cookie's domain</span><pre>setDomain()</pre></a></li>
+<li class="method public "><a href="#method_setExpire" title="setExpire :: Sets the cookie's expire time"><span class="description">Sets the cookie's expire time</span><pre>setExpire()</pre></a></li>
+<li class="method public "><a href="#method_setHttpOnly" title="setHttpOnly :: Sets the cookie's HTTP only flag"><span class="description">Sets the cookie's HTTP only flag</span><pre>setHttpOnly()</pre></a></li>
+<li class="method public "><a href="#method_setName" title="setName :: Sets the cookie's name"><span class="description">Sets the cookie's name</span><pre>setName()</pre></a></li>
+<li class="method public "><a href="#method_setPath" title="setPath :: Sets the cookie's path"><span class="description">Sets the cookie's path</span><pre>setPath()</pre></a></li>
+<li class="method public "><a href="#method_setSecure" title="setSecure :: Sets the cookie's secure only flag"><span class="description">Sets the cookie's secure only flag</span><pre>setSecure()</pre></a></li>
+<li class="method public "><a href="#method_setValue" title="setValue :: Sets the cookie's value"><span class="description">Sets the cookie's value</span><pre>setValue()</pre></a></li>
+</ul>
+</li>
+<li class="nav-header">
+<i class="icon-custom icon-property"></i> Properties
+                    <ul></ul>
+</li>
+<li class="nav-header protected">» Protected
+                    <ul>
+<li class="property protected "><a href="#property_domain" title="$domain :: The domain that the cookie is available to"><span class="description"></span><pre>$domain</pre></a></li>
+<li class="property protected "><a href="#property_expire" title="$expire :: The date/time that the cookie should expire"><span class="description"></span><pre>$expire</pre></a></li>
+<li class="property protected "><a href="#property_http_only" title="$http_only :: Whether the cookie will be available through HTTP
+only (not available to be accessed through
+client-side scripting languages like JavaScript)"><span class="description"></span><pre>$http_only</pre></a></li>
+<li class="property protected "><a href="#property_name" title="$name :: The name of the cookie"><span class="description"></span><pre>$name</pre></a></li>
+<li class="property protected "><a href="#property_path" title="$path :: The path on the server that the cookie will
+be available on"><span class="description"></span><pre>$path</pre></a></li>
+<li class="property protected "><a href="#property_secure" title="$secure :: Whether the cookie should only be transferred
+over an HTTPS connection or not"><span class="description"></span><pre>$secure</pre></a></li>
+<li class="property protected "><a href="#property_value" title='$value :: The string "value" of the cookie'><span class="description"></span><pre>$value</pre></a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="span8">
+<a id="\Klein\ResponseCookie"></a><ul class="breadcrumb">
+<li>
+<a href="../index.html"><i class="icon-custom icon-class"></i></a><span class="divider">\</span>
+</li>
+<li><a href="../namespaces/Klein.html">Klein</a></li>
+<li class="active">
+<span class="divider">\</span><a href="../classes/Klein.ResponseCookie.html">ResponseCookie</a>
+</li>
+</ul>
+<div class="element class">
+<p class="short_description">ResponseCookie</p>
+<div class="details">
+<div class="long_description"><p>Class to represent an HTTP response cookie</p></div>
+<table class="table table-bordered"><tr>
+<th>package</th>
+<td><a href="../packages/Klein.html">Klein</a></td>
+</tr></table>
+<h3>
+<i class="icon-custom icon-method"></i> Methods</h3>
+<a id="method___construct"></a><div class="element clickable method public method___construct" data-toggle="collapse" data-target=".method___construct .collapse">
+<h2>Constructor</h2>
+<pre>__construct(string $name, string $value, int $expire, string $path, string $domain, boolean $secure, boolean $http_only) </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>public</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$name</h4>
+<code>string</code><p>The name of the cookie</p></div>
+<div class="subelement argument">
+<h4>$value</h4>
+<code>string</code><p>The value to set the cookie with</p></div>
+<div class="subelement argument">
+<h4>$expire</h4>
+<code>int</code><p>The time that the cookie should expire</p></div>
+<div class="subelement argument">
+<h4>$path</h4>
+<code>string</code><p>The path of which to restrict the cookie</p></div>
+<div class="subelement argument">
+<h4>$domain</h4>
+<code>string</code><p>The domain of which to restrict the cookie</p></div>
+<div class="subelement argument">
+<h4>$secure</h4>
+<code>boolean</code><p>Flag of whether the cookie should only be sent over a HTTPS connection</p></div>
+<div class="subelement argument">
+<h4>$http_only</h4>
+<code>boolean</code><p>Flag of whether the cookie should only be accessible over the HTTP protocol</p></div>
+</div></div>
+</div>
+<a id="method_getDomain"></a><div class="element clickable method public method_getDomain" data-toggle="collapse" data-target=".method_getDomain .collapse">
+<h2>Gets the cookie's domain</h2>
+<pre>getDomain() : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>public</td>
+</tr></table>
+<h3>Returns</h3>
+<div class="subelement response"><code>string</code></div>
+</div></div>
+</div>
+<a id="method_getExpire"></a><div class="element clickable method public method_getExpire" data-toggle="collapse" data-target=".method_getExpire .collapse">
+<h2>Gets the cookie's expire time</h2>
+<pre>getExpire() : int</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>public</td>
+</tr></table>
+<h3>Returns</h3>
+<div class="subelement response"><code>int</code></div>
+</div></div>
+</div>
+<a id="method_getHttpOnly"></a><div class="element clickable method public method_getHttpOnly" data-toggle="collapse" data-target=".method_getHttpOnly .collapse">
+<h2>Gets the cookie's HTTP only flag</h2>
+<pre>getHttpOnly() : boolean</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>public</td>
+</tr></table>
+<h3>Returns</h3>
+<div class="subelement response"><code>boolean</code></div>
+</div></div>
+</div>
+<a id="method_getName"></a><div class="element clickable method public method_getName" data-toggle="collapse" data-target=".method_getName .collapse">
+<h2>Gets the cookie's name</h2>
+<pre>getName() : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>public</td>
+</tr></table>
+<h3>Returns</h3>
+<div class="subelement response"><code>string</code></div>
+</div></div>
+</div>
+<a id="method_getPath"></a><div class="element clickable method public method_getPath" data-toggle="collapse" data-target=".method_getPath .collapse">
+<h2>Gets the cookie's path</h2>
+<pre>getPath() : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>public</td>
+</tr></table>
+<h3>Returns</h3>
+<div class="subelement response"><code>string</code></div>
+</div></div>
+</div>
+<a id="method_getSecure"></a><div class="element clickable method public method_getSecure" data-toggle="collapse" data-target=".method_getSecure .collapse">
+<h2>Gets the cookie's secure only flag</h2>
+<pre>getSecure() : boolean</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>public</td>
+</tr></table>
+<h3>Returns</h3>
+<div class="subelement response"><code>boolean</code></div>
+</div></div>
+</div>
+<a id="method_getValue"></a><div class="element clickable method public method_getValue" data-toggle="collapse" data-target=".method_getValue .collapse">
+<h2>Gets the cookie's value</h2>
+<pre>getValue() : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>public</td>
+</tr></table>
+<h3>Returns</h3>
+<div class="subelement response"><code>string</code></div>
+</div></div>
+</div>
+<a id="method_setDomain"></a><div class="element clickable method public method_setDomain" data-toggle="collapse" data-target=".method_setDomain .collapse">
+<h2>Sets the cookie's domain</h2>
+<pre>setDomain(string $domain) : <a href="../classes/Klein.ResponseCookie.html">\Klein\ResponseCookie</a></pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>public</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$domain</h4>
+<code>string</code>
+</div>
+<h3>Returns</h3>
+<div class="subelement response"><code><a href="../classes/Klein.ResponseCookie.html">\Klein\ResponseCookie</a></code></div>
+</div></div>
+</div>
+<a id="method_setExpire"></a><div class="element clickable method public method_setExpire" data-toggle="collapse" data-target=".method_setExpire .collapse">
+<h2>Sets the cookie's expire time</h2>
+<pre>setExpire(int $expire) : <a href="../classes/Klein.ResponseCookie.html">\Klein\ResponseCookie</a></pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"><p>The time should be an integer
+representing a Unix timestamp</p></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>public</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$expire</h4>
+<code>int</code>
+</div>
+<h3>Returns</h3>
+<div class="subelement response"><code><a href="../classes/Klein.ResponseCookie.html">\Klein\ResponseCookie</a></code></div>
+</div></div>
+</div>
+<a id="method_setHttpOnly"></a><div class="element clickable method public method_setHttpOnly" data-toggle="collapse" data-target=".method_setHttpOnly .collapse">
+<h2>Sets the cookie's HTTP only flag</h2>
+<pre>setHttpOnly(boolean $http_only) : <a href="../classes/Klein.ResponseCookie.html">\Klein\ResponseCookie</a></pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>public</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$http_only</h4>
+<code>boolean</code>
+</div>
+<h3>Returns</h3>
+<div class="subelement response"><code><a href="../classes/Klein.ResponseCookie.html">\Klein\ResponseCookie</a></code></div>
+</div></div>
+</div>
+<a id="method_setName"></a><div class="element clickable method public method_setName" data-toggle="collapse" data-target=".method_setName .collapse">
+<h2>Sets the cookie's name</h2>
+<pre>setName(string $name) : <a href="../classes/Klein.ResponseCookie.html">\Klein\ResponseCookie</a></pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>public</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$name</h4>
+<code>string</code>
+</div>
+<h3>Returns</h3>
+<div class="subelement response"><code><a href="../classes/Klein.ResponseCookie.html">\Klein\ResponseCookie</a></code></div>
+</div></div>
+</div>
+<a id="method_setPath"></a><div class="element clickable method public method_setPath" data-toggle="collapse" data-target=".method_setPath .collapse">
+<h2>Sets the cookie's path</h2>
+<pre>setPath(string $path) : <a href="../classes/Klein.ResponseCookie.html">\Klein\ResponseCookie</a></pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>public</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$path</h4>
+<code>string</code>
+</div>
+<h3>Returns</h3>
+<div class="subelement response"><code><a href="../classes/Klein.ResponseCookie.html">\Klein\ResponseCookie</a></code></div>
+</div></div>
+</div>
+<a id="method_setSecure"></a><div class="element clickable method public method_setSecure" data-toggle="collapse" data-target=".method_setSecure .collapse">
+<h2>Sets the cookie's secure only flag</h2>
+<pre>setSecure(boolean $secure) : <a href="../classes/Klein.ResponseCookie.html">\Klein\ResponseCookie</a></pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>public</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$secure</h4>
+<code>boolean</code>
+</div>
+<h3>Returns</h3>
+<div class="subelement response"><code><a href="../classes/Klein.ResponseCookie.html">\Klein\ResponseCookie</a></code></div>
+</div></div>
+</div>
+<a id="method_setValue"></a><div class="element clickable method public method_setValue" data-toggle="collapse" data-target=".method_setValue .collapse">
+<h2>Sets the cookie's value</h2>
+<pre>setValue(string $value) : <a href="../classes/Klein.ResponseCookie.html">\Klein\ResponseCookie</a></pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>public</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$value</h4>
+<code>string</code>
+</div>
+<h3>Returns</h3>
+<div class="subelement response"><code><a href="../classes/Klein.ResponseCookie.html">\Klein\ResponseCookie</a></code></div>
+</div></div>
+</div>
+<h3>
+<i class="icon-custom icon-property"></i> Properties</h3>
+<a id="property_domain"> </a><div class="element clickable property protected property_domain" data-toggle="collapse" data-target=".property_domain .collapse">
+<h2></h2>
+<pre>$domain : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>protected</td>
+</tr></table>
+</div></div>
+</div>
+<a id="property_expire"> </a><div class="element clickable property protected property_expire" data-toggle="collapse" data-target=".property_expire .collapse">
+<h2></h2>
+<pre>$expire : int</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"><p>Represented by a Unix "Timestamp"</p></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>protected</td>
+</tr></table>
+</div></div>
+</div>
+<a id="property_http_only"> </a><div class="element clickable property protected property_http_only" data-toggle="collapse" data-target=".property_http_only .collapse">
+<h2></h2>
+<pre>$http_only : boolean</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>protected</td>
+</tr></table>
+</div></div>
+</div>
+<a id="property_name"> </a><div class="element clickable property protected property_name" data-toggle="collapse" data-target=".property_name .collapse">
+<h2></h2>
+<pre>$name : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>protected</td>
+</tr></table>
+</div></div>
+</div>
+<a id="property_path"> </a><div class="element clickable property protected property_path" data-toggle="collapse" data-target=".property_path .collapse">
+<h2></h2>
+<pre>$path : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>protected</td>
+</tr></table>
+</div></div>
+</div>
+<a id="property_secure"> </a><div class="element clickable property protected property_secure" data-toggle="collapse" data-target=".property_secure .collapse">
+<h2></h2>
+<pre>$secure : boolean</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>protected</td>
+</tr></table>
+</div></div>
+</div>
+<a id="property_value"> </a><div class="element clickable property protected property_value" data-toggle="collapse" data-target=".property_value .collapse">
+<h2></h2>
+<pre>$value : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>protected</td>
+</tr></table>
+</div></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="row"><footer class="span12">
+            Template is built using <a href="http://twitter.github.com/bootstrap/">Twitter Bootstrap 2</a> and icons provided by <a href="http://glyphicons.com/">Glyphicons</a>.<br>
+            Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor 2.0.0a12</a> and<br>
+            generated on 2013-06-23T14:57:26-04:00.<br></footer></div>
+</div>
+</body>
+</html>

@@ -64,17 +64,23 @@
 <li class="method public "><a href="#method_chunk" title="chunk :: Enable response chunking"><span class="description">Enable response chunking</span><pre>chunk()</pre></a></li>
 <li class="method public "><a href="#method_code" title="code :: Get (or set) the HTTP response code"><span class="description">Get (or set) the HTTP response code</span><pre>code()</pre></a></li>
 <li class="method public "><a href="#method_cookie" title="cookie :: Sets a response cookie"><span class="description">Sets a response cookie</span><pre>cookie()</pre></a></li>
+<li class="method public "><a href="#method_cookies" title="cookies :: Returns the cookies collection"><span class="description">Returns the cookies collection</span><pre>cookies()</pre></a></li>
 <li class="method public "><a href="#method_dump" title="dump :: Dump a variable"><span class="description">Dump a variable</span><pre>dump()</pre></a></li>
+<li class="method public "><a href="#method_file" title="file :: Sends a file"><span class="description">Sends a file</span><pre>file()</pre></a></li>
 <li class="method public "><a href="#method_header" title="header :: Sets a response header"><span class="description">Sets a response header</span><pre>header()</pre></a></li>
 <li class="method public "><a href="#method_headers" title="headers :: Returns the headers collection"><span class="description">Returns the headers collection</span><pre>headers()</pre></a></li>
 <li class="method public "><a href="#method_isLocked" title="isLocked :: Check if the response is locked"><span class="description">Check if the response is locked</span><pre>isLocked()</pre></a></li>
+<li class="method public "><a href="#method_isSent" title="isSent :: Check if the response has been sent"><span class="description">Check if the response has been sent</span><pre>isSent()</pre></a></li>
+<li class="method public "><a href="#method_json" title="json :: Sends an object as json or jsonp by providing the padding prefix"><span class="description">Sends an object as json or jsonp by providing the padding prefix</span><pre>json()</pre></a></li>
 <li class="method public "><a href="#method_lock" title="lock :: Lock the response from further modification"><span class="description">Lock the response from further modification</span><pre>lock()</pre></a></li>
 <li class="method public "><a href="#method_noCache" title="noCache :: Tell the browser not to cache the response"><span class="description">Tell the browser not to cache the response</span><pre>noCache()</pre></a></li>
 <li class="method public "><a href="#method_prepend" title="prepend :: Prepend a string to the response's content body"><span class="description">Prepend a string to the response's content body</span><pre>prepend()</pre></a></li>
 <li class="method public "><a href="#method_protocolVersion" title="protocolVersion :: Get (or set) the HTTP protocol version"><span class="description">Get (or set) the HTTP protocol version</span><pre>protocolVersion()</pre></a></li>
 <li class="method public "><a href="#method_redirect" title="redirect :: Redirects the request to another URL"><span class="description">Redirects the request to another URL</span><pre>redirect()</pre></a></li>
+<li class="method public "><a href="#method_requireUnlocked" title="requireUnlocked :: Require that the response is unlocked"><span class="description">Require that the response is unlocked</span><pre>requireUnlocked()</pre></a></li>
 <li class="method public "><a href="#method_send" title="send :: Send the response and lock it"><span class="description">Send the response and lock it</span><pre>send()</pre></a></li>
 <li class="method public "><a href="#method_sendBody" title="sendBody :: Send our body's contents"><span class="description">Send our body's contents</span><pre>sendBody()</pre></a></li>
+<li class="method public "><a href="#method_sendCookies" title="sendCookies :: Send our HTTP response cookies"><span class="description">Send our HTTP response cookies</span><pre>sendCookies()</pre></a></li>
 <li class="method public "><a href="#method_sendHeaders" title="sendHeaders :: Send our HTTP headers"><span class="description">Send our HTTP headers</span><pre>sendHeaders()</pre></a></li>
 <li class="method public "><a href="#method_status" title="status :: Returns the status object"><span class="description">Returns the status object</span><pre>status()</pre></a></li>
 <li class="method public "><a href="#method_unlock" title="unlock :: Unlock the response from further modification"><span class="description">Unlock the response from further modification</span><pre>unlock()</pre></a></li>
@@ -90,6 +96,7 @@
 <li class="nav-header protected">» Protected
                     <ul>
 <li class="property protected "><a href="#property_body" title="$body :: The response body"><span class="description"></span><pre>$body</pre></a></li>
+<li class="property protected "><a href="#property_cookies" title="$cookies :: HTTP response cookies"><span class="description"></span><pre>$cookies</pre></a></li>
 <li class="property protected "><a href="#property_default_status_code" title="$default_status_code :: The default response HTTP status code"><span class="description"></span><pre>$default_status_code</pre></a></li>
 <li class="property protected "><a href="#property_headers" title="$headers :: HTTP response headers"><span class="description"></span><pre>$headers</pre></a></li>
 <li class="property protected "><a href="#property_locked" title='$locked :: Whether or not the response is "locked" from
@@ -235,7 +242,7 @@ was provided by the argument.</p></div>
 </div>
 <a id="method_cookie"></a><div class="element clickable method public method_cookie" data-toggle="collapse" data-target=".method_cookie .collapse">
 <h2>Sets a response cookie</h2>
-<pre>cookie(string $key, string $value, int $expiry, string $path, string $domain, boolean $secure, boolean $httponly) : boolean</pre>
+<pre>cookie(string $key, string $value, int $expiry, string $path, string $domain, boolean $secure, boolean $httponly) : <a href="../classes/Klein.Response.html">\Klein\Response</a></pre>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
@@ -266,7 +273,21 @@ was provided by the argument.</p></div>
 <h4>$httponly</h4>
 <code>boolean</code><p>Flag of whether the cookie should only be accessible over the HTTP protocol</p></div>
 <h3>Returns</h3>
-<div class="subelement response"><code>boolean</code></div>
+<div class="subelement response"><code><a href="../classes/Klein.Response.html">\Klein\Response</a></code></div>
+</div></div>
+</div>
+<a id="method_cookies"></a><div class="element clickable method public method_cookies" data-toggle="collapse" data-target=".method_cookies .collapse">
+<h2>Returns the cookies collection</h2>
+<pre>cookies() : <a href="../classes/Klein.DataCollection.ResponseCookieDataCollection.html">\Klein\DataCollection\ResponseCookieDataCollection</a></pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>public</td>
+</tr></table>
+<h3>Returns</h3>
+<div class="subelement response"><code><a href="../classes/Klein.DataCollection.ResponseCookieDataCollection.html">\Klein\DataCollection\ResponseCookieDataCollection</a></code></div>
 </div></div>
 </div>
 <a id="method_dump"></a><div class="element clickable method public method_dump" data-toggle="collapse" data-target=".method_dump .collapse">
@@ -285,9 +306,32 @@ was provided by the argument.</p></div>
 <code>mixed</code><p>The variable to dump</p></div>
 </div></div>
 </div>
+<a id="method_file"></a><div class="element clickable method public method_file" data-toggle="collapse" data-target=".method_file .collapse">
+<h2>Sends a file</h2>
+<pre>file(string $path, string $filename, string $mimetype) : void</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>public</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$path</h4>
+<code>string</code><p>The path of the file to send</p></div>
+<div class="subelement argument">
+<h4>$filename</h4>
+<code>string</code><p>The file's name</p>
+</div>
+<div class="subelement argument">
+<h4>$mimetype</h4>
+<code>string</code><p>The MIME type of the file</p></div>
+</div></div>
+</div>
 <a id="method_header"></a><div class="element clickable method public method_header" data-toggle="collapse" data-target=".method_header .collapse">
 <h2>Sets a response header</h2>
-<pre>header(string $key, mixed $value) : void</pre>
+<pre>header(string $key, mixed $value) : <a href="../classes/Klein.Response.html">\Klein\Response</a></pre>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
@@ -302,6 +346,8 @@ was provided by the argument.</p></div>
 <div class="subelement argument">
 <h4>$value</h4>
 <code>mixed</code><p>The value to set the header with</p></div>
+<h3>Returns</h3>
+<div class="subelement response"><code><a href="../classes/Klein.Response.html">\Klein\Response</a></code></div>
 </div></div>
 </div>
 <a id="method_headers"></a><div class="element clickable method public method_headers" data-toggle="collapse" data-target=".method_headers .collapse">
@@ -330,6 +376,40 @@ was provided by the argument.</p></div>
 </tr></table>
 <h3>Returns</h3>
 <div class="subelement response"><code>boolean</code></div>
+</div></div>
+</div>
+<a id="method_isSent"></a><div class="element clickable method public method_isSent" data-toggle="collapse" data-target=".method_isSent .collapse">
+<h2>Check if the response has been sent</h2>
+<pre>isSent() : boolean</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>public</td>
+</tr></table>
+<h3>Returns</h3>
+<div class="subelement response"><code>boolean</code></div>
+</div></div>
+</div>
+<a id="method_json"></a><div class="element clickable method public method_json" data-toggle="collapse" data-target=".method_json .collapse">
+<h2>Sends an object as json or jsonp by providing the padding prefix</h2>
+<pre>json(mixed $object, string $jsonp_prefix) : void</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>public</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$object</h4>
+<code>mixed</code><p>The data to encode as JSON</p></div>
+<div class="subelement argument">
+<h4>$jsonp_prefix</h4>
+<code>string</code><p>The name of the JSON-P function prefix</p>
+</div>
 </div></div>
 </div>
 <a id="method_lock"></a><div class="element clickable method public method_lock" data-toggle="collapse" data-target=".method_lock .collapse">
@@ -422,6 +502,27 @@ was provided by the argument.</p></div>
 <div class="subelement response"><code><a href="../classes/Klein.Response.html">\Klein\Response</a></code></div>
 </div></div>
 </div>
+<a id="method_requireUnlocked"></a><div class="element clickable method public method_requireUnlocked" data-toggle="collapse" data-target=".method_requireUnlocked .collapse">
+<h2>Require that the response is unlocked</h2>
+<pre>requireUnlocked() : <a href="../classes/Klein.Response.html">\Klein\Response</a></pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"><p>Throws an exception if the response is locked,
+preventing any methods from mutating the response
+when its locked</p></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>public</td>
+</tr></table>
+<h3>Exceptions</h3>
+<table class="table table-bordered"><tr>
+<th><code><a href="../classes/Klein.Exceptions.LockedResponseException.html">\Klein\Exceptions\LockedResponseException</a></code></th>
+<td>If the response is locked</td>
+</tr></table>
+<h3>Returns</h3>
+<div class="subelement response"><code><a href="../classes/Klein.Response.html">\Klein\Response</a></code></div>
+</div></div>
+</div>
 <a id="method_send"></a><div class="element clickable method public method_send" data-toggle="collapse" data-target=".method_send .collapse">
 <h2>Send the response and lock it</h2>
 <pre>send(boolean $override) : <a href="../classes/Klein.Response.html">\Klein\Response</a></pre>
@@ -436,6 +537,11 @@ was provided by the argument.</p></div>
 <div class="subelement argument">
 <h4>$override</h4>
 <code>boolean</code><p>Whether or not to override the check if the response has already been sent</p></div>
+<h3>Exceptions</h3>
+<table class="table table-bordered"><tr>
+<th><code><a href="../classes/Klein.Exceptions.ResponseAlreadySentException.html">\Klein\Exceptions\ResponseAlreadySentException</a></code></th>
+<td>If the response has already been sent</td>
+</tr></table>
 <h3>Returns</h3>
 <div class="subelement response"><code><a href="../classes/Klein.Response.html">\Klein\Response</a></code></div>
 </div></div>
@@ -454,9 +560,9 @@ was provided by the argument.</p></div>
 <div class="subelement response"><code><a href="../classes/Klein.Response.html">\Klein\Response</a></code></div>
 </div></div>
 </div>
-<a id="method_sendHeaders"></a><div class="element clickable method public method_sendHeaders" data-toggle="collapse" data-target=".method_sendHeaders .collapse">
-<h2>Send our HTTP headers</h2>
-<pre>sendHeaders(boolean $override) : <a href="../classes/Klein.Response.html">\Klein\Response</a></pre>
+<a id="method_sendCookies"></a><div class="element clickable method public method_sendCookies" data-toggle="collapse" data-target=".method_sendCookies .collapse">
+<h2>Send our HTTP response cookies</h2>
+<pre>sendCookies(boolean $override) : <a href="../classes/Klein.Response.html">\Klein\Response</a></pre>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
@@ -465,6 +571,27 @@ was provided by the argument.</p></div>
 <td>public</td>
 </tr></table>
 <h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$override</h4>
+<code>boolean</code><p>Whether or not to override the check if headers have already been sent</p></div>
+<h3>Returns</h3>
+<div class="subelement response"><code><a href="../classes/Klein.Response.html">\Klein\Response</a></code></div>
+</div></div>
+</div>
+<a id="method_sendHeaders"></a><div class="element clickable method public method_sendHeaders" data-toggle="collapse" data-target=".method_sendHeaders .collapse">
+<h2>Send our HTTP headers</h2>
+<pre>sendHeaders(boolean $cookies_also, boolean $override) : <a href="../classes/Klein.Response.html">\Klein\Response</a></pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>public</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$cookies_also</h4>
+<code>boolean</code><p>Whether or not to also send the cookies after sending the normal headers</p></div>
 <div class="subelement argument">
 <h4>$override</h4>
 <code>boolean</code><p>Whether or not to override the check if headers have already been sent</p></div>
@@ -531,6 +658,18 @@ was provided by the argument.</p></div>
 <a id="property_body"> </a><div class="element clickable property protected property_body" data-toggle="collapse" data-target=".property_body .collapse">
 <h2></h2>
 <pre>$body : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>protected</td>
+</tr></table>
+</div></div>
+</div>
+<a id="property_cookies"> </a><div class="element clickable property protected property_cookies" data-toggle="collapse" data-target=".property_cookies .collapse">
+<h2></h2>
+<pre>$cookies : <a href="../classes/Klein.DataCollection.ResponseCookieDataCollection.html">\Klein\DataCollection\ResponseCookieDataCollection</a></pre>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
@@ -625,7 +764,7 @@ was provided by the argument.</p></div>
 <div class="row"><footer class="span12">
             Template is built using <a href="http://twitter.github.com/bootstrap/">Twitter Bootstrap 2</a> and icons provided by <a href="http://glyphicons.com/">Glyphicons</a>.<br>
             Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor 2.0.0a12</a> and<br>
-            generated on 2013-05-08T03:28:14-04:00.<br></footer></div>
+            generated on 2013-06-23T14:57:26-04:00.<br></footer></div>
 </div>
 </body>
 </html>

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project version="2.0.0a12" title="Klein">
-  <file path="App.php" hash="4a7947dedb170afd82e595cceb9369b4" package="Default">
+  <file path="App.php" hash="b27a1b009dac9e05073914bc995fbc3b" package="Default">
     <docblock line="2">
       <description>Klein (klein.php) - A lightning fast router for PHP</description>
-      <long-description/>
+      <long-description></long-description>
       <tag line="2" name="author" description="Chris O'Hara &lt;cohara87@gmail.com&gt;"/>
       <tag line="2" name="author" description="Trevor Suarez (Rican7) (contributor and v2 refactorer)"/>
       <tag line="2" name="copyright" description="(c) Chris O'Hara"/>
@@ -16,7 +16,7 @@
       <full_name>\Klein\App</full_name>
       <docblock line="19">
         <description>App</description>
-        <long-description/>
+        <long-description></long-description>
         <tag line="19" name="package" description="Klein"/>
       </docblock>
       <property final="false" static="false" visibility="protected" line="37" namespace="Klein" package="Default">
@@ -24,14 +24,14 @@
         <default>array()</default>
         <docblock line="31">
           <description>The array of app services</description>
-          <long-description/>
+          <long-description></long-description>
           <tag line="31" name="var" description="" type="array">
             <type by_reference="false">array</type>
           </tag>
           <tag line="31" name="access" description="protected"/>
         </docblock>
       </property>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="Klein" line="52" package="Klein">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Klein" line="53" package="Klein">
         <name>__get</name>
         <full_name>__get</full_name>
         <docblock line="39">
@@ -44,77 +44,86 @@ service method&lt;/p&gt;</long-description>
           <tag line="39" name="param" description="The name of the service" type="string" variable="$name">
             <type by_reference="false">string</type>
           </tag>
+          <tag line="39" name="throws" description="If a non-registered service is attempted to fetched" type="\Klein\Exceptions\UnknownServiceException">
+            <type by_reference="false">\Klein\Exceptions\UnknownServiceException</type>
+          </tag>
           <tag line="39" name="access" description="public"/>
           <tag line="39" name="return" description="" type="mixed">
             <type by_reference="false">mixed</type>
           </tag>
         </docblock>
-        <argument line="52">
+        <argument line="53">
           <name>$name</name>
-          <default/>
+          <default></default>
           <type/>
         </argument>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="Klein" line="73" package="Klein">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Klein" line="75" package="Klein">
         <name>__call</name>
         <full_name>__call</full_name>
-        <docblock line="62">
+        <docblock line="63">
           <description>Magic "__call" method</description>
           <long-description>&lt;p&gt;Allows the ability to arbitrarily call a property as a callable method
 Allow callbacks to be assigned as properties and called like normal methods&lt;/p&gt;</long-description>
-          <tag line="62" name="param" description="The callable method to execute" type="callable" variable="$method">
+          <tag line="63" name="param" description="The callable method to execute" type="callable" variable="$method">
             <type by_reference="false">callable</type>
           </tag>
-          <tag line="62" name="param" description="The argument array to pass to our callback" type="array" variable="$args">
+          <tag line="63" name="param" description="The argument array to pass to our callback" type="array" variable="$args">
             <type by_reference="false">array</type>
           </tag>
-          <tag line="62" name="access" description="public"/>
-          <tag line="62" name="return" description="" type="void">
+          <tag line="63" name="throws" description="If a non-registered method is attempted to be called" type="\BadMethodCallException">
+            <type by_reference="false">\BadMethodCallException</type>
+          </tag>
+          <tag line="63" name="access" description="public"/>
+          <tag line="63" name="return" description="" type="void">
             <type by_reference="false">void</type>
           </tag>
         </docblock>
-        <argument line="73">
+        <argument line="75">
           <name>$method</name>
-          <default/>
+          <default></default>
           <type/>
         </argument>
-        <argument line="73">
+        <argument line="75">
           <name>$args</name>
-          <default/>
+          <default></default>
           <type/>
         </argument>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="Klein" line="90" package="Klein">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Klein" line="93" package="Klein">
         <name>register</name>
         <full_name>register</full_name>
-        <docblock line="82">
+        <docblock line="84">
           <description>Register a lazy service</description>
-          <long-description/>
-          <tag line="82" name="param" description="The name of the service" type="string" variable="$name">
+          <long-description></long-description>
+          <tag line="84" name="param" description="The name of the service" type="string" variable="$name">
             <type by_reference="false">string</type>
           </tag>
-          <tag line="82" name="param" description="The callable function to execute when requesting our service" type="callable" variable="$closure">
+          <tag line="84" name="param" description="The callable function to execute when requesting our service" type="callable" variable="$closure">
             <type by_reference="false">callable</type>
           </tag>
-          <tag line="82" name="access" description="public"/>
-          <tag line="82" name="return" description="" type="mixed">
+          <tag line="84" name="throws" description="If an attempt is made to register two services with the same name" type="\Klein\Exceptions\DuplicateServiceException">
+            <type by_reference="false">\Klein\Exceptions\DuplicateServiceException</type>
+          </tag>
+          <tag line="84" name="access" description="public"/>
+          <tag line="84" name="return" description="" type="mixed">
             <type by_reference="false">mixed</type>
           </tag>
         </docblock>
-        <argument line="90">
+        <argument line="93">
           <name>$name</name>
-          <default/>
+          <default></default>
           <type/>
         </argument>
-        <argument line="90">
+        <argument line="93">
           <name>$closure</name>
-          <default/>
+          <default></default>
           <type/>
         </argument>
       </method>
     </class>
   </file>
-  <file path="DataCollection/DataCollection.php" hash="a9feaac036767616506a3c77f3e95517" package="Default">
+  <file path="DataCollection/DataCollection.php" hash="90a59c190ff3718ad5d73dc1c05fb8f1" package="Default">
     <docblock line="2">
       <description>Klein (klein.php) - A lightning fast router for PHP</description>
       <long-description></long-description>
@@ -172,7 +181,7 @@ designed to work with HTTP data (request params, session data, etc)&lt;/p&gt;
           <type>array</type>
         </argument>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="Klein\DataCollection" line="74" package="Klein\DataCollection">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Klein\DataCollection" line="76" package="Klein\DataCollection">
         <name>all</name>
         <full_name>all</full_name>
         <docblock line="64">
@@ -182,14 +191,22 @@ returns the keys that match the mask&lt;/p&gt;</long-description>
           <tag line="64" name="param" description="The parameter mask array" type="array" variable="$mask">
             <type by_reference="false">array</type>
           </tag>
+          <tag line="64" name="param" description="Whether or not to fill the returned array&#10; with null values to match the given mask" type="boolean" variable="$fill_with_nulls">
+            <type by_reference="false">boolean</type>
+          </tag>
           <tag line="64" name="access" description="public"/>
           <tag line="64" name="return" description="" type="array">
             <type by_reference="false">array</type>
           </tag>
         </docblock>
-        <argument line="74">
+        <argument line="76">
           <name>$mask</name>
           <default>null</default>
+          <type/>
+        </argument>
+        <argument line="76">
+          <name>$fill_with_nulls</name>
+          <default>true</default>
           <type/>
         </argument>
       </method>
@@ -563,7 +580,7 @@ to simply count the number of attributes in the collection.&lt;/p&gt;</long-desc
   <file path="DataCollection/HeaderDataCollection.php" hash="9982fd802fe1428ffe8a1cef1d53346c" package="Default">
     <docblock line="2">
       <description>Klein (klein.php) - A lightning fast router for PHP</description>
-      <long-description/>
+      <long-description></long-description>
       <tag line="2" name="author" description="Chris O'Hara &lt;cohara87@gmail.com&gt;"/>
       <tag line="2" name="author" description="Trevor Suarez (Rican7) (contributor and v2 refactorer)"/>
       <tag line="2" name="copyright" description="(c) Chris O'Hara"/>
@@ -585,7 +602,7 @@ to simply count the number of attributes in the collection.&lt;/p&gt;</long-desc
         <full_name>__construct</full_name>
         <docblock line="29">
           <description>Constructor</description>
-          <long-description/>
+          <long-description></long-description>
           <tag line="29" name="override" description="(doesn't call our parent)"/>
           <tag line="29" name="param" description="The headers of this collection" type="array" variable="$headers">
             <type by_reference="false">array</type>
@@ -618,7 +635,7 @@ to simply count the number of attributes in the collection.&lt;/p&gt;</long-desc
         </docblock>
         <argument line="54">
           <name>$key</name>
-          <default/>
+          <default></default>
           <type/>
         </argument>
         <argument line="54">
@@ -647,12 +664,12 @@ to simply count the number of attributes in the collection.&lt;/p&gt;</long-desc
         </docblock>
         <argument line="72">
           <name>$key</name>
-          <default/>
+          <default></default>
           <type/>
         </argument>
         <argument line="72">
           <name>$value</name>
-          <default/>
+          <default></default>
           <type/>
         </argument>
       </method>
@@ -673,7 +690,7 @@ to simply count the number of attributes in the collection.&lt;/p&gt;</long-desc
         </docblock>
         <argument line="89">
           <name>$key</name>
-          <default/>
+          <default></default>
           <type/>
         </argument>
       </method>
@@ -694,7 +711,7 @@ to simply count the number of attributes in the collection.&lt;/p&gt;</long-desc
         </docblock>
         <argument line="106">
           <name>$key</name>
-          <default/>
+          <default></default>
           <type/>
         </argument>
       </method>
@@ -720,7 +737,7 @@ separates the words of headers&lt;/p&gt;</long-description>
         </docblock>
         <argument line="126">
           <name>$name</name>
-          <default/>
+          <default></default>
           <type/>
         </argument>
         <argument line="126">
@@ -734,7 +751,7 @@ separates the words of headers&lt;/p&gt;</long-description>
   <file path="DataCollection/ResponseCookieDataCollection.php" hash="a632656f0ae4546aca015489ddeef2a6" package="Default">
     <docblock line="2">
       <description>Klein (klein.php) - A lightning fast router for PHP</description>
-      <long-description/>
+      <long-description></long-description>
       <tag line="2" name="author" description="Chris O'Hara &lt;cohara87@gmail.com&gt;"/>
       <tag line="2" name="author" description="Trevor Suarez (Rican7) (contributor and v2 refactorer)"/>
       <tag line="2" name="copyright" description="(c) Chris O'Hara"/>
@@ -756,7 +773,7 @@ separates the words of headers&lt;/p&gt;</long-description>
         <full_name>__construct</full_name>
         <docblock line="31">
           <description>Constructor</description>
-          <long-description/>
+          <long-description></long-description>
           <tag line="31" name="override" description="(doesn't call our parent)"/>
           <tag line="31" name="param" description="The cookies of this collection" type="array" variable="$cookies">
             <type by_reference="false">array</type>
@@ -799,12 +816,132 @@ instance of a ResponseCookie as the "$value"&lt;/p&gt;</long-description>
         </docblock>
         <argument line="65">
           <name>$key</name>
-          <default/>
+          <default></default>
           <type/>
         </argument>
         <argument line="65">
           <name>$value</name>
-          <default/>
+          <default></default>
+          <type/>
+        </argument>
+      </method>
+    </class>
+  </file>
+  <file path="DataCollection/RouteCollection.php" hash="63cfd38f559506761f0d539bc37c840a" package="Default">
+    <docblock line="2">
+      <description>Klein (klein.php) - A lightning fast router for PHP</description>
+      <long-description></long-description>
+      <tag line="2" name="author" description="Chris O'Hara &lt;cohara87@gmail.com&gt;"/>
+      <tag line="2" name="author" description="Trevor Suarez (Rican7) (contributor and v2 refactorer)"/>
+      <tag line="2" name="copyright" description="(c) Chris O'Hara"/>
+      <tag line="2" name="link" description="https://github.com/chriso/klein.php" link="https://github.com/chriso/klein.php"/>
+      <tag line="2" name="license" description="MIT"/>
+    </docblock>
+    <class final="false" abstract="false" namespace="Klein\DataCollection" line="24" package="Klein\DataCollection">
+      <extends>\Klein\DataCollection\DataCollection</extends>
+      <name>RouteCollection</name>
+      <full_name>\Klein\DataCollection\RouteCollection</full_name>
+      <docblock line="16">
+        <description>RouteCollection</description>
+        <long-description>&lt;p&gt;A DataCollection for Routes&lt;/p&gt;</long-description>
+        <tag line="16" name="uses" description="\Klein\DataCollection\DataCollection" refers="\Klein\DataCollection\DataCollection"/>
+        <tag line="16" name="package" description="Klein\DataCollection"/>
+      </docblock>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Klein\DataCollection" line="38" package="Klein\DataCollection">
+        <name>__construct</name>
+        <full_name>__construct</full_name>
+        <docblock line="31">
+          <description>Constructor</description>
+          <long-description></long-description>
+          <tag line="31" name="override" description="(doesn't call our parent)"/>
+          <tag line="31" name="param" description="The routes of this collection" type="array" variable="$routes">
+            <type by_reference="false">array</type>
+          </tag>
+          <tag line="31" name="access" description="public"/>
+        </docblock>
+        <argument line="38">
+          <name>$routes</name>
+          <default>array()</default>
+          <type>array</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Klein\DataCollection" line="64" package="Klein\DataCollection">
+        <name>set</name>
+        <full_name>set</full_name>
+        <docblock line="45">
+          <description>Set a route</description>
+          <long-description>&lt;p&gt;{@inheritdoc}&lt;/p&gt;
+
+&lt;p&gt;A value may either be a callable or a Route instance
+Callable values will be converted into a Route with
+the "name" of the route being set from the "key"&lt;/p&gt;
+
+&lt;p&gt;A developer may add a named route to the collection
+by passing the name of the route as the "$key" and an
+instance of a Route as the "$value"&lt;/p&gt;</long-description>
+          <tag line="45" name="see" description="\Klein\DataCollection\DataCollection::set()" refers="\Klein\DataCollection\DataCollection::set()"/>
+          <tag line="45" name="param" description="The name of the route to set" type="string" variable="$key">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="45" name="param" description="The value of the route to set" type="\Klein\Route|callable" variable="$value">
+            <type by_reference="false">\Klein\Route</type>
+            <type by_reference="false">callable</type>
+          </tag>
+          <tag line="45" name="access" description="public"/>
+          <tag line="45" name="return" description="" type="\Klein\Route">
+            <type by_reference="false">\Klein\Route</type>
+          </tag>
+        </docblock>
+        <argument line="64">
+          <name>$key</name>
+          <default></default>
+          <type/>
+        </argument>
+        <argument line="64">
+          <name>$value</name>
+          <default></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Klein\DataCollection" line="82" package="Klein\DataCollection">
+        <name>addRoute</name>
+        <full_name>addRoute</full_name>
+        <docblock line="73">
+          <description>Add a route instance to the collection</description>
+          <long-description>&lt;p&gt;This will auto-generate a name&lt;/p&gt;</long-description>
+          <tag line="73" name="param" description="" type="\Klein\Route" variable="$route">
+            <type by_reference="false">\Klein\Route</type>
+          </tag>
+          <tag line="73" name="access" description="public"/>
+          <tag line="73" name="return" description="" type="\Klein\Route">
+            <type by_reference="false">\Klein\Route</type>
+          </tag>
+        </docblock>
+        <argument line="82">
+          <name>$route</name>
+          <default></default>
+          <type>\Klein\Route</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Klein\DataCollection" line="105" package="Klein\DataCollection">
+        <name>add</name>
+        <full_name>add</full_name>
+        <docblock line="94">
+          <description>Add a route to the collection</description>
+          <long-description>&lt;p&gt;This allows a more generic form that
+will take a Route instance, string callable
+or any other Route class compatible callback&lt;/p&gt;</long-description>
+          <tag line="94" name="param" description="" type="mixed" variable="$route">
+            <type by_reference="false">mixed</type>
+          </tag>
+          <tag line="94" name="access" description="public"/>
+          <tag line="94" name="return" description="" type="\Klein\Route">
+            <type by_reference="false">\Klein\Route</type>
+          </tag>
+        </docblock>
+        <argument line="105">
+          <name>$route</name>
+          <default></default>
           <type/>
         </argument>
       </method>
@@ -813,7 +950,7 @@ instance of a ResponseCookie as the "$value"&lt;/p&gt;</long-description>
   <file path="DataCollection/ServerDataCollection.php" hash="e5ea3699b19f0d728d1dd18313db3d2f" package="Default">
     <docblock line="2">
       <description>Klein (klein.php) - A lightning fast router for PHP</description>
-      <long-description/>
+      <long-description></long-description>
       <tag line="2" name="author" description="Chris O'Hara &lt;cohara87@gmail.com&gt;"/>
       <tag line="2" name="author" description="Trevor Suarez (Rican7) (contributor and v2 refactorer)"/>
       <tag line="2" name="copyright" description="(c) Chris O'Hara"/>
@@ -841,7 +978,7 @@ instance of a ResponseCookie as the "$value"&lt;/p&gt;</long-description>
         <docblock line="34">
           <description>The prefix of HTTP headers normally
 stored in the Server data</description>
-          <long-description/>
+          <long-description></long-description>
           <tag line="34" name="static" description=""/>
           <tag line="34" name="var" description="" type="string">
             <type by_reference="false">string</type>
@@ -868,7 +1005,7 @@ reason aren't prefixed in PHP.</description>
         <full_name>hasPrefix</full_name>
         <docblock line="63">
           <description>Quickly check if a string has a passed prefix</description>
-          <long-description/>
+          <long-description></long-description>
           <tag line="63" name="param" description="The string to check" type="string" variable="$string">
             <type by_reference="false">string</type>
           </tag>
@@ -883,12 +1020,12 @@ reason aren't prefixed in PHP.</description>
         </docblock>
         <argument line="72">
           <name>$string</name>
-          <default/>
+          <default></default>
           <type/>
         </argument>
         <argument line="72">
           <name>$prefix</name>
-          <default/>
+          <default></default>
           <type/>
         </argument>
       </method>
@@ -907,10 +1044,106 @@ headers in the $_SERVER array. This handles that&lt;/p&gt;</long-description>
       </method>
     </class>
   </file>
+  <file path="Exceptions/DispatchHaltedException.php" hash="eff8bf66d33aa9f12648370ae98e475f" package="Default">
+    <docblock line="2">
+      <description>Klein (klein.php) - A lightning fast router for PHP</description>
+      <long-description></long-description>
+      <tag line="2" name="author" description="Chris O'Hara &lt;cohara87@gmail.com&gt;"/>
+      <tag line="2" name="author" description="Trevor Suarez (Rican7) (contributor and v2 refactorer)"/>
+      <tag line="2" name="copyright" description="(c) Chris O'Hara"/>
+      <tag line="2" name="link" description="https://github.com/chriso/klein.php" link="https://github.com/chriso/klein.php"/>
+      <tag line="2" name="license" description="MIT"/>
+    </docblock>
+    <class final="false" abstract="false" namespace="Klein\Exceptions" line="24" package="Klein\Exceptions">
+      <extends>\RuntimeException</extends>
+      <implements>\Klein\Exceptions\KleinExceptionInterface</implements>
+      <name>DispatchHaltedException</name>
+      <full_name>\Klein\Exceptions\DispatchHaltedException</full_name>
+      <docblock line="16">
+        <description>DispatchHaltedException</description>
+        <long-description>&lt;p&gt;Exception used to halt a route callback from executing in a dispatch loop&lt;/p&gt;</long-description>
+        <tag line="16" name="uses" description="\RuntimeException" refers="\RuntimeException"/>
+        <tag line="16" name="package" description="Klein\Exceptions"/>
+      </docblock>
+      <constant namespace="Klein\Exceptions" line="36" package="Klein\Exceptions">
+        <name>SKIP_THIS</name>
+        <full_name>SKIP_THIS</full_name>
+        <value>1</value>
+        <docblock line="31">
+          <description>Skip this current match/callback</description>
+          <long-description></long-description>
+          <tag line="31" name="const" description="int"/>
+        </docblock>
+      </constant>
+      <constant namespace="Klein\Exceptions" line="43" package="Klein\Exceptions">
+        <name>SKIP_NEXT</name>
+        <full_name>SKIP_NEXT</full_name>
+        <value>2</value>
+        <docblock line="38">
+          <description>Skip the next match/callback</description>
+          <long-description></long-description>
+          <tag line="38" name="const" description="int"/>
+        </docblock>
+      </constant>
+      <constant namespace="Klein\Exceptions" line="50" package="Klein\Exceptions">
+        <name>SKIP_REMAINING</name>
+        <full_name>SKIP_REMAINING</full_name>
+        <value>0</value>
+        <docblock line="45">
+          <description>Skip the rest of the matches</description>
+          <long-description></long-description>
+          <tag line="45" name="const" description="int"/>
+        </docblock>
+      </constant>
+      <property final="false" static="false" visibility="protected" line="63" namespace="Klein\Exceptions" package="Default">
+        <name>$number_of_skips</name>
+        <default>1</default>
+        <docblock line="57">
+          <description>The number of next matches to skip on a "next" skip</description>
+          <long-description></long-description>
+          <tag line="57" name="var" description="" type="int">
+            <type by_reference="false">int</type>
+          </tag>
+          <tag line="57" name="access" description="protected"/>
+        </docblock>
+      </property>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Klein\Exceptions" line="75" package="Klein\Exceptions">
+        <name>getNumberOfSkips</name>
+        <full_name>getNumberOfSkips</full_name>
+        <docblock line="70">
+          <description>Gets the number of matches to skip on a "next" skip</description>
+          <long-description></long-description>
+          <tag line="70" name="return" description="" type="int">
+            <type by_reference="false">int</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Klein\Exceptions" line="87" package="Klein\Exceptions">
+        <name>setNumberOfSkips</name>
+        <full_name>setNumberOfSkips</full_name>
+        <docblock line="80">
+          <description>Sets the number of matches to skip on a "next" skip</description>
+          <long-description></long-description>
+          <tag line="80" name="param" description="" type="int" variable="$number_of_skips">
+            <type by_reference="false">int</type>
+          </tag>
+          <tag line="80" name="access" description="public"/>
+          <tag line="80" name="return" description="" type="\Klein\Exceptions\DispatchHaltedException">
+            <type by_reference="false">\Klein\Exceptions\DispatchHaltedException</type>
+          </tag>
+        </docblock>
+        <argument line="87">
+          <name>$number_of_skips</name>
+          <default></default>
+          <type/>
+        </argument>
+      </method>
+    </class>
+  </file>
   <file path="Exceptions/DuplicateServiceException.php" hash="84146565d317145b3f39f04ec95aaa92" package="Default">
     <docblock line="2">
       <description>Klein (klein.php) - A lightning fast router for PHP</description>
-      <long-description/>
+      <long-description></long-description>
       <tag line="2" name="author" description="Chris O'Hara &lt;cohara87@gmail.com&gt;"/>
       <tag line="2" name="author" description="Trevor Suarez (Rican7) (contributor and v2 refactorer)"/>
       <tag line="2" name="copyright" description="(c) Chris O'Hara"/>
@@ -933,7 +1166,7 @@ headers in the $_SERVER array. This handles that&lt;/p&gt;</long-description>
   <file path="Exceptions/KleinExceptionInterface.php" hash="7b23e9b695051bf22e1ca0d8b4c36152" package="Default">
     <docblock line="2">
       <description>Klein (klein.php) - A lightning fast router for PHP</description>
-      <long-description/>
+      <long-description></long-description>
       <tag line="2" name="author" description="Chris O'Hara &lt;cohara87@gmail.com&gt;"/>
       <tag line="2" name="author" description="Trevor Suarez (Rican7) (contributor and v2 refactorer)"/>
       <tag line="2" name="copyright" description="(c) Chris O'Hara"/>
@@ -958,7 +1191,7 @@ exception classes to properly extend the corresponding SPL Exception type&lt;/p&
   <file path="Exceptions/LockedResponseException.php" hash="9584b5097cdf170e72dd417dbcc1b682" package="Default">
     <docblock line="2">
       <description>Klein (klein.php) - A lightning fast router for PHP</description>
-      <long-description/>
+      <long-description></long-description>
       <tag line="2" name="author" description="Chris O'Hara &lt;cohara87@gmail.com&gt;"/>
       <tag line="2" name="author" description="Trevor Suarez (Rican7) (contributor and v2 refactorer)"/>
       <tag line="2" name="copyright" description="(c) Chris O'Hara"/>
@@ -981,7 +1214,7 @@ exception classes to properly extend the corresponding SPL Exception type&lt;/p&
   <file path="Exceptions/ResponseAlreadySentException.php" hash="9b0e43125b17f9295052408d471ebcb5" package="Default">
     <docblock line="2">
       <description>Klein (klein.php) - A lightning fast router for PHP</description>
-      <long-description/>
+      <long-description></long-description>
       <tag line="2" name="author" description="Chris O'Hara &lt;cohara87@gmail.com&gt;"/>
       <tag line="2" name="author" description="Trevor Suarez (Rican7) (contributor and v2 refactorer)"/>
       <tag line="2" name="copyright" description="(c) Chris O'Hara"/>
@@ -1004,7 +1237,7 @@ exception classes to properly extend the corresponding SPL Exception type&lt;/p&
   <file path="Exceptions/UnhandledException.php" hash="18b9da7cbba19084c76c5976dac0a591" package="Default">
     <docblock line="2">
       <description>Klein (klein.php) - A lightning fast router for PHP</description>
-      <long-description/>
+      <long-description></long-description>
       <tag line="2" name="author" description="Chris O'Hara &lt;cohara87@gmail.com&gt;"/>
       <tag line="2" name="author" description="Trevor Suarez (Rican7) (contributor and v2 refactorer)"/>
       <tag line="2" name="copyright" description="(c) Chris O'Hara"/>
@@ -1027,7 +1260,7 @@ exception classes to properly extend the corresponding SPL Exception type&lt;/p&
   <file path="Exceptions/UnknownServiceException.php" hash="8ff371a67530079a5e0f964ae31cca13" package="Default">
     <docblock line="2">
       <description>Klein (klein.php) - A lightning fast router for PHP</description>
-      <long-description/>
+      <long-description></long-description>
       <tag line="2" name="author" description="Chris O'Hara &lt;cohara87@gmail.com&gt;"/>
       <tag line="2" name="author" description="Trevor Suarez (Rican7) (contributor and v2 refactorer)"/>
       <tag line="2" name="copyright" description="(c) Chris O'Hara"/>
@@ -1050,7 +1283,7 @@ exception classes to properly extend the corresponding SPL Exception type&lt;/p&
   <file path="Exceptions/ValidationException.php" hash="171d8cdff5ad5c1966afda9186be0b29" package="Default">
     <docblock line="2">
       <description>Klein (klein.php) - A lightning fast router for PHP</description>
-      <long-description/>
+      <long-description></long-description>
       <tag line="2" name="author" description="Chris O'Hara &lt;cohara87@gmail.com&gt;"/>
       <tag line="2" name="author" description="Trevor Suarez (Rican7) (contributor and v2 refactorer)"/>
       <tag line="2" name="copyright" description="(c) Chris O'Hara"/>
@@ -1269,7 +1502,7 @@ found for the passed in code&lt;/p&gt;</long-description>
       </method>
     </class>
   </file>
-  <file path="Klein.php" hash="1413744fa62ac2d1d6c722a7d5b3ab0b" package="Default">
+  <file path="Klein.php" hash="e1100349040c6af1c76d3c837f2c7e46" package="Default">
     <docblock line="2">
       <description>Klein (klein.php) - A lightning fast router for PHP</description>
       <long-description></long-description>
@@ -1279,232 +1512,252 @@ found for the passed in code&lt;/p&gt;</long-description>
       <tag line="2" name="link" description="https://github.com/chriso/klein.php" link="https://github.com/chriso/klein.php"/>
       <tag line="2" name="license" description="MIT"/>
     </docblock>
-    <include line="321" type="Require" package="Default">
+    <include line="338" type="Require" package="Default">
       <name/>
     </include>
-    <class final="false" abstract="false" namespace="Klein" line="27" package="Klein">
+    <class final="false" abstract="false" namespace="Klein" line="29" package="Klein">
       <extends/>
       <name>Klein</name>
       <full_name>\Klein\Klein</full_name>
-      <docblock line="20">
+      <docblock line="22">
         <description>Klein</description>
         <long-description>&lt;p&gt;Main Klein router class&lt;/p&gt;</long-description>
-        <tag line="20" name="package" description="Klein"/>
+        <tag line="22" name="package" description="Klein"/>
       </docblock>
-      <constant namespace="Klein" line="41" package="Klein">
+      <constant namespace="Klein" line="43" package="Klein">
         <name>DISPATCH_NO_CAPTURE</name>
         <full_name>DISPATCH_NO_CAPTURE</full_name>
         <value>0</value>
-        <docblock line="34">
+        <docblock line="36">
           <description>Dispatch route output handling</description>
           <long-description>&lt;p&gt;Don't capture anything. Behave as normal.&lt;/p&gt;</long-description>
-          <tag line="34" name="const" description="int"/>
+          <tag line="36" name="const" description="int"/>
         </docblock>
       </constant>
-      <constant namespace="Klein" line="50" package="Klein">
+      <constant namespace="Klein" line="52" package="Klein">
         <name>DISPATCH_CAPTURE_AND_RETURN</name>
         <full_name>DISPATCH_CAPTURE_AND_RETURN</full_name>
         <value>1</value>
-        <docblock line="43">
+        <docblock line="45">
           <description>Dispatch route output handling</description>
           <long-description>&lt;p&gt;Capture all output and return it from dispatch&lt;/p&gt;</long-description>
-          <tag line="43" name="const" description="int"/>
+          <tag line="45" name="const" description="int"/>
         </docblock>
       </constant>
-      <constant namespace="Klein" line="59" package="Klein">
+      <constant namespace="Klein" line="61" package="Klein">
         <name>DISPATCH_CAPTURE_AND_REPLACE</name>
         <full_name>DISPATCH_CAPTURE_AND_REPLACE</full_name>
         <value>2</value>
-        <docblock line="52">
+        <docblock line="54">
           <description>Dispatch route output handling</description>
           <long-description>&lt;p&gt;Capture all output and replace the response body with it&lt;/p&gt;</long-description>
-          <tag line="52" name="const" description="int"/>
+          <tag line="54" name="const" description="int"/>
         </docblock>
       </constant>
-      <constant namespace="Klein" line="68" package="Klein">
+      <constant namespace="Klein" line="70" package="Klein">
         <name>DISPATCH_CAPTURE_AND_PREPEND</name>
         <full_name>DISPATCH_CAPTURE_AND_PREPEND</full_name>
         <value>3</value>
-        <docblock line="61">
+        <docblock line="63">
           <description>Dispatch route output handling</description>
           <long-description>&lt;p&gt;Capture all output and prepend it to the response body&lt;/p&gt;</long-description>
-          <tag line="61" name="const" description="int"/>
+          <tag line="63" name="const" description="int"/>
         </docblock>
       </constant>
-      <constant namespace="Klein" line="77" package="Klein">
+      <constant namespace="Klein" line="79" package="Klein">
         <name>DISPATCH_CAPTURE_AND_APPEND</name>
         <full_name>DISPATCH_CAPTURE_AND_APPEND</full_name>
         <value>4</value>
-        <docblock line="70">
+        <docblock line="72">
           <description>Dispatch route output handling</description>
           <long-description>&lt;p&gt;Capture all output and append it to the response body&lt;/p&gt;</long-description>
-          <tag line="70" name="const" description="int"/>
+          <tag line="72" name="const" description="int"/>
         </docblock>
       </constant>
-      <property final="false" static="false" visibility="protected" line="90" namespace="Klein" package="Default">
+      <property final="false" static="false" visibility="protected" line="92" namespace="Klein" package="Default">
         <name>$routes</name>
         <default></default>
-        <docblock line="84">
-          <description>Array of the routes to match on dispatch</description>
+        <docblock line="86">
+          <description>Collection of the routes to match on dispatch</description>
           <long-description></long-description>
-          <tag line="84" name="var" description="" type="array">
-            <type by_reference="false">array</type>
+          <tag line="86" name="var" description="" type="\Klein\DataCollection\RouteCollection">
+            <type by_reference="false">\Klein\DataCollection\RouteCollection</type>
           </tag>
-          <tag line="84" name="access" description="protected"/>
+          <tag line="86" name="access" description="protected"/>
         </docblock>
       </property>
-      <property final="false" static="false" visibility="protected" line="100" namespace="Klein" package="Default">
+      <property final="false" static="false" visibility="protected" line="102" namespace="Klein" package="Default">
         <name>$namespace</name>
         <default></default>
-        <docblock line="92">
+        <docblock line="94">
           <description>The namespace of which to collect the routes in
 when matching, so you can define routes under a
 common endpoint</description>
           <long-description></long-description>
-          <tag line="92" name="var" description="" type="string">
+          <tag line="94" name="var" description="" type="string">
             <type by_reference="false">string</type>
           </tag>
-          <tag line="92" name="access" description="protected"/>
+          <tag line="94" name="access" description="protected"/>
         </docblock>
       </property>
-      <property final="false" static="false" visibility="protected" line="108" namespace="Klein" package="Default">
+      <property final="false" static="false" visibility="protected" line="110" namespace="Klein" package="Default">
         <name>$errorCallbacks</name>
         <default>array()</default>
-        <docblock line="102">
+        <docblock line="104">
           <description>An array of error callback callables</description>
           <long-description></long-description>
-          <tag line="102" name="var" description="" type="\Klein\array[callable]">
+          <tag line="104" name="var" description="" type="\Klein\array[callable]">
             <type by_reference="false">\Klein\array[callable]</type>
           </tag>
-          <tag line="102" name="access" description="protected"/>
+          <tag line="104" name="access" description="protected"/>
         </docblock>
       </property>
-      <property final="false" static="false" visibility="protected" line="121" namespace="Klein" package="Default">
+      <property final="false" static="false" visibility="protected" line="123" namespace="Klein" package="Default">
         <name>$request</name>
         <default></default>
-        <docblock line="115">
+        <docblock line="117">
           <description>The Request object passed to each matched route</description>
           <long-description></long-description>
-          <tag line="115" name="var" description="" type="\Klein\Request">
+          <tag line="117" name="var" description="" type="\Klein\Request">
             <type by_reference="false">\Klein\Request</type>
           </tag>
-          <tag line="115" name="access" description="protected"/>
+          <tag line="117" name="access" description="protected"/>
         </docblock>
       </property>
-      <property final="false" static="false" visibility="protected" line="129" namespace="Klein" package="Default">
+      <property final="false" static="false" visibility="protected" line="131" namespace="Klein" package="Default">
         <name>$response</name>
         <default></default>
-        <docblock line="123">
+        <docblock line="125">
           <description>The Response object passed to each matched route</description>
           <long-description></long-description>
-          <tag line="123" name="var" description="" type="\Klein\Response">
+          <tag line="125" name="var" description="" type="\Klein\Response">
             <type by_reference="false">\Klein\Response</type>
           </tag>
-          <tag line="123" name="access" description="protected"/>
+          <tag line="125" name="access" description="protected"/>
         </docblock>
       </property>
-      <property final="false" static="false" visibility="protected" line="137" namespace="Klein" package="Default">
+      <property final="false" static="false" visibility="protected" line="139" namespace="Klein" package="Default">
         <name>$service</name>
         <default></default>
-        <docblock line="131">
+        <docblock line="133">
           <description>The service provider object passed to each matched route</description>
           <long-description></long-description>
-          <tag line="131" name="var" description="" type="\Klein\ServiceProvider">
+          <tag line="133" name="var" description="" type="\Klein\ServiceProvider">
             <type by_reference="false">\Klein\ServiceProvider</type>
           </tag>
-          <tag line="131" name="access" description="protected"/>
+          <tag line="133" name="access" description="protected"/>
         </docblock>
       </property>
-      <property final="false" static="false" visibility="protected" line="145" namespace="Klein" package="Default">
+      <property final="false" static="false" visibility="protected" line="147" namespace="Klein" package="Default">
         <name>$app</name>
         <default></default>
-        <docblock line="139">
+        <docblock line="141">
           <description>A generic variable passed to each matched route</description>
           <long-description></long-description>
-          <tag line="139" name="var" description="" type="mixed">
+          <tag line="141" name="var" description="" type="mixed">
             <type by_reference="false">mixed</type>
           </tag>
-          <tag line="139" name="access" description="protected"/>
+          <tag line="141" name="access" description="protected"/>
         </docblock>
       </property>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="Klein" line="162" package="Klein">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Klein" line="165" package="Klein">
         <name>__construct</name>
         <full_name>__construct</full_name>
-        <docblock line="152">
+        <docblock line="154">
           <description>Constructor</description>
           <long-description>&lt;p&gt;Create a new Klein instance with optionally injected dependencies
 This DI allows for easy testing, object mocking, or class extension&lt;/p&gt;</long-description>
-          <tag line="152" name="param" description="Service provider object responsible for utilitarian behaviors" type="\Klein\ServiceProvider" variable="$service">
+          <tag line="154" name="param" description="Service provider object responsible for utilitarian behaviors" type="\Klein\ServiceProvider" variable="$service">
             <type by_reference="false">\Klein\ServiceProvider</type>
           </tag>
-          <tag line="152" name="param" description="An object passed to each route callback, defaults to a new App instance" type="mixed" variable="$app">
+          <tag line="154" name="param" description="An object passed to each route callback, defaults to a new App instance" type="mixed" variable="$app">
             <type by_reference="false">mixed</type>
           </tag>
-          <tag line="152" name="access" description="public"/>
+          <tag line="154" name="param" description="Collection object responsible for containing all of the route instances" type="\Klein\DataCollection\RouteCollection" variable="$routes">
+            <type by_reference="false">\Klein\DataCollection\RouteCollection</type>
+          </tag>
+          <tag line="154" name="access" description="public"/>
         </docblock>
-        <argument line="162">
+        <argument line="165">
           <name>$service</name>
           <default>null</default>
           <type>\Klein\ServiceProvider</type>
         </argument>
-        <argument line="162">
+        <argument line="165">
           <name>$app</name>
           <default>null</default>
           <type/>
         </argument>
+        <argument line="165">
+          <name>$routes</name>
+          <default>null</default>
+          <type>\Klein\DataCollection\RouteCollection</type>
+        </argument>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="Klein" line="175" package="Klein">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Klein" line="179" package="Klein">
+        <name>routes</name>
+        <full_name>routes</full_name>
+        <docblock line="173">
+          <description>Returns the routes object</description>
+          <long-description></long-description>
+          <tag line="173" name="access" description="public"/>
+          <tag line="173" name="return" description="" type="\Klein\DataCollection\RouteCollection">
+            <type by_reference="false">\Klein\DataCollection\RouteCollection</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Klein" line="190" package="Klein">
         <name>request</name>
         <full_name>request</full_name>
-        <docblock line="169">
+        <docblock line="184">
           <description>Returns the request object</description>
           <long-description></long-description>
-          <tag line="169" name="access" description="public"/>
-          <tag line="169" name="return" description="" type="\Klein\Request">
+          <tag line="184" name="access" description="public"/>
+          <tag line="184" name="return" description="" type="\Klein\Request">
             <type by_reference="false">\Klein\Request</type>
           </tag>
         </docblock>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="Klein" line="186" package="Klein">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Klein" line="201" package="Klein">
         <name>response</name>
         <full_name>response</full_name>
-        <docblock line="180">
+        <docblock line="195">
           <description>Returns the response object</description>
           <long-description></long-description>
-          <tag line="180" name="access" description="public"/>
-          <tag line="180" name="return" description="" type="\Klein\Response">
+          <tag line="195" name="access" description="public"/>
+          <tag line="195" name="return" description="" type="\Klein\Response">
             <type by_reference="false">\Klein\Response</type>
           </tag>
         </docblock>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="Klein" line="197" package="Klein">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Klein" line="212" package="Klein">
         <name>service</name>
         <full_name>service</full_name>
-        <docblock line="191">
+        <docblock line="206">
           <description>Returns the service object</description>
           <long-description></long-description>
-          <tag line="191" name="access" description="public"/>
-          <tag line="191" name="return" description="" type="\Klein\ServiceProvider">
+          <tag line="206" name="access" description="public"/>
+          <tag line="206" name="return" description="" type="\Klein\ServiceProvider">
             <type by_reference="false">\Klein\ServiceProvider</type>
           </tag>
         </docblock>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="Klein" line="208" package="Klein">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Klein" line="223" package="Klein">
         <name>app</name>
         <full_name>app</full_name>
-        <docblock line="202">
+        <docblock line="217">
           <description>Returns the app object</description>
           <long-description></long-description>
-          <tag line="202" name="access" description="public"/>
-          <tag line="202" name="return" description="" type="mixed">
+          <tag line="217" name="access" description="public"/>
+          <tag line="217" name="return" description="" type="mixed">
             <type by_reference="false">mixed</type>
           </tag>
         </docblock>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="Klein" line="239" package="Klein">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Klein" line="254" package="Klein">
         <name>respond</name>
         <full_name>respond</full_name>
-        <docblock line="213">
+        <docblock line="228">
           <description>Add a new route to be matched on dispatch</description>
           <long-description>&lt;p&gt;This method takes its arguments in a very loose format
 The only "required" parameter is the callback (which is very strange considering the argument definition order)&lt;/p&gt;
@@ -1521,40 +1774,40 @@ $router-&gt;respond( 'POST', '/endpoint', function() {
     echo 'this also works!!!!';
 });
 &lt;/code&gt;&lt;/pre&gt;</long-description>
-          <tag line="213" name="param" description="| array $method    HTTP Method to match" type="string" variable="$method">
+          <tag line="228" name="param" description="| array $method    HTTP Method to match" type="string" variable="$method">
             <type by_reference="false">string</type>
           </tag>
-          <tag line="213" name="param" description="Route URI to match" type="string" variable="$route">
+          <tag line="228" name="param" description="Route URI path to match" type="string" variable="$path">
             <type by_reference="false">string</type>
           </tag>
-          <tag line="213" name="param" description="Callable callback method to execute on route match" type="callable" variable="$callback">
+          <tag line="228" name="param" description="Callable callback method to execute on route match" type="callable" variable="$callback">
             <type by_reference="false">callable</type>
           </tag>
-          <tag line="213" name="access" description="public"/>
-          <tag line="213" name="return" description="$callback" type="callable">
+          <tag line="228" name="access" description="public"/>
+          <tag line="228" name="return" description="$callback" type="callable">
             <type by_reference="false">callable</type>
           </tag>
         </docblock>
-        <argument line="239">
+        <argument line="254">
           <name>$method</name>
           <default></default>
           <type/>
         </argument>
-        <argument line="239">
-          <name>$route</name>
+        <argument line="254">
+          <name>$path</name>
           <default>'*'</default>
           <type/>
         </argument>
-        <argument line="239">
+        <argument line="254">
           <name>$callback</name>
           <default>null</default>
           <type/>
         </argument>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="Klein" line="313" package="Klein">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Klein" line="330" package="Klein">
         <name>with</name>
         <full_name>with</full_name>
-        <docblock line="287">
+        <docblock line="304">
           <description>Collect a set of routes under a common namespace</description>
           <long-description>&lt;p&gt;The routes may be passed in as either a callable (which holds the route definitions),
 or as a string of a filename, of which to "include" under the Klein router scope&lt;/p&gt;
@@ -1572,242 +1825,358 @@ $router-&gt;with('/users', function() use ( $router) {
 
 $router-&gt;with('/cars', __DIR__ . '/routes/cars.php');
 &lt;/code&gt;&lt;/pre&gt;</long-description>
-          <tag line="287" name="param" description="The namespace under which to collect the routes" type="string" variable="$namespace">
+          <tag line="304" name="param" description="The namespace under which to collect the routes" type="string" variable="$namespace">
             <type by_reference="false">string</type>
           </tag>
-          <tag line="287" name="param" description="| string[filename] $routes   The defined routes to collect under the namespace" type="callable" variable="$routes">
+          <tag line="304" name="param" description="| string[filename] $routes   The defined routes to collect under the namespace" type="callable" variable="$routes">
             <type by_reference="false">callable</type>
           </tag>
-          <tag line="287" name="access" description="public"/>
-          <tag line="287" name="return" description="" type="void">
+          <tag line="304" name="access" description="public"/>
+          <tag line="304" name="return" description="" type="void">
             <type by_reference="false">void</type>
           </tag>
         </docblock>
-        <argument line="313">
+        <argument line="330">
           <name>$namespace</name>
           <default></default>
           <type/>
         </argument>
-        <argument line="313">
+        <argument line="330">
           <name>$routes</name>
           <default></default>
           <type/>
         </argument>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="Klein" line="340" package="Klein">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Klein" line="357" package="Klein">
         <name>dispatch</name>
         <full_name>dispatch</full_name>
-        <docblock line="327">
+        <docblock line="344">
           <description>Dispatch the request to the approriate route(s)</description>
           <long-description>&lt;p&gt;Dispatch with optionally injected dependencies
 This DI allows for easy testing, object mocking, or class extension&lt;/p&gt;</long-description>
-          <tag line="327" name="param" description="The request object to give to each callback" type="\Klein\Request" variable="$request">
+          <tag line="344" name="param" description="The request object to give to each callback" type="\Klein\Request" variable="$request">
             <type by_reference="false">\Klein\Request</type>
           </tag>
-          <tag line="327" name="param" description="The response object to give to each callback" type="\Klein\Response" variable="$response">
+          <tag line="344" name="param" description="The response object to give to each callback" type="\Klein\Response" variable="$response">
             <type by_reference="false">\Klein\Response</type>
           </tag>
-          <tag line="327" name="param" description="Whether or not to &quot;send&quot; the response after the last route has been matched" type="boolean" variable="$send_response">
+          <tag line="344" name="param" description="Whether or not to &quot;send&quot; the response after the last route has been matched" type="boolean" variable="$send_response">
             <type by_reference="false">boolean</type>
           </tag>
-          <tag line="327" name="param" description="Specify a DISPATCH_* constant to change the output capturing behavior" type="int" variable="$capture">
+          <tag line="344" name="param" description="Specify a DISPATCH_* constant to change the output capturing behavior" type="int" variable="$capture">
             <type by_reference="false">int</type>
           </tag>
-          <tag line="327" name="access" description="public"/>
-          <tag line="327" name="return" description="" type="void|string">
+          <tag line="344" name="access" description="public"/>
+          <tag line="344" name="return" description="" type="void|string">
             <type by_reference="false">void</type>
             <type by_reference="false">string</type>
           </tag>
         </docblock>
-        <argument line="341">
+        <argument line="358">
           <name>$request</name>
           <default>null</default>
           <type>\Klein\Request</type>
         </argument>
-        <argument line="342">
+        <argument line="359">
           <name>$response</name>
           <default>null</default>
           <type>\Klein\Response</type>
         </argument>
-        <argument line="343">
+        <argument line="360">
           <name>$send_response</name>
           <default>true</default>
           <type/>
         </argument>
-        <argument line="344">
+        <argument line="361">
           <name>$capture</name>
           <default>self::DISPATCH_NO_CAPTURE</default>
           <type/>
         </argument>
       </method>
-      <method final="false" abstract="false" static="false" visibility="protected" namespace="Klein" line="607" package="Klein">
+      <method final="false" abstract="false" static="false" visibility="protected" namespace="Klein" line="606" package="Klein">
         <name>compileRoute</name>
         <full_name>compileRoute</full_name>
-        <docblock line="600">
+        <docblock line="599">
           <description>Compiles a route string to a regular expression</description>
           <long-description></long-description>
-          <tag line="600" name="param" description="The route string to compile" type="string" variable="$route">
+          <tag line="599" name="param" description="The route string to compile" type="string" variable="$route">
             <type by_reference="false">string</type>
           </tag>
-          <tag line="600" name="access" description="protected"/>
-          <tag line="600" name="return" description="" type="void">
+          <tag line="599" name="access" description="protected"/>
+          <tag line="599" name="return" description="" type="void">
             <type by_reference="false">void</type>
           </tag>
         </docblock>
-        <argument line="607">
+        <argument line="606">
           <name>$route</name>
           <default></default>
           <type/>
         </argument>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="Klein" line="649" package="Klein">
-        <name>onError</name>
-        <full_name>onError</full_name>
-        <docblock line="642">
-          <description>Adds an error callback to the stack of error handlers</description>
-          <long-description></long-description>
-          <tag line="642" name="param" description="The callable function to execute in the error handling chain" type="callable" variable="$callback">
+      <method final="false" abstract="false" static="false" visibility="protected" namespace="Klein" line="653" package="Klein">
+        <name>handleResponseCallback</name>
+        <full_name>handleResponseCallback</full_name>
+        <docblock line="641">
+          <description>Handle a response callback</description>
+          <long-description>&lt;p&gt;This handles common exceptions and their output
+to keep the "dispatch()" method DRY&lt;/p&gt;</long-description>
+          <tag line="641" name="param" description="" type="callable" variable="$callback">
             <type by_reference="false">callable</type>
           </tag>
-          <tag line="642" name="access" description="public"/>
-          <tag line="642" name="return" description="" type="boolean|void">
+          <tag line="641" name="param" description="" type="int" variable="$matched">
+            <type by_reference="false">int</type>
+          </tag>
+          <tag line="641" name="param" description="" type="int" variable="$methods_matched">
+            <type by_reference="false">int</type>
+          </tag>
+          <tag line="641" name="access" description="protected"/>
+          <tag line="641" name="return" description="" type="void">
+            <type by_reference="false">void</type>
+          </tag>
+        </docblock>
+        <argument line="653">
+          <name>$callback</name>
+          <default></default>
+          <type/>
+        </argument>
+        <argument line="653">
+          <name>$matched</name>
+          <default></default>
+          <type/>
+        </argument>
+        <argument line="653">
+          <name>$methods_matched</name>
+          <default></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Klein" line="684" package="Klein">
+        <name>onError</name>
+        <full_name>onError</full_name>
+        <docblock line="677">
+          <description>Adds an error callback to the stack of error handlers</description>
+          <long-description></long-description>
+          <tag line="677" name="param" description="The callable function to execute in the error handling chain" type="callable" variable="$callback">
+            <type by_reference="false">callable</type>
+          </tag>
+          <tag line="677" name="access" description="public"/>
+          <tag line="677" name="return" description="" type="boolean|void">
             <type by_reference="false">boolean</type>
             <type by_reference="false">void</type>
           </tag>
         </docblock>
-        <argument line="649">
+        <argument line="684">
           <name>$callback</name>
           <default></default>
           <type/>
         </argument>
       </method>
-      <method final="false" abstract="false" static="false" visibility="protected" namespace="Klein" line="661" package="Klein">
+      <method final="false" abstract="false" static="false" visibility="protected" namespace="Klein" line="697" package="Klein">
         <name>error</name>
         <full_name>error</full_name>
-        <docblock line="654">
+        <docblock line="689">
           <description>Routes an exception through the error callbacks</description>
           <long-description></long-description>
-          <tag line="654" name="param" description="The exception that occurred" type="\Exception" variable="$err">
+          <tag line="689" name="param" description="The exception that occurred" type="\Exception" variable="$err">
             <type by_reference="false">\Exception</type>
           </tag>
-          <tag line="654" name="access" description="protected"/>
-          <tag line="654" name="return" description="" type="void">
+          <tag line="689" name="throws" description="If the error/exception isn't handled by an error callback" type="\Klein\Exceptions\UnhandledException">
+            <type by_reference="false">\Klein\Exceptions\UnhandledException</type>
+          </tag>
+          <tag line="689" name="access" description="protected"/>
+          <tag line="689" name="return" description="" type="void">
             <type by_reference="false">void</type>
           </tag>
         </docblock>
-        <argument line="661">
+        <argument line="697">
           <name>$err</name>
           <default></default>
           <type>\Exception</type>
         </argument>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="Klein" line="704" package="Klein">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Klein" line="739" package="Klein">
+        <name>skipThis</name>
+        <full_name>skipThis</full_name>
+        <docblock line="732">
+          <description>Quick alias to skip the current callback/route method from executing</description>
+          <long-description></long-description>
+          <tag line="732" name="throws" description="To halt/skip the current dispatch loop" type="\Klein\Exceptions\DispatchHaltedException">
+            <type by_reference="false">\Klein\Exceptions\DispatchHaltedException</type>
+          </tag>
+          <tag line="732" name="access" description="public"/>
+          <tag line="732" name="return" description="" type="void">
+            <type by_reference="false">void</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Klein" line="752" package="Klein">
+        <name>skipNext</name>
+        <full_name>skipNext</full_name>
+        <docblock line="744">
+          <description>Quick alias to skip the next callback/route method from executing</description>
+          <long-description></long-description>
+          <tag line="744" name="param" description="The number of next matches to skip" type="int" variable="$num">
+            <type by_reference="false">int</type>
+          </tag>
+          <tag line="744" name="throws" description="To halt/skip the current dispatch loop" type="\Klein\Exceptions\DispatchHaltedException">
+            <type by_reference="false">\Klein\Exceptions\DispatchHaltedException</type>
+          </tag>
+          <tag line="744" name="access" description="public"/>
+          <tag line="744" name="return" description="" type="void">
+            <type by_reference="false">void</type>
+          </tag>
+        </docblock>
+        <argument line="752">
+          <name>$num</name>
+          <default>1</default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Klein" line="767" package="Klein">
+        <name>skipRemaining</name>
+        <full_name>skipRemaining</full_name>
+        <docblock line="760">
+          <description>Quick alias to stop the remaining callbacks/route methods from executing</description>
+          <long-description></long-description>
+          <tag line="760" name="throws" description="To halt/skip the current dispatch loop" type="\Klein\Exceptions\DispatchHaltedException">
+            <type by_reference="false">\Klein\Exceptions\DispatchHaltedException</type>
+          </tag>
+          <tag line="760" name="access" description="public"/>
+          <tag line="760" name="return" description="" type="void">
+            <type by_reference="false">void</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Klein" line="780" package="Klein">
+        <name>abort</name>
+        <full_name>abort</full_name>
+        <docblock line="772">
+          <description>Alias to set a response code, lock the response, and halt the route matching/dispatching</description>
+          <long-description></long-description>
+          <tag line="772" name="param" description="Optional HTTP status code to send" type="int" variable="$code">
+            <type by_reference="false">int</type>
+          </tag>
+          <tag line="772" name="throws" description="To halt/skip the current dispatch loop" type="\Klein\Exceptions\DispatchHaltedException">
+            <type by_reference="false">\Klein\Exceptions\DispatchHaltedException</type>
+          </tag>
+          <tag line="772" name="access" description="public"/>
+          <tag line="772" name="return" description="" type="void">
+            <type by_reference="false">void</type>
+          </tag>
+        </docblock>
+        <argument line="780">
+          <name>$code</name>
+          <default>null</default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Klein" line="800" package="Klein">
         <name>get</name>
         <full_name>get</full_name>
-        <docblock line="696">
+        <docblock line="792">
           <description>GET alias for "respond()"</description>
           <long-description></long-description>
-          <tag line="696" name="param" description="" type="string" variable="$route">
+          <tag line="792" name="param" description="" type="string" variable="$route">
             <type by_reference="false">string</type>
           </tag>
-          <tag line="696" name="param" description="" type="callable" variable="$callback">
+          <tag line="792" name="param" description="" type="callable" variable="$callback">
             <type by_reference="false">callable</type>
           </tag>
-          <tag line="696" name="access" description="public"/>
-          <tag line="696" name="return" description="" type="callable">
+          <tag line="792" name="access" description="public"/>
+          <tag line="792" name="return" description="" type="callable">
             <type by_reference="false">callable</type>
           </tag>
         </docblock>
-        <argument line="704">
+        <argument line="800">
           <name>$route</name>
           <default>'*'</default>
           <type/>
         </argument>
-        <argument line="704">
+        <argument line="800">
           <name>$callback</name>
           <default>null</default>
           <type/>
         </argument>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="Klein" line="721" package="Klein">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Klein" line="817" package="Klein">
         <name>post</name>
         <full_name>post</full_name>
-        <docblock line="713">
+        <docblock line="809">
           <description>POST alias for "respond()"</description>
           <long-description></long-description>
-          <tag line="713" name="param" description="" type="string" variable="$route">
+          <tag line="809" name="param" description="" type="string" variable="$route">
             <type by_reference="false">string</type>
           </tag>
-          <tag line="713" name="param" description="" type="callable" variable="$callback">
+          <tag line="809" name="param" description="" type="callable" variable="$callback">
             <type by_reference="false">callable</type>
           </tag>
-          <tag line="713" name="access" description="public"/>
-          <tag line="713" name="return" description="" type="callable">
+          <tag line="809" name="access" description="public"/>
+          <tag line="809" name="return" description="" type="callable">
             <type by_reference="false">callable</type>
           </tag>
         </docblock>
-        <argument line="721">
+        <argument line="817">
           <name>$route</name>
           <default>'*'</default>
           <type/>
         </argument>
-        <argument line="721">
+        <argument line="817">
           <name>$callback</name>
           <default>null</default>
           <type/>
         </argument>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="Klein" line="738" package="Klein">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Klein" line="834" package="Klein">
         <name>put</name>
         <full_name>put</full_name>
-        <docblock line="730">
+        <docblock line="826">
           <description>PUT alias for "respond()"</description>
           <long-description></long-description>
-          <tag line="730" name="param" description="" type="string" variable="$route">
+          <tag line="826" name="param" description="" type="string" variable="$route">
             <type by_reference="false">string</type>
           </tag>
-          <tag line="730" name="param" description="" type="callable" variable="$callback">
+          <tag line="826" name="param" description="" type="callable" variable="$callback">
             <type by_reference="false">callable</type>
           </tag>
-          <tag line="730" name="access" description="public"/>
-          <tag line="730" name="return" description="" type="callable">
+          <tag line="826" name="access" description="public"/>
+          <tag line="826" name="return" description="" type="callable">
             <type by_reference="false">callable</type>
           </tag>
         </docblock>
-        <argument line="738">
+        <argument line="834">
           <name>$route</name>
           <default>'*'</default>
           <type/>
         </argument>
-        <argument line="738">
+        <argument line="834">
           <name>$callback</name>
           <default>null</default>
           <type/>
         </argument>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="Klein" line="755" package="Klein">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Klein" line="851" package="Klein">
         <name>delete</name>
         <full_name>delete</full_name>
-        <docblock line="747">
+        <docblock line="843">
           <description>DELETE alias for "respond()"</description>
           <long-description></long-description>
-          <tag line="747" name="param" description="" type="string" variable="$route">
+          <tag line="843" name="param" description="" type="string" variable="$route">
             <type by_reference="false">string</type>
           </tag>
-          <tag line="747" name="param" description="" type="callable" variable="$callback">
+          <tag line="843" name="param" description="" type="callable" variable="$callback">
             <type by_reference="false">callable</type>
           </tag>
-          <tag line="747" name="access" description="public"/>
-          <tag line="747" name="return" description="" type="callable">
+          <tag line="843" name="access" description="public"/>
+          <tag line="843" name="return" description="" type="callable">
             <type by_reference="false">callable</type>
           </tag>
         </docblock>
-        <argument line="755">
+        <argument line="851">
           <name>$route</name>
           <default>'*'</default>
           <type/>
         </argument>
-        <argument line="755">
+        <argument line="851">
           <name>$callback</name>
           <default>null</default>
           <type/>
@@ -1815,7 +2184,7 @@ This DI allows for easy testing, object mocking, or class extension&lt;/p&gt;</l
       </method>
     </class>
   </file>
-  <file path="Request.php" hash="dcbf58e6e388704dc5db15097b3af98b" package="Default">
+  <file path="Request.php" hash="b481b4ef31b7af5ad415f3f3f0d8cd60" package="Default">
     <docblock line="2">
       <description>Klein (klein.php) - A lightning fast router for PHP</description>
       <long-description></long-description>
@@ -2129,7 +2498,7 @@ This DI allows for easy testing, object mocking, or class extension&lt;/p&gt;</l
           </tag>
         </docblock>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="Klein" line="288" package="Klein">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Klein" line="290" package="Klein">
         <name>params</name>
         <full_name>params</full_name>
         <docblock line="277">
@@ -2140,255 +2509,263 @@ you'd like this method to exclude in the returned array&lt;/p&gt;</long-descript
           <tag line="277" name="param" description="The parameter mask array" type="array" variable="$mask">
             <type by_reference="false">array</type>
           </tag>
+          <tag line="277" name="param" description="Whether or not to fill the returned array&#10; with null values to match the given mask" type="boolean" variable="$fill_with_nulls">
+            <type by_reference="false">boolean</type>
+          </tag>
           <tag line="277" name="access" description="public"/>
           <tag line="277" name="return" description="" type="array">
             <type by_reference="false">array</type>
           </tag>
         </docblock>
-        <argument line="288">
+        <argument line="290">
           <name>$mask</name>
           <default>null</default>
           <type/>
         </argument>
+        <argument line="290">
+          <name>$fill_with_nulls</name>
+          <default>true</default>
+          <type/>
+        </argument>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="Klein" line="307" package="Klein">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Klein" line="320" package="Klein">
         <name>param</name>
         <full_name>param</full_name>
-        <docblock line="299">
+        <docblock line="312">
           <description>Return a request parameter, or $default if it doesn't exist</description>
           <long-description></long-description>
-          <tag line="299" name="param" description="The name of the parameter to return" type="string" variable="$key">
+          <tag line="312" name="param" description="The name of the parameter to return" type="string" variable="$key">
             <type by_reference="false">string</type>
           </tag>
-          <tag line="299" name="param" description="The default value of the parameter if it contains no value" type="mixed" variable="$default">
+          <tag line="312" name="param" description="The default value of the parameter if it contains no value" type="mixed" variable="$default">
             <type by_reference="false">mixed</type>
           </tag>
-          <tag line="299" name="access" description="public"/>
-          <tag line="299" name="return" description="" type="string">
+          <tag line="312" name="access" description="public"/>
+          <tag line="312" name="return" description="" type="string">
             <type by_reference="false">string</type>
           </tag>
         </docblock>
-        <argument line="307">
+        <argument line="320">
           <name>$key</name>
           <default></default>
           <type/>
         </argument>
-        <argument line="307">
+        <argument line="320">
           <name>$default</name>
           <default>null</default>
           <type/>
         </argument>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="Klein" line="325" package="Klein">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Klein" line="338" package="Klein">
         <name>__isset</name>
         <full_name>__isset</full_name>
-        <docblock line="315">
+        <docblock line="328">
           <description>Magic "__isset" method</description>
           <long-description>&lt;p&gt;Allows the ability to arbitrarily check the existence of a parameter
 from this instance while treating it as an instance property&lt;/p&gt;</long-description>
-          <tag line="315" name="param" description="The name of the parameter" type="string" variable="$param">
+          <tag line="328" name="param" description="The name of the parameter" type="string" variable="$param">
             <type by_reference="false">string</type>
           </tag>
-          <tag line="315" name="access" description="public"/>
-          <tag line="315" name="return" description="" type="boolean">
+          <tag line="328" name="access" description="public"/>
+          <tag line="328" name="return" description="" type="boolean">
             <type by_reference="false">boolean</type>
           </tag>
         </docblock>
-        <argument line="325">
+        <argument line="338">
           <name>$param</name>
           <default></default>
           <type/>
         </argument>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="Klein" line="343" package="Klein">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Klein" line="356" package="Klein">
         <name>__get</name>
         <full_name>__get</full_name>
-        <docblock line="333">
+        <docblock line="346">
           <description>Magic "__get" method</description>
           <long-description>&lt;p&gt;Allows the ability to arbitrarily request a parameter from this instance
 while treating it as an instance property&lt;/p&gt;</long-description>
-          <tag line="333" name="param" description="The name of the parameter" type="string" variable="$param">
+          <tag line="346" name="param" description="The name of the parameter" type="string" variable="$param">
             <type by_reference="false">string</type>
           </tag>
-          <tag line="333" name="access" description="public"/>
-          <tag line="333" name="return" description="" type="string">
+          <tag line="346" name="access" description="public"/>
+          <tag line="346" name="return" description="" type="string">
             <type by_reference="false">string</type>
           </tag>
         </docblock>
-        <argument line="343">
+        <argument line="356">
           <name>$param</name>
           <default></default>
           <type/>
         </argument>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="Klein" line="362" package="Klein">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Klein" line="375" package="Klein">
         <name>__set</name>
         <full_name>__set</full_name>
-        <docblock line="348">
+        <docblock line="361">
           <description>Magic "__set" method</description>
           <long-description>&lt;p&gt;Allows the ability to arbitrarily set a parameter from this instance
 while treating it as an instance property&lt;/p&gt;
 
 &lt;p&gt;NOTE: This currently sets the "named" parameters, since that's the
 one collection that we have the most sane control over&lt;/p&gt;</long-description>
-          <tag line="348" name="param" description="The name of the parameter" type="string" variable="$param">
+          <tag line="361" name="param" description="The name of the parameter" type="string" variable="$param">
             <type by_reference="false">string</type>
           </tag>
-          <tag line="348" name="param" description="The value of the parameter" type="mixed" variable="$value">
+          <tag line="361" name="param" description="The value of the parameter" type="mixed" variable="$value">
             <type by_reference="false">mixed</type>
           </tag>
-          <tag line="348" name="access" description="public"/>
-          <tag line="348" name="return" description="" type="void">
+          <tag line="361" name="access" description="public"/>
+          <tag line="361" name="return" description="" type="void">
             <type by_reference="false">void</type>
           </tag>
         </docblock>
-        <argument line="362">
+        <argument line="375">
           <name>$param</name>
           <default></default>
           <type/>
         </argument>
-        <argument line="362">
+        <argument line="375">
           <name>$value</name>
           <default></default>
           <type/>
         </argument>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="Klein" line="377" package="Klein">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Klein" line="390" package="Klein">
         <name>__unset</name>
         <full_name>__unset</full_name>
-        <docblock line="367">
+        <docblock line="380">
           <description>Magic "__unset" method</description>
           <long-description>&lt;p&gt;Allows the ability to arbitrarily remove a parameter from this instance
 while treating it as an instance property&lt;/p&gt;</long-description>
-          <tag line="367" name="param" description="The name of the parameter" type="string" variable="$param">
+          <tag line="380" name="param" description="The name of the parameter" type="string" variable="$param">
             <type by_reference="false">string</type>
           </tag>
-          <tag line="367" name="access" description="public"/>
-          <tag line="367" name="return" description="" type="void">
+          <tag line="380" name="access" description="public"/>
+          <tag line="380" name="return" description="" type="void">
             <type by_reference="false">void</type>
           </tag>
         </docblock>
-        <argument line="377">
+        <argument line="390">
           <name>$param</name>
           <default></default>
           <type/>
         </argument>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="Klein" line="388" package="Klein">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Klein" line="401" package="Klein">
         <name>isSecure</name>
         <full_name>isSecure</full_name>
-        <docblock line="382">
+        <docblock line="395">
           <description>Is the request secure?</description>
           <long-description></long-description>
-          <tag line="382" name="access" description="public"/>
-          <tag line="382" name="return" description="" type="boolean">
+          <tag line="395" name="access" description="public"/>
+          <tag line="395" name="return" description="" type="boolean">
             <type by_reference="false">boolean</type>
           </tag>
         </docblock>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="Klein" line="399" package="Klein">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Klein" line="412" package="Klein">
         <name>ip</name>
         <full_name>ip</full_name>
-        <docblock line="393">
+        <docblock line="406">
           <description>Gets the request IP address</description>
           <long-description></long-description>
-          <tag line="393" name="access" description="public"/>
-          <tag line="393" name="return" description="" type="string">
+          <tag line="406" name="access" description="public"/>
+          <tag line="406" name="return" description="" type="string">
             <type by_reference="false">string</type>
           </tag>
         </docblock>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="Klein" line="410" package="Klein">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Klein" line="423" package="Klein">
         <name>userAgent</name>
         <full_name>userAgent</full_name>
-        <docblock line="404">
+        <docblock line="417">
           <description>Gets the request user agent</description>
           <long-description></long-description>
-          <tag line="404" name="access" description="public"/>
-          <tag line="404" name="return" description="" type="string">
+          <tag line="417" name="access" description="public"/>
+          <tag line="417" name="return" description="" type="string">
             <type by_reference="false">string</type>
           </tag>
         </docblock>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="Klein" line="421" package="Klein">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Klein" line="434" package="Klein">
         <name>uri</name>
         <full_name>uri</full_name>
-        <docblock line="415">
+        <docblock line="428">
           <description>Gets the request URI</description>
           <long-description></long-description>
-          <tag line="415" name="access" description="public"/>
-          <tag line="415" name="return" description="" type="string">
+          <tag line="428" name="access" description="public"/>
+          <tag line="428" name="return" description="" type="string">
             <type by_reference="false">string</type>
           </tag>
         </docblock>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="Klein" line="432" package="Klein">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Klein" line="445" package="Klein">
         <name>pathname</name>
         <full_name>pathname</full_name>
-        <docblock line="426">
+        <docblock line="439">
           <description>Get the request's pathname</description>
           <long-description></long-description>
-          <tag line="426" name="access" description="public"/>
-          <tag line="426" name="return" description="" type="string">
+          <tag line="439" name="access" description="public"/>
+          <tag line="439" name="return" description="" type="string">
             <type by_reference="false">string</type>
           </tag>
         </docblock>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="Klein" line="457" package="Klein">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Klein" line="470" package="Klein">
         <name>method</name>
         <full_name>method</full_name>
-        <docblock line="442">
+        <docblock line="455">
           <description>Gets the request method, or checks it against $is</description>
           <long-description>&lt;pre&gt;&lt;code&gt;// POST request example
 $request-&gt;method() // returns 'POST'
 $request-&gt;method('post') // returns true
 $request-&gt;method('get') // returns false
 &lt;/code&gt;&lt;/pre&gt;</long-description>
-          <tag line="442" name="param" description="The method to check the current request method against" type="string" variable="$is">
+          <tag line="455" name="param" description="The method to check the current request method against" type="string" variable="$is">
             <type by_reference="false">string</type>
           </tag>
-          <tag line="442" name="param" description="Whether or not to allow HTTP method overriding via header or params" type="boolean" variable="$allow_override">
+          <tag line="455" name="param" description="Whether or not to allow HTTP method overriding via header or params" type="boolean" variable="$allow_override">
             <type by_reference="false">boolean</type>
           </tag>
-          <tag line="442" name="access" description="public"/>
-          <tag line="442" name="return" description="| boolean" type="string">
+          <tag line="455" name="access" description="public"/>
+          <tag line="455" name="return" description="| boolean" type="string">
             <type by_reference="false">string</type>
           </tag>
         </docblock>
-        <argument line="457">
+        <argument line="470">
           <name>$is</name>
           <default>null</default>
           <type/>
         </argument>
-        <argument line="457">
+        <argument line="470">
           <name>$allow_override</name>
           <default>true</default>
           <type/>
         </argument>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="Klein" line="489" package="Klein">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Klein" line="502" package="Klein">
         <name>query</name>
         <full_name>query</full_name>
-        <docblock line="481">
+        <docblock line="494">
           <description>Adds to or modifies the current query string</description>
           <long-description></long-description>
-          <tag line="481" name="param" description="The name of the query param" type="string" variable="$key">
+          <tag line="494" name="param" description="The name of the query param" type="string" variable="$key">
             <type by_reference="false">string</type>
           </tag>
-          <tag line="481" name="param" description="The value of the query param" type="mixed" variable="$value">
+          <tag line="494" name="param" description="The value of the query param" type="mixed" variable="$value">
             <type by_reference="false">mixed</type>
           </tag>
-          <tag line="481" name="access" description="public"/>
-          <tag line="481" name="return" description="" type="string">
+          <tag line="494" name="access" description="public"/>
+          <tag line="494" name="return" description="" type="string">
             <type by_reference="false">string</type>
           </tag>
         </docblock>
-        <argument line="489">
+        <argument line="502">
           <name>$key</name>
           <default></default>
           <type/>
         </argument>
-        <argument line="489">
+        <argument line="502">
           <name>$value</name>
           <default>null</default>
           <type/>
@@ -2396,10 +2773,10 @@ $request-&gt;method('get') // returns false
       </method>
     </class>
   </file>
-  <file path="Response.php" hash="1858ab2126852b08346c116061346bc6" package="Default">
+  <file path="Response.php" hash="d4f9b8d23ab6cc7b4a71a57b1347b407" package="Default">
     <docblock line="2">
       <description>Klein (klein.php) - A lightning fast router for PHP</description>
-      <long-description/>
+      <long-description></long-description>
       <tag line="2" name="author" description="Chris O'Hara &lt;cohara87@gmail.com&gt;"/>
       <tag line="2" name="author" description="Trevor Suarez (Rican7) (contributor and v2 refactorer)"/>
       <tag line="2" name="copyright" description="(c) Chris O'Hara"/>
@@ -2412,7 +2789,7 @@ $request-&gt;method('get') // returns false
       <full_name>\Klein\Response</full_name>
       <docblock line="20">
         <description>Response</description>
-        <long-description/>
+        <long-description></long-description>
         <tag line="20" name="package" description="Klein"/>
       </docblock>
       <property final="false" static="true" visibility="protected" line="39" namespace="Klein" package="Default">
@@ -2420,7 +2797,7 @@ $request-&gt;method('get') // returns false
         <default>200</default>
         <docblock line="32">
           <description>The default response HTTP status code</description>
-          <long-description/>
+          <long-description></long-description>
           <tag line="32" name="static" description=""/>
           <tag line="32" name="var" description="" type="int">
             <type by_reference="false">int</type>
@@ -2433,7 +2810,7 @@ $request-&gt;method('get') // returns false
         <default>'1.1'</default>
         <docblock line="41">
           <description>The HTTP version of the response</description>
-          <long-description/>
+          <long-description></long-description>
           <tag line="41" name="var" description="" type="string">
             <type by_reference="false">string</type>
           </tag>
@@ -2442,10 +2819,10 @@ $request-&gt;method('get') // returns false
       </property>
       <property final="false" static="false" visibility="protected" line="55" namespace="Klein" package="Default">
         <name>$body</name>
-        <default/>
+        <default></default>
         <docblock line="49">
           <description>The response body</description>
-          <long-description/>
+          <long-description></long-description>
           <tag line="49" name="var" description="" type="string">
             <type by_reference="false">string</type>
           </tag>
@@ -2454,10 +2831,10 @@ $request-&gt;method('get') // returns false
       </property>
       <property final="false" static="false" visibility="protected" line="63" namespace="Klein" package="Default">
         <name>$status</name>
-        <default/>
+        <default></default>
         <docblock line="57">
           <description>HTTP response status</description>
-          <long-description/>
+          <long-description></long-description>
           <tag line="57" name="var" description="" type="\Klein\HttpStatus">
             <type by_reference="false">\Klein\HttpStatus</type>
           </tag>
@@ -2466,10 +2843,10 @@ $request-&gt;method('get') // returns false
       </property>
       <property final="false" static="false" visibility="protected" line="71" namespace="Klein" package="Default">
         <name>$headers</name>
-        <default/>
+        <default></default>
         <docblock line="65">
           <description>HTTP response headers</description>
-          <long-description/>
+          <long-description></long-description>
           <tag line="65" name="var" description="" type="\Klein\DataCollection\HeaderDataCollection">
             <type by_reference="false">\Klein\DataCollection\HeaderDataCollection</type>
           </tag>
@@ -2478,10 +2855,10 @@ $request-&gt;method('get') // returns false
       </property>
       <property final="false" static="false" visibility="protected" line="79" namespace="Klein" package="Default">
         <name>$cookies</name>
-        <default/>
+        <default></default>
         <docblock line="73">
           <description>HTTP response cookies</description>
-          <long-description/>
+          <long-description></long-description>
           <tag line="73" name="var" description="" type="\Klein\DataCollection\ResponseCookieDataCollection">
             <type by_reference="false">\Klein\DataCollection\ResponseCookieDataCollection</type>
           </tag>
@@ -2494,7 +2871,7 @@ $request-&gt;method('get') // returns false
         <docblock line="81">
           <description>Whether or not the response is "locked" from
 any further modification</description>
-          <long-description/>
+          <long-description></long-description>
           <tag line="81" name="var" description="" type="boolean">
             <type by_reference="false">boolean</type>
           </tag>
@@ -2506,7 +2883,7 @@ any further modification</description>
         <default>false</default>
         <docblock line="90">
           <description>Whether or not the response has been sent</description>
-          <long-description/>
+          <long-description></long-description>
           <tag line="90" name="var" description="" type="boolean">
             <type by_reference="false">boolean</type>
           </tag>
@@ -2518,7 +2895,7 @@ any further modification</description>
         <default>false</default>
         <docblock line="98">
           <description>Whether the response has been chunked or not</description>
-          <long-description/>
+          <long-description></long-description>
           <tag line="98" name="var" description="" type="boolean">
             <type by_reference="false">boolean</type>
           </tag>
@@ -2608,7 +2985,7 @@ Calling with an argument, however, sets the response body to what was provided b
         <full_name>status</full_name>
         <docblock line="182">
           <description>Returns the status object</description>
-          <long-description/>
+          <long-description></long-description>
           <tag line="182" name="access" description="public"/>
           <tag line="182" name="return" description="" type="\Klein\HttpStatus">
             <type by_reference="false">\Klein\HttpStatus</type>
@@ -2620,7 +2997,7 @@ Calling with an argument, however, sets the response body to what was provided b
         <full_name>headers</full_name>
         <docblock line="193">
           <description>Returns the headers collection</description>
-          <long-description/>
+          <long-description></long-description>
           <tag line="193" name="access" description="public"/>
           <tag line="193" name="return" description="" type="\Klein\DataCollection\HeaderDataCollection">
             <type by_reference="false">\Klein\DataCollection\HeaderDataCollection</type>
@@ -2632,7 +3009,7 @@ Calling with an argument, however, sets the response body to what was provided b
         <full_name>cookies</full_name>
         <docblock line="204">
           <description>Returns the cookies collection</description>
-          <long-description/>
+          <long-description></long-description>
           <tag line="204" name="access" description="public"/>
           <tag line="204" name="return" description="" type="\Klein\DataCollection\ResponseCookieDataCollection">
             <type by_reference="false">\Klein\DataCollection\ResponseCookieDataCollection</type>
@@ -2667,7 +3044,7 @@ was provided by the argument.&lt;/p&gt;</long-description>
         <full_name>prepend</full_name>
         <docblock line="240">
           <description>Prepend a string to the response's content body</description>
-          <long-description/>
+          <long-description></long-description>
           <tag line="240" name="param" description="The string to prepend" type="string" variable="$content">
             <type by_reference="false">string</type>
           </tag>
@@ -2678,7 +3055,7 @@ was provided by the argument.&lt;/p&gt;</long-description>
         </docblock>
         <argument line="247">
           <name>$content</name>
-          <default/>
+          <default></default>
           <type/>
         </argument>
       </method>
@@ -2687,7 +3064,7 @@ was provided by the argument.&lt;/p&gt;</long-description>
         <full_name>append</full_name>
         <docblock line="257">
           <description>Append a string to the response's content body</description>
-          <long-description/>
+          <long-description></long-description>
           <tag line="257" name="param" description="The string to append" type="string" variable="$content">
             <type by_reference="false">string</type>
           </tag>
@@ -2698,7 +3075,7 @@ was provided by the argument.&lt;/p&gt;</long-description>
         </docblock>
         <argument line="264">
           <name>$content</name>
-          <default/>
+          <default></default>
           <type/>
         </argument>
       </method>
@@ -2707,14 +3084,14 @@ was provided by the argument.&lt;/p&gt;</long-description>
         <full_name>isLocked</full_name>
         <docblock line="274">
           <description>Check if the response is locked</description>
-          <long-description/>
+          <long-description></long-description>
           <tag line="274" name="access" description="public"/>
           <tag line="274" name="return" description="" type="boolean">
             <type by_reference="false">boolean</type>
           </tag>
         </docblock>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="Klein" line="295" package="Klein">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Klein" line="296" package="Klein">
         <name>requireUnlocked</name>
         <full_name>requireUnlocked</full_name>
         <docblock line="285">
@@ -2722,377 +3099,383 @@ was provided by the argument.&lt;/p&gt;</long-description>
           <long-description>&lt;p&gt;Throws an exception if the response is locked,
 preventing any methods from mutating the response
 when its locked&lt;/p&gt;</long-description>
+          <tag line="285" name="throws" description="If the response is locked" type="\Klein\Exceptions\LockedResponseException">
+            <type by_reference="false">\Klein\Exceptions\LockedResponseException</type>
+          </tag>
           <tag line="285" name="access" description="public"/>
           <tag line="285" name="return" description="" type="\Klein\Response">
             <type by_reference="false">\Klein\Response</type>
           </tag>
         </docblock>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="Klein" line="310" package="Klein">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Klein" line="311" package="Klein">
         <name>lock</name>
         <full_name>lock</full_name>
-        <docblock line="304">
+        <docblock line="305">
           <description>Lock the response from further modification</description>
-          <long-description/>
-          <tag line="304" name="access" description="public"/>
-          <tag line="304" name="return" description="" type="\Klein\Response">
+          <long-description></long-description>
+          <tag line="305" name="access" description="public"/>
+          <tag line="305" name="return" description="" type="\Klein\Response">
             <type by_reference="false">\Klein\Response</type>
           </tag>
         </docblock>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="Klein" line="323" package="Klein">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Klein" line="324" package="Klein">
         <name>unlock</name>
         <full_name>unlock</full_name>
-        <docblock line="317">
+        <docblock line="318">
           <description>Unlock the response from further modification</description>
-          <long-description/>
-          <tag line="317" name="access" description="public"/>
-          <tag line="317" name="return" description="" type="\Klein\Response">
+          <long-description></long-description>
+          <tag line="318" name="access" description="public"/>
+          <tag line="318" name="return" description="" type="\Klein\Response">
             <type by_reference="false">\Klein\Response</type>
           </tag>
         </docblock>
       </method>
-      <method final="false" abstract="false" static="false" visibility="protected" namespace="Klein" line="338" package="Klein">
+      <method final="false" abstract="false" static="false" visibility="protected" namespace="Klein" line="339" package="Klein">
         <name>httpStatusLine</name>
         <full_name>httpStatusLine</full_name>
-        <docblock line="330">
+        <docblock line="331">
           <description>Generates an HTTP compatible status header line string</description>
           <long-description>&lt;p&gt;Creates the string based off of the response's properties&lt;/p&gt;</long-description>
-          <tag line="330" name="access" description="protected"/>
-          <tag line="330" name="return" description="" type="string">
+          <tag line="331" name="access" description="protected"/>
+          <tag line="331" name="return" description="" type="string">
             <type by_reference="false">string</type>
           </tag>
         </docblock>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="Klein" line="351" package="Klein">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Klein" line="352" package="Klein">
         <name>sendHeaders</name>
         <full_name>sendHeaders</full_name>
-        <docblock line="343">
+        <docblock line="344">
           <description>Send our HTTP headers</description>
-          <long-description/>
-          <tag line="343" name="param" description="Whether or not to also send the cookies after sending the normal headers" type="boolean" variable="$cookies_also">
+          <long-description></long-description>
+          <tag line="344" name="param" description="Whether or not to also send the cookies after sending the normal headers" type="boolean" variable="$cookies_also">
             <type by_reference="false">boolean</type>
           </tag>
-          <tag line="343" name="param" description="Whether or not to override the check if headers have already been sent" type="boolean" variable="$override">
+          <tag line="344" name="param" description="Whether or not to override the check if headers have already been sent" type="boolean" variable="$override">
             <type by_reference="false">boolean</type>
           </tag>
-          <tag line="343" name="access" description="public"/>
-          <tag line="343" name="return" description="" type="\Klein\Response">
+          <tag line="344" name="access" description="public"/>
+          <tag line="344" name="return" description="" type="\Klein\Response">
             <type by_reference="false">\Klein\Response</type>
           </tag>
         </docblock>
-        <argument line="351">
+        <argument line="352">
           <name>$cookies_also</name>
           <default>true</default>
           <type/>
         </argument>
-        <argument line="351">
+        <argument line="352">
           <name>$override</name>
           <default>false</default>
           <type/>
         </argument>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="Klein" line="379" package="Klein">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Klein" line="380" package="Klein">
         <name>sendCookies</name>
         <full_name>sendCookies</full_name>
-        <docblock line="372">
+        <docblock line="373">
           <description>Send our HTTP response cookies</description>
-          <long-description/>
-          <tag line="372" name="param" description="Whether or not to override the check if headers have already been sent" type="boolean" variable="$override">
+          <long-description></long-description>
+          <tag line="373" name="param" description="Whether or not to override the check if headers have already been sent" type="boolean" variable="$override">
             <type by_reference="false">boolean</type>
           </tag>
-          <tag line="372" name="access" description="public"/>
-          <tag line="372" name="return" description="" type="\Klein\Response">
+          <tag line="373" name="access" description="public"/>
+          <tag line="373" name="return" description="" type="\Klein\Response">
             <type by_reference="false">\Klein\Response</type>
           </tag>
         </docblock>
-        <argument line="379">
+        <argument line="380">
           <name>$override</name>
           <default>false</default>
           <type/>
         </argument>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="Klein" line="408" package="Klein">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Klein" line="409" package="Klein">
         <name>sendBody</name>
         <full_name>sendBody</full_name>
-        <docblock line="402">
+        <docblock line="403">
           <description>Send our body's contents</description>
-          <long-description/>
-          <tag line="402" name="access" description="public"/>
-          <tag line="402" name="return" description="" type="\Klein\Response">
+          <long-description></long-description>
+          <tag line="403" name="access" description="public"/>
+          <tag line="403" name="return" description="" type="\Klein\Response">
             <type by_reference="false">\Klein\Response</type>
           </tag>
         </docblock>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="Klein" line="422" package="Klein">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Klein" line="424" package="Klein">
         <name>send</name>
         <full_name>send</full_name>
-        <docblock line="415">
+        <docblock line="416">
           <description>Send the response and lock it</description>
-          <long-description/>
-          <tag line="415" name="param" description="Whether or not to override the check if the response has already been sent" type="boolean" variable="$override">
+          <long-description></long-description>
+          <tag line="416" name="param" description="Whether or not to override the check if the response has already been sent" type="boolean" variable="$override">
             <type by_reference="false">boolean</type>
           </tag>
-          <tag line="415" name="access" description="public"/>
-          <tag line="415" name="return" description="" type="\Klein\Response">
+          <tag line="416" name="throws" description="If the response has already been sent" type="\Klein\Exceptions\ResponseAlreadySentException">
+            <type by_reference="false">\Klein\Exceptions\ResponseAlreadySentException</type>
+          </tag>
+          <tag line="416" name="access" description="public"/>
+          <tag line="416" name="return" description="" type="\Klein\Response">
             <type by_reference="false">\Klein\Response</type>
           </tag>
         </docblock>
-        <argument line="422">
+        <argument line="424">
           <name>$override</name>
           <default>false</default>
           <type/>
         </argument>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="Klein" line="452" package="Klein">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Klein" line="454" package="Klein">
         <name>isSent</name>
         <full_name>isSent</full_name>
-        <docblock line="446">
+        <docblock line="448">
           <description>Check if the response has been sent</description>
-          <long-description/>
-          <tag line="446" name="access" description="public"/>
-          <tag line="446" name="return" description="" type="boolean">
+          <long-description></long-description>
+          <tag line="448" name="access" description="public"/>
+          <tag line="448" name="return" description="" type="boolean">
             <type by_reference="false">boolean</type>
           </tag>
         </docblock>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="Klein" line="466" package="Klein">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Klein" line="468" package="Klein">
         <name>chunk</name>
         <full_name>chunk</full_name>
-        <docblock line="457">
+        <docblock line="459">
           <description>Enable response chunking</description>
-          <long-description/>
-          <tag line="457" name="link" description="https://github.com/chriso/klein.php/wiki/Response-Chunking" link="https://github.com/chriso/klein.php/wiki/Response-Chunking"/>
-          <tag line="457" name="link" description="http://bit.ly/hg3gHb" link="http://bit.ly/hg3gHb"/>
-          <tag line="457" name="param" description="An optional string to send as a response &quot;chunk&quot;" type="string" variable="$str">
+          <long-description></long-description>
+          <tag line="459" name="link" description="https://github.com/chriso/klein.php/wiki/Response-Chunking" link="https://github.com/chriso/klein.php/wiki/Response-Chunking"/>
+          <tag line="459" name="link" description="http://bit.ly/hg3gHb" link="http://bit.ly/hg3gHb"/>
+          <tag line="459" name="param" description="An optional string to send as a response &quot;chunk&quot;" type="string" variable="$str">
             <type by_reference="false">string</type>
           </tag>
-          <tag line="457" name="access" description="public"/>
-          <tag line="457" name="return" description="" type="void">
+          <tag line="459" name="access" description="public"/>
+          <tag line="459" name="return" description="" type="void">
             <type by_reference="false">void</type>
           </tag>
         </docblock>
-        <argument line="466">
+        <argument line="468">
           <name>$str</name>
           <default>null</default>
           <type/>
         </argument>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="Klein" line="495" package="Klein">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Klein" line="497" package="Klein">
         <name>header</name>
         <full_name>header</full_name>
-        <docblock line="487">
+        <docblock line="489">
           <description>Sets a response header</description>
-          <long-description/>
-          <tag line="487" name="param" description="The name of the HTTP response header" type="string" variable="$key">
+          <long-description></long-description>
+          <tag line="489" name="param" description="The name of the HTTP response header" type="string" variable="$key">
             <type by_reference="false">string</type>
           </tag>
-          <tag line="487" name="param" description="The value to set the header with" type="mixed" variable="$value">
+          <tag line="489" name="param" description="The value to set the header with" type="mixed" variable="$value">
             <type by_reference="false">mixed</type>
           </tag>
-          <tag line="487" name="access" description="public"/>
-          <tag line="487" name="return" description="" type="\Klein\Response">
+          <tag line="489" name="access" description="public"/>
+          <tag line="489" name="return" description="" type="\Klein\Response">
             <type by_reference="false">\Klein\Response</type>
           </tag>
         </docblock>
-        <argument line="495">
+        <argument line="497">
           <name>$key</name>
-          <default/>
+          <default></default>
           <type/>
         </argument>
-        <argument line="495">
+        <argument line="497">
           <name>$value</name>
-          <default/>
+          <default></default>
           <type/>
         </argument>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="Klein" line="515" package="Klein">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Klein" line="517" package="Klein">
         <name>cookie</name>
         <full_name>cookie</full_name>
-        <docblock line="502">
+        <docblock line="504">
           <description>Sets a response cookie</description>
-          <long-description/>
-          <tag line="502" name="param" description="The name of the cookie" type="string" variable="$key">
+          <long-description></long-description>
+          <tag line="504" name="param" description="The name of the cookie" type="string" variable="$key">
             <type by_reference="false">string</type>
           </tag>
-          <tag line="502" name="param" description="The value to set the cookie with" type="string" variable="$value">
+          <tag line="504" name="param" description="The value to set the cookie with" type="string" variable="$value">
             <type by_reference="false">string</type>
           </tag>
-          <tag line="502" name="param" description="The time that the cookie should expire" type="int" variable="$expiry">
+          <tag line="504" name="param" description="The time that the cookie should expire" type="int" variable="$expiry">
             <type by_reference="false">int</type>
           </tag>
-          <tag line="502" name="param" description="The path of which to restrict the cookie" type="string" variable="$path">
+          <tag line="504" name="param" description="The path of which to restrict the cookie" type="string" variable="$path">
             <type by_reference="false">string</type>
           </tag>
-          <tag line="502" name="param" description="The domain of which to restrict the cookie" type="string" variable="$domain">
+          <tag line="504" name="param" description="The domain of which to restrict the cookie" type="string" variable="$domain">
             <type by_reference="false">string</type>
           </tag>
-          <tag line="502" name="param" description="Flag of whether the cookie should only be sent over a HTTPS connection" type="boolean" variable="$secure">
+          <tag line="504" name="param" description="Flag of whether the cookie should only be sent over a HTTPS connection" type="boolean" variable="$secure">
             <type by_reference="false">boolean</type>
           </tag>
-          <tag line="502" name="param" description="Flag of whether the cookie should only be accessible over the HTTP protocol" type="boolean" variable="$httponly">
+          <tag line="504" name="param" description="Flag of whether the cookie should only be accessible over the HTTP protocol" type="boolean" variable="$httponly">
             <type by_reference="false">boolean</type>
           </tag>
-          <tag line="502" name="access" description="public"/>
-          <tag line="502" name="return" description="" type="\Klein\Response">
+          <tag line="504" name="access" description="public"/>
+          <tag line="504" name="return" description="" type="\Klein\Response">
             <type by_reference="false">\Klein\Response</type>
           </tag>
         </docblock>
-        <argument line="516">
+        <argument line="518">
           <name>$key</name>
-          <default/>
+          <default></default>
           <type/>
         </argument>
-        <argument line="517">
+        <argument line="519">
           <name>$value</name>
           <default>''</default>
           <type/>
         </argument>
-        <argument line="518">
+        <argument line="520">
           <name>$expiry</name>
           <default>null</default>
           <type/>
         </argument>
-        <argument line="519">
+        <argument line="521">
           <name>$path</name>
           <default>'/'</default>
           <type/>
         </argument>
-        <argument line="520">
+        <argument line="522">
           <name>$domain</name>
           <default>null</default>
           <type/>
         </argument>
-        <argument line="521">
+        <argument line="523">
           <name>$secure</name>
           <default>false</default>
           <type/>
         </argument>
-        <argument line="522">
+        <argument line="524">
           <name>$httponly</name>
           <default>false</default>
           <type/>
         </argument>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="Klein" line="542" package="Klein">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Klein" line="544" package="Klein">
         <name>noCache</name>
         <full_name>noCache</full_name>
-        <docblock line="536">
+        <docblock line="538">
           <description>Tell the browser not to cache the response</description>
-          <long-description/>
-          <tag line="536" name="access" description="public"/>
-          <tag line="536" name="return" description="" type="\Klein\Response">
+          <long-description></long-description>
+          <tag line="538" name="access" description="public"/>
+          <tag line="538" name="return" description="" type="\Klein\Response">
             <type by_reference="false">\Klein\Response</type>
           </tag>
         </docblock>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="Klein" line="558" package="Klein">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Klein" line="560" package="Klein">
         <name>redirect</name>
         <full_name>redirect</full_name>
-        <docblock line="550">
+        <docblock line="552">
           <description>Redirects the request to another URL</description>
-          <long-description/>
-          <tag line="550" name="param" description="The URL to redirect to" type="string" variable="$url">
+          <long-description></long-description>
+          <tag line="552" name="param" description="The URL to redirect to" type="string" variable="$url">
             <type by_reference="false">string</type>
           </tag>
-          <tag line="550" name="param" description="The HTTP status code to use for redirection" type="int" variable="$code">
+          <tag line="552" name="param" description="The HTTP status code to use for redirection" type="int" variable="$code">
             <type by_reference="false">int</type>
           </tag>
-          <tag line="550" name="access" description="public"/>
-          <tag line="550" name="return" description="" type="\Klein\Response">
+          <tag line="552" name="access" description="public"/>
+          <tag line="552" name="return" description="" type="\Klein\Response">
             <type by_reference="false">\Klein\Response</type>
           </tag>
         </docblock>
-        <argument line="558">
+        <argument line="560">
           <name>$url</name>
-          <default/>
+          <default></default>
           <type/>
         </argument>
-        <argument line="558">
+        <argument line="560">
           <name>$code</name>
           <default>302</default>
           <type/>
         </argument>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="Klein" line="574" package="Klein">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Klein" line="576" package="Klein">
         <name>dump</name>
         <full_name>dump</full_name>
-        <docblock line="567">
+        <docblock line="569">
           <description>Dump a variable</description>
-          <long-description/>
-          <tag line="567" name="param" description="The variable to dump" type="mixed" variable="$obj">
+          <long-description></long-description>
+          <tag line="569" name="param" description="The variable to dump" type="mixed" variable="$obj">
             <type by_reference="false">mixed</type>
           </tag>
-          <tag line="567" name="access" description="public"/>
-          <tag line="567" name="return" description="" type="void">
+          <tag line="569" name="access" description="public"/>
+          <tag line="569" name="return" description="" type="void">
             <type by_reference="false">void</type>
           </tag>
         </docblock>
-        <argument line="574">
+        <argument line="576">
           <name>$obj</name>
-          <default/>
+          <default></default>
           <type/>
         </argument>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="Klein" line="592" package="Klein">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Klein" line="594" package="Klein">
         <name>file</name>
         <full_name>file</full_name>
-        <docblock line="583">
+        <docblock line="585">
           <description>Sends a file</description>
-          <long-description/>
-          <tag line="583" name="param" description="The path of the file to send" type="string" variable="$path">
+          <long-description></long-description>
+          <tag line="585" name="param" description="The path of the file to send" type="string" variable="$path">
             <type by_reference="false">string</type>
           </tag>
-          <tag line="583" name="param" description="The file's name" type="string" variable="$filename">
+          <tag line="585" name="param" description="The file's name" type="string" variable="$filename">
             <type by_reference="false">string</type>
           </tag>
-          <tag line="583" name="param" description="The MIME type of the file" type="string" variable="$mimetype">
+          <tag line="585" name="param" description="The MIME type of the file" type="string" variable="$mimetype">
             <type by_reference="false">string</type>
           </tag>
-          <tag line="583" name="access" description="public"/>
-          <tag line="583" name="return" description="" type="void">
+          <tag line="585" name="access" description="public"/>
+          <tag line="585" name="return" description="" type="void">
             <type by_reference="false">void</type>
           </tag>
         </docblock>
-        <argument line="592">
+        <argument line="594">
           <name>$path</name>
-          <default/>
+          <default></default>
           <type/>
         </argument>
-        <argument line="592">
+        <argument line="594">
           <name>$filename</name>
           <default>null</default>
           <type/>
         </argument>
-        <argument line="592">
+        <argument line="594">
           <name>$mimetype</name>
           <default>null</default>
           <type/>
         </argument>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="Klein" line="623" package="Klein">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Klein" line="625" package="Klein">
         <name>json</name>
         <full_name>json</full_name>
-        <docblock line="615">
+        <docblock line="617">
           <description>Sends an object as json or jsonp by providing the padding prefix</description>
-          <long-description/>
-          <tag line="615" name="param" description="The data to encode as JSON" type="mixed" variable="$object">
+          <long-description></long-description>
+          <tag line="617" name="param" description="The data to encode as JSON" type="mixed" variable="$object">
             <type by_reference="false">mixed</type>
           </tag>
-          <tag line="615" name="param" description="The name of the JSON-P function prefix" type="string" variable="$jsonp_prefix">
+          <tag line="617" name="param" description="The name of the JSON-P function prefix" type="string" variable="$jsonp_prefix">
             <type by_reference="false">string</type>
           </tag>
-          <tag line="615" name="access" description="public"/>
-          <tag line="615" name="return" description="" type="void">
+          <tag line="617" name="access" description="public"/>
+          <tag line="617" name="return" description="" type="void">
             <type by_reference="false">void</type>
           </tag>
         </docblock>
-        <argument line="623">
+        <argument line="625">
           <name>$object</name>
-          <default/>
+          <default></default>
           <type/>
         </argument>
-        <argument line="623">
+        <argument line="625">
           <name>$jsonp_prefix</name>
           <default>null</default>
           <type/>
@@ -3103,7 +3486,7 @@ when its locked&lt;/p&gt;</long-description>
   <file path="ResponseCookie.php" hash="869dc47a198255aea04d4549c6df7692" package="Default">
     <docblock line="2">
       <description>Klein (klein.php) - A lightning fast router for PHP</description>
-      <long-description/>
+      <long-description></long-description>
       <tag line="2" name="author" description="Chris O'Hara &lt;cohara87@gmail.com&gt;"/>
       <tag line="2" name="author" description="Trevor Suarez (Rican7) (contributor and v2 refactorer)"/>
       <tag line="2" name="copyright" description="(c) Chris O'Hara"/>
@@ -3121,10 +3504,10 @@ when its locked&lt;/p&gt;</long-description>
       </docblock>
       <property final="false" static="false" visibility="protected" line="34" namespace="Klein" package="Default">
         <name>$name</name>
-        <default/>
+        <default></default>
         <docblock line="28">
           <description>The name of the cookie</description>
-          <long-description/>
+          <long-description></long-description>
           <tag line="28" name="var" description="" type="string">
             <type by_reference="false">string</type>
           </tag>
@@ -3133,10 +3516,10 @@ when its locked&lt;/p&gt;</long-description>
       </property>
       <property final="false" static="false" visibility="protected" line="42" namespace="Klein" package="Default">
         <name>$value</name>
-        <default/>
+        <default></default>
         <docblock line="36">
           <description>The string "value" of the cookie</description>
-          <long-description/>
+          <long-description></long-description>
           <tag line="36" name="var" description="" type="string">
             <type by_reference="false">string</type>
           </tag>
@@ -3145,7 +3528,7 @@ when its locked&lt;/p&gt;</long-description>
       </property>
       <property final="false" static="false" visibility="protected" line="52" namespace="Klein" package="Default">
         <name>$expire</name>
-        <default/>
+        <default></default>
         <docblock line="44">
           <description>The date/time that the cookie should expire</description>
           <long-description>&lt;p&gt;Represented by a Unix "Timestamp"&lt;/p&gt;</long-description>
@@ -3157,11 +3540,11 @@ when its locked&lt;/p&gt;</long-description>
       </property>
       <property final="false" static="false" visibility="protected" line="61" namespace="Klein" package="Default">
         <name>$path</name>
-        <default/>
+        <default></default>
         <docblock line="54">
           <description>The path on the server that the cookie will
 be available on</description>
-          <long-description/>
+          <long-description></long-description>
           <tag line="54" name="var" description="" type="string">
             <type by_reference="false">string</type>
           </tag>
@@ -3170,10 +3553,10 @@ be available on</description>
       </property>
       <property final="false" static="false" visibility="protected" line="69" namespace="Klein" package="Default">
         <name>$domain</name>
-        <default/>
+        <default></default>
         <docblock line="63">
           <description>The domain that the cookie is available to</description>
-          <long-description/>
+          <long-description></long-description>
           <tag line="63" name="var" description="" type="string">
             <type by_reference="false">string</type>
           </tag>
@@ -3182,11 +3565,11 @@ be available on</description>
       </property>
       <property final="false" static="false" visibility="protected" line="78" namespace="Klein" package="Default">
         <name>$secure</name>
-        <default/>
+        <default></default>
         <docblock line="71">
           <description>Whether the cookie should only be transferred
 over an HTTPS connection or not</description>
-          <long-description/>
+          <long-description></long-description>
           <tag line="71" name="var" description="" type="boolean">
             <type by_reference="false">boolean</type>
           </tag>
@@ -3195,12 +3578,12 @@ over an HTTPS connection or not</description>
       </property>
       <property final="false" static="false" visibility="protected" line="88" namespace="Klein" package="Default">
         <name>$http_only</name>
-        <default/>
+        <default></default>
         <docblock line="80">
           <description>Whether the cookie will be available through HTTP
 only (not available to be accessed through
 client-side scripting languages like JavaScript)</description>
-          <long-description/>
+          <long-description></long-description>
           <tag line="80" name="var" description="" type="boolean">
             <type by_reference="false">boolean</type>
           </tag>
@@ -3212,7 +3595,7 @@ client-side scripting languages like JavaScript)</description>
         <full_name>__construct</full_name>
         <docblock line="95">
           <description>Constructor</description>
-          <long-description/>
+          <long-description></long-description>
           <tag line="95" name="param" description="The name of the cookie" type="string" variable="$name">
             <type by_reference="false">string</type>
           </tag>
@@ -3238,7 +3621,7 @@ client-side scripting languages like JavaScript)</description>
         </docblock>
         <argument line="108">
           <name>$name</name>
-          <default/>
+          <default></default>
           <type/>
         </argument>
         <argument line="109">
@@ -3277,7 +3660,7 @@ client-side scripting languages like JavaScript)</description>
         <full_name>getName</full_name>
         <docblock line="126">
           <description>Gets the cookie's name</description>
-          <long-description/>
+          <long-description></long-description>
           <tag line="126" name="access" description="public"/>
           <tag line="126" name="return" description="" type="string">
             <type by_reference="false">string</type>
@@ -3289,7 +3672,7 @@ client-side scripting languages like JavaScript)</description>
         <full_name>setName</full_name>
         <docblock line="137">
           <description>Sets the cookie's name</description>
-          <long-description/>
+          <long-description></long-description>
           <tag line="137" name="param" description="" type="string" variable="$name">
             <type by_reference="false">string</type>
           </tag>
@@ -3300,7 +3683,7 @@ client-side scripting languages like JavaScript)</description>
         </docblock>
         <argument line="144">
           <name>$name</name>
-          <default/>
+          <default></default>
           <type/>
         </argument>
       </method>
@@ -3309,7 +3692,7 @@ client-side scripting languages like JavaScript)</description>
         <full_name>getValue</full_name>
         <docblock line="151">
           <description>Gets the cookie's value</description>
-          <long-description/>
+          <long-description></long-description>
           <tag line="151" name="access" description="public"/>
           <tag line="151" name="return" description="" type="string">
             <type by_reference="false">string</type>
@@ -3321,7 +3704,7 @@ client-side scripting languages like JavaScript)</description>
         <full_name>setValue</full_name>
         <docblock line="162">
           <description>Sets the cookie's value</description>
-          <long-description/>
+          <long-description></long-description>
           <tag line="162" name="param" description="" type="string" variable="$value">
             <type by_reference="false">string</type>
           </tag>
@@ -3332,7 +3715,7 @@ client-side scripting languages like JavaScript)</description>
         </docblock>
         <argument line="169">
           <name>$value</name>
-          <default/>
+          <default></default>
           <type/>
         </argument>
       </method>
@@ -3341,7 +3724,7 @@ client-side scripting languages like JavaScript)</description>
         <full_name>getExpire</full_name>
         <docblock line="180">
           <description>Gets the cookie's expire time</description>
-          <long-description/>
+          <long-description></long-description>
           <tag line="180" name="access" description="public"/>
           <tag line="180" name="return" description="" type="int">
             <type by_reference="false">int</type>
@@ -3365,7 +3748,7 @@ representing a Unix timestamp&lt;/p&gt;</long-description>
         </docblock>
         <argument line="201">
           <name>$expire</name>
-          <default/>
+          <default></default>
           <type/>
         </argument>
       </method>
@@ -3374,7 +3757,7 @@ representing a Unix timestamp&lt;/p&gt;</long-description>
         <full_name>getPath</full_name>
         <docblock line="212">
           <description>Gets the cookie's path</description>
-          <long-description/>
+          <long-description></long-description>
           <tag line="212" name="access" description="public"/>
           <tag line="212" name="return" description="" type="string">
             <type by_reference="false">string</type>
@@ -3386,7 +3769,7 @@ representing a Unix timestamp&lt;/p&gt;</long-description>
         <full_name>setPath</full_name>
         <docblock line="223">
           <description>Sets the cookie's path</description>
-          <long-description/>
+          <long-description></long-description>
           <tag line="223" name="param" description="" type="string" variable="$path">
             <type by_reference="false">string</type>
           </tag>
@@ -3397,7 +3780,7 @@ representing a Unix timestamp&lt;/p&gt;</long-description>
         </docblock>
         <argument line="230">
           <name>$path</name>
-          <default/>
+          <default></default>
           <type/>
         </argument>
       </method>
@@ -3406,7 +3789,7 @@ representing a Unix timestamp&lt;/p&gt;</long-description>
         <full_name>getDomain</full_name>
         <docblock line="241">
           <description>Gets the cookie's domain</description>
-          <long-description/>
+          <long-description></long-description>
           <tag line="241" name="access" description="public"/>
           <tag line="241" name="return" description="" type="string">
             <type by_reference="false">string</type>
@@ -3418,7 +3801,7 @@ representing a Unix timestamp&lt;/p&gt;</long-description>
         <full_name>setDomain</full_name>
         <docblock line="252">
           <description>Sets the cookie's domain</description>
-          <long-description/>
+          <long-description></long-description>
           <tag line="252" name="param" description="" type="string" variable="$domain">
             <type by_reference="false">string</type>
           </tag>
@@ -3429,7 +3812,7 @@ representing a Unix timestamp&lt;/p&gt;</long-description>
         </docblock>
         <argument line="259">
           <name>$domain</name>
-          <default/>
+          <default></default>
           <type/>
         </argument>
       </method>
@@ -3438,7 +3821,7 @@ representing a Unix timestamp&lt;/p&gt;</long-description>
         <full_name>getSecure</full_name>
         <docblock line="270">
           <description>Gets the cookie's secure only flag</description>
-          <long-description/>
+          <long-description></long-description>
           <tag line="270" name="access" description="public"/>
           <tag line="270" name="return" description="" type="boolean">
             <type by_reference="false">boolean</type>
@@ -3450,7 +3833,7 @@ representing a Unix timestamp&lt;/p&gt;</long-description>
         <full_name>setSecure</full_name>
         <docblock line="281">
           <description>Sets the cookie's secure only flag</description>
-          <long-description/>
+          <long-description></long-description>
           <tag line="281" name="param" description="" type="boolean" variable="$secure">
             <type by_reference="false">boolean</type>
           </tag>
@@ -3461,7 +3844,7 @@ representing a Unix timestamp&lt;/p&gt;</long-description>
         </docblock>
         <argument line="288">
           <name>$secure</name>
-          <default/>
+          <default></default>
           <type/>
         </argument>
       </method>
@@ -3470,7 +3853,7 @@ representing a Unix timestamp&lt;/p&gt;</long-description>
         <full_name>getHttpOnly</full_name>
         <docblock line="295">
           <description>Gets the cookie's HTTP only flag</description>
-          <long-description/>
+          <long-description></long-description>
           <tag line="295" name="access" description="public"/>
           <tag line="295" name="return" description="" type="boolean">
             <type by_reference="false">boolean</type>
@@ -3482,7 +3865,7 @@ representing a Unix timestamp&lt;/p&gt;</long-description>
         <full_name>setHttpOnly</full_name>
         <docblock line="306">
           <description>Sets the cookie's HTTP only flag</description>
-          <long-description/>
+          <long-description></long-description>
           <tag line="306" name="param" description="" type="boolean" variable="$http_only">
             <type by_reference="false">boolean</type>
           </tag>
@@ -3493,7 +3876,285 @@ representing a Unix timestamp&lt;/p&gt;</long-description>
         </docblock>
         <argument line="313">
           <name>$http_only</name>
-          <default/>
+          <default></default>
+          <type/>
+        </argument>
+      </method>
+    </class>
+  </file>
+  <file path="Route.php" hash="18b017e500a90c202dde7ff9b89f1cec" package="Default">
+    <docblock line="2">
+      <description>Klein (klein.php) - A lightning fast router for PHP</description>
+      <long-description></long-description>
+      <tag line="2" name="author" description="Chris O'Hara &lt;cohara87@gmail.com&gt;"/>
+      <tag line="2" name="author" description="Trevor Suarez (Rican7) (contributor and v2 refactorer)"/>
+      <tag line="2" name="copyright" description="(c) Chris O'Hara"/>
+      <tag line="2" name="link" description="https://github.com/chriso/klein.php" link="https://github.com/chriso/klein.php"/>
+      <tag line="2" name="license" description="MIT"/>
+    </docblock>
+    <class final="false" abstract="false" namespace="Klein" line="23" package="Klein">
+      <extends/>
+      <name>Route</name>
+      <full_name>\Klein\Route</full_name>
+      <docblock line="16">
+        <description>Route</description>
+        <long-description>&lt;p&gt;Class to represent a route definition&lt;/p&gt;</long-description>
+        <tag line="16" name="package" description="Klein"/>
+      </docblock>
+      <property final="false" static="false" visibility="protected" line="39" namespace="Klein" package="Default">
+        <name>$callback</name>
+        <default></default>
+        <docblock line="30">
+          <description>The callback method to execute when the route is matched</description>
+          <long-description>&lt;p&gt;Any valid "callable" type is allowed&lt;/p&gt;</long-description>
+          <tag line="30" name="link" description="http://php.net/manual/en/language.types.callable.php" link="http://php.net/manual/en/language.types.callable.php"/>
+          <tag line="30" name="var" description="" type="callable">
+            <type by_reference="false">callable</type>
+          </tag>
+          <tag line="30" name="access" description="protected"/>
+        </docblock>
+      </property>
+      <property final="false" static="false" visibility="protected" line="54" namespace="Klein" package="Default">
+        <name>$path</name>
+        <default></default>
+        <docblock line="41">
+          <description>The URL path to match</description>
+          <long-description>&lt;p&gt;Allows for regular expression matching and/or basic string matching&lt;/p&gt;
+
+&lt;p&gt;Examples:
+- '/posts'
+- '/posts/[:post_slug]'
+- '/posts/[i:id]'&lt;/p&gt;</long-description>
+          <tag line="41" name="var" description="" type="string">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="41" name="access" description="protected"/>
+        </docblock>
+      </property>
+      <property final="false" static="false" visibility="protected" line="68" namespace="Klein" package="Default">
+        <name>$method</name>
+        <default></default>
+        <docblock line="56">
+          <description>The HTTP method to match</description>
+          <long-description>&lt;p&gt;May either be represented as a string or an array containing multiple methods to match&lt;/p&gt;
+
+&lt;p&gt;Examples:
+- 'POST'
+- array('GET', 'POST')&lt;/p&gt;</long-description>
+          <tag line="56" name="var" description="" type="string|array">
+            <type by_reference="false">string</type>
+            <type by_reference="false">array</type>
+          </tag>
+          <tag line="56" name="access" description="protected"/>
+        </docblock>
+      </property>
+      <property final="false" static="false" visibility="protected" line="76" namespace="Klein" package="Default">
+        <name>$count_match</name>
+        <default></default>
+        <docblock line="70">
+          <description>Whether or not to count this route as a match when counting total matches</description>
+          <long-description></long-description>
+          <tag line="70" name="var" description="" type="boolean">
+            <type by_reference="false">boolean</type>
+          </tag>
+          <tag line="70" name="access" description="protected"/>
+        </docblock>
+      </property>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Klein" line="92" package="Klein">
+        <name>__construct</name>
+        <full_name>__construct</full_name>
+        <docblock line="83">
+          <description>Constructor</description>
+          <long-description></long-description>
+          <tag line="83" name="param" description="" type="callable" variable="$callback">
+            <type by_reference="false">callable</type>
+          </tag>
+          <tag line="83" name="param" description="" type="string" variable="$path">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="83" name="param" description="" type="string|array" variable="$method">
+            <type by_reference="false">string</type>
+            <type by_reference="false">array</type>
+          </tag>
+          <tag line="83" name="param" description="" type="boolean" variable="$count_match">
+            <type by_reference="false">boolean</type>
+          </tag>
+          <tag line="83" name="access" description="public"/>
+        </docblock>
+        <argument line="92">
+          <name>$callback</name>
+          <default></default>
+          <type/>
+        </argument>
+        <argument line="92">
+          <name>$path</name>
+          <default>'*'</default>
+          <type/>
+        </argument>
+        <argument line="92">
+          <name>$method</name>
+          <default>null</default>
+          <type/>
+        </argument>
+        <argument line="92">
+          <name>$count_match</name>
+          <default>true</default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Klein" line="107" package="Klein">
+        <name>getCallback</name>
+        <full_name>getCallback</full_name>
+        <docblock line="101">
+          <description>Get the callback</description>
+          <long-description></long-description>
+          <tag line="101" name="access" description="public"/>
+          <tag line="101" name="return" description="" type="callable">
+            <type by_reference="false">callable</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Klein" line="120" package="Klein">
+        <name>setCallback</name>
+        <full_name>setCallback</full_name>
+        <docblock line="112">
+          <description>Set the callback</description>
+          <long-description></long-description>
+          <tag line="112" name="param" description="" type="callable" variable="$callback">
+            <type by_reference="false">callable</type>
+          </tag>
+          <tag line="112" name="throws" description="If the callback isn't a callable" type="\InvalidArgumentException">
+            <type by_reference="false">\InvalidArgumentException</type>
+          </tag>
+          <tag line="112" name="access" description="public"/>
+          <tag line="112" name="return" description="" type="\Klein\Route">
+            <type by_reference="false">\Klein\Route</type>
+          </tag>
+        </docblock>
+        <argument line="120">
+          <name>$callback</name>
+          <default></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Klein" line="137" package="Klein">
+        <name>getPath</name>
+        <full_name>getPath</full_name>
+        <docblock line="131">
+          <description>Get the path</description>
+          <long-description></long-description>
+          <tag line="131" name="access" description="public"/>
+          <tag line="131" name="return" description="" type="string">
+            <type by_reference="false">string</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Klein" line="149" package="Klein">
+        <name>setPath</name>
+        <full_name>setPath</full_name>
+        <docblock line="142">
+          <description>Set the path</description>
+          <long-description></long-description>
+          <tag line="142" name="param" description="" type="string" variable="$path">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="142" name="access" description="public"/>
+          <tag line="142" name="return" description="" type="\Klein\Route">
+            <type by_reference="false">\Klein\Route</type>
+          </tag>
+        </docblock>
+        <argument line="149">
+          <name>$path</name>
+          <default></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Klein" line="162" package="Klein">
+        <name>getMethod</name>
+        <full_name>getMethod</full_name>
+        <docblock line="156">
+          <description>Get the method</description>
+          <long-description></long-description>
+          <tag line="156" name="access" description="public"/>
+          <tag line="156" name="return" description="" type="string|array">
+            <type by_reference="false">string</type>
+            <type by_reference="false">array</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Klein" line="175" package="Klein">
+        <name>setMethod</name>
+        <full_name>setMethod</full_name>
+        <docblock line="167">
+          <description>Set the method</description>
+          <long-description></long-description>
+          <tag line="167" name="param" description="" type="string|array" variable="$method">
+            <type by_reference="false">string</type>
+            <type by_reference="false">array</type>
+          </tag>
+          <tag line="167" name="throws" description="If a non-string or non-array type is passed" type="\InvalidArgumentException">
+            <type by_reference="false">\InvalidArgumentException</type>
+          </tag>
+          <tag line="167" name="access" description="public"/>
+          <tag line="167" name="return" description="" type="\Klein\Route">
+            <type by_reference="false">\Klein\Route</type>
+          </tag>
+        </docblock>
+        <argument line="175">
+          <name>$method</name>
+          <default></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Klein" line="193" package="Klein">
+        <name>getCountMatch</name>
+        <full_name>getCountMatch</full_name>
+        <docblock line="187">
+          <description>Get the count_match</description>
+          <long-description></long-description>
+          <tag line="187" name="access" description="public"/>
+          <tag line="187" name="return" description="" type="boolean">
+            <type by_reference="false">boolean</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Klein" line="205" package="Klein">
+        <name>setCountMatch</name>
+        <full_name>setCountMatch</full_name>
+        <docblock line="198">
+          <description>Set the count_match</description>
+          <long-description></long-description>
+          <tag line="198" name="param" description="" type="boolean" variable="$count_match">
+            <type by_reference="false">boolean</type>
+          </tag>
+          <tag line="198" name="access" description="public"/>
+          <tag line="198" name="return" description="" type="\Klein\Route">
+            <type by_reference="false">\Klein\Route</type>
+          </tag>
+        </docblock>
+        <argument line="205">
+          <name>$count_match</name>
+          <default></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Klein" line="222" package="Klein">
+        <name>__invoke</name>
+        <full_name>__invoke</full_name>
+        <docblock line="213">
+          <description>Magic "__invoke" method</description>
+          <long-description>&lt;p&gt;Allows the ability to arbitrarily call this instance like a function&lt;/p&gt;</long-description>
+          <tag line="213" name="param" description="Generic arguments, magically accepted" type="mixed" variable="$args">
+            <type by_reference="false">mixed</type>
+          </tag>
+          <tag line="213" name="access" description="public"/>
+          <tag line="213" name="return" description="" type="mixed">
+            <type by_reference="false">mixed</type>
+          </tag>
+        </docblock>
+        <argument line="222">
+          <name>$args</name>
+          <default>null</default>
           <type/>
         </argument>
       </method>
@@ -3502,7 +4163,7 @@ representing a Unix timestamp&lt;/p&gt;</long-description>
   <file path="ServiceProvider.php" hash="7571b666ac0f2bde82732f072e6e61a0" package="Default">
     <docblock line="2">
       <description>Klein (klein.php) - A lightning fast router for PHP</description>
-      <long-description/>
+      <long-description></long-description>
       <tag line="2" name="author" description="Chris O'Hara &lt;cohara87@gmail.com&gt;"/>
       <tag line="2" name="author" description="Trevor Suarez (Rican7) (contributor and v2 refactorer)"/>
       <tag line="2" name="copyright" description="(c) Chris O'Hara"/>
@@ -3527,10 +4188,10 @@ a request's data and a response's behavior&lt;/p&gt;</long-description>
       </docblock>
       <property final="false" static="false" visibility="protected" line="37" namespace="Klein" package="Default">
         <name>$request</name>
-        <default/>
+        <default></default>
         <docblock line="31">
           <description>The Request instance containing HTTP request data and behaviors</description>
-          <long-description/>
+          <long-description></long-description>
           <tag line="31" name="var" description="" type="\Klein\Request">
             <type by_reference="false">\Klein\Request</type>
           </tag>
@@ -3539,10 +4200,10 @@ a request's data and a response's behavior&lt;/p&gt;</long-description>
       </property>
       <property final="false" static="false" visibility="protected" line="45" namespace="Klein" package="Default">
         <name>$response</name>
-        <default/>
+        <default></default>
         <docblock line="39">
           <description>The Response instance containing HTTP response data and behaviors</description>
-          <long-description/>
+          <long-description></long-description>
           <tag line="39" name="var" description="" type="\Klein\Response">
             <type by_reference="false">\Klein\Response</type>
           </tag>
@@ -3551,10 +4212,10 @@ a request's data and a response's behavior&lt;/p&gt;</long-description>
       </property>
       <property final="false" static="false" visibility="protected" line="53" namespace="Klein" package="Default">
         <name>$session_id</name>
-        <default/>
+        <default></default>
         <docblock line="47">
           <description>The id of the current PHP session</description>
-          <long-description/>
+          <long-description></long-description>
           <tag line="47" name="var" description="" type="string">
             <type by_reference="false">string</type>
           </tag>
@@ -3563,10 +4224,10 @@ a request's data and a response's behavior&lt;/p&gt;</long-description>
       </property>
       <property final="false" static="false" visibility="protected" line="61" namespace="Klein" package="Default">
         <name>$layout</name>
-        <default/>
+        <default></default>
         <docblock line="55">
           <description>The view layout</description>
-          <long-description/>
+          <long-description></long-description>
           <tag line="55" name="var" description="" type="string">
             <type by_reference="false">string</type>
           </tag>
@@ -3575,10 +4236,10 @@ a request's data and a response's behavior&lt;/p&gt;</long-description>
       </property>
       <property final="false" static="false" visibility="protected" line="69" namespace="Klein" package="Default">
         <name>$view</name>
-        <default/>
+        <default></default>
         <docblock line="63">
           <description>The view to render</description>
-          <long-description/>
+          <long-description></long-description>
           <tag line="63" name="var" description="" type="string">
             <type by_reference="false">string</type>
           </tag>
@@ -3587,10 +4248,10 @@ a request's data and a response's behavior&lt;/p&gt;</long-description>
       </property>
       <property final="false" static="false" visibility="protected" line="77" namespace="Klein" package="Default">
         <name>$shared_data</name>
-        <default/>
+        <default></default>
         <docblock line="71">
           <description>Shared data collection</description>
-          <long-description/>
+          <long-description></long-description>
           <tag line="71" name="var" description="" type="\Klein\DataCollection\DataCollection">
             <type by_reference="false">\Klein\DataCollection\DataCollection</type>
           </tag>
@@ -3602,7 +4263,7 @@ a request's data and a response's behavior&lt;/p&gt;</long-description>
         <full_name>__construct</full_name>
         <docblock line="84">
           <description>Constructor</description>
-          <long-description/>
+          <long-description></long-description>
           <tag line="84" name="param" description="Object containing all HTTP request data and behaviors" type="\Klein\Request" variable="$request">
             <type by_reference="false">\Klein\Request</type>
           </tag>
@@ -3627,7 +4288,7 @@ a request's data and a response's behavior&lt;/p&gt;</long-description>
         <full_name>bind</full_name>
         <docblock line="100">
           <description>Bind object instances to this service</description>
-          <long-description/>
+          <long-description></long-description>
           <tag line="100" name="param" description="Object containing all HTTP request data and behaviors" type="\Klein\Request" variable="$request">
             <type by_reference="false">\Klein\Request</type>
           </tag>
@@ -3655,7 +4316,7 @@ a request's data and a response's behavior&lt;/p&gt;</long-description>
         <full_name>sharedData</full_name>
         <docblock line="117">
           <description>Returns the shared data collection object</description>
-          <long-description/>
+          <long-description></long-description>
           <tag line="117" name="access" description="public"/>
           <tag line="117" name="return" description="" type="\Klein\DataCollection\DataCollection">
             <type by_reference="false">\Klein\DataCollection\DataCollection</type>
@@ -3680,7 +4341,7 @@ a request's data and a response's behavior&lt;/p&gt;</long-description>
         <full_name>flash</full_name>
         <docblock line="149">
           <description>Stores a flash message of $type</description>
-          <long-description/>
+          <long-description></long-description>
           <tag line="149" name="param" description="The message to flash" type="string" variable="$msg">
             <type by_reference="false">string</type>
           </tag>
@@ -3697,7 +4358,7 @@ a request's data and a response's behavior&lt;/p&gt;</long-description>
         </docblock>
         <argument line="158">
           <name>$msg</name>
-          <default/>
+          <default></default>
           <type/>
         </argument>
         <argument line="158">
@@ -3716,7 +4377,7 @@ a request's data and a response's behavior&lt;/p&gt;</long-description>
         <full_name>flashes</full_name>
         <docblock line="173">
           <description>Returns and clears all flashes of optional $type</description>
-          <long-description/>
+          <long-description></long-description>
           <tag line="173" name="param" description="The name of the flash message type" type="string" variable="$type">
             <type by_reference="false">string</type>
           </tag>
@@ -3754,7 +4415,7 @@ a request's data and a response's behavior&lt;/p&gt;</long-description>
         </docblock>
         <argument line="213">
           <name>$str</name>
-          <default/>
+          <default></default>
           <type/>
         </argument>
         <argument line="213">
@@ -3768,7 +4429,7 @@ a request's data and a response's behavior&lt;/p&gt;</long-description>
         <full_name>escape</full_name>
         <docblock line="242">
           <description>Escapes a string</description>
-          <long-description/>
+          <long-description></long-description>
           <tag line="242" name="param" description="The string to escape" type="string" variable="$str">
             <type by_reference="false">string</type>
           </tag>
@@ -3780,7 +4441,7 @@ a request's data and a response's behavior&lt;/p&gt;</long-description>
         </docblock>
         <argument line="250">
           <name>$str</name>
-          <default/>
+          <default></default>
           <type/>
         </argument>
       </method>
@@ -3789,7 +4450,7 @@ a request's data and a response's behavior&lt;/p&gt;</long-description>
         <full_name>refresh</full_name>
         <docblock line="255">
           <description>Redirects the request to the current URL</description>
-          <long-description/>
+          <long-description></long-description>
           <tag line="255" name="access" description="public"/>
           <tag line="255" name="return" description="" type="\Klein\ServiceProvider">
             <type by_reference="false">\Klein\ServiceProvider</type>
@@ -3801,7 +4462,7 @@ a request's data and a response's behavior&lt;/p&gt;</long-description>
         <full_name>back</full_name>
         <docblock line="270">
           <description>Redirects the request back to the referrer</description>
-          <long-description/>
+          <long-description></long-description>
           <tag line="270" name="access" description="public"/>
           <tag line="270" name="return" description="" type="\Klein\ServiceProvider">
             <type by_reference="false">\Klein\ServiceProvider</type>
@@ -3835,7 +4496,7 @@ Calling with an argument, however, sets the layout to what was provided by the a
         <full_name>yieldView</full_name>
         <docblock line="310">
           <description>Renders the current view</description>
-          <long-description/>
+          <long-description></long-description>
           <tag line="310" name="access" description="public"/>
           <tag line="310" name="return" description="" type="void">
             <type by_reference="false">void</type>
@@ -3847,7 +4508,7 @@ Calling with an argument, however, sets the layout to what was provided by the a
         <full_name>render</full_name>
         <docblock line="321">
           <description>Renders a view + optional layout</description>
-          <long-description/>
+          <long-description></long-description>
           <tag line="321" name="param" description="The view to render" type="string" variable="$view">
             <type by_reference="false">string</type>
           </tag>
@@ -3861,7 +4522,7 @@ Calling with an argument, however, sets the layout to what was provided by the a
         </docblock>
         <argument line="329">
           <name>$view</name>
-          <default/>
+          <default></default>
           <type/>
         </argument>
         <argument line="329">
@@ -3875,7 +4536,7 @@ Calling with an argument, however, sets the layout to what was provided by the a
         <full_name>partial</full_name>
         <docblock line="353">
           <description>Renders a view without a layout</description>
-          <long-description/>
+          <long-description></long-description>
           <tag line="353" name="param" description="The view to render" type="string" variable="$view">
             <type by_reference="false">string</type>
           </tag>
@@ -3889,7 +4550,7 @@ Calling with an argument, however, sets the layout to what was provided by the a
         </docblock>
         <argument line="361">
           <name>$view</name>
-          <default/>
+          <default></default>
           <type/>
         </argument>
         <argument line="361">
@@ -3903,7 +4564,7 @@ Calling with an argument, however, sets the layout to what was provided by the a
         <full_name>addValidator</full_name>
         <docblock line="369">
           <description>Add a custom validator for our validation method</description>
-          <long-description/>
+          <long-description></long-description>
           <tag line="369" name="param" description="The name of the validator method" type="string" variable="$method">
             <type by_reference="false">string</type>
           </tag>
@@ -3917,12 +4578,12 @@ Calling with an argument, however, sets the layout to what was provided by the a
         </docblock>
         <argument line="377">
           <name>$method</name>
-          <default/>
+          <default></default>
           <type/>
         </argument>
         <argument line="377">
           <name>$callback</name>
-          <default/>
+          <default></default>
           <type/>
         </argument>
       </method>
@@ -3931,7 +4592,7 @@ Calling with an argument, however, sets the layout to what was provided by the a
         <full_name>validate</full_name>
         <docblock line="382">
           <description>Start a validator chain for the specified string</description>
-          <long-description/>
+          <long-description></long-description>
           <tag line="382" name="param" description="The string to validate" type="string" variable="$string">
             <type by_reference="false">string</type>
           </tag>
@@ -3945,7 +4606,7 @@ Calling with an argument, however, sets the layout to what was provided by the a
         </docblock>
         <argument line="390">
           <name>$string</name>
-          <default/>
+          <default></default>
           <type/>
         </argument>
         <argument line="390">
@@ -3959,7 +4620,7 @@ Calling with an argument, however, sets the layout to what was provided by the a
         <full_name>validateParam</full_name>
         <docblock line="395">
           <description>Start a validator chain for the specified parameter</description>
-          <long-description/>
+          <long-description></long-description>
           <tag line="395" name="param" description="The name of the parameter to validate" type="string" variable="$param">
             <type by_reference="false">string</type>
           </tag>
@@ -3973,7 +4634,7 @@ Calling with an argument, however, sets the layout to what was provided by the a
         </docblock>
         <argument line="403">
           <name>$param</name>
-          <default/>
+          <default></default>
           <type/>
         </argument>
         <argument line="403">
@@ -3999,7 +4660,7 @@ from this instance while treating it as an instance property&lt;/p&gt;</long-des
         </docblock>
         <argument line="419">
           <name>$key</name>
-          <default/>
+          <default></default>
           <type/>
         </argument>
       </method>
@@ -4020,7 +4681,7 @@ while treating it as an instance property&lt;/p&gt;</long-description>
         </docblock>
         <argument line="434">
           <name>$key</name>
-          <default/>
+          <default></default>
           <type/>
         </argument>
       </method>
@@ -4044,12 +4705,12 @@ while treating it as an instance property&lt;/p&gt;</long-description>
         </docblock>
         <argument line="450">
           <name>$key</name>
-          <default/>
+          <default></default>
           <type/>
         </argument>
         <argument line="450">
           <name>$value</name>
-          <default/>
+          <default></default>
           <type/>
         </argument>
       </method>
@@ -4070,13 +4731,13 @@ while treating it as an instance property&lt;/p&gt;</long-description>
         </docblock>
         <argument line="465">
           <name>$key</name>
-          <default/>
+          <default></default>
           <type/>
         </argument>
       </method>
     </class>
   </file>
-  <file path="Validator.php" hash="f8ff95dc4672ddb1e8beaf61ee3cf849" package="Default">
+  <file path="Validator.php" hash="e481029bd0873f06f23ce266de6e561e" package="Default">
     <docblock line="2">
       <description>Klein (klein.php) - A lightning fast router for PHP</description>
       <long-description></long-description>
@@ -4212,7 +4873,7 @@ while treating it as an instance property&lt;/p&gt;</long-description>
           <type/>
         </argument>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="Klein" line="164" package="Klein">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Klein" line="166" package="Klein">
         <name>__call</name>
         <full_name>__call</full_name>
         <docblock line="153">
@@ -4225,17 +4886,23 @@ of "is" or "not" by simply calling an instance property like a callback&lt;/p&gt
           <tag line="153" name="param" description="The argument array to pass to our callback" type="array" variable="$args">
             <type by_reference="false">array</type>
           </tag>
+          <tag line="153" name="throws" description="If an attempt was made to call a validator modifier that doesn't exist" type="\BadMethodCallException">
+            <type by_reference="false">\BadMethodCallException</type>
+          </tag>
+          <tag line="153" name="throws" description="If the validation check returns false" type="\Klein\Exceptions\ValidationException">
+            <type by_reference="false">\Klein\Exceptions\ValidationException</type>
+          </tag>
           <tag line="153" name="access" description="public"/>
           <tag line="153" name="return" description="" type="\Klein\Validator">
             <type by_reference="false">\Klein\Validator</type>
           </tag>
         </docblock>
-        <argument line="164">
+        <argument line="166">
           <name>$method</name>
           <default></default>
           <type/>
         </argument>
-        <argument line="164">
+        <argument line="166">
           <name>$args</name>
           <default></default>
           <type/>

@@ -58,19 +58,31 @@
 <li class="nav-header">
 <i class="icon-custom icon-method"></i> Methods
                     <ul>
-<li class="method public "><a href="#method___call" title='__call :: Magic "__call" method'><span class="description">Magic "__call" method</span><pre>__call()</pre></a></li>
 <li class="method public "><a href="#method___construct" title="__construct :: Constructor"><span class="description">Constructor</span><pre>__construct()</pre></a></li>
+<li class="method public "><a href="#method_abort" title="abort :: Alias to set a response code, lock the response, and halt the route matching/dispatching"><span class="description">Alias to set a response code, lock the response, and halt the route matching/dispatching</span><pre>abort()</pre></a></li>
 <li class="method public "><a href="#method_app" title="app :: Returns the app object"><span class="description">Returns the app object</span><pre>app()</pre></a></li>
-<li class="method public "><a href="#method_compileRoute" title="compileRoute :: Compiles a route string to a regular expression"><span class="description">Compiles a route string to a regular expression</span><pre>compileRoute()</pre></a></li>
+<li class="method public "><a href="#method_delete" title='delete :: DELETE alias for "respond()"'><span class="description">DELETE alias for "respond()"</span><pre>delete()</pre></a></li>
 <li class="method public "><a href="#method_dispatch" title="dispatch :: Dispatch the request to the approriate route(s)"><span class="description">Dispatch the request to the approriate route(s)</span><pre>dispatch()</pre></a></li>
-<li class="method public "><a href="#method_error" title="error :: Routes an exception through the error callbacks"><span class="description">Routes an exception through the error callbacks</span><pre>error()</pre></a></li>
+<li class="method public "><a href="#method_get" title='get :: GET alias for "respond()"'><span class="description">GET alias for "respond()"</span><pre>get()</pre></a></li>
 <li class="method public "><a href="#method_onError" title="onError :: Adds an error callback to the stack of error handlers"><span class="description">Adds an error callback to the stack of error handlers</span><pre>onError()</pre></a></li>
+<li class="method public "><a href="#method_post" title='post :: POST alias for "respond()"'><span class="description">POST alias for "respond()"</span><pre>post()</pre></a></li>
+<li class="method public "><a href="#method_put" title='put :: PUT alias for "respond()"'><span class="description">PUT alias for "respond()"</span><pre>put()</pre></a></li>
 <li class="method public "><a href="#method_request" title="request :: Returns the request object"><span class="description">Returns the request object</span><pre>request()</pre></a></li>
 <li class="method public "><a href="#method_respond" title="respond :: Add a new route to be matched on dispatch"><span class="description">Add a new route to be matched on dispatch</span><pre>respond()</pre></a></li>
 <li class="method public "><a href="#method_response" title="response :: Returns the response object"><span class="description">Returns the response object</span><pre>response()</pre></a></li>
+<li class="method public "><a href="#method_routes" title="routes :: Returns the routes object"><span class="description">Returns the routes object</span><pre>routes()</pre></a></li>
 <li class="method public "><a href="#method_service" title="service :: Returns the service object"><span class="description">Returns the service object</span><pre>service()</pre></a></li>
-<li class="method public "><a href="#method_startSession" title="startSession :: Start a PHP session"><span class="description">Start a PHP session</span><pre>startSession()</pre></a></li>
+<li class="method public "><a href="#method_skipNext" title="skipNext :: Quick alias to skip the next callback/route method from executing"><span class="description">Quick alias to skip the next callback/route method from executing</span><pre>skipNext()</pre></a></li>
+<li class="method public "><a href="#method_skipRemaining" title="skipRemaining :: Quick alias to stop the remaining callbacks/route methods from executing"><span class="description">Quick alias to stop the remaining callbacks/route methods from executing</span><pre>skipRemaining()</pre></a></li>
+<li class="method public "><a href="#method_skipThis" title="skipThis :: Quick alias to skip the current callback/route method from executing"><span class="description">Quick alias to skip the current callback/route method from executing</span><pre>skipThis()</pre></a></li>
 <li class="method public "><a href="#method_with" title="with :: Collect a set of routes under a common namespace"><span class="description">Collect a set of routes under a common namespace</span><pre>with()</pre></a></li>
+</ul>
+</li>
+<li class="nav-header protected">» Protected
+                    <ul>
+<li class="method protected "><a href="#method_compileRoute" title="compileRoute :: Compiles a route string to a regular expression"><span class="description">Compiles a route string to a regular expression</span><pre>compileRoute()</pre></a></li>
+<li class="method protected "><a href="#method_error" title="error :: Routes an exception through the error callbacks"><span class="description">Routes an exception through the error callbacks</span><pre>error()</pre></a></li>
+<li class="method protected "><a href="#method_handleResponseCallback" title="handleResponseCallback :: Handle a response callback"><span class="description">Handle a response callback</span><pre>handleResponseCallback()</pre></a></li>
 </ul>
 </li>
 <li class="nav-header">
@@ -86,7 +98,7 @@ when matching, so you can define routes under a
 common endpoint"><span class="description"></span><pre>$namespace</pre></a></li>
 <li class="property protected "><a href="#property_request" title="$request :: The Request object passed to each matched route"><span class="description"></span><pre>$request</pre></a></li>
 <li class="property protected "><a href="#property_response" title="$response :: The Response object passed to each matched route"><span class="description"></span><pre>$response</pre></a></li>
-<li class="property protected "><a href="#property_routes" title="$routes :: Array of the routes to match on dispatch"><span class="description"></span><pre>$routes</pre></a></li>
+<li class="property protected "><a href="#property_routes" title="$routes :: Collection of the routes to match on dispatch"><span class="description"></span><pre>$routes</pre></a></li>
 <li class="property protected "><a href="#property_service" title="$service :: The service provider object passed to each matched route"><span class="description"></span><pre>$service</pre></a></li>
 </ul>
 </li>
@@ -122,31 +134,9 @@ common endpoint"><span class="description"></span><pre>$namespace</pre></a></li>
 </tr></table>
 <h3>
 <i class="icon-custom icon-method"></i> Methods</h3>
-<a id="method___call"></a><div class="element clickable method public method___call" data-toggle="collapse" data-target=".method___call .collapse">
-<h2>Magic "__call" method</h2>
-<pre>__call(callable $method, array $args) : mixed</pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<div class="long_description"><p>Allows the ability to arbitrarily call a method of our service provider's
-through an instance of this class</p></div>
-<table class="table table-bordered"><tr>
-<th>access</th>
-<td>public</td>
-</tr></table>
-<h3>Parameters</h3>
-<div class="subelement argument">
-<h4>$method</h4>
-<code>callable</code><p>The callable method to execute</p></div>
-<div class="subelement argument">
-<h4>$args</h4>
-<code>array</code><p>The argument array to pass to our callback</p></div>
-<h3>Returns</h3>
-<div class="subelement response"><code>mixed</code></div>
-</div></div>
-</div>
 <a id="method___construct"></a><div class="element clickable method public method___construct" data-toggle="collapse" data-target=".method___construct .collapse">
 <h2>Constructor</h2>
-<pre>__construct(\Klein\ServiceProvider $service, mixed $app) </pre>
+<pre>__construct(\Klein\ServiceProvider $service, mixed $app, \Klein\DataCollection\RouteCollection $routes) </pre>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"><p>Create a new Klein instance with optionally injected dependencies
@@ -162,6 +152,30 @@ This DI allows for easy testing, object mocking, or class extension</p></div>
 <div class="subelement argument">
 <h4>$app</h4>
 <code>mixed</code><p>An object passed to each route callback, defaults to a new App instance</p></div>
+<div class="subelement argument">
+<h4>$routes</h4>
+<code><a href="../classes/Klein.DataCollection.RouteCollection.html">\Klein\DataCollection\RouteCollection</a></code><p>Collection object responsible for containing all of the route instances</p></div>
+</div></div>
+</div>
+<a id="method_abort"></a><div class="element clickable method public method_abort" data-toggle="collapse" data-target=".method_abort .collapse">
+<h2>Alias to set a response code, lock the response, and halt the route matching/dispatching</h2>
+<pre>abort(int $code) : void</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>public</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$code</h4>
+<code>int</code><p>Optional HTTP status code to send</p></div>
+<h3>Exceptions</h3>
+<table class="table table-bordered"><tr>
+<th><code><a href="../classes/Klein.Exceptions.DispatchHaltedException.html">\Klein\Exceptions\DispatchHaltedException</a></code></th>
+<td>To halt/skip the current dispatch loop</td>
+</tr></table>
 </div></div>
 </div>
 <a id="method_app"></a><div class="element clickable method public method_app" data-toggle="collapse" data-target=".method_app .collapse">
@@ -178,9 +192,9 @@ This DI allows for easy testing, object mocking, or class extension</p></div>
 <div class="subelement response"><code>mixed</code></div>
 </div></div>
 </div>
-<a id="method_compileRoute"></a><div class="element clickable method public method_compileRoute" data-toggle="collapse" data-target=".method_compileRoute .collapse">
-<h2>Compiles a route string to a regular expression</h2>
-<pre>compileRoute(string $route) : void</pre>
+<a id="method_delete"></a><div class="element clickable method public method_delete" data-toggle="collapse" data-target=".method_delete .collapse">
+<h2>DELETE alias for "respond()"</h2>
+<pre>delete(string $route, callable $callback) : callable</pre>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
@@ -191,7 +205,14 @@ This DI allows for easy testing, object mocking, or class extension</p></div>
 <h3>Parameters</h3>
 <div class="subelement argument">
 <h4>$route</h4>
-<code>string</code><p>The route string to compile</p></div>
+<code>string</code>
+</div>
+<div class="subelement argument">
+<h4>$callback</h4>
+<code>callable</code>
+</div>
+<h3>Returns</h3>
+<div class="subelement response"><code>callable</code></div>
 </div></div>
 </div>
 <a id="method_dispatch"></a><div class="element clickable method public method_dispatch" data-toggle="collapse" data-target=".method_dispatch .collapse">
@@ -226,9 +247,9 @@ This DI allows for easy testing, object mocking, or class extension</p></div>
 </div>
 </div></div>
 </div>
-<a id="method_error"></a><div class="element clickable method public method_error" data-toggle="collapse" data-target=".method_error .collapse">
-<h2>Routes an exception through the error callbacks</h2>
-<pre>error(\Exception $err) : void</pre>
+<a id="method_get"></a><div class="element clickable method public method_get" data-toggle="collapse" data-target=".method_get .collapse">
+<h2>GET alias for "respond()"</h2>
+<pre>get(string $route, callable $callback) : callable</pre>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
@@ -238,13 +259,20 @@ This DI allows for easy testing, object mocking, or class extension</p></div>
 </tr></table>
 <h3>Parameters</h3>
 <div class="subelement argument">
-<h4>$err</h4>
-<code><a href="http://php.net/manual/en/class.exception.php">\Exception</a></code><p>The exception that occurred</p></div>
+<h4>$route</h4>
+<code>string</code>
+</div>
+<div class="subelement argument">
+<h4>$callback</h4>
+<code>callable</code>
+</div>
+<h3>Returns</h3>
+<div class="subelement response"><code>callable</code></div>
 </div></div>
 </div>
 <a id="method_onError"></a><div class="element clickable method public method_onError" data-toggle="collapse" data-target=".method_onError .collapse">
 <h2>Adds an error callback to the stack of error handlers</h2>
-<pre>onError(callable $callback, boolean $allow_duplicates) : boolean | void</pre>
+<pre>onError(callable $callback) : boolean | void</pre>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
@@ -256,14 +284,56 @@ This DI allows for easy testing, object mocking, or class extension</p></div>
 <div class="subelement argument">
 <h4>$callback</h4>
 <code>callable</code><p>The callable function to execute in the error handling chain</p></div>
-<div class="subelement argument">
-<h4>$allow_duplicates</h4>
-<code>boolean</code><p>Whether or not to allow duplicate callbacks to exist in the
- error handling chain</p></div>
 <h3>Returns</h3>
 <div class="subelement response">
 <code>boolean</code><code>void</code>
 </div>
+</div></div>
+</div>
+<a id="method_post"></a><div class="element clickable method public method_post" data-toggle="collapse" data-target=".method_post .collapse">
+<h2>POST alias for "respond()"</h2>
+<pre>post(string $route, callable $callback) : callable</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>public</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$route</h4>
+<code>string</code>
+</div>
+<div class="subelement argument">
+<h4>$callback</h4>
+<code>callable</code>
+</div>
+<h3>Returns</h3>
+<div class="subelement response"><code>callable</code></div>
+</div></div>
+</div>
+<a id="method_put"></a><div class="element clickable method public method_put" data-toggle="collapse" data-target=".method_put .collapse">
+<h2>PUT alias for "respond()"</h2>
+<pre>put(string $route, callable $callback) : callable</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>public</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$route</h4>
+<code>string</code>
+</div>
+<div class="subelement argument">
+<h4>$callback</h4>
+<code>callable</code>
+</div>
+<h3>Returns</h3>
+<div class="subelement response"><code>callable</code></div>
 </div></div>
 </div>
 <a id="method_request"></a><div class="element clickable method public method_request" data-toggle="collapse" data-target=".method_request .collapse">
@@ -282,7 +352,7 @@ This DI allows for easy testing, object mocking, or class extension</p></div>
 </div>
 <a id="method_respond"></a><div class="element clickable method public method_respond" data-toggle="collapse" data-target=".method_respond .collapse">
 <h2>Add a new route to be matched on dispatch</h2>
-<pre>respond(string $method, string $route, callable $callback) : callable</pre>
+<pre>respond(string $method, string $path, callable $callback) : callable</pre>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"><p>This method takes its arguments in a very loose format
@@ -310,8 +380,8 @@ $router->respond( 'POST', '/endpoint', function() {
 <code>string</code><p>| array $method    HTTP Method to match</p>
 </div>
 <div class="subelement argument">
-<h4>$route</h4>
-<code>string</code><p>Route URI to match</p></div>
+<h4>$path</h4>
+<code>string</code><p>Route URI path to match</p></div>
 <div class="subelement argument">
 <h4>$callback</h4>
 <code>callable</code><p>Callable callback method to execute on route match</p></div>
@@ -334,6 +404,20 @@ $router->respond( 'POST', '/endpoint', function() {
 <div class="subelement response"><code><a href="../classes/Klein.Response.html">\Klein\Response</a></code></div>
 </div></div>
 </div>
+<a id="method_routes"></a><div class="element clickable method public method_routes" data-toggle="collapse" data-target=".method_routes .collapse">
+<h2>Returns the routes object</h2>
+<pre>routes() : <a href="../classes/Klein.DataCollection.RouteCollection.html">\Klein\DataCollection\RouteCollection</a></pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>public</td>
+</tr></table>
+<h3>Returns</h3>
+<div class="subelement response"><code><a href="../classes/Klein.DataCollection.RouteCollection.html">\Klein\DataCollection\RouteCollection</a></code></div>
+</div></div>
+</div>
 <a id="method_service"></a><div class="element clickable method public method_service" data-toggle="collapse" data-target=".method_service .collapse">
 <h2>Returns the service object</h2>
 <pre>service() : <a href="../classes/Klein.ServiceProvider.html">\Klein\ServiceProvider</a></pre>
@@ -348,15 +432,58 @@ $router->respond( 'POST', '/endpoint', function() {
 <div class="subelement response"><code><a href="../classes/Klein.ServiceProvider.html">\Klein\ServiceProvider</a></code></div>
 </div></div>
 </div>
-<a id="method_startSession"></a><div class="element clickable method public method_startSession" data-toggle="collapse" data-target=".method_startSession .collapse">
-<h2>Start a PHP session</h2>
-<pre>startSession() : void</pre>
+<a id="method_skipNext"></a><div class="element clickable method public method_skipNext" data-toggle="collapse" data-target=".method_skipNext .collapse">
+<h2>Quick alias to skip the next callback/route method from executing</h2>
+<pre>skipNext(int $num) : void</pre>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
 <table class="table table-bordered"><tr>
 <th>access</th>
 <td>public</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$num</h4>
+<code>int</code><p>The number of next matches to skip</p></div>
+<h3>Exceptions</h3>
+<table class="table table-bordered"><tr>
+<th><code><a href="../classes/Klein.Exceptions.DispatchHaltedException.html">\Klein\Exceptions\DispatchHaltedException</a></code></th>
+<td>To halt/skip the current dispatch loop</td>
+</tr></table>
+</div></div>
+</div>
+<a id="method_skipRemaining"></a><div class="element clickable method public method_skipRemaining" data-toggle="collapse" data-target=".method_skipRemaining .collapse">
+<h2>Quick alias to stop the remaining callbacks/route methods from executing</h2>
+<pre>skipRemaining() : void</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>public</td>
+</tr></table>
+<h3>Exceptions</h3>
+<table class="table table-bordered"><tr>
+<th><code><a href="../classes/Klein.Exceptions.DispatchHaltedException.html">\Klein\Exceptions\DispatchHaltedException</a></code></th>
+<td>To halt/skip the current dispatch loop</td>
+</tr></table>
+</div></div>
+</div>
+<a id="method_skipThis"></a><div class="element clickable method public method_skipThis" data-toggle="collapse" data-target=".method_skipThis .collapse">
+<h2>Quick alias to skip the current callback/route method from executing</h2>
+<pre>skipThis() : void</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>public</td>
+</tr></table>
+<h3>Exceptions</h3>
+<table class="table table-bordered"><tr>
+<th><code><a href="../classes/Klein.Exceptions.DispatchHaltedException.html">\Klein\Exceptions\DispatchHaltedException</a></code></th>
+<td>To halt/skip the current dispatch loop</td>
 </tr></table>
 </div></div>
 </div>
@@ -392,6 +519,69 @@ $router->with('/cars', __DIR__ . '/routes/cars.php');
 <div class="subelement argument">
 <h4>$routes</h4>
 <code>callable</code><p>| string[filename] $routes   The defined routes to collect under the namespace</p>
+</div>
+</div></div>
+</div>
+<a id="method_compileRoute"></a><div class="element clickable method protected method_compileRoute" data-toggle="collapse" data-target=".method_compileRoute .collapse">
+<h2>Compiles a route string to a regular expression</h2>
+<pre>compileRoute(string $route) : void</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>protected</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$route</h4>
+<code>string</code><p>The route string to compile</p></div>
+</div></div>
+</div>
+<a id="method_error"></a><div class="element clickable method protected method_error" data-toggle="collapse" data-target=".method_error .collapse">
+<h2>Routes an exception through the error callbacks</h2>
+<pre>error(\Exception $err) : void</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>protected</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$err</h4>
+<code><a href="http://php.net/manual/en/class.exception.php">\Exception</a></code><p>The exception that occurred</p></div>
+<h3>Exceptions</h3>
+<table class="table table-bordered"><tr>
+<th><code><a href="../classes/Klein.Exceptions.UnhandledException.html">\Klein\Exceptions\UnhandledException</a></code></th>
+<td>If the error/exception isn't handled by an error callback</td>
+</tr></table>
+</div></div>
+</div>
+<a id="method_handleResponseCallback"></a><div class="element clickable method protected method_handleResponseCallback" data-toggle="collapse" data-target=".method_handleResponseCallback .collapse">
+<h2>Handle a response callback</h2>
+<pre>handleResponseCallback(callable $callback, int $matched, int $methods_matched) : void</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"><p>This handles common exceptions and their output
+to keep the "dispatch()" method DRY</p></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>protected</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$callback</h4>
+<code>callable</code>
+</div>
+<div class="subelement argument">
+<h4>$matched</h4>
+<code>int</code>
+</div>
+<div class="subelement argument">
+<h4>$methods_matched</h4>
+<code>int</code>
 </div>
 </div></div>
 </div>
@@ -459,7 +649,7 @@ $router->with('/cars', __DIR__ . '/routes/cars.php');
 </div>
 <a id="property_routes"> </a><div class="element clickable property protected property_routes" data-toggle="collapse" data-target=".property_routes .collapse">
 <h2></h2>
-<pre>$routes : array</pre>
+<pre>$routes : <a href="../classes/Klein.DataCollection.RouteCollection.html">\Klein\DataCollection\RouteCollection</a></pre>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
@@ -550,7 +740,7 @@ $router->with('/cars', __DIR__ . '/routes/cars.php');
 <div class="row"><footer class="span12">
             Template is built using <a href="http://twitter.github.com/bootstrap/">Twitter Bootstrap 2</a> and icons provided by <a href="http://glyphicons.com/">Glyphicons</a>.<br>
             Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor 2.0.0a12</a> and<br>
-            generated on 2013-05-08T03:28:14-04:00.<br></footer></div>
+            generated on 2013-06-23T14:57:26-04:00.<br></footer></div>
 </div>
 </body>
 </html>

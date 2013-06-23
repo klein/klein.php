@@ -3,7 +3,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
 <meta charset="utf-8">
-<title>Klein » \Klein\App</title>
+<title>Klein » \Klein\Exceptions\DispatchHaltedException</title>
 <meta name="author" content="Mike van Riel">
 <meta name="description" content="">
 <link href="../css/template.css" rel="stylesheet" media="all">
@@ -58,9 +58,8 @@
 <li class="nav-header">
 <i class="icon-custom icon-method"></i> Methods
                     <ul>
-<li class="method public "><a href="#method___call" title='__call :: Magic "__call" method'><span class="description">Magic "__call" method</span><pre>__call()</pre></a></li>
-<li class="method public "><a href="#method___get" title='__get :: Magic "__get" method'><span class="description">Magic "__get" method</span><pre>__get()</pre></a></li>
-<li class="method public "><a href="#method_register" title="register :: Register a lazy service"><span class="description">Register a lazy service</span><pre>register()</pre></a></li>
+<li class="method public "><a href="#method_getNumberOfSkips" title='getNumberOfSkips :: Gets the number of matches to skip on a "next" skip'><span class="description">Gets the number of matches to skip on a "next" skip</span><pre>getNumberOfSkips()</pre></a></li>
+<li class="method public "><a href="#method_setNumberOfSkips" title='setNumberOfSkips :: Sets the number of matches to skip on a "next" skip'><span class="description">Sets the number of matches to skip on a "next" skip</span><pre>setNumberOfSkips()</pre></a></li>
 </ul>
 </li>
 <li class="nav-header">
@@ -68,85 +67,60 @@
                     <ul></ul>
 </li>
 <li class="nav-header protected">» Protected
-                    <ul><li class="property protected "><a href="#property_services" title="$services :: The array of app services"><span class="description"></span><pre>$services</pre></a></li></ul>
+                    <ul><li class="property protected "><a href="#property_number_of_skips" title='$number_of_skips :: The number of next matches to skip on a "next" skip'><span class="description"></span><pre>$number_of_skips</pre></a></li></ul>
+</li>
+<li class="nav-header">
+<i class="icon-custom icon-constant"></i> Constants
+                    <ul>
+<li class="constant  "><a href="#constant_SKIP_NEXT" title="SKIP_NEXT :: Skip the next match/callback"><span class="description">Skip the next match/callback</span><pre>SKIP_NEXT</pre></a></li>
+<li class="constant  "><a href="#constant_SKIP_REMAINING" title="SKIP_REMAINING :: Skip the rest of the matches"><span class="description">Skip the rest of the matches</span><pre>SKIP_REMAINING</pre></a></li>
+<li class="constant  "><a href="#constant_SKIP_THIS" title="SKIP_THIS :: Skip this current match/callback"><span class="description">Skip this current match/callback</span><pre>SKIP_THIS</pre></a></li>
+</ul>
 </li>
 </ul>
 </div>
 <div class="span8">
-<a id="\Klein\App"></a><ul class="breadcrumb">
+<a id="\Klein\Exceptions\DispatchHaltedException"></a><ul class="breadcrumb">
 <li>
 <a href="../index.html"><i class="icon-custom icon-class"></i></a><span class="divider">\</span>
 </li>
 <li><a href="../namespaces/Klein.html">Klein</a></li>
+<li>
+<span class="divider">\</span><a href="../namespaces/Klein.Exceptions.html">Exceptions</a>
+</li>
 <li class="active">
-<span class="divider">\</span><a href="../classes/Klein.App.html">App</a>
+<span class="divider">\</span><a href="../classes/Klein.Exceptions.DispatchHaltedException.html">DispatchHaltedException</a>
 </li>
 </ul>
 <div class="element class">
-<p class="short_description">App</p>
+<p class="short_description">DispatchHaltedException</p>
 <div class="details">
-<div class="long_description"></div>
-<table class="table table-bordered"><tr>
+<div class="long_description"><p>Exception used to halt a route callback from executing in a dispatch loop</p></div>
+<table class="table table-bordered">
+<tr>
+<th>uses</th>
+<td>\RuntimeException</td>
+</tr>
+<tr>
 <th>package</th>
-<td><a href="../packages/Klein.html">Klein</a></td>
-</tr></table>
+<td><a href="../packages/Klein.Exceptions.html">Klein\Exceptions</a></td>
+</tr>
+</table>
 <h3>
 <i class="icon-custom icon-method"></i> Methods</h3>
-<a id="method___call"></a><div class="element clickable method public method___call" data-toggle="collapse" data-target=".method___call .collapse">
-<h2>Magic "__call" method</h2>
-<pre>__call(callable $method, array $args) : void</pre>
+<a id="method_getNumberOfSkips"></a><div class="element clickable method public method_getNumberOfSkips" data-toggle="collapse" data-target=".method_getNumberOfSkips .collapse">
+<h2>Gets the number of matches to skip on a "next" skip</h2>
+<pre>getNumberOfSkips() : int</pre>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
-<div class="long_description"><p>Allows the ability to arbitrarily call a property as a callable method
-Allow callbacks to be assigned as properties and called like normal methods</p></div>
-<table class="table table-bordered"><tr>
-<th>access</th>
-<td>public</td>
-</tr></table>
-<h3>Parameters</h3>
-<div class="subelement argument">
-<h4>$method</h4>
-<code>callable</code><p>The callable method to execute</p></div>
-<div class="subelement argument">
-<h4>$args</h4>
-<code>array</code><p>The argument array to pass to our callback</p></div>
-<h3>Exceptions</h3>
-<table class="table table-bordered"><tr>
-<th><code><a href="http://php.net/manual/en/class.badmethodcallexception.php">\BadMethodCallException</a></code></th>
-<td>If a non-registered method is attempted to be called</td>
-</tr></table>
-</div></div>
-</div>
-<a id="method___get"></a><div class="element clickable method public method___get" data-toggle="collapse" data-target=".method___get .collapse">
-<h2>Magic "__get" method</h2>
-<pre>__get(string $name) : mixed</pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<div class="long_description"><p>Allows the ability to arbitrarily request a service from this instance
-while treating it as an instance property</p>
-
-<p>This checks the lazy service register and automatically calls the registered
-service method</p></div>
-<table class="table table-bordered"><tr>
-<th>access</th>
-<td>public</td>
-</tr></table>
-<h3>Parameters</h3>
-<div class="subelement argument">
-<h4>$name</h4>
-<code>string</code><p>The name of the service</p></div>
-<h3>Exceptions</h3>
-<table class="table table-bordered"><tr>
-<th><code><a href="../classes/Klein.Exceptions.UnknownServiceException.html">\Klein\Exceptions\UnknownServiceException</a></code></th>
-<td>If a non-registered service is attempted to fetched</td>
-</tr></table>
+<div class="long_description"></div>
 <h3>Returns</h3>
-<div class="subelement response"><code>mixed</code></div>
+<div class="subelement response"><code>int</code></div>
 </div></div>
 </div>
-<a id="method_register"></a><div class="element clickable method public method_register" data-toggle="collapse" data-target=".method_register .collapse">
-<h2>Register a lazy service</h2>
-<pre>register(string $name, callable $closure) : mixed</pre>
+<a id="method_setNumberOfSkips"></a><div class="element clickable method public method_setNumberOfSkips" data-toggle="collapse" data-target=".method_setNumberOfSkips .collapse">
+<h2>Sets the number of matches to skip on a "next" skip</h2>
+<pre>setNumberOfSkips(int $number_of_skips) : <a href="../classes/Klein.Exceptions.DispatchHaltedException.html">\Klein\Exceptions\DispatchHaltedException</a></pre>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
@@ -156,31 +130,62 @@ service method</p></div>
 </tr></table>
 <h3>Parameters</h3>
 <div class="subelement argument">
-<h4>$name</h4>
-<code>string</code><p>The name of the service</p></div>
-<div class="subelement argument">
-<h4>$closure</h4>
-<code>callable</code><p>The callable function to execute when requesting our service</p></div>
-<h3>Exceptions</h3>
-<table class="table table-bordered"><tr>
-<th><code><a href="../classes/Klein.Exceptions.DuplicateServiceException.html">\Klein\Exceptions\DuplicateServiceException</a></code></th>
-<td>If an attempt is made to register two services with the same name</td>
-</tr></table>
+<h4>$number_of_skips</h4>
+<code>int</code>
+</div>
 <h3>Returns</h3>
-<div class="subelement response"><code>mixed</code></div>
+<div class="subelement response"><code><a href="../classes/Klein.Exceptions.DispatchHaltedException.html">\Klein\Exceptions\DispatchHaltedException</a></code></div>
 </div></div>
 </div>
 <h3>
 <i class="icon-custom icon-property"></i> Properties</h3>
-<a id="property_services"> </a><div class="element clickable property protected property_services" data-toggle="collapse" data-target=".property_services .collapse">
+<a id="property_number_of_skips"> </a><div class="element clickable property protected property_number_of_skips" data-toggle="collapse" data-target=".property_number_of_skips .collapse">
 <h2></h2>
-<pre>$services : array</pre>
+<pre>$number_of_skips : int</pre>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
 <table class="table table-bordered"><tr>
 <th>access</th>
 <td>protected</td>
+</tr></table>
+</div></div>
+</div>
+<h3>
+<i class="icon-custom icon-constant"></i> Constants</h3>
+<a id="constant_SKIP_NEXT"> </a><div class="element clickable constant  constant_SKIP_NEXT" data-toggle="collapse" data-target=".constant_SKIP_NEXT .collapse">
+<h2>Skip the next match/callback</h2>
+<pre>SKIP_NEXT </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>const</th>
+<td>int</td>
+</tr></table>
+</div></div>
+</div>
+<a id="constant_SKIP_REMAINING"> </a><div class="element clickable constant  constant_SKIP_REMAINING" data-toggle="collapse" data-target=".constant_SKIP_REMAINING .collapse">
+<h2>Skip the rest of the matches</h2>
+<pre>SKIP_REMAINING </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>const</th>
+<td>int</td>
+</tr></table>
+</div></div>
+</div>
+<a id="constant_SKIP_THIS"> </a><div class="element clickable constant  constant_SKIP_THIS" data-toggle="collapse" data-target=".constant_SKIP_THIS .collapse">
+<h2>Skip this current match/callback</h2>
+<pre>SKIP_THIS </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>const</th>
+<td>int</td>
 </tr></table>
 </div></div>
 </div>

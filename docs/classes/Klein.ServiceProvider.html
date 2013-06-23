@@ -67,21 +67,18 @@
 <li class="method public "><a href="#method_back" title="back :: Redirects the request back to the referrer"><span class="description">Redirects the request back to the referrer</span><pre>back()</pre></a></li>
 <li class="method public "><a href="#method_bind" title="bind :: Bind object instances to this service"><span class="description">Bind object instances to this service</span><pre>bind()</pre></a></li>
 <li class="method public "><a href="#method_escape" title="escape :: Escapes a string"><span class="description">Escapes a string</span><pre>escape()</pre></a></li>
-<li class="method public "><a href="#method_file" title="file :: Sends a file"><span class="description">Sends a file</span><pre>file()</pre></a></li>
 <li class="method public "><a href="#method_flash" title="flash :: Stores a flash message of $type"><span class="description">Stores a flash message of $type</span><pre>flash()</pre></a></li>
 <li class="method public "><a href="#method_flashes" title="flashes :: Returns and clears all flashes of optional $type"><span class="description">Returns and clears all flashes of optional $type</span><pre>flashes()</pre></a></li>
-<li class="method public "><a href="#method_json" title="json :: Sends an object as json or jsonp by providing the padding prefix"><span class="description">Sends an object as json or jsonp by providing the padding prefix</span><pre>json()</pre></a></li>
 <li class="method public "><a href="#method_layout" title="layout :: Get (or set) the view's layout"><span class="description">Get (or set) the view's layout</span><pre>layout()</pre></a></li>
 <li class="method public "><a href="#method_markdown" title="markdown :: Render a text string as markdown"><span class="description">Render a text string as markdown</span><pre>markdown()</pre></a></li>
 <li class="method public "><a href="#method_partial" title="partial :: Renders a view without a layout"><span class="description">Renders a view without a layout</span><pre>partial()</pre></a></li>
-<li class="method public "><a href="#method_query" title="query :: Adds to or modifies the current query string"><span class="description">Adds to or modifies the current query string</span><pre>query()</pre></a></li>
 <li class="method public "><a href="#method_refresh" title="refresh :: Redirects the request to the current URL"><span class="description">Redirects the request to the current URL</span><pre>refresh()</pre></a></li>
 <li class="method public "><a href="#method_render" title="render :: Renders a view + optional layout"><span class="description">Renders a view + optional layout</span><pre>render()</pre></a></li>
 <li class="method public "><a href="#method_sharedData" title="sharedData :: Returns the shared data collection object"><span class="description">Returns the shared data collection object</span><pre>sharedData()</pre></a></li>
 <li class="method public "><a href="#method_startSession" title="startSession :: Get the current session's ID"><span class="description">Get the current session's ID</span><pre>startSession()</pre></a></li>
 <li class="method public "><a href="#method_validate" title="validate :: Start a validator chain for the specified string"><span class="description">Start a validator chain for the specified string</span><pre>validate()</pre></a></li>
 <li class="method public "><a href="#method_validateParam" title="validateParam :: Start a validator chain for the specified parameter"><span class="description">Start a validator chain for the specified parameter</span><pre>validateParam()</pre></a></li>
-<li class="method public "><a href="#method_yield" title="yield :: Renders the current view"><span class="description">Renders the current view</span><pre>yield()</pre></a></li>
+<li class="method public "><a href="#method_yieldView" title="yieldView :: Renders the current view"><span class="description">Renders the current view</span><pre>yieldView()</pre></a></li>
 </ul>
 </li>
 <li class="nav-header">
@@ -291,29 +288,6 @@ while treating it as an instance property</p></div>
 <code>string</code><p>The string to escape</p></div>
 </div></div>
 </div>
-<a id="method_file"></a><div class="element clickable method public method_file" data-toggle="collapse" data-target=".method_file .collapse">
-<h2>Sends a file</h2>
-<pre>file(string $path, string $filename, string $mimetype) : void</pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<div class="long_description"></div>
-<table class="table table-bordered"><tr>
-<th>access</th>
-<td>public</td>
-</tr></table>
-<h3>Parameters</h3>
-<div class="subelement argument">
-<h4>$path</h4>
-<code>string</code><p>The path of the file to send</p></div>
-<div class="subelement argument">
-<h4>$filename</h4>
-<code>string</code><p>The file's name</p>
-</div>
-<div class="subelement argument">
-<h4>$mimetype</h4>
-<code>string</code><p>The MIME type of the file</p></div>
-</div></div>
-</div>
 <a id="method_flash"></a><div class="element clickable method public method_flash" data-toggle="collapse" data-target=".method_flash .collapse">
 <h2>Stores a flash message of $type</h2>
 <pre>flash(string $msg, string $type, array $params) : void</pre>
@@ -352,26 +326,6 @@ while treating it as an instance property</p></div>
 <code>string</code><p>The name of the flash message type</p></div>
 <h3>Returns</h3>
 <div class="subelement response"><code>array</code></div>
-</div></div>
-</div>
-<a id="method_json"></a><div class="element clickable method public method_json" data-toggle="collapse" data-target=".method_json .collapse">
-<h2>Sends an object as json or jsonp by providing the padding prefix</h2>
-<pre>json(mixed $object, string $jsonp_prefix) : void</pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<div class="long_description"></div>
-<table class="table table-bordered"><tr>
-<th>access</th>
-<td>public</td>
-</tr></table>
-<h3>Parameters</h3>
-<div class="subelement argument">
-<h4>$object</h4>
-<code>mixed</code><p>The data to encode as JSON</p></div>
-<div class="subelement argument">
-<h4>$jsonp_prefix</h4>
-<code>string</code><p>The name of the JSON-P function prefix</p>
-</div>
 </div></div>
 </div>
 <a id="method_layout"></a><div class="element clickable method public method_layout" data-toggle="collapse" data-target=".method_layout .collapse">
@@ -442,27 +396,6 @@ Calling with an argument, however, sets the layout to what was provided by the a
 <div class="subelement argument">
 <h4>$data</h4>
 <code>array</code><p>The data to render in the view</p></div>
-</div></div>
-</div>
-<a id="method_query"></a><div class="element clickable method public method_query" data-toggle="collapse" data-target=".method_query .collapse">
-<h2>Adds to or modifies the current query string</h2>
-<pre>query(string $key, mixed $value) : string</pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<div class="long_description"></div>
-<table class="table table-bordered"><tr>
-<th>access</th>
-<td>public</td>
-</tr></table>
-<h3>Parameters</h3>
-<div class="subelement argument">
-<h4>$key</h4>
-<code>string</code><p>The name of the query param</p></div>
-<div class="subelement argument">
-<h4>$value</h4>
-<code>mixed</code><p>The value of the query param</p></div>
-<h3>Returns</h3>
-<div class="subelement response"><code>string</code></div>
 </div></div>
 </div>
 <a id="method_refresh"></a><div class="element clickable method public method_refresh" data-toggle="collapse" data-target=".method_refresh .collapse">
@@ -570,9 +503,9 @@ Calling with an argument, however, sets the layout to what was provided by the a
 <div class="subelement response"><code><a href="../classes/Klein.Validator.html">\Klein\Validator</a></code></div>
 </div></div>
 </div>
-<a id="method_yield"></a><div class="element clickable method public method_yield" data-toggle="collapse" data-target=".method_yield .collapse">
+<a id="method_yieldView"></a><div class="element clickable method public method_yieldView" data-toggle="collapse" data-target=".method_yieldView .collapse">
 <h2>Renders the current view</h2>
-<pre>yield() : void</pre>
+<pre>yieldView() : void</pre>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
@@ -663,7 +596,7 @@ Calling with an argument, however, sets the layout to what was provided by the a
 <div class="row"><footer class="span12">
             Template is built using <a href="http://twitter.github.com/bootstrap/">Twitter Bootstrap 2</a> and icons provided by <a href="http://glyphicons.com/">Glyphicons</a>.<br>
             Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor 2.0.0a12</a> and<br>
-            generated on 2013-05-08T03:28:14-04:00.<br></footer></div>
+            generated on 2013-06-23T14:57:26-04:00.<br></footer></div>
 </div>
 </body>
 </html>

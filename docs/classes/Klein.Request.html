@@ -77,6 +77,8 @@
 <li class="method public "><a href="#method_paramsGet" title="paramsGet :: Returns the GET parameters collection"><span class="description">Returns the GET parameters collection</span><pre>paramsGet()</pre></a></li>
 <li class="method public "><a href="#method_paramsNamed" title="paramsNamed :: Returns the named parameters collection"><span class="description">Returns the named parameters collection</span><pre>paramsNamed()</pre></a></li>
 <li class="method public "><a href="#method_paramsPost" title="paramsPost :: Returns the POST parameters collection"><span class="description">Returns the POST parameters collection</span><pre>paramsPost()</pre></a></li>
+<li class="method public "><a href="#method_pathname" title="pathname :: Get the request's pathname"><span class="description">Get the request's pathname</span><pre>pathname()</pre></a></li>
+<li class="method public "><a href="#method_query" title="query :: Adds to or modifies the current query string"><span class="description">Adds to or modifies the current query string</span><pre>query()</pre></a></li>
 <li class="method public "><a href="#method_server" title="server :: Returns the server collection"><span class="description">Returns the server collection</span><pre>server()</pre></a></li>
 <li class="method public "><a href="#method_uri" title="uri :: Gets the request URI"><span class="description">Gets the request URI</span><pre>uri()</pre></a></li>
 <li class="method public "><a href="#method_userAgent" title="userAgent :: Gets the request user agent"><span class="description">Gets the request user agent</span><pre>userAgent()</pre></a></li>
@@ -411,7 +413,7 @@ $request->method('get') // returns false
 </div>
 <a id="method_params"></a><div class="element clickable method public method_params" data-toggle="collapse" data-target=".method_params .collapse">
 <h2>Returns all parameters (GET, POST, named, and cookies) that match the mask</h2>
-<pre>params(array $mask) : array</pre>
+<pre>params(array $mask, boolean $fill_with_nulls) : array</pre>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"><p>Takes an optional mask param that contains the names of any params
@@ -430,6 +432,10 @@ you'd like this method to exclude in the returned array</p></div>
 <div class="subelement argument">
 <h4>$mask</h4>
 <code>array</code><p>The parameter mask array</p></div>
+<div class="subelement argument">
+<h4>$fill_with_nulls</h4>
+<code>boolean</code><p>Whether or not to fill the returned array
+ with null values to match the given mask</p></div>
 <h3>Returns</h3>
 <div class="subelement response"><code>array</code></div>
 </div></div>
@@ -476,6 +482,41 @@ you'd like this method to exclude in the returned array</p></div>
 <div class="subelement response"><code><a href="../classes/Klein.DataCollection.DataCollection.html">\Klein\DataCollection\DataCollection</a></code></div>
 </div></div>
 </div>
+<a id="method_pathname"></a><div class="element clickable method public method_pathname" data-toggle="collapse" data-target=".method_pathname .collapse">
+<h2>Get the request's pathname</h2>
+<pre>pathname() : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>public</td>
+</tr></table>
+<h3>Returns</h3>
+<div class="subelement response"><code>string</code></div>
+</div></div>
+</div>
+<a id="method_query"></a><div class="element clickable method public method_query" data-toggle="collapse" data-target=".method_query .collapse">
+<h2>Adds to or modifies the current query string</h2>
+<pre>query(string $key, mixed $value) : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>access</th>
+<td>public</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$key</h4>
+<code>string</code><p>The name of the query param</p></div>
+<div class="subelement argument">
+<h4>$value</h4>
+<code>mixed</code><p>The value of the query param</p></div>
+<h3>Returns</h3>
+<div class="subelement response"><code>string</code></div>
+</div></div>
+</div>
 <a id="method_server"></a><div class="element clickable method public method_server" data-toggle="collapse" data-target=".method_server .collapse">
 <h2>Returns the server collection</h2>
 <pre>server() : <a href="../classes/Klein.DataCollection.DataCollection.html">\Klein\DataCollection\DataCollection</a></pre>
@@ -492,7 +533,7 @@ you'd like this method to exclude in the returned array</p></div>
 </div>
 <a id="method_uri"></a><div class="element clickable method public method_uri" data-toggle="collapse" data-target=".method_uri .collapse">
 <h2>Gets the request URI</h2>
-<pre>uri(boolean $strip_query_string) : string</pre>
+<pre>uri() : string</pre>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
@@ -500,10 +541,6 @@ you'd like this method to exclude in the returned array</p></div>
 <th>access</th>
 <td>public</td>
 </tr></table>
-<h3>Parameters</h3>
-<div class="subelement argument">
-<h4>$strip_query_string</h4>
-<code>boolean</code><p>Whether or not to strip the query string from the URI</p></div>
 <h3>Returns</h3>
 <div class="subelement response"><code>string</code></div>
 </div></div>
@@ -639,7 +676,7 @@ you'd like this method to exclude in the returned array</p></div>
 <div class="row"><footer class="span12">
             Template is built using <a href="http://twitter.github.com/bootstrap/">Twitter Bootstrap 2</a> and icons provided by <a href="http://glyphicons.com/">Glyphicons</a>.<br>
             Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor 2.0.0a12</a> and<br>
-            generated on 2013-05-08T03:28:14-04:00.<br></footer></div>
+            generated on 2013-06-23T14:57:26-04:00.<br></footer></div>
 </div>
 </body>
 </html>

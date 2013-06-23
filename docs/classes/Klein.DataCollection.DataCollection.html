@@ -130,11 +130,19 @@ designed to work with HTTP data (request params, session data, etc)</p>
 </tr>
 <tr>
 <th>used_by</th>
-<td>\Klein\DataCollection\ServerDataCollection</td>
+<td>\Klein\DataCollection\HeaderDataCollection</td>
 </tr>
 <tr>
 <th>used_by</th>
-<td>\Klein\DataCollection\HeaderDataCollection</td>
+<td>\Klein\DataCollection\ResponseCookieDataCollection</td>
+</tr>
+<tr>
+<th>used_by</th>
+<td>\Klein\DataCollection\RouteCollection</td>
+</tr>
+<tr>
+<th>used_by</th>
+<td>\Klein\DataCollection\ServerDataCollection</td>
 </tr>
 </table>
 <h3>
@@ -256,7 +264,7 @@ this instance while treating it as an instance property</p></div>
 </div>
 <a id="method_all"></a><div class="element clickable method public method_all" data-toggle="collapse" data-target=".method_all .collapse">
 <h2>Returns all of the attributes in the collection</h2>
-<pre>all(array $mask) : array</pre>
+<pre>all(array $mask, boolean $fill_with_nulls) : array</pre>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"><p>If an optional mask array is passed, this only
@@ -269,6 +277,10 @@ returns the keys that match the mask</p></div>
 <div class="subelement argument">
 <h4>$mask</h4>
 <code>array</code><p>The parameter mask array</p></div>
+<div class="subelement argument">
+<h4>$fill_with_nulls</h4>
+<code>boolean</code><p>Whether or not to fill the returned array
+ with null values to match the given mask</p></div>
 <h3>Returns</h3>
 <div class="subelement response"><code>array</code></div>
 </div></div>
@@ -565,7 +577,7 @@ method instead of the usual "array_merge" method</p></div>
 <div class="row"><footer class="span12">
             Template is built using <a href="http://twitter.github.com/bootstrap/">Twitter Bootstrap 2</a> and icons provided by <a href="http://glyphicons.com/">Glyphicons</a>.<br>
             Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor 2.0.0a12</a> and<br>
-            generated on 2013-05-08T03:28:14-04:00.<br></footer></div>
+            generated on 2013-06-23T14:57:26-04:00.<br></footer></div>
 </div>
 </body>
 </html>

@@ -3,7 +3,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
 <meta charset="utf-8">
-<title>Klein » \Klein\DataCollection\HeaderDataCollection</title>
+<title>Klein » \Klein\DataCollection\ResponseCookieDataCollection</title>
 <meta name="author" content="Mike van Riel">
 <meta name="description" content="">
 <link href="../css/template.css" rel="stylesheet" media="all">
@@ -65,18 +65,17 @@
 <li class="method public inherited"><a href="#method___unset" title='__unset :: Magic "__unset" method'><span class="description">Magic "__unset" method</span><pre>__unset()</pre></a></li>
 <li class="method public inherited"><a href="#method_all" title="all :: Returns all of the attributes in the collection"><span class="description">Returns all of the attributes in the collection</span><pre>all()</pre></a></li>
 <li class="method public inherited"><a href="#method_count" title='count :: Count the attributes via a simple "count" call'><span class="description">Count the attributes via a simple "count" call</span><pre>count()</pre></a></li>
-<li class="method public "><a href="#method_exists" title="exists :: Check if a header exists"><span class="description">Check if a header exists</span><pre>exists()</pre></a></li>
-<li class="method public "><a href="#method_get" title="get :: Get a header"><span class="description">Get a header</span><pre>get()</pre></a></li>
+<li class="method public inherited"><a href="#method_exists" title="exists :: See if an attribute exists in the collection"><span class="description">See if an attribute exists in the collection</span><pre>exists()</pre></a></li>
+<li class="method public inherited"><a href="#method_get" title="get :: Return an attribute of the collection"><span class="description">Return an attribute of the collection</span><pre>get()</pre></a></li>
 <li class="method public inherited"><a href="#method_getIterator" title="getIterator :: Get the aggregate iterator"><span class="description">Get the aggregate iterator</span><pre>getIterator()</pre></a></li>
 <li class="method public inherited"><a href="#method_merge" title="merge :: Merge attributes with the collection's attributes"><span class="description">Merge attributes with the collection's attributes</span><pre>merge()</pre></a></li>
-<li class="method public "><a href="#method_normalizeName" title="normalizeName :: Normalize a header name by formatting it in a standard way"><span class="description">Normalize a header name by formatting it in a standard way</span><pre>normalizeName()</pre></a></li>
 <li class="method public inherited"><a href="#method_offsetExists" title="offsetExists :: Check existence an attribute via array syntax"><span class="description">Check existence an attribute via array syntax</span><pre>offsetExists()</pre></a></li>
 <li class="method public inherited"><a href="#method_offsetGet" title="offsetGet :: Get an attribute via array syntax"><span class="description">Get an attribute via array syntax</span><pre>offsetGet()</pre></a></li>
 <li class="method public inherited"><a href="#method_offsetSet" title="offsetSet :: Set an attribute via array syntax"><span class="description">Set an attribute via array syntax</span><pre>offsetSet()</pre></a></li>
 <li class="method public inherited"><a href="#method_offsetUnset" title="offsetUnset :: Remove an attribute via array syntax"><span class="description">Remove an attribute via array syntax</span><pre>offsetUnset()</pre></a></li>
-<li class="method public "><a href="#method_remove" title="remove :: Remove a header"><span class="description">Remove a header</span><pre>remove()</pre></a></li>
+<li class="method public inherited"><a href="#method_remove" title="remove :: Remove an attribute from the collection"><span class="description">Remove an attribute from the collection</span><pre>remove()</pre></a></li>
 <li class="method public inherited"><a href="#method_replace" title="replace :: Replace the collection's attributes"><span class="description">Replace the collection's attributes</span><pre>replace()</pre></a></li>
-<li class="method public "><a href="#method_set" title="set :: Set a header"><span class="description">Set a header</span><pre>set()</pre></a></li>
+<li class="method public "><a href="#method_set" title="set :: Set a cookie"><span class="description">Set a cookie</span><pre>set()</pre></a></li>
 </ul>
 </li>
 <li class="nav-header">
@@ -89,7 +88,7 @@
 </ul>
 </div>
 <div class="span8">
-<a id="\Klein\DataCollection\HeaderDataCollection"></a><ul class="breadcrumb">
+<a id="\Klein\DataCollection\ResponseCookieDataCollection"></a><ul class="breadcrumb">
 <li>
 <a href="../index.html"><i class="icon-custom icon-class"></i></a><span class="divider">\</span>
 </li>
@@ -98,13 +97,13 @@
 <span class="divider">\</span><a href="../namespaces/Klein.DataCollection.html">DataCollection</a>
 </li>
 <li class="active">
-<span class="divider">\</span><a href="../classes/Klein.DataCollection.HeaderDataCollection.html">HeaderDataCollection</a>
+<span class="divider">\</span><a href="../classes/Klein.DataCollection.ResponseCookieDataCollection.html">ResponseCookieDataCollection</a>
 </li>
 </ul>
 <div class="element class">
-<p class="short_description">HeaderDataCollection</p>
+<p class="short_description">ResponseCookieDataCollection</p>
 <div class="details">
-<div class="long_description"><p>A DataCollection for HTTP headers</p></div>
+<div class="long_description"><p>A DataCollection for HTTP response cookies</p></div>
 <table class="table table-bordered">
 <tr>
 <th>uses</th>
@@ -119,7 +118,7 @@
 <i class="icon-custom icon-method"></i> Methods</h3>
 <a id="method___construct"></a><div class="element clickable method public method___construct" data-toggle="collapse" data-target=".method___construct .collapse">
 <h2>Constructor</h2>
-<pre>__construct(array $headers) </pre>
+<pre>__construct(array $cookies) </pre>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
@@ -135,8 +134,8 @@
 </table>
 <h3>Parameters</h3>
 <div class="subelement argument">
-<h4>$headers</h4>
-<code>array</code><p>The headers of this collection</p></div>
+<h4>$cookies</h4>
+<code>array</code><p>The cookies of this collection</p></div>
 </div></div>
 </div>
 <a id="method___get"></a><div class="element clickable method public method___get" data-toggle="collapse" data-target=".method___get .collapse">
@@ -309,52 +308,52 @@ to simply count the number of attributes in the collection.</p></div>
 </div></div>
 </div>
 <a id="method_exists"></a><div class="element clickable method public method_exists" data-toggle="collapse" data-target=".method_exists .collapse">
-<h2>Check if a header exists</h2>
+<h2>See if an attribute exists in the collection</h2>
 <pre>exists(string $key) : boolean</pre>
-<div class="labels"></div>
+<div class="labels"><span class="label">Inherited</span></div>
 <div class="row collapse"><div class="detail-description">
-<div class="long_description"><p></p></div>
+<div class="long_description"></div>
 <table class="table table-bordered">
-<tr>
-<th>see</th>
-<td><a href="DataCollection.DataCollection.html#%5CKlein%5CDataCollection%5CDataCollection::exists()">\Klein\DataCollection\DataCollection::exists()</a></td>
-</tr>
 <tr>
 <th>access</th>
 <td>public</td>
+</tr>
+<tr>
+<th>inherited_from</th>
+<td>\Klein\DataCollection\DataCollection::exists()</td>
 </tr>
 </table>
 <h3>Parameters</h3>
 <div class="subelement argument">
 <h4>$key</h4>
-<code>string</code><p>The name of the header</p></div>
+<code>string</code><p>The name of the parameter</p></div>
 <h3>Returns</h3>
 <div class="subelement response"><code>boolean</code></div>
 </div></div>
 </div>
 <a id="method_get"></a><div class="element clickable method public method_get" data-toggle="collapse" data-target=".method_get .collapse">
-<h2>Get a header</h2>
+<h2>Return an attribute of the collection</h2>
 <pre>get(string $key, mixed $default_val) : mixed</pre>
-<div class="labels"></div>
+<div class="labels"><span class="label">Inherited</span></div>
 <div class="row collapse"><div class="detail-description">
-<div class="long_description"><p><p>Return a default value if the key doesn't exist</p></p></div>
+<div class="long_description"><p>Return a default value if the key doesn't exist</p></div>
 <table class="table table-bordered">
-<tr>
-<th>see</th>
-<td><a href="DataCollection.DataCollection.html#%5CKlein%5CDataCollection%5CDataCollection::get()">\Klein\DataCollection\DataCollection::get()</a></td>
-</tr>
 <tr>
 <th>access</th>
 <td>public</td>
+</tr>
+<tr>
+<th>inherited_from</th>
+<td>\Klein\DataCollection\DataCollection::get()</td>
 </tr>
 </table>
 <h3>Parameters</h3>
 <div class="subelement argument">
 <h4>$key</h4>
-<code>string</code><p>The name of the header to return</p></div>
+<code>string</code><p>The name of the parameter to return</p></div>
 <div class="subelement argument">
 <h4>$default_val</h4>
-<code>mixed</code><p>The default value of the header if it contains no value</p></div>
+<code>mixed</code><p>The default value of the parameter if it contains no value</p></div>
 <h3>Returns</h3>
 <div class="subelement response"><code>mixed</code></div>
 </div></div>
@@ -411,39 +410,6 @@ method instead of the usual "array_merge" method</p></div>
 </div>
 <h3>Returns</h3>
 <div class="subelement response"><code><a href="../classes/Klein.DataCollection.DataCollection.html">\Klein\DataCollection\DataCollection</a></code></div>
-</div></div>
-</div>
-<a id="method_normalizeName"></a><div class="element clickable method public method_normalizeName" data-toggle="collapse" data-target=".method_normalizeName .collapse">
-<h2>Normalize a header name by formatting it in a standard way</h2>
-<pre>normalizeName(string $name, boolean $make_lowercase) : string</pre>
-<div class="labels"><span class="label">Static</span></div>
-<div class="row collapse"><div class="detail-description">
-<div class="long_description"><p>This is useful since PHP automatically capitalizes and underscore
-separates the words of headers</p></div>
-<table class="table table-bordered">
-<tr>
-<th>link</th>
-<td><a href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec4.html#sec4.2">http://www.w3.org/Protocols/rfc2616/rfc2616-sec4.html#sec4.2</a></td>
-</tr>
-<tr>
-<th>static</th>
-<td></td>
-</tr>
-<tr>
-<th>access</th>
-<td>public</td>
-</tr>
-</table>
-<h3>Parameters</h3>
-<div class="subelement argument">
-<h4>$name</h4>
-<code>string</code><p>The name ("field") of the header</p>
-</div>
-<div class="subelement argument">
-<h4>$make_lowercase</h4>
-<code>boolean</code><p>Whether or not to lowercase the name</p></div>
-<h3>Returns</h3>
-<div class="subelement response"><code>string</code></div>
 </div></div>
 </div>
 <a id="method_offsetExists"></a><div class="element clickable method public method_offsetExists" data-toggle="collapse" data-target=".method_offsetExists .collapse">
@@ -574,25 +540,25 @@ separates the words of headers</p></div>
 </div></div>
 </div>
 <a id="method_remove"></a><div class="element clickable method public method_remove" data-toggle="collapse" data-target=".method_remove .collapse">
-<h2>Remove a header</h2>
+<h2>Remove an attribute from the collection</h2>
 <pre>remove(string $key) : void</pre>
-<div class="labels"></div>
+<div class="labels"><span class="label">Inherited</span></div>
 <div class="row collapse"><div class="detail-description">
-<div class="long_description"><p></p></div>
+<div class="long_description"></div>
 <table class="table table-bordered">
-<tr>
-<th>see</th>
-<td><a href="DataCollection.DataCollection.html#%5CKlein%5CDataCollection%5CDataCollection::remove()">\Klein\DataCollection\DataCollection::remove()</a></td>
-</tr>
 <tr>
 <th>access</th>
 <td>public</td>
+</tr>
+<tr>
+<th>inherited_from</th>
+<td>\Klein\DataCollection\DataCollection::remove()</td>
 </tr>
 </table>
 <h3>Parameters</h3>
 <div class="subelement argument">
 <h4>$key</h4>
-<code>string</code><p>The name of the header</p></div>
+<code>string</code><p>The name of the parameter</p></div>
 </div></div>
 </div>
 <a id="method_replace"></a><div class="element clickable method public method_replace" data-toggle="collapse" data-target=".method_replace .collapse">
@@ -621,11 +587,20 @@ separates the words of headers</p></div>
 </div></div>
 </div>
 <a id="method_set"></a><div class="element clickable method public method_set" data-toggle="collapse" data-target=".method_set .collapse">
-<h2>Set a header</h2>
-<pre>set(string $key, mixed $value) : <a href="../classes/Klein.DataCollection.HeaderDataCollection.html">\Klein\DataCollection\HeaderDataCollection</a></pre>
+<h2>Set a cookie</h2>
+<pre>set(string $key, <a href="../classes/Klein.ResponseCookie.html">\Klein\ResponseCookie</a> | string $value) : <a href="../classes/Klein.DataCollection.ResponseCookieDataCollection.html">\Klein\DataCollection\ResponseCookieDataCollection</a></pre>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
-<div class="long_description"><p></p></div>
+<div class="long_description"><p></p>
+
+<p>A value may either be a string or a ResponseCookie instance
+String values will be converted into a ResponseCookie with
+the "name" of the cookie being set from the "key"</p>
+
+<p>Obviously, the developer is free to organize this collection
+however they like, and can be more explicit by passing a more
+suggested "$key" as the cookie's "domain" and passing in an
+instance of a ResponseCookie as the "$value"</p></div>
 <table class="table table-bordered">
 <tr>
 <th>see</th>
@@ -639,12 +614,12 @@ separates the words of headers</p></div>
 <h3>Parameters</h3>
 <div class="subelement argument">
 <h4>$key</h4>
-<code>string</code><p>The name of the header to set</p></div>
+<code>string</code><p>The name of the cookie to set</p></div>
 <div class="subelement argument">
 <h4>$value</h4>
-<code>mixed</code><p>The value of the header to set</p></div>
+<code><a href="../classes/Klein.ResponseCookie.html">\Klein\ResponseCookie</a></code><code>string</code><p>The value of the cookie to set</p></div>
 <h3>Returns</h3>
-<div class="subelement response"><code><a href="../classes/Klein.DataCollection.HeaderDataCollection.html">\Klein\DataCollection\HeaderDataCollection</a></code></div>
+<div class="subelement response"><code><a href="../classes/Klein.DataCollection.ResponseCookieDataCollection.html">\Klein\DataCollection\ResponseCookieDataCollection</a></code></div>
 </div></div>
 </div>
 <h3>

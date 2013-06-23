@@ -3,7 +3,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
 <meta charset="utf-8">
-<title>Klein » \Klein\Exceptions\KleinExceptionInterface</title>
+<title>Klein » \Klein\Exceptions\ResponseAlreadySentException</title>
 <meta name="author" content="Mike van Riel">
 <meta name="description" content="">
 <link href="../css/template.css" rel="stylesheet" media="all">
@@ -57,7 +57,7 @@
 <ul class="side-nav nav nav-list"></ul>
 </div>
 <div class="span8">
-<a id="\Klein\Exceptions\KleinExceptionInterface"></a><ul class="breadcrumb">
+<a id="\Klein\Exceptions\ResponseAlreadySentException"></a><ul class="breadcrumb">
 <li>
 <a href="../index.html"><i class="icon-custom icon-class"></i></a><span class="divider">\</span>
 </li>
@@ -66,22 +66,23 @@
 <span class="divider">\</span><a href="../namespaces/Klein.Exceptions.html">Exceptions</a>
 </li>
 <li class="active">
-<span class="divider">\</span><a href="../classes/Klein.Exceptions.KleinExceptionInterface.html">KleinExceptionInterface</a>
+<span class="divider">\</span><a href="../classes/Klein.Exceptions.ResponseAlreadySentException.html">ResponseAlreadySentException</a>
 </li>
 </ul>
-<div class="element interface">
-<p class="short_description">KleinExceptionInterface</p>
+<div class="element class">
+<p class="short_description">ResponseAlreadySentException</p>
 <div class="details">
-<div class="long_description"><p>Exception interface that Klein's exceptions should implement</p>
-
-<p>This is mostly for having a simple, common Interface class/namespace
-that can be type-hinted/instance-checked against, therefore making it
-easier to handle Klein exceptions while still allowing the different
-exception classes to properly extend the corresponding SPL Exception type</p></div>
-<table class="table table-bordered"><tr>
+<div class="long_description"><p>Exception used for when a response is attempted to be sent after its already been sent</p></div>
+<table class="table table-bordered">
+<tr>
+<th>uses</th>
+<td>\RuntimeException</td>
+</tr>
+<tr>
 <th>package</th>
 <td><a href="../packages/Klein.Exceptions.html">Klein\Exceptions</a></td>
-</tr></table>
+</tr>
+</table>
 </div>
 </div>
 </div>
