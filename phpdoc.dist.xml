@@ -3,7 +3,7 @@
 <phpdoc>
     <title>Klein</title>
     <files>
-        <directory>Klein</directory>
+        <directory>src</directory>
     </files>
     <parser>
         <target>docs</target>
