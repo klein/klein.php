@@ -122,6 +122,29 @@ class RouteTest extends AbstractKleinTest
         $this->assertSame($test_count_match, $route->getCountMatch());
     }
 
+    public function testNameGetSet()
+    {
+        // Test data
+        $test_callable = $this->getTestCallable();
+        $test_name = 'trevor';
+
+        // Empty constructor
+        $route = new Route($test_callable);
+
+        $this->assertNull($route->getName());
+
+        // Set in constructor
+        $route = new Route($test_callable, null, null, null, $test_name);
+
+        $this->assertSame($test_name, $route->getName());
+
+        // Set in method
+        $route = new Route($test_callable);
+        $route->setName($test_name);
+
+        $this->assertSame($test_name, $route->getName());
+    }
+
     public function testInvokeMethod()
     {
         // Test data

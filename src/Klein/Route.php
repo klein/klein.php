@@ -75,6 +75,16 @@ class Route
      */
     protected $count_match;
 
+    /**
+     * The name of the route
+     *
+     * Mostly used for reverse routing
+     *
+     * @var string
+     * @access protected
+     */
+    protected $name;
+
 
     /**
      * Methods
@@ -89,13 +99,14 @@ class Route
      * @param boolean $count_match
      * @access public
      */
-    public function __construct($callback, $path = '*', $method = null, $count_match = true)
+    public function __construct($callback, $path = '*', $method = null, $count_match = true, $name = null)
     {
         // Initialize some properties (use our setters so we can validate param types)
         $this->setCallback($callback);
         $this->setPath($path);
         $this->setMethod($method);
         $this->setCountMatch($count_match);
+        $this->setName($name);
     }
 
     /**
@@ -205,6 +216,35 @@ class Route
     public function setCountMatch($count_match)
     {
         $this->count_match = (boolean) $count_match;
+
+        return $this;
+    }
+
+    /**
+     * Get the name
+     *
+     * @access public
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+    
+    /**
+     * Set the name
+     *
+     * @param string $name
+     * @access public
+     * @return Route
+     */
+    public function setName($name)
+    {
+        if (null !== $name) {
+            $this->name = (string) $name;
+        } else {
+            $this->name = $name;
+        }
 
         return $this;
     }
