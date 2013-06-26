@@ -54,8 +54,19 @@ class RouteCollectionTest extends AbstractKleinTest
             false
         );
 
+        $sample_named_route = new Route(
+            function () {
+                echo 'TREVOR!';
+            },
+            '/trevor/is/weird',
+            'OPTIONS',
+            false,
+            'trevor'
+        );
+
+
         return array(
-            array($sample_route, $sample_other_route),
+            array($sample_route, $sample_other_route, $sample_named_route),
         );
     }
 
@@ -98,7 +109,7 @@ class RouteCollectionTest extends AbstractKleinTest
     /**
      * @dataProvider sampleDataProvider
      */
-    public function testConstructorRoutesThroughSet($sample_route, $sample_other_route)
+    public function testConstructorRoutesThroughAdd($sample_route, $sample_other_route)
     {
         $array_of_route_instances = array(
             $sample_route,
@@ -111,7 +122,8 @@ class RouteCollectionTest extends AbstractKleinTest
 
         // Create our collection
         $routes = new RouteCollection($array_of_route_instances);
-        $this->assertSame($array_of_route_instances, $routes->all());
+        $this->assertSame($array_of_route_instances, array_values($routes->all()));
+        $this->assertNotSame(array_keys($array_of_route_instances), $routes->keys());
 
         foreach ($routes as $route) {
             $this->assertTrue($route instanceof Route);
@@ -151,5 +163,28 @@ class RouteCollectionTest extends AbstractKleinTest
 
         $this->assertNotSame($callable, current($routes->all()));
         $this->assertTrue(current($routes->all()) instanceof Route);
+    }
+
+    /**
+     * @dataProvider sampleDataProvider
+     */
+    public function testPrepareNamed($sample_route, $sample_other_route, $sample_named_route)
+    {
+        $array_of_routes = array(
+            $sample_route,
+            $sample_other_route,
+            $sample_named_route,
+        );
+
+        // Create our collection
+        $routes = new RouteCollection($array_of_routes);
+
+        $original_keys = $routes->keys();
+
+        // Prepare the named routes
+        $routes->prepareNamed();
+
+        $this->assertNotSame($original_keys, $routes->keys());
+        $this->assertSame(count($original_keys), count($routes->keys()));
     }
 }

@@ -37,8 +37,8 @@ class RouteCollection extends DataCollection
      */
     public function __construct(array $routes = array())
     {
-        foreach ($routes as $key => $value) {
-            $this->set($key, $value);
+        foreach ($routes as $value) {
+            $this->add($value);
         }
     }
 
@@ -59,7 +59,7 @@ class RouteCollection extends DataCollection
      * @param string $key                   The name of the route to set
      * @param Route|callable $value         The value of the route to set
      * @access public
-     * @return Route
+     * @return RouteCollection
      */
     public function set($key, $value)
     {
@@ -77,7 +77,7 @@ class RouteCollection extends DataCollection
      *
      * @param Route $route
      * @access public
-     * @return Route
+     * @return RouteCollection
      */
     public function addRoute(Route $route)
     {
@@ -100,7 +100,7 @@ class RouteCollection extends DataCollection
      *
      * @param mixed $route
      * @access public
-     * @return Route
+     * @return RouteCollection
      */
     public function add($route)
     {
@@ -109,5 +109,32 @@ class RouteCollection extends DataCollection
         }
 
         return $this->addRoute($route);
+    }
+
+    /**
+     * Prepare the named routes in the collection
+     *
+     * This loops through every route to set the collection's
+     * key name for that route to equal the routes name, if
+     * its changed
+     *
+     * @access public
+     * @return RouteCollection
+     */
+    public function prepareNamed()
+    {
+        foreach ($this as $key => $route) {
+            $route_name = $route->getName();
+
+            if (null !== $route_name) {
+                // Remove the route from the collection
+                $this->remove($key);
+
+                // Add the route back to the set with the new name
+                $this->set($route_name, $route);
+            }
+        }
+
+        return $this;
     }
 }
