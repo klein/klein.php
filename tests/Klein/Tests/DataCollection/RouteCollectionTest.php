@@ -176,6 +176,8 @@ class RouteCollectionTest extends AbstractKleinTest
             $sample_named_route,
         );
 
+        $route_name = $sample_named_route->getName();
+
         // Create our collection
         $routes = new RouteCollection($array_of_routes);
 
@@ -186,5 +188,6 @@ class RouteCollectionTest extends AbstractKleinTest
 
         $this->assertNotSame($original_keys, $routes->keys());
         $this->assertSame(count($original_keys), count($routes->keys()));
+        $this->assertSame($sample_named_route, $routes->get($route_name));
     }
 }
