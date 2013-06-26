@@ -62,14 +62,57 @@ class DataCollection implements IteratorAggregate, ArrayAccess, Countable
     }
 
     /**
+     * Returns all of the key names in the collection
+     *
+     * If an optional mask array is passed, this only
+     * returns the keys that match the mask
+     *
+     * @param array $mask               The parameter mask array
+     * @param boolean $fill_with_nulls  Whether or not to fill the returned array with
+     *  values to match the given mask, even if they don't exist in the collection
+     * @access public
+     * @return array
+     */
+    public function keys($mask = null, $fill_with_nulls = true)
+    {
+        if (null !== $mask) {
+            // Support a more "magical" call
+            if (!is_array($mask)) {
+                $mask = func_get_args();
+            }
+
+            /*
+             * Make sure that the returned array has at least the values
+             * passed into the mask, since the user will expect them to exist
+             */
+            if ($fill_with_nulls) {
+                $keys = $mask;
+            } else {
+                $keys = array();
+            }
+
+            /*
+             * Remove all of the values from the keys
+             * that aren't in the passed mask
+             */
+            return array_intersect(
+                array_keys($this->attributes),
+                $mask
+            ) + $keys;
+        }
+
+        return array_keys($this->attributes);
+    }
+
+    /**
      * Returns all of the attributes in the collection
      *
      * If an optional mask array is passed, this only
      * returns the keys that match the mask
      *
      * @param array $mask               The parameter mask array
-     * @param boolean $fill_with_nulls  Whether or not to fill the returned array
-     *  with null values to match the given mask
+     * @param boolean $fill_with_nulls  Whether or not to fill the returned array with
+     *  values to match the given mask, even if they don't exist in the collection
      * @access public
      * @return array
      */
@@ -208,6 +251,19 @@ class DataCollection implements IteratorAggregate, ArrayAccess, Countable
     public function remove($key)
     {
         unset($this->attributes[$key]);
+    }
+
+    /**
+     * Clear the collection's contents
+     *
+     * Semantic alias of a no-argument `$this->replace` call
+     *
+     * @access public
+     * @return DataCollection
+     */
+    public function clear()
+    {
+        return $this->replace();
     }
 
 

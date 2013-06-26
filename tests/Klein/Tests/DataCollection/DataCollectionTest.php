@@ -117,6 +117,27 @@ class DataCollectionTest extends AbstractKleinTest
     /**
      * @dataProvider sampleDataProvider
      */
+    public function testKeys($sample_data, $data_collection)
+    {
+        // Test basic data similarity
+        $this->assertSame(array_keys($sample_data), $data_collection->keys());
+
+        // Create mask
+        $mask = array('float', static::$nonexistent_key);
+
+        $this->assertContains($mask[0], $data_collection->keys($mask));
+        $this->assertContains($mask[1], $data_collection->keys($mask));
+        $this->assertNotContains(key($sample_data), $data_collection->keys($mask));
+
+        // Test more "magical" way of inputting mask
+        $this->assertContains($mask[0], $data_collection->keys($mask[0], $mask[1]));
+        $this->assertContains($mask[1], $data_collection->keys($mask[0], $mask[1]));
+        $this->assertNotContains(key($sample_data), $data_collection->keys($mask[0], $mask[1]));
+    }
+
+    /**
+     * @dataProvider sampleDataProvider
+     */
     public function testAll($sample_data, $data_collection)
     {
         // Test basic data similarity
@@ -244,6 +265,19 @@ class DataCollectionTest extends AbstractKleinTest
         $data_collection->remove(key($sample_data));
 
         $this->assertFalse($data_collection->exists(key($sample_data)));
+    }
+
+    /**
+     * @dataProvider sampleDataProvider
+     */
+    public function testClear($sample_data, $data_collection)
+    {
+        $original_data = $data_collection->all();
+
+        $data_collection->clear();
+
+        $this->assertNotSame($original_data, $data_collection->all());
+        $this->assertSame(array(), $data_collection->all());
     }
 
     /**
