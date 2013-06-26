@@ -12,11 +12,11 @@
 namespace Klein;
 
 use \Exception;
+use \OutOfBoundsException;
 
 use \Klein\DataCollection\RouteCollection;
 use \Klein\Exceptions\LockedResponseException;
 use \Klein\Exceptions\UnhandledException;
-use \Klein\Exceptions\ResponseAlreadySentException;
 use \Klein\Exceptions\DispatchHaltedException;
 
 /**
