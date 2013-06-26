@@ -1153,6 +1153,63 @@ class RoutingTest extends AbstractKleinTest
         }
     }
 
+    public function testGetPathFor()
+    {
+        $this->klein_app->respond(
+            '/dogs',
+            function () {
+            }
+        )->setName('dogs');
+
+        $this->klein_app->respond(
+            '/dogs/[i:dog_id]/collars',
+            function () {
+            }
+        )->setName('dog-collars');
+
+        $this->klein_app->respond(
+            '/dogs/[i:dog_id]/collars/[a:collar_slug]/?',
+            function () {
+            }
+        )->setName('dog-collar-details');
+
+        $this->klein_app->dispatch(
+            MockRequestFactory::create('/', 'HEAD')
+        );
+
+        $this->assertSame(
+            '/',
+            $this->klein_app->getPathFor('dogs')
+        );
+        $this->assertSame(
+            '/dogs/[i:dog_id]/collars',
+            $this->klein_app->getPathFor('dog-collars')
+        );
+        $this->assertSame(
+            '/dogs/idnumberandstuff/collars',
+            $this->klein_app->getPathFor(
+                'dog-collars',
+                array(
+                    'dog_id' => 'idnumberandstuff',
+                )
+            )
+        );
+        $this->assertSame(
+            '/dogs/[i:dog_id]/collars/[a:collar_slug]/?',
+            $this->klein_app->getPathFor('dog-collar-details')
+        );
+        $this->assertSame(
+            '/dogs/idnumberandstuff/collars/d12f3d1f2d3/?',
+            $this->klein_app->getPathFor(
+                'dog-collar-details',
+                array(
+                    'dog_id' => 'idnumberandstuff',
+                    'collar_slug' => 'd12f3d1f2d3',
+                )
+            )
+        );
+    }
+
     public function testDispatchHalt()
     {
         $this->expectOutputString('2,4,7,8,');

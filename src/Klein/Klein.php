@@ -34,6 +34,13 @@ class Klein
      */
 
     /**
+     * The regular expression used to compile and match URL's
+     *
+     * @const string
+     */
+    const ROUTE_COMPILE_REGEX = '`(/|\.|)\[([^:\]]*+)(?::([^:\]]*+))?\](\?|)`';
+
+    /**
      * Dispatch route output handling
      *
      * Don't capture anything. Behave as normal.
@@ -613,7 +620,7 @@ class Klein
      */
     protected function compileRoute($route)
     {
-        if (preg_match_all('`(/|\.|)\[([^:\]]*+)(?::([^:\]]*+))?\](\?|)`', $route, $matches, PREG_SET_ORDER)) {
+        if (preg_match_all(static::ROUTE_COMPILE_REGEX, $route, $matches, PREG_SET_ORDER)) {
             $match_types = array(
                 'i'  => '[0-9]++',
                 'a'  => '[0-9A-Za-z]++',
@@ -622,6 +629,7 @@ class Klein
                 '**' => '.++',
                 ''   => '[^/]+?'
             );
+
             foreach ($matches as $match) {
                 list($block, $pre, $type, $param, $optional) = $match;
 
@@ -643,7 +651,55 @@ class Klein
                 $route = str_replace($block, $pattern, $route);
             }
         }
+
         return "`^$route$`";
+    }
+
+    /**
+     * Get the path for a given route
+     *
+     * This looks up the route by its passed name and returns
+     * the path/url for that route, with its URL params as
+     * placeholders unless you pass a valid key-value pair array
+     * of the placeholder params and their values
+     *
+     * This method, and its style of reverse-compilation, was originally
+     * inspired by a similar effort by Gilles Bouthenot (@gbouthenot)
+     *
+     * @link https://github.com/gbouthenot
+     * @param string $route_name    The name of the route
+     * @param array $params         The array of placeholder fillers
+     * @throws OutOfBoundsException If the route requested doesn't exist
+     * @access public
+     * @return string
+     */
+    public function getPathFor($route_name, array $params = null)
+    {
+        // First, grab the route
+        $route = $this->routes->get($route_name);
+
+        // Make sure we are getting a valid route
+        if (null === $route) {
+            throw new OutOfBoundsException('No such route with name: '. $route_name);
+        }
+
+        $path = $route->getPath();
+
+        if (preg_match_all(static::ROUTE_COMPILE_REGEX, $path, $matches, PREG_SET_ORDER)) {
+            foreach ($matches as $match) {
+                list($block, $pre, $type, $param, $optional) = $match;
+
+                if (isset($params[$param])) {
+                    $path = str_replace($block, $pre. $params[$param], $path);
+                } elseif ($optional) {
+                    $path = str_replace($block, '', $path);
+                }
+            }
+
+            return $path;
+        }
+
+        return '/';
     }
 
     /**
