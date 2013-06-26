@@ -253,11 +253,13 @@ class Klein
      */
     public function respond($method, $path = '*', $callback = null)
     {
+        // Get the arguments in a very loose format
         $args = func_get_args();
         $callback = array_pop($args);
         $path = array_pop($args);
         $method = array_pop($args);
 
+        // If no path was passed, make our path our "match-all" symbol
         if (null === $path) {
             $path = '*';
         }
@@ -265,7 +267,9 @@ class Klein
         // only consider a request to be matched when not using matchall
         $count_match = ($path !== '*');
 
+        // If a custom regular expression (or negated custom regex)
         if ($this->namespace && $path[0] === '@' || ($path[0] === '!' && $path[1] === '@')) {
+            // Is it negated?
             if ($path[0] === '!') {
                 $negate = true;
                 $path = substr($path, 2);
@@ -274,7 +278,7 @@ class Klein
                 $path = substr($path, 1);
             }
 
-            // regex anchored to front of string
+            // Regex anchored to front of string
             if ($path[0] === '^') {
                 $path = substr($path, 1);
             } else {
@@ -288,9 +292,10 @@ class Klein
             }
 
         } elseif ($this->namespace && ('*' === $path)) {
-            // empty route with namespace is a match-all
+            // Empty route with namespace is a match-all
             $path = '@^' . $this->namespace . '(/|$)';
         } else {
+            // Just prepend our namespace
             $path = $this->namespace . $path;
         }
 
@@ -366,6 +371,9 @@ class Klein
 
         // Bind our objects to our service
         $this->service->bind($this->request, $this->response);
+
+        // Prepare any named routes
+        $this->routes->prepareNamed();
 
 
         // Grab some data from the request
