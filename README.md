@@ -299,7 +299,7 @@ $response->
     render($view, $data = array())                  // Render a view or partial (in the scope of $response)
     partial($view, $data = array())                 // Render a partial without a layout (in the scope of $response)
     layout($layout)                                 // Set the view layout
-    yield()                                         // Call inside the layout to render the view content
+    yieldView()                                     // Call inside the layout to render the view content
     error(Exception $err)                           // Routes an exception through the error callbacks
     onError($callback)                              // $callback takes ($response, $msg, $err_type = null)
     set($key, $value = null)                        // Set a view property or helper
