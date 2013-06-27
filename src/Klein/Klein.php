@@ -667,13 +667,14 @@ class Klein
      * inspired by a similar effort by Gilles Bouthenot (@gbouthenot)
      *
      * @link https://github.com/gbouthenot
-     * @param string $route_name    The name of the route
-     * @param array $params         The array of placeholder fillers
-     * @throws OutOfBoundsException If the route requested doesn't exist
+     * @param string $route_name        The name of the route
+     * @param array $params             The array of placeholder fillers
+     * @param boolean $flatten_regex    Optionally flatten custom regular expressions to "/"
+     * @throws OutOfBoundsException     If the route requested doesn't exist
      * @access public
      * @return string
      */
-    public function getPathFor($route_name, array $params = null)
+    public function getPathFor($route_name, array $params = null, $flatten_regex = true)
     {
         // First, grab the route
         $route = $this->routes->get($route_name);
@@ -696,10 +697,12 @@ class Klein
                 }
             }
 
-            return $path;
+        } elseif ($flatten_regex && strpos($path, '@') === 0) {
+            // If we're in a negative route match, just return the
+            $path = '/';
         }
 
-        return '/';
+        return $path;
     }
 
     /**
