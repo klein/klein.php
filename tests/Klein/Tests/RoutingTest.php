@@ -1173,12 +1173,30 @@ class RoutingTest extends AbstractKleinTest
             }
         )->setName('dog-collar-details');
 
+        $this->klein_app->respond(
+            '/dog/foo',
+            function () {
+            }
+        )->setName('dog-foo');
+
+        $this->klein_app->respond(
+            '@/dog/regex',
+            function () {
+            }
+        )->setName('dog-regex');
+
+        $this->klein_app->respond(
+            '!@/dog/regex',
+            function () {
+            }
+        )->setName('dog-neg-regex');
+
         $this->klein_app->dispatch(
             MockRequestFactory::create('/', 'HEAD')
         );
 
         $this->assertSame(
-            '/',
+            '/dogs',
             $this->klein_app->getPathFor('dogs')
         );
         $this->assertSame(
@@ -1207,6 +1225,26 @@ class RoutingTest extends AbstractKleinTest
                     'collar_slug' => 'd12f3d1f2d3',
                 )
             )
+        );
+        $this->assertSame(
+            '/dog/foo',
+            $this->klein_app->getPathFor('dog-foo')
+        );
+        $this->assertSame(
+            '/',
+            $this->klein_app->getPathFor('dog-regex')
+        );
+        $this->assertSame(
+            '/',
+            $this->klein_app->getPathFor('dog-neg-regex')
+        );
+        $this->assertNotSame(
+            '/',
+            $this->klein_app->getPathFor('dog-regex', null, false)
+        );
+        $this->assertNotSame(
+            '/',
+            $this->klein_app->getPathFor('dog-neg-regex', null, false)
         );
     }
 
