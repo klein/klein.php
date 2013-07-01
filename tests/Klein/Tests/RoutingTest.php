@@ -1191,6 +1191,18 @@ class RoutingTest extends AbstractKleinTest
             }
         )->setName('dog-neg-regex');
 
+        $this->klein_app->respond(
+            '@\.(json|csv)$',
+            function () {
+            }
+        )->setName('complex-regex');
+
+        $this->klein_app->respond(
+            '!@^/admin/',
+            function () {
+            }
+        )->setName('complex-neg-regex');
+
         $this->klein_app->dispatch(
             MockRequestFactory::create('/', 'HEAD')
         );
@@ -1238,13 +1250,29 @@ class RoutingTest extends AbstractKleinTest
             '/',
             $this->klein_app->getPathFor('dog-neg-regex')
         );
-        $this->assertNotSame(
-            '/',
+        $this->assertSame(
+            '@/dog/regex',
             $this->klein_app->getPathFor('dog-regex', null, false)
         );
         $this->assertNotSame(
             '/',
             $this->klein_app->getPathFor('dog-neg-regex', null, false)
+        );
+        $this->assertSame(
+            '/',
+            $this->klein_app->getPathFor('complex-regex')
+        );
+        $this->assertSame(
+            '/',
+            $this->klein_app->getPathFor('complex-neg-regex')
+        );
+        $this->assertSame(
+            '@\.(json|csv)$',
+            $this->klein_app->getPathFor('complex-regex', null, false)
+        );
+        $this->assertNotSame(
+            '/',
+            $this->klein_app->getPathFor('complex-neg-regex', null, false)
         );
     }
 
