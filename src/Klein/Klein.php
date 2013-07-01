@@ -663,6 +663,12 @@ class Klein
      * placeholders unless you pass a valid key-value pair array
      * of the placeholder params and their values
      *
+     * If a pathname is a complex/custom regular expression, this
+     * method will simply return the regular expression used to
+     * match the request pathname, unless an optional boolean is
+     * passed "flatten_regex" which will flatten the regular
+     * expression into a simple path string
+     *
      * This method, and its style of reverse-compilation, was originally
      * inspired by a similar effort by Gilles Bouthenot (@gbouthenot)
      *
@@ -698,7 +704,7 @@ class Klein
             }
 
         } elseif ($flatten_regex && strpos($path, '@') === 0) {
-            // If we're in a negative route match, just return the
+            // If the path is a custom regular expression and we're "flattening", just return a slash
             $path = '/';
         }
 
