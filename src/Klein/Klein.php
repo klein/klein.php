@@ -12,11 +12,11 @@
 namespace Klein;
 
 use \Exception;
+use \OutOfBoundsException;
 
 use \Klein\DataCollection\RouteCollection;
 use \Klein\Exceptions\LockedResponseException;
 use \Klein\Exceptions\UnhandledException;
-use \Klein\Exceptions\ResponseAlreadySentException;
 use \Klein\Exceptions\DispatchHaltedException;
 
 /**
@@ -32,6 +32,13 @@ class Klein
     /**
      * Class properties
      */
+
+    /**
+     * The regular expression used to compile and match URL's
+     *
+     * @const string
+     */
+    const ROUTE_COMPILE_REGEX = '`(/|\.|)\[([^:\]]*+)(?::([^:\]]*+))?\](\?|)`';
 
     /**
      * Dispatch route output handling
@@ -253,11 +260,13 @@ class Klein
      */
     public function respond($method, $path = '*', $callback = null)
     {
+        // Get the arguments in a very loose format
         $args = func_get_args();
         $callback = array_pop($args);
         $path = array_pop($args);
         $method = array_pop($args);
 
+        // If no path was passed, make our path our "match-all" symbol
         if (null === $path) {
             $path = '*';
         }
@@ -265,7 +274,9 @@ class Klein
         // only consider a request to be matched when not using matchall
         $count_match = ($path !== '*');
 
+        // If a custom regular expression (or negated custom regex)
         if ($this->namespace && $path[0] === '@' || ($path[0] === '!' && $path[1] === '@')) {
+            // Is it negated?
             if ($path[0] === '!') {
                 $negate = true;
                 $path = substr($path, 2);
@@ -274,7 +285,7 @@ class Klein
                 $path = substr($path, 1);
             }
 
-            // regex anchored to front of string
+            // Regex anchored to front of string
             if ($path[0] === '^') {
                 $path = substr($path, 1);
             } else {
@@ -288,9 +299,10 @@ class Klein
             }
 
         } elseif ($this->namespace && ('*' === $path)) {
-            // empty route with namespace is a match-all
+            // Empty route with namespace is a match-all
             $path = '@^' . $this->namespace . '(/|$)';
         } else {
+            // Just prepend our namespace
             $path = $this->namespace . $path;
         }
 
@@ -366,6 +378,9 @@ class Klein
 
         // Bind our objects to our service
         $this->service->bind($this->request, $this->response);
+
+        // Prepare any named routes
+        $this->routes->prepareNamed();
 
 
         // Grab some data from the request
@@ -605,7 +620,7 @@ class Klein
      */
     protected function compileRoute($route)
     {
-        if (preg_match_all('`(/|\.|)\[([^:\]]*+)(?::([^:\]]*+))?\](\?|)`', $route, $matches, PREG_SET_ORDER)) {
+        if (preg_match_all(static::ROUTE_COMPILE_REGEX, $route, $matches, PREG_SET_ORDER)) {
             $match_types = array(
                 'i'  => '[0-9]++',
                 'a'  => '[0-9A-Za-z]++',
@@ -614,6 +629,7 @@ class Klein
                 '**' => '.++',
                 ''   => '[^/]+?'
             );
+
             foreach ($matches as $match) {
                 list($block, $pre, $type, $param, $optional) = $match;
 
@@ -635,7 +651,64 @@ class Klein
                 $route = str_replace($block, $pattern, $route);
             }
         }
+
         return "`^$route$`";
+    }
+
+    /**
+     * Get the path for a given route
+     *
+     * This looks up the route by its passed name and returns
+     * the path/url for that route, with its URL params as
+     * placeholders unless you pass a valid key-value pair array
+     * of the placeholder params and their values
+     *
+     * If a pathname is a complex/custom regular expression, this
+     * method will simply return the regular expression used to
+     * match the request pathname, unless an optional boolean is
+     * passed "flatten_regex" which will flatten the regular
+     * expression into a simple path string
+     *
+     * This method, and its style of reverse-compilation, was originally
+     * inspired by a similar effort by Gilles Bouthenot (@gbouthenot)
+     *
+     * @link https://github.com/gbouthenot
+     * @param string $route_name        The name of the route
+     * @param array $params             The array of placeholder fillers
+     * @param boolean $flatten_regex    Optionally flatten custom regular expressions to "/"
+     * @throws OutOfBoundsException     If the route requested doesn't exist
+     * @access public
+     * @return string
+     */
+    public function getPathFor($route_name, array $params = null, $flatten_regex = true)
+    {
+        // First, grab the route
+        $route = $this->routes->get($route_name);
+
+        // Make sure we are getting a valid route
+        if (null === $route) {
+            throw new OutOfBoundsException('No such route with name: '. $route_name);
+        }
+
+        $path = $route->getPath();
+
+        if (preg_match_all(static::ROUTE_COMPILE_REGEX, $path, $matches, PREG_SET_ORDER)) {
+            foreach ($matches as $match) {
+                list($block, $pre, $type, $param, $optional) = $match;
+
+                if (isset($params[$param])) {
+                    $path = str_replace($block, $pre. $params[$param], $path);
+                } elseif ($optional) {
+                    $path = str_replace($block, '', $path);
+                }
+            }
+
+        } elseif ($flatten_regex && strpos($path, '@') === 0) {
+            // If the path is a custom regular expression and we're "flattening", just return a slash
+            $path = '/';
+        }
+
+        return $path;
     }
 
     /**
