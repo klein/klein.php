@@ -1341,6 +1341,40 @@ class RoutingTest extends AbstractKleinTest
         $this->klein_app->dispatch();
     }
 
+    public function testDispatchSkipCauses404()
+    {
+        $this->expectOutputString('404');
+
+        // Create a duplicate reference... yea, PHP 5.3 :/
+        $klein_app = $this->klein_app;
+
+        $this->klein_app->respond(
+            'POST',
+            '/steez',
+            function () use ($klein_app) {
+                $klein_app->skipThis();
+                echo 'Style... with ease';
+            }
+        );
+        $this->klein_app->respond(
+            'GET',
+            '/nope',
+            function () use ($klein_app) {
+                echo 'How did I get here?!';
+            }
+        );
+        $this->klein_app->respond(
+            '404',
+            function () use ($klein_app) {
+                echo '404';
+            }
+        );
+
+        $this->klein_app->dispatch(
+            MockRequestFactory::create('/steez', 'POST')
+        );
+    }
+
     public function testDispatchAbort()
     {
         $this->expectOutputString('1,');
