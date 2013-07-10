@@ -521,11 +521,6 @@ class Klein
             }
 
             if (isset($match) && $match ^ $negate) {
-                // Keep track of possibly matched methods
-                $methods_matched = array_merge($methods_matched, (array) $method);
-                $methods_matched = array_filter($methods_matched);
-                $methods_matched = array_unique($methods_matched);
-
                 if ($possible_match) {
                     if (!empty($params)) {
                         $this->request->paramsNamed()->merge($params);
@@ -538,7 +533,7 @@ class Klein
                     } catch (DispatchHaltedException $e) {
                         switch ($e->getCode()) {
                             case DispatchHaltedException::SKIP_THIS:
-                                continue;
+                                continue 2;
                                 break;
                             case DispatchHaltedException::SKIP_NEXT:
                                 $skip_num = $e->getNumberOfSkips();
@@ -554,6 +549,11 @@ class Klein
                         $count_match && ++$matched;
                     }
                 }
+
+                // Keep track of possibly matched methods
+                $methods_matched = array_merge($methods_matched, (array) $method);
+                $methods_matched = array_filter($methods_matched);
+                $methods_matched = array_unique($methods_matched);
             }
         }
 
