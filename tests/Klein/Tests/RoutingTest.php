@@ -1153,6 +1153,129 @@ class RoutingTest extends AbstractKleinTest
         }
     }
 
+    public function testGetPathFor()
+    {
+        $this->klein_app->respond(
+            '/dogs',
+            function () {
+            }
+        )->setName('dogs');
+
+        $this->klein_app->respond(
+            '/dogs/[i:dog_id]/collars',
+            function () {
+            }
+        )->setName('dog-collars');
+
+        $this->klein_app->respond(
+            '/dogs/[i:dog_id]/collars/[a:collar_slug]/?',
+            function () {
+            }
+        )->setName('dog-collar-details');
+
+        $this->klein_app->respond(
+            '/dog/foo',
+            function () {
+            }
+        )->setName('dog-foo');
+
+        $this->klein_app->respond(
+            '@/dog/regex',
+            function () {
+            }
+        )->setName('dog-regex');
+
+        $this->klein_app->respond(
+            '!@/dog/regex',
+            function () {
+            }
+        )->setName('dog-neg-regex');
+
+        $this->klein_app->respond(
+            '@\.(json|csv)$',
+            function () {
+            }
+        )->setName('complex-regex');
+
+        $this->klein_app->respond(
+            '!@^/admin/',
+            function () {
+            }
+        )->setName('complex-neg-regex');
+
+        $this->klein_app->dispatch(
+            MockRequestFactory::create('/', 'HEAD')
+        );
+
+        $this->assertSame(
+            '/dogs',
+            $this->klein_app->getPathFor('dogs')
+        );
+        $this->assertSame(
+            '/dogs/[i:dog_id]/collars',
+            $this->klein_app->getPathFor('dog-collars')
+        );
+        $this->assertSame(
+            '/dogs/idnumberandstuff/collars',
+            $this->klein_app->getPathFor(
+                'dog-collars',
+                array(
+                    'dog_id' => 'idnumberandstuff',
+                )
+            )
+        );
+        $this->assertSame(
+            '/dogs/[i:dog_id]/collars/[a:collar_slug]/?',
+            $this->klein_app->getPathFor('dog-collar-details')
+        );
+        $this->assertSame(
+            '/dogs/idnumberandstuff/collars/d12f3d1f2d3/?',
+            $this->klein_app->getPathFor(
+                'dog-collar-details',
+                array(
+                    'dog_id' => 'idnumberandstuff',
+                    'collar_slug' => 'd12f3d1f2d3',
+                )
+            )
+        );
+        $this->assertSame(
+            '/dog/foo',
+            $this->klein_app->getPathFor('dog-foo')
+        );
+        $this->assertSame(
+            '/',
+            $this->klein_app->getPathFor('dog-regex')
+        );
+        $this->assertSame(
+            '/',
+            $this->klein_app->getPathFor('dog-neg-regex')
+        );
+        $this->assertSame(
+            '@/dog/regex',
+            $this->klein_app->getPathFor('dog-regex', null, false)
+        );
+        $this->assertNotSame(
+            '/',
+            $this->klein_app->getPathFor('dog-neg-regex', null, false)
+        );
+        $this->assertSame(
+            '/',
+            $this->klein_app->getPathFor('complex-regex')
+        );
+        $this->assertSame(
+            '/',
+            $this->klein_app->getPathFor('complex-neg-regex')
+        );
+        $this->assertSame(
+            '@\.(json|csv)$',
+            $this->klein_app->getPathFor('complex-regex', null, false)
+        );
+        $this->assertNotSame(
+            '/',
+            $this->klein_app->getPathFor('complex-neg-regex', null, false)
+        );
+    }
+
     public function testDispatchHalt()
     {
         $this->expectOutputString('2,4,7,8,');
