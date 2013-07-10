@@ -614,6 +614,60 @@ class RoutingTest extends AbstractKleinTest
         );
     }
 
+    public function testParamsSlug()
+    {
+        $this->klein_app->respond(
+            '/[s:slug_name]',
+            function ($request) {
+                echo $request->param('slug_name');
+            }
+        );
+
+
+        $this->assertSame(
+            'dog-thing',
+            $this->dispatchAndReturnOutput(
+                MockRequestFactory::create('/dog-thing')
+            )
+        );
+        $this->assertSame(
+            'a_badass_slug',
+            $this->dispatchAndReturnOutput(
+                MockRequestFactory::create('/a_badass_slug')
+            )
+        );
+        $this->assertSame(
+            'AN_UPERCASE_SLUG',
+            $this->dispatchAndReturnOutput(
+                MockRequestFactory::create('/AN_UPERCASE_SLUG')
+            )
+        );
+        $this->assertSame(
+            'sample-wordpress-like-post-slug-based-on-the-title-2013-edition',
+            $this->dispatchAndReturnOutput(
+                MockRequestFactory::create('/sample-wordpress-like-post-slug-based-on-the-title-2013-edition')
+            )
+        );
+        $this->assertSame(
+            '',
+            $this->dispatchAndReturnOutput(
+                MockRequestFactory::create('/%!@#')
+            )
+        );
+        $this->assertSame(
+            '',
+            $this->dispatchAndReturnOutput(
+                MockRequestFactory::create('/')
+            )
+        );
+        $this->assertSame(
+            '',
+            $this->dispatchAndReturnOutput(
+                MockRequestFactory::create('/dog-%thing')
+            )
+        );
+    }
+
     public function test404TriggersOnce()
     {
         $this->expectOutputString('d404 Code');
