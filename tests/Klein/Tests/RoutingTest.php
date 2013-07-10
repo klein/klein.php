@@ -17,6 +17,7 @@ use \Klein\Klein;
 use \Klein\Tests\Mocks\HeadersEcho;
 use \Klein\Tests\Mocks\HeadersSave;
 use \Klein\Tests\Mocks\MockRequestFactory;
+use \Klein\Response;
 
 /**
  * RoutingTest
@@ -265,6 +266,48 @@ class RoutingTest extends AbstractKleinTest
         $this->assertSame(
             $expectedOutput['returned'] . $expectedOutput['echoed'] . $expectedOutput['echoed2'],
             $this->klein_app->response()->body()
+        );
+    }
+
+    public function testDispatchResponseReplaced()
+    {
+        $expected_body = 'You SHOULD see this';
+        $expected_code = 201;
+
+        $expected_append = 'This should be appended?';
+
+        $this->klein_app->respond(
+            '/',
+            function ($request, $response) {
+                // Set our response code
+                $response->code(569);
+
+                return 'This should disappear';
+            }
+        );
+        $this->klein_app->respond(
+            '/',
+            function () use ($expected_body, $expected_code) {
+                return new Response($expected_body, $expected_code);
+            }
+        );
+        $this->klein_app->respond(
+            '/',
+            function () use ($expected_append) {
+                return $expected_append;
+            }
+        );
+
+        $this->klein_app->dispatch(null, null, false, Klein::DISPATCH_CAPTURE_AND_RETURN);
+
+        // Make sure our response body and code match up
+        $this->assertSame(
+            $expected_body . $expected_append,
+            $this->klein_app->response()->body()
+        );
+        $this->assertSame(
+            $expected_code,
+            $this->klein_app->response()->code()
         );
     }
 

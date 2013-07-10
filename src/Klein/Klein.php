@@ -727,17 +727,21 @@ class Klein
     {
         // Handle the callback
         try {
-            $this->response->append(
-                call_user_func(
-                    $callback,
-                    $this->request,
-                    $this->response,
-                    $this->service,
-                    $this->app,
-                    $matched,
-                    $methods_matched
-                )
+            $returned = call_user_func(
+                $callback,
+                $this->request,
+                $this->response,
+                $this->service,
+                $this->app,
+                $matched,
+                $methods_matched
             );
+
+            if ($returned instanceof Response) {
+                $this->response = $returned;
+            } else {
+                $this->response->append($returned);
+            }
         } catch (LockedResponseException $e) {
             // Do nothing, since this is an automated behavior
         } catch (DispatchHaltedException $e) {
