@@ -251,9 +251,9 @@ authentication or view layouts. e.g. as a basic example, the following
 code will wrap other routes with a header and footer
 
 ```php
-$klein->respond('*', function ($request, $response, $service) { $service->render('header.phtml'; });
+$klein->respond('*', function ($request, $response, $service) { $service->render('header.phtml'); });
 //other routes
-$klein->respond('*', function ($request, $response, $service) { $service->render('footer.phtml'; });
+$klein->respond('*', function ($request, $response, $service) { $service->render('footer.phtml'); });
 ```
 
 Routes automatically match the entire request URI. If you need to match
