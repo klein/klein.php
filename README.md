@@ -100,9 +100,9 @@ $klein->respond('/report/latest', function ($request, $response, $service) {
 *Example 5* - All together
 
 ```php
-$klein->respond(function ($request, $response, $service, $app) {
+$klein->respond(function ($request, $response, $service, $app) use ($klein) {
     // Handle exceptions => flash the message and redirect to the referrer
-    $response->onError(function ($klein, $err_msg) {
+    $klein->onError(function ($klein, $err_msg) {
         $klein->service()->flash($err_msg);
         $klein->service()->back();
     });
