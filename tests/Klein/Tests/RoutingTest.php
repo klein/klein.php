@@ -668,6 +668,54 @@ class RoutingTest extends AbstractKleinTest
         );
     }
 
+    public function testPathParamsAreUrlDecoded()
+    {
+        $this->klein_app->respond(
+            '/[:test]',
+            function ($request) {
+                echo $request->param('test');
+            }
+        );
+
+        $this->assertSame(
+            'Knife Party',
+            $this->dispatchAndReturnOutput(
+                MockRequestFactory::create('/Knife%20Party')
+            )
+        );
+
+        $this->assertSame(
+            'and/or',
+            $this->dispatchAndReturnOutput(
+                MockRequestFactory::create('/and%2For')
+            )
+        );
+    }
+
+    public function testPathParamsAreUrlDecodedToRFC3986Spec()
+    {
+        $this->klein_app->respond(
+            '/[:test]',
+            function ($request) {
+                echo $request->param('test');
+            }
+        );
+
+        $this->assertNotSame(
+            'Knife Party',
+            $this->dispatchAndReturnOutput(
+                MockRequestFactory::create('/Knife+Party')
+            )
+        );
+
+        $this->assertSame(
+            'Knife+Party',
+            $this->dispatchAndReturnOutput(
+                MockRequestFactory::create('/Knife+Party')
+            )
+        );
+    }
+
     public function test404TriggersOnce()
     {
         $this->expectOutputString('d404 Code');
