@@ -523,6 +523,15 @@ class Klein
             if (isset($match) && $match ^ $negate) {
                 if ($possible_match) {
                     if (!empty($params)) {
+                        /**
+                         * URL Decode the params according to RFC 3986
+                         * @link http://www.faqs.org/rfcs/rfc3986
+                         *
+                         * Decode here AFTER matching as per @chriso's suggestion
+                         * @link https://github.com/chriso/klein.php/issues/117#issuecomment-21093915
+                         */
+                        $params = array_map('rawurldecode', $params);
+
                         $this->request->paramsNamed()->merge($params);
                     }
 
