@@ -462,7 +462,6 @@ class Klein
 
                 $this->handleResponseCallback($callback, $matched, $methods_matched);
 
-                ++$matched;
                 continue;
 
             } elseif ($_route === '405' && !$matched && count($methods_matched) > 0) {
@@ -470,7 +469,6 @@ class Klein
 
                 $this->handleResponseCallback($callback, $matched, $methods_matched);
 
-                ++$matched;
                 continue;
 
             } elseif (isset($_route[$i]) && $_route[$i] === '@') {
