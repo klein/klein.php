@@ -457,15 +457,10 @@ class Klein
             if ($_route === '*') {
                 $match = true;
 
-            } elseif ($_route === '404' && !$matched && count($methods_matched) <= 0) {
-                // Easily handle 404's
+            } elseif (($_route === '404' && !$matched && count($methods_matched) <= 0)
+                   || ($_route === '405' && !$matched && count($methods_matched) > 0)) {
 
-                $this->handleResponseCallback($callback, $matched, $methods_matched);
-
-                continue;
-
-            } elseif ($_route === '405' && !$matched && count($methods_matched) > 0) {
-                // Easily handle 405's
+                // Easily handle 40x's
 
                 $this->handleResponseCallback($callback, $matched, $methods_matched);
 
