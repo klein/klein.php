@@ -266,6 +266,17 @@ class DataCollection implements IteratorAggregate, ArrayAccess, Countable
         return $this->replace();
     }
 
+    /**
+     * Check if the collection is empty
+     *
+     * @access public
+     * @return boolean
+     */
+    public function isEmpty()
+    {
+        return empty($this->attributes);
+    }
+
 
     /*
      * Magic method implementations
