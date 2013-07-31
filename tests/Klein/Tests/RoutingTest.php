@@ -17,7 +17,11 @@ use \Klein\Klein;
 use \Klein\Tests\Mocks\HeadersEcho;
 use \Klein\Tests\Mocks\HeadersSave;
 use \Klein\Tests\Mocks\MockRequestFactory;
+use \Klein\Request;
 use \Klein\Response;
+use \Klein\ServiceProvider;
+use \Klein\App;
+use \Klein\DataCollection\RouteCollection;
 
 /**
  * RoutingTest
@@ -60,6 +64,39 @@ class RoutingTest extends AbstractKleinTest
         $this->klein_app->dispatch(
             MockRequestFactory::create('/')
         );
+    }
+
+    public function testCallbackArguments()
+    {
+        // Create expected objects
+        $expected_objects = [
+            'request'         => null,
+            'response'        => null,
+            'service'         => null,
+            'app'             => null,
+            'matched'         => null,
+            'methods_matched' => null,
+        ];
+
+        $this->klein_app->respond(
+            function ($a, $b, $c, $d, $e, $f) use (&$expected_objects) {
+                $expected_objects['request']         = $a;
+                $expected_objects['response']        = $b;
+                $expected_objects['service']         = $c;
+                $expected_objects['app']             = $d;
+                $expected_objects['matched']         = $e;
+                $expected_objects['methods_matched'] = $f;
+            }
+        );
+
+        $this->klein_app->dispatch();
+
+        $this->assertTrue($expected_objects['request'] instanceof Request);
+        $this->assertTrue($expected_objects['response'] instanceof Response);
+        $this->assertTrue($expected_objects['service'] instanceof ServiceProvider);
+        $this->assertTrue($expected_objects['app'] instanceof App);
+        $this->assertTrue($expected_objects['matched'] instanceof RouteCollection);
+        $this->assertTrue(is_array($expected_objects['methods_matched']));
     }
 
     public function testAppReference()
