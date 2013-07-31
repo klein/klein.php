@@ -486,6 +486,8 @@ class RoutingTest extends AbstractKleinTest
         $this->klein_app->dispatch(
             MockRequestFactory::create('/foo')
         );
+
+        $this->assertSame(404, $this->klein_app->response()->code());
     }
 
     public function testParamsBasic()
@@ -1172,6 +1174,7 @@ class RoutingTest extends AbstractKleinTest
         $this->assertCount(2, $resultArray);
         $this->assertContains('GET', $resultArray);
         $this->assertContains('POST', $resultArray);
+        $this->assertSame(405, $this->klein_app->response()->code());
     }
 
     public function testOptionsDefaultRequest()
