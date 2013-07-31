@@ -69,14 +69,14 @@ class RoutingTest extends AbstractKleinTest
     public function testCallbackArguments()
     {
         // Create expected objects
-        $expected_objects = [
+        $expected_objects = array(
             'request'         => null,
             'response'        => null,
             'service'         => null,
             'app'             => null,
             'matched'         => null,
             'methods_matched' => null,
-        ];
+        );
 
         $this->klein_app->respond(
             function ($a, $b, $c, $d, $e, $f) use (&$expected_objects) {
