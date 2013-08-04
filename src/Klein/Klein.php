@@ -736,6 +736,7 @@ class Klein
                 $this->response,
                 $this->service,
                 $this->app,
+                $this, // Pass the Klein instance
                 $matched,
                 $methods_matched
             );
