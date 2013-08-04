@@ -1049,12 +1049,9 @@ class RoutingTest extends AbstractKleinTest
 
     public function testNSDispatch()
     {
-        // Create a duplicate reference... yea, PHP 5.3 :/
-        $klein_app = $this->klein_app;
-
         $this->klein_app->with(
             '/u',
-            function () use ($klein_app) {
+            function ($klein_app) {
                 $klein_app->respond(
                     'GET',
                     '/?',
@@ -1474,60 +1471,57 @@ class RoutingTest extends AbstractKleinTest
     {
         $this->expectOutputString('2,4,7,8,');
 
-        // Create a duplicate reference... yea, PHP 5.3 :/
-        $klein_app = $this->klein_app;
-
         $this->klein_app->respond(
-            function () use ($klein_app) {
+            function ($a, $b, $c, $d, $klein_app) {
                 $klein_app->skipThis();
                 echo '1,';
             }
         );
         $this->klein_app->respond(
-            function () use ($klein_app) {
+            function ($a, $b, $c, $d, $klein_app) {
                 echo '2,';
                 $klein_app->skipNext();
             }
         );
         $this->klein_app->respond(
-            function () use ($klein_app) {
+            function ($a, $b, $c, $d, $klein_app) {
                 echo '3,';
             }
         );
         $this->klein_app->respond(
-            function () use ($klein_app) {
+            function ($a, $b, $c, $d, $klein_app) {
                 echo '4,';
                 $klein_app->skipNext(2);
             }
         );
         $this->klein_app->respond(
-            function () use ($klein_app) {
+            function ($a, $b, $c, $d, $klein_app) {
                 echo '5,';
             }
         );
         $this->klein_app->respond(
-            function () use ($klein_app) {
+            function ($a, $b, $c, $d, $klein_app) {
                 echo '6,';
             }
         );
         $this->klein_app->respond(
-            function () use ($klein_app) {
+            function ($a, $b, $c, $d, $klein_app) {
                 echo '7,';
             }
         );
         $this->klein_app->respond(
-            function () use ($klein_app) {
+            function ($a, $b, $c, $d, $klein_app) {
                 echo '8,';
                 $klein_app->skipRemaining();
             }
         );
         $this->klein_app->respond(
-            function () use ($klein_app) {
+            function ($a, $b, $c, $d, $klein_app) {
                 echo '9,';
             }
         );
         $this->klein_app->respond(
-            function () use ($klein_app) {
+            function ($a, $b, $c, $d, $klein_app) {
                 echo '10,';
             }
         );
@@ -1539,13 +1533,10 @@ class RoutingTest extends AbstractKleinTest
     {
         $this->expectOutputString('404');
 
-        // Create a duplicate reference... yea, PHP 5.3 :/
-        $klein_app = $this->klein_app;
-
         $this->klein_app->respond(
             'POST',
             '/steez',
-            function () use ($klein_app) {
+            function ($a, $b, $c, $d, $klein_app) {
                 $klein_app->skipThis();
                 echo 'Style... with ease';
             }
@@ -1553,13 +1544,13 @@ class RoutingTest extends AbstractKleinTest
         $this->klein_app->respond(
             'GET',
             '/nope',
-            function () use ($klein_app) {
+            function ($a, $b, $c, $d, $klein_app) {
                 echo 'How did I get here?!';
             }
         );
         $this->klein_app->respond(
             '404',
-            function () use ($klein_app) {
+            function ($a, $b, $c, $d, $klein_app) {
                 echo '404';
             }
         );
@@ -1573,22 +1564,19 @@ class RoutingTest extends AbstractKleinTest
     {
         $this->expectOutputString('1,');
 
-        // Create a duplicate reference... yea, PHP 5.3 :/
-        $klein_app = $this->klein_app;
-
         $this->klein_app->respond(
-            function () use ($klein_app) {
+            function ($a, $b, $c, $d, $klein_app) {
                 echo '1,';
             }
         );
         $this->klein_app->respond(
-            function () use ($klein_app) {
+            function ($a, $b, $c, $d, $klein_app) {
                 $klein_app->abort(404);
                 echo '2,';
             }
         );
         $this->klein_app->respond(
-            function () use ($klein_app) {
+            function ($a, $b, $c, $d, $klein_app) {
                 echo '3,';
             }
         );
