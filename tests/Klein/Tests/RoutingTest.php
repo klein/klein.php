@@ -74,18 +74,20 @@ class RoutingTest extends AbstractKleinTest
             'response'        => null,
             'service'         => null,
             'app'             => null,
+            'klein'           => null,
             'matched'         => null,
             'methods_matched' => null,
         );
 
         $this->klein_app->respond(
-            function ($a, $b, $c, $d, $e, $f) use (&$expected_objects) {
+            function ($a, $b, $c, $d, $e, $f, $g) use (&$expected_objects) {
                 $expected_objects['request']         = $a;
                 $expected_objects['response']        = $b;
                 $expected_objects['service']         = $c;
                 $expected_objects['app']             = $d;
-                $expected_objects['matched']         = $e;
-                $expected_objects['methods_matched'] = $f;
+                $expected_objects['klein']           = $e;
+                $expected_objects['matched']         = $f;
+                $expected_objects['methods_matched'] = $g;
             }
         );
 
@@ -95,8 +97,15 @@ class RoutingTest extends AbstractKleinTest
         $this->assertTrue($expected_objects['response'] instanceof Response);
         $this->assertTrue($expected_objects['service'] instanceof ServiceProvider);
         $this->assertTrue($expected_objects['app'] instanceof App);
+        $this->assertTrue($expected_objects['klein'] instanceof Klein);
         $this->assertTrue($expected_objects['matched'] instanceof RouteCollection);
         $this->assertTrue(is_array($expected_objects['methods_matched']));
+
+        $this->assertSame($expected_objects['request'], $this->klein_app->request());
+        $this->assertSame($expected_objects['response'], $this->klein_app->response());
+        $this->assertSame($expected_objects['service'], $this->klein_app->service());
+        $this->assertSame($expected_objects['app'], $this->klein_app->app());
+        $this->assertSame($expected_objects['klein'], $this->klein_app);
     }
 
     public function testAppReference()
@@ -1040,12 +1049,9 @@ class RoutingTest extends AbstractKleinTest
 
     public function testNSDispatch()
     {
-        // Create a duplicate reference... yea, PHP 5.3 :/
-        $klein_app = $this->klein_app;
-
         $this->klein_app->with(
             '/u',
-            function () use ($klein_app) {
+            function ($klein_app) {
                 $klein_app->respond(
                     'GET',
                     '/?',
@@ -1199,7 +1205,7 @@ class RoutingTest extends AbstractKleinTest
         );
         $this->klein_app->respond(
             405,
-            function ($a, $b, $c, $d, $e, $methods) use (&$resultArray) {
+            function ($a, $b, $c, $d, $e, $f, $methods) use (&$resultArray) {
                 $resultArray = $methods;
             }
         );
@@ -1465,60 +1471,57 @@ class RoutingTest extends AbstractKleinTest
     {
         $this->expectOutputString('2,4,7,8,');
 
-        // Create a duplicate reference... yea, PHP 5.3 :/
-        $klein_app = $this->klein_app;
-
         $this->klein_app->respond(
-            function () use ($klein_app) {
+            function ($a, $b, $c, $d, $klein_app) {
                 $klein_app->skipThis();
                 echo '1,';
             }
         );
         $this->klein_app->respond(
-            function () use ($klein_app) {
+            function ($a, $b, $c, $d, $klein_app) {
                 echo '2,';
                 $klein_app->skipNext();
             }
         );
         $this->klein_app->respond(
-            function () use ($klein_app) {
+            function ($a, $b, $c, $d, $klein_app) {
                 echo '3,';
             }
         );
         $this->klein_app->respond(
-            function () use ($klein_app) {
+            function ($a, $b, $c, $d, $klein_app) {
                 echo '4,';
                 $klein_app->skipNext(2);
             }
         );
         $this->klein_app->respond(
-            function () use ($klein_app) {
+            function ($a, $b, $c, $d, $klein_app) {
                 echo '5,';
             }
         );
         $this->klein_app->respond(
-            function () use ($klein_app) {
+            function ($a, $b, $c, $d, $klein_app) {
                 echo '6,';
             }
         );
         $this->klein_app->respond(
-            function () use ($klein_app) {
+            function ($a, $b, $c, $d, $klein_app) {
                 echo '7,';
             }
         );
         $this->klein_app->respond(
-            function () use ($klein_app) {
+            function ($a, $b, $c, $d, $klein_app) {
                 echo '8,';
                 $klein_app->skipRemaining();
             }
         );
         $this->klein_app->respond(
-            function () use ($klein_app) {
+            function ($a, $b, $c, $d, $klein_app) {
                 echo '9,';
             }
         );
         $this->klein_app->respond(
-            function () use ($klein_app) {
+            function ($a, $b, $c, $d, $klein_app) {
                 echo '10,';
             }
         );
@@ -1530,13 +1533,10 @@ class RoutingTest extends AbstractKleinTest
     {
         $this->expectOutputString('404');
 
-        // Create a duplicate reference... yea, PHP 5.3 :/
-        $klein_app = $this->klein_app;
-
         $this->klein_app->respond(
             'POST',
             '/steez',
-            function () use ($klein_app) {
+            function ($a, $b, $c, $d, $klein_app) {
                 $klein_app->skipThis();
                 echo 'Style... with ease';
             }
@@ -1544,13 +1544,13 @@ class RoutingTest extends AbstractKleinTest
         $this->klein_app->respond(
             'GET',
             '/nope',
-            function () use ($klein_app) {
+            function ($a, $b, $c, $d, $klein_app) {
                 echo 'How did I get here?!';
             }
         );
         $this->klein_app->respond(
             '404',
-            function () use ($klein_app) {
+            function ($a, $b, $c, $d, $klein_app) {
                 echo '404';
             }
         );
@@ -1564,22 +1564,19 @@ class RoutingTest extends AbstractKleinTest
     {
         $this->expectOutputString('1,');
 
-        // Create a duplicate reference... yea, PHP 5.3 :/
-        $klein_app = $this->klein_app;
-
         $this->klein_app->respond(
-            function () use ($klein_app) {
+            function ($a, $b, $c, $d, $klein_app) {
                 echo '1,';
             }
         );
         $this->klein_app->respond(
-            function () use ($klein_app) {
+            function ($a, $b, $c, $d, $klein_app) {
                 $klein_app->abort(404);
                 echo '2,';
             }
         );
         $this->klein_app->respond(
-            function () use ($klein_app) {
+            function ($a, $b, $c, $d, $klein_app) {
                 echo '3,';
             }
         );
