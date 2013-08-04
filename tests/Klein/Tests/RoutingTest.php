@@ -74,18 +74,20 @@ class RoutingTest extends AbstractKleinTest
             'response'        => null,
             'service'         => null,
             'app'             => null,
+            'klein'           => null,
             'matched'         => null,
             'methods_matched' => null,
         );
 
         $this->klein_app->respond(
-            function ($a, $b, $c, $d, $e, $f) use (&$expected_objects) {
+            function ($a, $b, $c, $d, $e, $f, $g) use (&$expected_objects) {
                 $expected_objects['request']         = $a;
                 $expected_objects['response']        = $b;
                 $expected_objects['service']         = $c;
                 $expected_objects['app']             = $d;
-                $expected_objects['matched']         = $e;
-                $expected_objects['methods_matched'] = $f;
+                $expected_objects['klein']           = $e;
+                $expected_objects['matched']         = $f;
+                $expected_objects['methods_matched'] = $g;
             }
         );
 
@@ -95,8 +97,15 @@ class RoutingTest extends AbstractKleinTest
         $this->assertTrue($expected_objects['response'] instanceof Response);
         $this->assertTrue($expected_objects['service'] instanceof ServiceProvider);
         $this->assertTrue($expected_objects['app'] instanceof App);
+        $this->assertTrue($expected_objects['klein'] instanceof Klein);
         $this->assertTrue($expected_objects['matched'] instanceof RouteCollection);
         $this->assertTrue(is_array($expected_objects['methods_matched']));
+
+        $this->assertSame($expected_objects['request'], $this->klein_app->request());
+        $this->assertSame($expected_objects['response'], $this->klein_app->response());
+        $this->assertSame($expected_objects['service'], $this->klein_app->service());
+        $this->assertSame($expected_objects['app'], $this->klein_app->app());
+        $this->assertSame($expected_objects['klein'], $this->klein_app);
     }
 
     public function testAppReference()
@@ -1199,7 +1208,7 @@ class RoutingTest extends AbstractKleinTest
         );
         $this->klein_app->respond(
             405,
-            function ($a, $b, $c, $d, $e, $methods) use (&$resultArray) {
+            function ($a, $b, $c, $d, $e, $f, $methods) use (&$resultArray) {
                 $resultArray = $methods;
             }
         );
