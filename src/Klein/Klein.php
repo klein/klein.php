@@ -322,7 +322,7 @@ class Klein
      * <code>
      * $router = new Klein();
      *
-     * $router->with('/users', function() use ( $router) {
+     * $router->with('/users', function($router) {
      *     $router->respond( '/', function() {
      *         // do something interesting
      *     });
@@ -345,7 +345,7 @@ class Klein
         $this->namespace .= $namespace;
 
         if (is_callable($routes)) {
-            $routes();
+            $routes($this);
         } else {
             require $routes;
         }
