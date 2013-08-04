@@ -389,7 +389,7 @@ class Klein
 
         // Set up some variables for matching
         $skip_num = 0;
-        $matched = 0;
+        $matched = $this->routes->cloneEmpty(); // Get a clone of the routes collection, as it may have been injected
         $methods_matched = array();
         $params = array();
         $apc = function_exists('apc_fetch');
@@ -457,8 +457,8 @@ class Klein
             if ($_route === '*') {
                 $match = true;
 
-            } elseif (($_route === '404' && !$matched && count($methods_matched) <= 0)
-                   || ($_route === '405' && !$matched && count($methods_matched) > 0)) {
+            } elseif (($_route === '404' && $matched->isEmpty() && count($methods_matched) <= 0)
+                   || ($_route === '405' && $matched->isEmpty() && count($methods_matched) > 0)) {
 
                 // Easily handle 40x's
 
@@ -548,7 +548,7 @@ class Klein
                     }
 
                     if ($_route !== '*') {
-                        $count_match && ++$matched;
+                        $count_match && $matched->add($handler);
                     }
                 }
 
@@ -560,13 +560,13 @@ class Klein
         }
 
         try {
-            if (!$matched && count($methods_matched) > 0) {
+            if ($matched->isEmpty() && count($methods_matched) > 0) {
                 if (strcasecmp($req_method, 'OPTIONS') !== 0) {
                     $this->response->code(405);
                 }
 
                 $this->response->header('Allow', implode(', ', $methods_matched));
-            } elseif (!$matched) {
+            } elseif ($matched->isEmpty()) {
                 $this->response->code(404);
             }
 
@@ -721,7 +721,7 @@ class Klein
      * to keep the "dispatch()" method DRY
      *
      * @param callable $callback
-     * @param int $matched
+     * @param RouteCollection $matched
      * @param int $methods_matched
      * @access protected
      * @return void
