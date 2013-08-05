@@ -1698,7 +1698,7 @@ class RoutingTest extends AbstractKleinTest
 
     /**
      * Advanced string route matching tests
-     * 
+     *
      * As the original Klein project was designed as a PHP version of Sinatra,
      * many of the following tests are ports of the Sinatra ruby equivalents:
      * https://github.com/sinatra/sinatra/blob/cd82a57154d57c18acfadbfefbefc6ea6a5035af/test/routing_test.rb
@@ -1788,6 +1788,27 @@ class RoutingTest extends AbstractKleinTest
         $this->assertSame(404, $this->klein_app->response()->code());
     }
 
+    public function testMatchesLiteralDotsInPathBeforeNamedParam()
+    {
+        $this->klein_app->respond(
+            '/file.[:ext]',
+            function () {
+            }
+        );
+
+        // Should match
+        $this->klein_app->dispatch(
+            MockRequestFactory::create('/file.ext')
+        );
+        $this->assertSame(200, $this->klein_app->response()->code());
+
+        // Shouldn't match
+        $this->klein_app->dispatch(
+            MockRequestFactory::create('/file0ext')
+        );
+        $this->assertSame(404, $this->klein_app->response()->code());
+    }
+
     public function testMatchesLiteralPlusSignsInPaths()
     {
         $this->klein_app->respond(
@@ -1807,5 +1828,33 @@ class RoutingTest extends AbstractKleinTest
             MockRequestFactory::create('/teeeeeeeeest')
         );
         $this->assertSame(404, $this->klein_app->response()->code());
+    }
+
+    public function testMatchesParenthesesInPaths()
+    {
+        $this->klein_app->respond(
+            '/test(bar)',
+            function () {
+            }
+        );
+
+        $this->klein_app->dispatch(
+            MockRequestFactory::create('/test(bar)')
+        );
+        $this->assertSame(200, $this->klein_app->response()->code());
+    }
+
+    public function testMatchesAdvancedRegularExpressions()
+    {
+        $this->klein_app->respond(
+            '@^\/foo...\/bar$',
+            function () {
+            }
+        );
+
+        $this->klein_app->dispatch(
+            MockRequestFactory::create('/foooom/bar')
+        );
+        $this->assertSame(200, $this->klein_app->response()->code());
     }
 }
