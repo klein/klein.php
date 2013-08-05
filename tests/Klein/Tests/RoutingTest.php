@@ -482,7 +482,7 @@ class RoutingTest extends AbstractKleinTest
 
     public function testRegex()
     {
-        $this->expectOutputString('z');
+        $this->expectOutputString('zz');
 
         $this->klein_app->respond(
             '@/bar',
@@ -491,8 +491,21 @@ class RoutingTest extends AbstractKleinTest
             }
         );
 
+        $this->klein_app->respond(
+            '@/[0-9]s',
+            function () {
+                echo 'z';
+            }
+        );
+
         $this->klein_app->dispatch(
             MockRequestFactory::create('/bar')
+        );
+        $this->klein_app->dispatch(
+            MockRequestFactory::create('/8s')
+        );
+        $this->klein_app->dispatch(
+            MockRequestFactory::create('/88s')
         );
     }
 
