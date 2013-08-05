@@ -30,7 +30,7 @@ class Klein
 {
 
     /**
-     * Class properties
+     * Class constants
      */
 
     /**
@@ -38,10 +38,14 @@ class Klein
      *
      * @const string
      */
-    // const ROUTE_COMPILE_REGEX = '`(/|\.|)\[([^:\]]*+)(?::([^:\]]*+))?\](\?|)`';
-    // const ROUTE_COMPILE_REGEX = '`(/|\.|)(\[([^:\]]*+)(?::([^:\]]*+))?\])(\?|)`';
     const ROUTE_COMPILE_REGEX = '`(\\\?(?:/|\.|))(\[([^:\]]*+)(?::([^:\]]*+))?\])(\?|)`';
-    const ROUTE_REGEX_ESCAPE = '`(?<=^|\])[^\]\[\?]+?(?=\[|$)`';
+
+    /**
+     * The regular expression used to escape the non-named param section of a route URL
+     *
+     * @const string
+     */
+    const ROUTE_ESCAPE_REGEX = '`(?<=^|\])[^\]\[\?]+?(?=\[|$)`';
 
     /**
      * Dispatch route output handling
@@ -625,52 +629,15 @@ class Klein
      */
     protected function compileRoute($route)
     {
-        // if (strpos($route, '@') !== 0) {
-        //     // Escape regex chars
-        //     $route = preg_quote($route);
-        //     $route = strtr(
-        //         $route,
-        //         array(
-        //             '\[' => '[',
-        //             '\]' => ']',
-        //             '\:' => ':',
-        //             '\?' => '?',
-        //             '\*' => '*',
-        //         )
-        //     );
-        // }
-
-        // if (preg_match_all(static::ROUTE_COMPILE_REGEX, $route, $match_locations, PREG_OFFSET_CAPTURE)) {
-        //     if (isset($match_locations[0])) {
-        //         foreach (array_reverse($match_locations[0]) as $locations) {
-        //             $position = $locations[1];
-
-        //             $route = substr_replace($route, preg_quote($loc
-        //         }
-        //     }
-        // }
-
-        if (preg_match_all(static::ROUTE_REGEX_ESCAPE, $route, $escape_locations, PREG_SET_ORDER)) {
-            // if (strlen($route) > 15) {
-            if ($route === '/te+st') {
-                // $on = true;
-                // var_dump($escape_locations);
-                // var_dump($route);
-            }
+        // First escape all of the non-named param (non [block]s) for regex-chars
+        if (preg_match_all(static::ROUTE_ESCAPE_REGEX, $route, $escape_locations, PREG_SET_ORDER)) {
             foreach ($escape_locations as $locations) {
                 $route = str_replace($locations[0], preg_quote($locations[0]), $route);
             }
-            if (isset($on)) {
-                // var_dump($route);
-            }
         }
 
+        // Now let's actually compile the path
         if (preg_match_all(static::ROUTE_COMPILE_REGEX, $route, $matches, PREG_SET_ORDER)) {
-            if (strlen($route) > 15) {
-                // var_dump($route);
-                // var_dump($matches);
-                // exit();
-            }
             $match_types = array(
                 'i'  => '[0-9]++',
                 'a'  => '[0-9A-Za-z]++',
@@ -701,11 +668,6 @@ class Klein
 
                 $route = str_replace($block, $pattern, $route);
             }
-        }
-
-        if (isset($on)) {
-            // var_dump("`^$route$`");
-            // exit();
         }
 
         return "`^$route$`";
