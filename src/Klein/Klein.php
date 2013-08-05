@@ -38,7 +38,10 @@ class Klein
      *
      * @const string
      */
-    const ROUTE_COMPILE_REGEX = '`(/|\.|)\[([^:\]]*+)(?::([^:\]]*+))?\](\?|)`';
+    // const ROUTE_COMPILE_REGEX = '`(/|\.|)\[([^:\]]*+)(?::([^:\]]*+))?\](\?|)`';
+    // const ROUTE_COMPILE_REGEX = '`(/|\.|)(\[([^:\]]*+)(?::([^:\]]*+))?\])(\?|)`';
+    const ROUTE_COMPILE_REGEX = '`(\\\?(?:/|\.|))(\[([^:\]]*+)(?::([^:\]]*+))?\])(\?|)`';
+    const ROUTE_REGEX_ESCAPE = '`(?<=^|\])[^\]\[\?]+?(?=\[|$)`';
 
     /**
      * Dispatch route output handling
@@ -622,7 +625,52 @@ class Klein
      */
     protected function compileRoute($route)
     {
+        // if (strpos($route, '@') !== 0) {
+        //     // Escape regex chars
+        //     $route = preg_quote($route);
+        //     $route = strtr(
+        //         $route,
+        //         array(
+        //             '\[' => '[',
+        //             '\]' => ']',
+        //             '\:' => ':',
+        //             '\?' => '?',
+        //             '\*' => '*',
+        //         )
+        //     );
+        // }
+
+        // if (preg_match_all(static::ROUTE_COMPILE_REGEX, $route, $match_locations, PREG_OFFSET_CAPTURE)) {
+        //     if (isset($match_locations[0])) {
+        //         foreach (array_reverse($match_locations[0]) as $locations) {
+        //             $position = $locations[1];
+
+        //             $route = substr_replace($route, preg_quote($loc
+        //         }
+        //     }
+        // }
+
+        if (preg_match_all(static::ROUTE_REGEX_ESCAPE, $route, $escape_locations, PREG_SET_ORDER)) {
+            // if (strlen($route) > 15) {
+            if ($route === '/te+st') {
+                // $on = true;
+                // var_dump($escape_locations);
+                // var_dump($route);
+            }
+            foreach ($escape_locations as $locations) {
+                $route = str_replace($locations[0], preg_quote($locations[0]), $route);
+            }
+            if (isset($on)) {
+                // var_dump($route);
+            }
+        }
+
         if (preg_match_all(static::ROUTE_COMPILE_REGEX, $route, $matches, PREG_SET_ORDER)) {
+            if (strlen($route) > 15) {
+                // var_dump($route);
+                // var_dump($matches);
+                // exit();
+            }
             $match_types = array(
                 'i'  => '[0-9]++',
                 'a'  => '[0-9A-Za-z]++',
@@ -634,14 +682,14 @@ class Klein
             );
 
             foreach ($matches as $match) {
-                list($block, $pre, $type, $param, $optional) = $match;
+                list($block, $pre, $inner_block, $type, $param, $optional) = $match;
 
                 if (isset($match_types[$type])) {
                     $type = $match_types[$type];
                 }
-                if ($pre === '.') {
-                    $pre = '\.';
-                }
+                // if ($pre === '.') {
+                //     $pre = '\.';
+                // }
                 // Older versions of PCRE require the 'P' in (?P<named>)
                 $pattern = '(?:'
                          . ($pre !== '' ? $pre : null)
@@ -653,6 +701,11 @@ class Klein
 
                 $route = str_replace($block, $pattern, $route);
             }
+        }
+
+        if (isset($on)) {
+            // var_dump("`^$route$`");
+            // exit();
         }
 
         return "`^$route$`";
@@ -697,7 +750,7 @@ class Klein
 
         if (preg_match_all(static::ROUTE_COMPILE_REGEX, $path, $matches, PREG_SET_ORDER)) {
             foreach ($matches as $match) {
-                list($block, $pre, $type, $param, $optional) = $match;
+                list($block, $pre, $inner_block, $type, $param, $optional) = $match;
 
                 if (isset($params[$param])) {
                     $path = str_replace($block, $pre. $params[$param], $path);
