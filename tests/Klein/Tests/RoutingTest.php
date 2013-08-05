@@ -1785,7 +1785,7 @@ class RoutingTest extends AbstractKleinTest
 
         // Should match
         $this->klein_app->dispatch(
-            MockRequestFactory::create('/te%2Bst')
+            MockRequestFactory::create('/te+st')
         );
         $this->assertSame(200, $this->klein_app->response()->code());
 
