@@ -654,9 +654,6 @@ class Klein
                 if (isset($match_types[$type])) {
                     $type = $match_types[$type];
                 }
-                // if ($pre === '.') {
-                //     $pre = '\.';
-                // }
                 // Older versions of PCRE require the 'P' in (?P<named>)
                 $pattern = '(?:'
                          . ($pre !== '' ? $pre : null)
