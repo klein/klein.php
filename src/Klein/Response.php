@@ -26,6 +26,19 @@ class Response
 {
 
     /**
+     * Class constants
+     */
+
+    /**  Public HTTP cache flag */
+    const PUBLIC_CACHE = 'public_cache';
+
+    /**  Private HTTP cache flag */
+    const PRIVATE_CACHE = 'private_cache';
+
+    /**  No HTTP cache flag */
+    const NO_CACHE = 'no_cache';
+
+    /**
      * Class properties
      */
 
@@ -103,6 +116,13 @@ class Response
      */
     public $chunked = false;
 
+    /**
+     * Cache control flag
+     *
+     * @var string
+     * @access public
+     */
+    public $cache_control = self::NO_CACHE;
 
     /**
      * Methods
@@ -342,6 +362,36 @@ class Response
     }
 
     /**
+     * Send HTTP cache headers
+     *
+     * @param boolean $override
+     * @access public
+     * @return Response
+     */
+    public function sendCacheHeaders($override = false)
+    {
+
+        if (headers_sent() && !$override) {
+            return $this;
+        }
+
+        switch ($this->cache_control) {
+            case self::PUBLIC_CACHE:
+                header('Cache-Control: public');
+                break;
+            case self::PRIVATE_CACHE:
+                header('Cache-Control: private');
+                break;
+            case self::NO_CACHE:
+                header('Pragma: no-cache');
+                header('Cache-Control: no-store, no-cache');
+                break;
+        }
+
+        return $this;
+    }
+
+    /**
      * Send our HTTP headers
      *
      * @param boolean $cookies_also Whether or not to also send the cookies after sending the normal headers
@@ -357,6 +407,9 @@ class Response
 
         // Send our HTTP status line
         header($this->httpStatusLine());
+
+        //Send HTTP cache headers
+        $this->sendCacheHeaders($override);
 
         // Iterate through our Headers data collection and send each header
         foreach ($this->headers as $key => $value) {
@@ -536,6 +589,32 @@ class Response
     }
 
     /**
+     * Tell the browser and network caches (e.g. Varnish) to publicly cache the response
+     *
+     * @access public
+     * @return Response
+     */
+    public function publicCache()
+    {
+        $this->cache_control = self::PUBLIC_CACHE;
+
+        return $this;
+    }
+
+    /**
+     * Tell the browser to privately cache the response
+     *
+     * @access public
+     * @return Response
+     */
+    public function privateCache()
+    {
+        $this->cache_control = self::PRIVATE_CACHE;
+
+        return $this;
+    }
+
+    /**
      * Tell the browser not to cache the response
      *
      * @access public
@@ -543,8 +622,7 @@ class Response
      */
     public function noCache()
     {
-        $this->header('Pragma', 'no-cache');
-        $this->header('Cache-Control', 'no-store, no-cache');
+        $this->cache_control = self::NO_CACHE;
 
         return $this;
     }

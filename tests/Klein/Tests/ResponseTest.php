@@ -202,6 +202,21 @@ class ResponsesTest extends AbstractKleinTest
     }
 
     /**
+     * Yes, testing headers really is a pain in the ass. ;)
+     *
+     * Technically... we can't. So, yea.
+     */
+    public function testSendCacheHeaders()
+    {
+        $response = new Response('beep bloop blop beep boop');
+        $response->noCache();
+
+        $response->sendCacheHeaders();
+
+        $this->expectOutputString(null);
+    }
+
+    /**
      * Testing cookies is exactly like testing headers
      * ... So, yea.
      */
@@ -283,16 +298,40 @@ class ResponsesTest extends AbstractKleinTest
         }
     }
 
+    public function testPublicCache()
+    {
+        $response = new Response();
+
+        // Make sure cache control is not initially publicCache
+        $response->cache_control = null;
+
+        $response->publicCache();
+
+        $this->assertEquals(Response::PUBLIC_CACHE, $response->cache_control);
+    }
+
+    public function testPrivateCache()
+    {
+        $response = new Response();
+
+        // Make sure cache control is not initially privateCache
+        $response->cache_control = null;
+
+        $response->privateCache();
+
+        $this->assertEquals(Response::PRIVATE_CACHE, $response->cache_control);
+    }
+
     public function testNoCache()
     {
         $response = new Response();
 
-        // Make sure the headers are initially empty
-        $this->assertEmpty($response->headers()->all());
+        // Make sure cache control is not initially noCache
+        $response->cache_control = null;
 
         $response->noCache();
 
-        $this->assertContains('no-cache', $response->headers()->all());
+        $this->assertEquals(Response::NO_CACHE, $response->cache_control);
     }
 
     public function testRedirect()
@@ -337,6 +376,9 @@ class ResponsesTest extends AbstractKleinTest
             file_get_contents(__FILE__)
         );
 
+        //Assert noCache was set
+        $this->assertEquals(Response::NO_CACHE, $this->klein_app->response()->cache_control);
+
         // Assert headers were passed
         $this->assertEquals(
             $file_mime,
@@ -378,15 +420,10 @@ class ResponsesTest extends AbstractKleinTest
             json_encode($test_object)
         );
 
+        //Assert noCache was set
+        $this->assertEquals(Response::NO_CACHE, $this->klein_app->response()->cache_control);
+
         // Assert headers were passed
-        $this->assertEquals(
-            'no-cache',
-            $this->klein_app->response()->headers()->get('Pragma')
-        );
-        $this->assertEquals(
-            'no-store, no-cache',
-            $this->klein_app->response()->headers()->get('Cache-Control')
-        );
         $this->assertEquals(
             'application/json',
             $this->klein_app->response()->headers()->get('Content-Type')
