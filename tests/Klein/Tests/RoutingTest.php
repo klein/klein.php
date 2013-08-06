@@ -1746,11 +1746,13 @@ class RoutingTest extends AbstractKleinTest
 
     public function testMatchesDotOutsideOfNamedParam()
     {
+        $self = $this;
+
         $this->klein_app->respond(
             '/[:file].[:ext]',
-            function ($request) {
-                $this->assertSame('unicorn', $request->param('file'));
-                $this->assertSame('png', $request->param('ext'));
+            function ($request) use ($self) {
+                $self->assertSame('unicorn', $request->param('file'));
+                $self->assertSame('png', $request->param('ext'));
 
                 return 'woot!';
             }
