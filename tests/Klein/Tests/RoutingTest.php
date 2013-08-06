@@ -1746,13 +1746,14 @@ class RoutingTest extends AbstractKleinTest
 
     public function testMatchesDotOutsideOfNamedParam()
     {
-        $self = $this;
+        $file = null;
+        $ext  = null;
 
         $this->klein_app->respond(
             '/[:file].[:ext]',
-            function ($request) use ($self) {
-                $self->assertSame('unicorn', $request->param('file'));
-                $self->assertSame('png', $request->param('ext'));
+            function ($request) use (&$file, &$ext) {
+                $file = $request->param('file');
+                $ext = $request->param('ext');
 
                 return 'woot!';
             }
@@ -1767,6 +1768,8 @@ class RoutingTest extends AbstractKleinTest
 
         $this->assertSame(200, $this->klein_app->response()->code());
         $this->assertSame('woot!', $this->klein_app->response()->body());
+        $this->assertSame('unicorn', $file);
+        $this->assertSame('png', $ext);
     }
 
     public function testMatchesLiteralDotsInPaths()
