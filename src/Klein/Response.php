@@ -247,6 +247,27 @@ class Response
     }
 
     /**
+     * Get (or set) the HTTP Cache-Control object
+     *
+     * @param null|HttpResponseCache $cache
+     * @access public
+     * @return HttpResponseCache|Response
+     */
+    public function cache(HttpResponseCache $cache = null)
+    {
+        if (null !== $cache) {
+            // Require that the response be unlocked before changing it
+            $this->requireUnlocked();
+
+            $this->cache = $cache;
+
+            return $this;
+        }
+
+        return $this->cache;
+    }
+
+    /**
      * Prepend a string to the response's content body
      *
      * @param string $content   The string to prepend
