@@ -15,6 +15,7 @@ namespace Klein\Tests;
 use \Klein\Klein;
 use \Klein\Response;
 use \Klein\HttpStatus;
+use \Klein\HttpResponseCache;
 use \Klein\DataCollection\HeaderDataCollection;
 use \Klein\DataCollection\ResponseCookieDataCollection;
 use \Klein\Exceptions\LockedResponseException;
@@ -22,8 +23,8 @@ use \Klein\Exceptions\LockedResponseException;
 use \Klein\Tests\Mocks\MockRequestFactory;
 
 /**
- * ResponsesTest 
- * 
+ * ResponsesTest
+ *
  * @uses AbstractKleinTest
  * @package Klein\Tests
  */
@@ -109,6 +110,19 @@ class ResponsesTest extends AbstractKleinTest
 
         $this->assertInternalType('object', $response->cookies());
         $this->assertTrue($response->cookies() instanceof ResponseCookieDataCollection);
+    }
+
+    public function testCacheGetSet()
+    {
+        $response = new Response();
+
+        $this->assertInternalType('object', $response->cache());
+        $this->assertTrue($response->cache() instanceof HttpResponseCache);
+
+        $newCache = new HttpResponseCache();
+        $response->cache($newCache);
+
+        $this->assertEquals($newCache, $response->cache());
     }
 
     public function testPrepend()
@@ -202,21 +216,6 @@ class ResponsesTest extends AbstractKleinTest
     }
 
     /**
-     * Yes, testing headers really is a pain in the ass. ;)
-     *
-     * Technically... we can't. So, yea.
-     */
-    public function testSendCacheHeaders()
-    {
-        $response = new Response('beep bloop blop beep boop');
-        $response->noCache();
-
-        $response->sendCacheHeaders();
-
-        $this->expectOutputString(null);
-    }
-
-    /**
      * Testing cookies is exactly like testing headers
      * ... So, yea.
      */
@@ -298,40 +297,14 @@ class ResponsesTest extends AbstractKleinTest
         }
     }
 
-    public function testPublicCache()
-    {
-        $response = new Response();
-
-        // Make sure cache control is not initially publicCache
-        $response->cache_control = null;
-
-        $response->publicCache();
-
-        $this->assertEquals(Response::PUBLIC_CACHE, $response->cache_control);
-    }
-
-    public function testPrivateCache()
-    {
-        $response = new Response();
-
-        // Make sure cache control is not initially privateCache
-        $response->cache_control = null;
-
-        $response->privateCache();
-
-        $this->assertEquals(Response::PRIVATE_CACHE, $response->cache_control);
-    }
-
     public function testNoCache()
     {
         $response = new Response();
 
-        // Make sure cache control is not initially noCache
-        $response->cache_control = null;
-
         $response->noCache();
 
-        $this->assertEquals(Response::NO_CACHE, $response->cache_control);
+        $this->assertTrue($response->cache()->getNoCache());
+        $this->assertTrue($response->cache()->getNoStore());
     }
 
     public function testRedirect()
@@ -377,10 +350,8 @@ class ResponsesTest extends AbstractKleinTest
         );
 
         // Assert noCache was set
-        $this->assertEquals(
-            Response::NO_CACHE,
-            $this->klein_app->response()->cache_control
-        );
+        $this->assertTrue($this->klein_app->response()->cache()->getNoCache());
+        $this->assertTrue($this->klein_app->response()->cache()->getNoStore());
 
         // Assert headers were passed
         $this->assertEquals(
@@ -424,10 +395,8 @@ class ResponsesTest extends AbstractKleinTest
         );
 
         // Assert noCache was set
-        $this->assertEquals(
-            Response::NO_CACHE,
-            $this->klein_app->response()->cache_control
-        );
+        $this->assertTrue($this->klein_app->response()->cache()->getNoCache());
+        $this->assertTrue($this->klein_app->response()->cache()->getNoStore());
 
         // Assert headers were passed
         $this->assertEquals(
