@@ -376,8 +376,11 @@ class ResponsesTest extends AbstractKleinTest
             file_get_contents(__FILE__)
         );
 
-        //Assert noCache was set
-        $this->assertEquals(Response::NO_CACHE, $this->klein_app->response()->cache_control);
+        // Assert noCache was set
+        $this->assertEquals(
+            Response::NO_CACHE,
+            $this->klein_app->response()->cache_control
+        );
 
         // Assert headers were passed
         $this->assertEquals(
@@ -420,8 +423,11 @@ class ResponsesTest extends AbstractKleinTest
             json_encode($test_object)
         );
 
-        //Assert noCache was set
-        $this->assertEquals(Response::NO_CACHE, $this->klein_app->response()->cache_control);
+        // Assert noCache was set
+        $this->assertEquals(
+            Response::NO_CACHE,
+            $this->klein_app->response()->cache_control
+        );
 
         // Assert headers were passed
         $this->assertEquals(

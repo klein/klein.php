@@ -30,13 +30,13 @@ class Response
      */
 
     /**  Public HTTP cache flag */
-    const PUBLIC_CACHE = 'public_cache';
+    const PUBLIC_CACHE = 0;
 
     /**  Private HTTP cache flag */
-    const PRIVATE_CACHE = 'private_cache';
+    const PRIVATE_CACHE = 1;
 
     /**  No HTTP cache flag */
-    const NO_CACHE = 'no_cache';
+    const NO_CACHE = 2;
 
     /**
      * Class properties
@@ -370,7 +370,6 @@ class Response
      */
     public function sendCacheHeaders($override = false)
     {
-
         if (headers_sent() && !$override) {
             return $this;
         }
@@ -408,7 +407,7 @@ class Response
         // Send our HTTP status line
         header($this->httpStatusLine());
 
-        //Send HTTP cache headers
+        // Send HTTP cache headers
         $this->sendCacheHeaders($override);
 
         // Iterate through our Headers data collection and send each header
