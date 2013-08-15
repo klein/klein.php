@@ -1852,7 +1852,7 @@ class RoutingTest extends AbstractKleinTest
     public function testMatchesAdvancedRegularExpressions()
     {
         $this->klein_app->respond(
-            '@^\/foo...\/bar$',
+            '@^/foo.../bar$',
             function () {
             }
         );
