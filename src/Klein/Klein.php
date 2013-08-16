@@ -240,6 +240,42 @@ class Klein
     }
 
     /**
+     * Parse our extremely loose argument order of our "respond" method and its aliases
+     *
+     * This method takes its arguments in a loose format and order.
+     * The method signature is simply there for documentation purposes, but allows
+     * for the minimum of a callback to be passed in its current configuration.
+     *
+     * @see Klein::respond()
+     * @param mixed $args               An argument array. Hint: This works well when passing "func_get_args()"
+     *  @named string | array $method   HTTP Method to match
+     *  @named string $path             Route URI path to match
+     *  @named callable $callback       Callable callback method to execute on route match
+     * @access protected
+     * @return array                    A named parameter array containing the keys: 'method', 'path', and 'callback'
+     */
+    protected function parseLooseArgumentOrder($args)
+    {
+        // Get the arguments in a very loose format
+        $args = is_array($args) ? $args : func_get_args();
+        $callback = array_pop($args);
+        $path = array_pop($args);
+        $method = array_pop($args);
+
+        // If no path was passed, make our path our "match-all" symbol
+        if (null === $path) {
+            $path = '*';
+        }
+
+        // Return a named parameter array
+        return array(
+            'method' => $method,
+            'path' => $path,
+            'callback' => $callback,
+        );
+    }
+
+    /**
      * Add a new route to be matched on dispatch
      *
      * This method takes its arguments in a very loose format
@@ -268,15 +304,10 @@ class Klein
     public function respond($method, $path = '*', $callback = null)
     {
         // Get the arguments in a very loose format
-        $args = func_get_args();
-        $callback = array_pop($args);
-        $path = array_pop($args);
-        $method = array_pop($args);
-
-        // If no path was passed, make our path our "match-all" symbol
-        if (null === $path) {
-            $path = '*';
-        }
+        extract(
+            $this->parseLooseArgumentOrder(func_get_args()),
+            EXTR_OVERWRITE
+        );
 
         // only consider a request to be matched when not using matchall
         $count_match = ($path !== '*');
@@ -885,6 +916,7 @@ class Klein
     /**
      * GET alias for "respond()"
      *
+     * @see Klein::respond()
      * @param string $route
      * @param callable $callback
      * @access public
@@ -902,6 +934,7 @@ class Klein
     /**
      * POST alias for "respond()"
      *
+     * @see Klein::respond()
      * @param string $route
      * @param callable $callback
      * @access public
@@ -919,6 +952,7 @@ class Klein
     /**
      * PUT alias for "respond()"
      *
+     * @see Klein::respond()
      * @param string $route
      * @param callable $callback
      * @access public
@@ -936,6 +970,7 @@ class Klein
     /**
      * DELETE alias for "respond()"
      *
+     * @see Klein::respond()
      * @param string $route
      * @param callable $callback
      * @access public
