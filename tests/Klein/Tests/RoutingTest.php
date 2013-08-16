@@ -482,7 +482,7 @@ class RoutingTest extends AbstractKleinTest
 
     public function testRegex()
     {
-        $this->expectOutputString('z');
+        $this->expectOutputString('zz');
 
         $this->klein_app->respond(
             '@/bar',
@@ -491,8 +491,21 @@ class RoutingTest extends AbstractKleinTest
             }
         );
 
+        $this->klein_app->respond(
+            '@/[0-9]s',
+            function () {
+                echo 'z';
+            }
+        );
+
         $this->klein_app->dispatch(
             MockRequestFactory::create('/bar')
+        );
+        $this->klein_app->dispatch(
+            MockRequestFactory::create('/8s')
+        );
+        $this->klein_app->dispatch(
+            MockRequestFactory::create('/88s')
         );
     }
 
@@ -1680,5 +1693,173 @@ class RoutingTest extends AbstractKleinTest
         $this->klein_app->dispatch(
             MockRequestFactory::create('/', 'DELETE')
         );
+    }
+
+
+    /**
+     * Advanced string route matching tests
+     *
+     * As the original Klein project was designed as a PHP version of Sinatra,
+     * many of the following tests are ports of the Sinatra ruby equivalents:
+     * https://github.com/sinatra/sinatra/blob/cd82a57154d57c18acfadbfefbefc6ea6a5035af/test/routing_test.rb
+     */
+
+    public function testMatchesEncodedSlashes()
+    {
+        $this->klein_app->respond(
+            '/[:a]',
+            function ($request) {
+                return $request->param('a');
+            }
+        );
+
+        $this->klein_app->dispatch(
+            MockRequestFactory::create('/foo%2Fbar'),
+            null,
+            true,
+            Klein::DISPATCH_CAPTURE_AND_RETURN
+        );
+
+        $this->assertSame(200, $this->klein_app->response()->code());
+        $this->assertSame('foo/bar', $this->klein_app->response()->body());
+    }
+
+    public function testMatchesDotAsNamedParam()
+    {
+        $this->klein_app->respond(
+            '/[:foo]/[:bar]',
+            function ($request) {
+                return $request->param('foo');
+            }
+        );
+
+        $this->klein_app->dispatch(
+            MockRequestFactory::create('/user@example.com/name'),
+            null,
+            true,
+            Klein::DISPATCH_CAPTURE_AND_RETURN
+        );
+
+        $this->assertSame(200, $this->klein_app->response()->code());
+        $this->assertSame('user@example.com', $this->klein_app->response()->body());
+    }
+
+    public function testMatchesDotOutsideOfNamedParam()
+    {
+        $file = null;
+        $ext  = null;
+
+        $this->klein_app->respond(
+            '/[:file].[:ext]',
+            function ($request) use (&$file, &$ext) {
+                $file = $request->param('file');
+                $ext = $request->param('ext');
+
+                return 'woot!';
+            }
+        );
+
+        $this->klein_app->dispatch(
+            MockRequestFactory::create('/unicorn.png'),
+            null,
+            true,
+            Klein::DISPATCH_CAPTURE_AND_RETURN
+        );
+
+        $this->assertSame(200, $this->klein_app->response()->code());
+        $this->assertSame('woot!', $this->klein_app->response()->body());
+        $this->assertSame('unicorn', $file);
+        $this->assertSame('png', $ext);
+    }
+
+    public function testMatchesLiteralDotsInPaths()
+    {
+        $this->klein_app->respond(
+            '/file.ext',
+            function () {
+            }
+        );
+
+        // Should match
+        $this->klein_app->dispatch(
+            MockRequestFactory::create('/file.ext')
+        );
+        $this->assertSame(200, $this->klein_app->response()->code());
+
+        // Shouldn't match
+        $this->klein_app->dispatch(
+            MockRequestFactory::create('/file0ext')
+        );
+        $this->assertSame(404, $this->klein_app->response()->code());
+    }
+
+    public function testMatchesLiteralDotsInPathBeforeNamedParam()
+    {
+        $this->klein_app->respond(
+            '/file.[:ext]',
+            function () {
+            }
+        );
+
+        // Should match
+        $this->klein_app->dispatch(
+            MockRequestFactory::create('/file.ext')
+        );
+        $this->assertSame(200, $this->klein_app->response()->code());
+
+        // Shouldn't match
+        $this->klein_app->dispatch(
+            MockRequestFactory::create('/file0ext')
+        );
+        $this->assertSame(404, $this->klein_app->response()->code());
+    }
+
+    public function testMatchesLiteralPlusSignsInPaths()
+    {
+        $this->klein_app->respond(
+            '/te+st',
+            function () {
+            }
+        );
+
+        // Should match
+        $this->klein_app->dispatch(
+            MockRequestFactory::create('/te+st')
+        );
+        $this->assertSame(200, $this->klein_app->response()->code());
+
+        // Shouldn't match
+        $this->klein_app->dispatch(
+            MockRequestFactory::create('/teeeeeeeeest')
+        );
+        $this->assertSame(404, $this->klein_app->response()->code());
+    }
+
+    public function testMatchesParenthesesInPaths()
+    {
+        $this->klein_app->respond(
+            '/test(bar)',
+            function () {
+            }
+        );
+
+        $this->klein_app->dispatch(
+            MockRequestFactory::create('/test(bar)')
+        );
+        $this->assertSame(200, $this->klein_app->response()->code());
+    }
+
+    public function testMatchesAdvancedRegularExpressions()
+    {
+        $this->klein_app->respond(
+            '@^/foo.../bar$',
+            function () {
+            }
+        );
+
+        $this->klein_app->dispatch(
+            MockRequestFactory::create('/foooom/bar')
+        );
+        $this->assertSame(200, $this->klein_app->response()->code());
     }
 }
