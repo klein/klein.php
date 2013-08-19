@@ -275,7 +275,59 @@ class Klein
     }
 
     /**
+     * Pre-process a path string
+     *
+     * This method wraps the path string in a regular expression syntax baesd
+     * on whether the string is a catch-all or custom regular expression.
+     * It also adds the namespace in a specific part, based on the style of expression
+     *
+     * @param string $path
+     * @access protected
+     * @return string
+     */
+    protected function preprocessPathString($path)
+    {
+        // If a custom regular expression (or negated custom regex)
+        if ($this->namespace && $path[0] === '@' || ($path[0] === '!' && $path[1] === '@')) {
+            // Is it negated?
+            if ($path[0] === '!') {
+                $negate = true;
+                $path = substr($path, 2);
+            } else {
+                $negate = false;
+                $path = substr($path, 1);
+            }
+
+            // Regex anchored to front of string
+            if ($path[0] === '^') {
+                $path = substr($path, 1);
+            } else {
+                $path = '.*' . $path;
+            }
+
+            if ($negate) {
+                $path = '@^' . $this->namespace . '(?!' . $path . ')';
+            } else {
+                $path = '@^' . $this->namespace . $path;
+            }
+
+        } elseif ($this->namespace && ('*' === $path)) {
+            // Empty route with namespace is a match-all
+            $path = '@^' . $this->namespace . '(/|$)';
+        } else {
+            // Just prepend our namespace
+            $path = $this->namespace . $path;
+        }
+
+        return $path;
+    }
+
+    /**
      * Add a new route to be matched on dispatch
+     *
+     * Essentially, this method is a standard "Route" builder/factory,
+     * allowing a loose argument format and a standard way of creating
+     * Route instances
      *
      * This method takes its arguments in a very loose format
      * The only "required" parameter is the callback (which is very strange considering the argument definition order)
@@ -311,37 +363,7 @@ class Klein
         // only consider a request to be matched when not using matchall
         $count_match = ($path !== '*');
 
-        // If a custom regular expression (or negated custom regex)
-        if ($this->namespace && $path[0] === '@' || ($path[0] === '!' && $path[1] === '@')) {
-            // Is it negated?
-            if ($path[0] === '!') {
-                $negate = true;
-                $path = substr($path, 2);
-            } else {
-                $negate = false;
-                $path = substr($path, 1);
-            }
-
-            // Regex anchored to front of string
-            if ($path[0] === '^') {
-                $path = substr($path, 1);
-            } else {
-                $path = '.*' . $path;
-            }
-
-            if ($negate) {
-                $path = '@^' . $this->namespace . '(?!' . $path . ')';
-            } else {
-                $path = '@^' . $this->namespace . $path;
-            }
-
-        } elseif ($this->namespace && ('*' === $path)) {
-            // Empty route with namespace is a match-all
-            $path = '@^' . $this->namespace . '(/|$)';
-        } else {
-            // Just prepend our namespace
-            $path = $this->namespace . $path;
-        }
+        $path = $this->preprocessPathString($path);
 
         $route = new Route($callback, $path, $method, $count_match);
 
