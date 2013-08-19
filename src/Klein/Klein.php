@@ -935,6 +935,46 @@ class Klein
     }
 
     /**
+     * OPTIONS alias for "respond()"
+     *
+     * @see Klein::respond()
+     * @param string $route
+     * @param callable $callback
+     * @access public
+     * @return callable
+     */
+    public function options($path = '*', $callback = null)
+    {
+        // Options the arguments in a very loose format
+        extract(
+            $this->parseLooseArgumentOrder(func_get_args()),
+            EXTR_OVERWRITE
+        );
+
+        return $this->respond('OPTIONS', $path, $callback);
+    }
+
+    /**
+     * HEAD alias for "respond()"
+     *
+     * @see Klein::respond()
+     * @param string $path
+     * @param callable $callback
+     * @access public
+     * @return callable
+     */
+    public function head($path = '*', $callback = null)
+    {
+        // Get the arguments in a very loose format
+        extract(
+            $this->parseLooseArgumentOrder(func_get_args()),
+            EXTR_OVERWRITE
+        );
+
+        return $this->respond('HEAD', $path, $callback);
+    }
+
+    /**
      * GET alias for "respond()"
      *
      * @see Klein::respond()
