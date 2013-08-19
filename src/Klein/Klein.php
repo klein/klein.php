@@ -30,7 +30,7 @@ class Klein
 {
 
     /**
-     * Class properties
+     * Class constants
      */
 
     /**
@@ -38,7 +38,14 @@ class Klein
      *
      * @const string
      */
-    const ROUTE_COMPILE_REGEX = '`(/|\.|)\[([^:\]]*+)(?::([^:\]]*+))?\](\?|)`';
+    const ROUTE_COMPILE_REGEX = '`(\\\?(?:/|\.|))(\[([^:\]]*+)(?::([^:\]]*+))?\])(\?|)`';
+
+    /**
+     * The regular expression used to escape the non-named param section of a route URL
+     *
+     * @const string
+     */
+    const ROUTE_ESCAPE_REGEX = '`(?<=^|\])[^\]\[\?]+?(?=\[|$)`';
 
     /**
      * Dispatch route output handling
@@ -622,6 +629,14 @@ class Klein
      */
     protected function compileRoute($route)
     {
+        // First escape all of the non-named param (non [block]s) for regex-chars
+        if (preg_match_all(static::ROUTE_ESCAPE_REGEX, $route, $escape_locations, PREG_SET_ORDER)) {
+            foreach ($escape_locations as $locations) {
+                $route = str_replace($locations[0], preg_quote($locations[0]), $route);
+            }
+        }
+
+        // Now let's actually compile the path
         if (preg_match_all(static::ROUTE_COMPILE_REGEX, $route, $matches, PREG_SET_ORDER)) {
             $match_types = array(
                 'i'  => '[0-9]++',
@@ -634,13 +649,10 @@ class Klein
             );
 
             foreach ($matches as $match) {
-                list($block, $pre, $type, $param, $optional) = $match;
+                list($block, $pre, $inner_block, $type, $param, $optional) = $match;
 
                 if (isset($match_types[$type])) {
                     $type = $match_types[$type];
-                }
-                if ($pre === '.') {
-                    $pre = '\.';
                 }
                 // Older versions of PCRE require the 'P' in (?P<named>)
                 $pattern = '(?:'
@@ -697,7 +709,7 @@ class Klein
 
         if (preg_match_all(static::ROUTE_COMPILE_REGEX, $path, $matches, PREG_SET_ORDER)) {
             foreach ($matches as $match) {
-                list($block, $pre, $type, $param, $optional) = $match;
+                list($block, $pre, $inner_block, $type, $param, $optional) = $match;
 
                 if (isset($params[$param])) {
                     $path = str_replace($block, $pre. $params[$param], $path);
