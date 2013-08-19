@@ -254,10 +254,9 @@ class Klein
      * @access protected
      * @return array                    A named parameter array containing the keys: 'method', 'path', and 'callback'
      */
-    protected function parseLooseArgumentOrder($args)
+    protected function parseLooseArgumentOrder(array $args)
     {
         // Get the arguments in a very loose format
-        $args = is_array($args) ? $args : func_get_args();
         $callback = array_pop($args);
         $path = array_pop($args);
         $method = array_pop($args);
@@ -922,66 +921,74 @@ class Klein
      * @access public
      * @return callable
      */
-    public function get($route = '*', $callback = null)
+    public function get($path = '*', $callback = null)
     {
-        $args = func_get_args();
-        $callback = array_pop($args);
-        $route = array_pop($args);
+        // Get the arguments in a very loose format
+        extract(
+            $this->parseLooseArgumentOrder(func_get_args()),
+            EXTR_OVERWRITE
+        );
 
-        return $this->respond('GET', $route, $callback);
+        return $this->respond('GET', $path, $callback);
     }
 
     /**
      * POST alias for "respond()"
      *
      * @see Klein::respond()
-     * @param string $route
+     * @param string $path
      * @param callable $callback
      * @access public
      * @return callable
      */
-    public function post($route = '*', $callback = null)
+    public function post($path = '*', $callback = null)
     {
-        $args = func_get_args();
-        $callback = array_pop($args);
-        $route = array_pop($args);
+        // Get the arguments in a very loose format
+        extract(
+            $this->parseLooseArgumentOrder(func_get_args()),
+            EXTR_OVERWRITE
+        );
 
-        return $this->respond('POST', $route, $callback);
+        return $this->respond('POST', $path, $callback);
     }
 
     /**
      * PUT alias for "respond()"
      *
      * @see Klein::respond()
-     * @param string $route
+     * @param string $path
      * @param callable $callback
      * @access public
      * @return callable
      */
-    public function put($route = '*', $callback = null)
+    public function put($path = '*', $callback = null)
     {
-        $args = func_get_args();
-        $callback = array_pop($args);
-        $route = array_pop($args);
+        // Get the arguments in a very loose format
+        extract(
+            $this->parseLooseArgumentOrder(func_get_args()),
+            EXTR_OVERWRITE
+        );
 
-        return $this->respond('PUT', $route, $callback);
+        return $this->respond('PUT', $path, $callback);
     }
 
     /**
      * DELETE alias for "respond()"
      *
      * @see Klein::respond()
-     * @param string $route
+     * @param string $path
      * @param callable $callback
      * @access public
      * @return callable
      */
-    public function delete($route = '*', $callback = null)
+    public function delete($path = '*', $callback = null)
     {
-        $args = func_get_args();
-        $callback = array_pop($args);
-        $route = array_pop($args);
+        // Get the arguments in a very loose format
+        extract(
+            $this->parseLooseArgumentOrder(func_get_args()),
+            EXTR_OVERWRITE
+        );
 
-        return $this->respond('DELETE', $route, $callback);
+        return $this->respond('DELETE', $path, $callback);
     }
 }
