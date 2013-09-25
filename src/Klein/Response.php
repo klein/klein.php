@@ -18,8 +18,8 @@ use \Klein\Exceptions\LockedResponseException;
 use \Klein\Exceptions\ResponseAlreadySentException;
 
 /**
- * Response 
- * 
+ * Response
+ *
  * @package     Klein
  */
 class Response
@@ -79,6 +79,14 @@ class Response
     protected $cookies;
 
     /**
+     * HTTP response cache headers
+     *
+     * @var \Klein\HttpResponseCache
+     * @access protected
+     */
+    protected $cache;
+
+    /**
      * Whether or not the response is "locked" from
      * any further modification
      *
@@ -128,6 +136,7 @@ class Response
 
         $this->headers = new HeaderDataCollection($headers);
         $this->cookies = new ResponseCookieDataCollection();
+        $this->cache = new HttpResponseCache();
     }
 
     /**
@@ -235,6 +244,27 @@ class Response
         }
 
         return $this->status->getCode();
+    }
+
+    /**
+     * Get (or set) the HTTP Cache-Control object
+     *
+     * @param null|HttpResponseCache $cache
+     * @access public
+     * @return HttpResponseCache|Response
+     */
+    public function cache(HttpResponseCache $cache = null)
+    {
+        if (null !== $cache) {
+            // Require that the response be unlocked before changing it
+            $this->requireUnlocked();
+
+            $this->cache = $cache;
+
+            return $this;
+        }
+
+        return $this->cache;
     }
 
     /**
@@ -357,6 +387,9 @@ class Response
 
         // Send our HTTP status line
         header($this->httpStatusLine());
+
+        // Send HTTP cache headers
+        $this->cache->send();
 
         // Iterate through our Headers data collection and send each header
         foreach ($this->headers as $key => $value) {
@@ -543,8 +576,8 @@ class Response
      */
     public function noCache()
     {
-        $this->header('Pragma', 'no-cache');
-        $this->header('Cache-Control', 'no-store, no-cache');
+        $this->cache->setNoCache();
+        $this->cache->setNoStore();
 
         return $this;
     }
