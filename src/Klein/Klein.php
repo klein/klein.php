@@ -106,14 +106,12 @@ class Klein
     protected $routes;
 
     /**
-     * The namespace of which to collect the routes in
-     * when matching, so you can define routes under a
-     * common endpoint
+     * The Route factory object responsible for creating Route instances
      *
-     * @var string
+     * @var AbstractRouteFactory
      * @access protected
      */
-    protected $namespace;
+    protected $route_factory;
 
     /**
      * An array of error callback callables
@@ -171,17 +169,23 @@ class Klein
      * Create a new Klein instance with optionally injected dependencies
      * This DI allows for easy testing, object mocking, or class extension
      *
-     * @param ServiceProvider $service  Service provider object responsible for utilitarian behaviors
-     * @param mixed $app                An object passed to each route callback, defaults to a new App instance
-     * @param RouteCollection $routes   Collection object responsible for containing all of the route instances
+     * @param ServiceProvider $service              Service provider object responsible for utilitarian behaviors
+     * @param mixed $app                            An object passed to each route callback, defaults to an App instance
+     * @param RouteCollection $routes               Collection object responsible for containing all route instances
+     * @param AbstractRouteFactory $route_factory   A factory class responsible for creating Route instances
      * @access public
      */
-    public function __construct(ServiceProvider $service = null, $app = null, RouteCollection $routes = null)
-    {
+    public function __construct(
+        ServiceProvider $service = null,
+        $app = null,
+        RouteCollection $routes = null,
+        AbstractRouteFactory $route_factory = null
+    ) {
         // Instanciate and fall back to defaults
-        $this->service = $service ?: new ServiceProvider();
-        $this->app     = $app     ?: new App();
-        $this->routes  = $routes  ?: new RouteCollection();
+        $this->service       = $service       ?: new ServiceProvider();
+        $this->app           = $app           ?: new App();
+        $this->routes        = $routes        ?: new RouteCollection();
+        $this->route_factory = $route_factory ?: new RouteFactory();
     }
 
     /**
@@ -275,54 +279,6 @@ class Klein
     }
 
     /**
-     * Pre-process a path string
-     *
-     * This method wraps the path string in a regular expression syntax baesd
-     * on whether the string is a catch-all or custom regular expression.
-     * It also adds the namespace in a specific part, based on the style of expression
-     *
-     * @param string $path
-     * @access protected
-     * @return string
-     */
-    protected function preprocessPathString($path)
-    {
-        // If a custom regular expression (or negated custom regex)
-        if ($this->namespace && $path[0] === '@' || ($path[0] === '!' && $path[1] === '@')) {
-            // Is it negated?
-            if ($path[0] === '!') {
-                $negate = true;
-                $path = substr($path, 2);
-            } else {
-                $negate = false;
-                $path = substr($path, 1);
-            }
-
-            // Regex anchored to front of string
-            if ($path[0] === '^') {
-                $path = substr($path, 1);
-            } else {
-                $path = '.*' . $path;
-            }
-
-            if ($negate) {
-                $path = '@^' . $this->namespace . '(?!' . $path . ')';
-            } else {
-                $path = '@^' . $this->namespace . $path;
-            }
-
-        } elseif ($this->namespace && ('*' === $path)) {
-            // Empty route with namespace is a match-all
-            $path = '@^' . $this->namespace . '(/|$)';
-        } else {
-            // Just prepend our namespace
-            $path = $this->namespace . $path;
-        }
-
-        return $path;
-    }
-
-    /**
      * Add a new route to be matched on dispatch
      *
      * Essentially, this method is a standard "Route" builder/factory,
@@ -360,12 +316,7 @@ class Klein
             EXTR_OVERWRITE
         );
 
-        // only consider a request to be matched when not using matchall
-        $count_match = ($path !== '*');
-
-        $path = $this->preprocessPathString($path);
-
-        $route = new Route($callback, $path, $method, $count_match);
+        $route = $this->route_factory->build($callback, $path, $method);
 
         $this->routes->add($route);
 
@@ -400,8 +351,9 @@ class Klein
      */
     public function with($namespace, $routes)
     {
-        $previous = $this->namespace;
-        $this->namespace .= $namespace;
+        $previous = $this->route_factory->getNamespace();
+
+        $this->route_factory->appendNamespace($namespace);
 
         if (is_callable($routes)) {
             $routes($this);
@@ -409,7 +361,7 @@ class Klein
             require $routes;
         }
 
-        $this->namespace = $previous;
+        $this->route_factory->setNamespace($previous);
     }
 
     /**
