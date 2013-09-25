@@ -131,7 +131,7 @@ class Route
     public function setCallback($callback)
     {
         if (!is_callable($callback)) {
-            throw new InvalidArgumentException('Expected a callable. Got a '. gettype($callback));
+            throw new InvalidArgumentException('Expected a callable. Got an uncallable '. gettype($callback));
         }
 
         $this->callback = $callback;
