@@ -23,6 +23,34 @@ class RouteFactory extends AbstractRouteFactory
 {
 
     /**
+     * Constants
+     */
+
+    /**
+     * The value given to path's when they are entered as null values
+     *
+     * @const string
+     */
+    const NULL_PATH_VALUE = '*';
+
+
+    /**
+     * Methods
+     */
+
+    /**
+     * Check if the path is null or equal to our match-all, null-like value
+     *
+     * @param mixed $path
+     * @access protected
+     * @return boolean
+     */
+    protected function pathIsNull($path)
+    {
+        return (static::NULL_PATH_VALUE === $path || null === $path);
+    }
+
+    /**
      * Quick check to see whether or not to count the route
      * as a match when counting total matches
      *
@@ -33,7 +61,7 @@ class RouteFactory extends AbstractRouteFactory
     protected function shouldPathStringCauseRouteMatch($path)
     {
         // Only consider a request to be matched when not using 'matchall'
-        return ($path !== '*');
+        return !$this->pathIsNull($path);
     }
 
     /**
@@ -49,6 +77,9 @@ class RouteFactory extends AbstractRouteFactory
      */
     protected function preprocessPathString($path)
     {
+        // If the path is null, make sure to give it our match-all value
+        $path = (null === $path) ? static::NULL_PATH_VALUE : (string) $path;
+
         // If a custom regular expression (or negated custom regex)
         if ($this->namespace && $path[0] === '@' || ($path[0] === '!' && $path[1] === '@')) {
             // Is it negated?
@@ -73,7 +104,7 @@ class RouteFactory extends AbstractRouteFactory
                 $path = '@^' . $this->namespace . $path;
             }
 
-        } elseif ($this->namespace && ('*' === $path)) {
+        } elseif ($this->namespace && $this->pathIsNull($path)) {
             // Empty route with namespace is a match-all
             $path = '@^' . $this->namespace . '(/|$)';
         } else {
@@ -96,7 +127,7 @@ class RouteFactory extends AbstractRouteFactory
      * @access public
      * @return Route
      */
-    public function build($callback, $path = '*', $method = null, $count_match = true, $name = null)
+    public function build($callback, $path = null, $method = null, $count_match = true, $name = null)
     {
         return new Route(
             $callback,

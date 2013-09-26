@@ -105,5 +105,5 @@ abstract class AbstractRouteFactory
      * @access public
      * @return Klein\Route
      */
-    abstract public function build($callback, $path = '*', $method = null, $count_match = true, $name = null);
+    abstract public function build($callback, $path = null, $method = null, $count_match = true, $name = null);
 }
