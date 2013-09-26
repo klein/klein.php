@@ -99,7 +99,7 @@ class Route
      * @param boolean $count_match
      * @access public
      */
-    public function __construct($callback, $path = '*', $method = null, $count_match = true, $name = null)
+    public function __construct($callback, $path = null, $method = null, $count_match = true, $name = null)
     {
         // Initialize some properties (use our setters so we can validate param types)
         $this->setCallback($callback);
@@ -131,7 +131,7 @@ class Route
     public function setCallback($callback)
     {
         if (!is_callable($callback)) {
-            throw new InvalidArgumentException('Expected a callable. Got a '. gettype($callback));
+            throw new InvalidArgumentException('Expected a callable. Got an uncallable '. gettype($callback));
         }
 
         $this->callback = $callback;

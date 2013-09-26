@@ -1599,6 +1599,61 @@ class RoutingTest extends AbstractKleinTest
         $this->assertSame(404, $this->klein_app->response()->code());
     }
 
+    public function testOptionsAlias()
+    {
+        $this->expectOutputString('1,2,');
+
+        // With path
+        $this->klein_app->options(
+            '/',
+            function () {
+                echo '1,';
+            }
+        );
+
+        // Without path
+        $this->klein_app->options(
+            function () {
+                echo '2,';
+            }
+        );
+
+        $this->klein_app->dispatch(
+            MockRequestFactory::create('/', 'OPTIONS')
+        );
+    }
+
+    public function testHeadAlias()
+    {
+        // HEAD requests shouldn't return data
+        $this->expectOutputString('');
+
+        // With path
+        $this->klein_app->head(
+            '/',
+            function ($request, $response) {
+                echo '1,';
+                $response->headers()->set('Test-1', 'yup');
+            }
+        );
+
+        // Without path
+        $this->klein_app->head(
+            function ($request, $response) {
+                echo '2,';
+                $response->headers()->set('Test-2', 'yup');
+            }
+        );
+
+        $this->klein_app->dispatch(
+            MockRequestFactory::create('/', 'HEAD')
+        );
+
+        $this->assertTrue($this->klein_app->response()->headers()->exists('Test-1'));
+        $this->assertTrue($this->klein_app->response()->headers()->exists('Test-2'));
+        $this->assertFalse($this->klein_app->response()->headers()->exists('Test-3'));
+    }
+
     public function testGetAlias()
     {
         $this->expectOutputString('1,2,');
