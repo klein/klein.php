@@ -175,6 +175,25 @@ class ServiceProviderTest extends AbstractKleinTest
         $this->assertLessThan(400, $this->klein_app->response()->code());
     }
 
+    public function testBackWithoutRefererSet()
+    {
+        $request = new Request();
+
+        $this->klein_app->respond(
+            function ($request, $response, $service) {
+                $service->back();
+            }
+        );
+
+        $this->klein_app->dispatch($request);
+
+        $this->assertTrue($this->klein_app->response()->isLocked());
+
+        // Make sure we got a 3xx response code
+        $this->assertGreaterThan(299, $this->klein_app->response()->code());
+        $this->assertLessThan(400, $this->klein_app->response()->code());
+    }
+
     public function testLayoutGetSet()
     {
         $test_layout = 'boom!! :D';
@@ -216,6 +235,43 @@ class ServiceProviderTest extends AbstractKleinTest
         );
 
         $this->klein_app->dispatch();
+
+        $this->expectOutputString(
+            '<h1>About</h1>' . PHP_EOL
+            .'My name is Trevor Suarez.' . PHP_EOL
+            .'WOOT!' . PHP_EOL
+            .'<div>footer</div>' . PHP_EOL
+        );
+    }
+
+    public function testRenderChunked()
+    {
+        $test_data = array(
+            'name' => 'trevor suarez',
+            'title' => 'about',
+            'verb' => 'woot',
+        );
+
+        $response = new Response();
+        $response->chunk();
+ 
+        $this->klein_app->respond(
+            function ($request, $response, $service) use ($test_data) {
+                // Set some data manually
+                $service->sharedData()->set('name', 'should be overwritten');
+
+                // Set our layout
+                $service->layout(__DIR__.'/views/layout.php');
+
+                // Render our view, and pass some MORE data
+                $service->render(
+                    __DIR__.'/views/test.php',
+                    $test_data
+                );
+            }
+        );
+
+        $this->klein_app->dispatch(null, $response);
 
         $this->expectOutputString(
             '<h1>About</h1>' . PHP_EOL
