@@ -265,11 +265,6 @@ class Klein
         $path = array_pop($args);
         $method = array_pop($args);
 
-        // If no path was passed, make our path our "match-all" symbol
-        if (null === $path) {
-            $path = '*';
-        }
-
         // Return a named parameter array
         return array(
             'method' => $method,
