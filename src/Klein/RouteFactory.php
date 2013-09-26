@@ -23,6 +23,20 @@ class RouteFactory extends AbstractRouteFactory
 {
 
     /**
+     * Quick check to see whether or not to count the route
+     * as a match when counting total matches
+     *
+     * @param string $path
+     * @access protected
+     * @return boolean
+     */
+    protected function shouldPathStringCauseRouteMatch($path)
+    {
+        // Only consider a request to be matched when not using 'matchall'
+        return ($path !== '*');
+    }
+
+    /**
      * Pre-process a path string
      *
      * This method wraps the path string in a regular expression syntax baesd
@@ -84,11 +98,11 @@ class RouteFactory extends AbstractRouteFactory
      */
     public function build($callback, $path = '*', $method = null, $count_match = true, $name = null)
     {
-        // Only consider a request to be matched when not using matchall
-        $count_match = ($path !== '*');
-
-        $path = $this->preprocessPathString($path);
-
-        return new Route($callback, $path, $method, $count_match);
+        return new Route(
+            $callback,
+            $this->preprocessPathString($path),
+            $method,
+            $this->shouldPathStringCauseRouteMatch($path) // Ignore the $count_match boolean that they passed
+        );
     }
 }
