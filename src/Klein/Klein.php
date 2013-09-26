@@ -106,14 +106,12 @@ class Klein
     protected $routes;
 
     /**
-     * The namespace of which to collect the routes in
-     * when matching, so you can define routes under a
-     * common endpoint
+     * The Route factory object responsible for creating Route instances
      *
-     * @var string
+     * @var AbstractRouteFactory
      * @access protected
      */
-    protected $namespace;
+    protected $route_factory;
 
     /**
      * An array of error callback callables
@@ -171,17 +169,23 @@ class Klein
      * Create a new Klein instance with optionally injected dependencies
      * This DI allows for easy testing, object mocking, or class extension
      *
-     * @param ServiceProvider $service  Service provider object responsible for utilitarian behaviors
-     * @param mixed $app                An object passed to each route callback, defaults to a new App instance
-     * @param RouteCollection $routes   Collection object responsible for containing all of the route instances
+     * @param ServiceProvider $service              Service provider object responsible for utilitarian behaviors
+     * @param mixed $app                            An object passed to each route callback, defaults to an App instance
+     * @param RouteCollection $routes               Collection object responsible for containing all route instances
+     * @param AbstractRouteFactory $route_factory   A factory class responsible for creating Route instances
      * @access public
      */
-    public function __construct(ServiceProvider $service = null, $app = null, RouteCollection $routes = null)
-    {
+    public function __construct(
+        ServiceProvider $service = null,
+        $app = null,
+        RouteCollection $routes = null,
+        AbstractRouteFactory $route_factory = null
+    ) {
         // Instanciate and fall back to defaults
-        $this->service = $service ?: new ServiceProvider();
-        $this->app     = $app     ?: new App();
-        $this->routes  = $routes  ?: new RouteCollection();
+        $this->service       = $service       ?: new ServiceProvider();
+        $this->app           = $app           ?: new App();
+        $this->routes        = $routes        ?: new RouteCollection();
+        $this->route_factory = $route_factory ?: new RouteFactory();
     }
 
     /**
@@ -240,7 +244,41 @@ class Klein
     }
 
     /**
+     * Parse our extremely loose argument order of our "respond" method and its aliases
+     *
+     * This method takes its arguments in a loose format and order.
+     * The method signature is simply there for documentation purposes, but allows
+     * for the minimum of a callback to be passed in its current configuration.
+     *
+     * @see Klein::respond()
+     * @param mixed $args               An argument array. Hint: This works well when passing "func_get_args()"
+     *  @named string | array $method   HTTP Method to match
+     *  @named string $path             Route URI path to match
+     *  @named callable $callback       Callable callback method to execute on route match
+     * @access protected
+     * @return array                    A named parameter array containing the keys: 'method', 'path', and 'callback'
+     */
+    protected function parseLooseArgumentOrder(array $args)
+    {
+        // Get the arguments in a very loose format
+        $callback = array_pop($args);
+        $path = array_pop($args);
+        $method = array_pop($args);
+
+        // Return a named parameter array
+        return array(
+            'method' => $method,
+            'path' => $path,
+            'callback' => $callback,
+        );
+    }
+
+    /**
      * Add a new route to be matched on dispatch
+     *
+     * Essentially, this method is a standard "Route" builder/factory,
+     * allowing a loose argument format and a standard way of creating
+     * Route instances
      *
      * This method takes its arguments in a very loose format
      * The only "required" parameter is the callback (which is very strange considering the argument definition order)
@@ -268,52 +306,12 @@ class Klein
     public function respond($method, $path = '*', $callback = null)
     {
         // Get the arguments in a very loose format
-        $args = func_get_args();
-        $callback = array_pop($args);
-        $path = array_pop($args);
-        $method = array_pop($args);
+        extract(
+            $this->parseLooseArgumentOrder(func_get_args()),
+            EXTR_OVERWRITE
+        );
 
-        // If no path was passed, make our path our "match-all" symbol
-        if (null === $path) {
-            $path = '*';
-        }
-
-        // only consider a request to be matched when not using matchall
-        $count_match = ($path !== '*');
-
-        // If a custom regular expression (or negated custom regex)
-        if ($this->namespace && $path[0] === '@' || ($path[0] === '!' && $path[1] === '@')) {
-            // Is it negated?
-            if ($path[0] === '!') {
-                $negate = true;
-                $path = substr($path, 2);
-            } else {
-                $negate = false;
-                $path = substr($path, 1);
-            }
-
-            // Regex anchored to front of string
-            if ($path[0] === '^') {
-                $path = substr($path, 1);
-            } else {
-                $path = '.*' . $path;
-            }
-
-            if ($negate) {
-                $path = '@^' . $this->namespace . '(?!' . $path . ')';
-            } else {
-                $path = '@^' . $this->namespace . $path;
-            }
-
-        } elseif ($this->namespace && ('*' === $path)) {
-            // Empty route with namespace is a match-all
-            $path = '@^' . $this->namespace . '(/|$)';
-        } else {
-            // Just prepend our namespace
-            $path = $this->namespace . $path;
-        }
-
-        $route = new Route($callback, $path, $method, $count_match);
+        $route = $this->route_factory->build($callback, $path, $method);
 
         $this->routes->add($route);
 
@@ -348,8 +346,9 @@ class Klein
      */
     public function with($namespace, $routes)
     {
-        $previous = $this->namespace;
-        $this->namespace .= $namespace;
+        $previous = $this->route_factory->getNamespace();
+
+        $this->route_factory->appendNamespace($namespace);
 
         if (is_callable($routes)) {
             $routes($this);
@@ -357,7 +356,7 @@ class Klein
             require $routes;
         }
 
-        $this->namespace = $previous;
+        $this->route_factory->setNamespace($previous);
     }
 
     /**
@@ -883,70 +882,122 @@ class Klein
     }
 
     /**
-     * GET alias for "respond()"
+     * OPTIONS alias for "respond()"
      *
+     * @see Klein::respond()
      * @param string $route
      * @param callable $callback
      * @access public
      * @return callable
      */
-    public function get($route = '*', $callback = null)
+    public function options($path = '*', $callback = null)
     {
-        $args = func_get_args();
-        $callback = array_pop($args);
-        $route = array_pop($args);
+        // Options the arguments in a very loose format
+        extract(
+            $this->parseLooseArgumentOrder(func_get_args()),
+            EXTR_OVERWRITE
+        );
 
-        return $this->respond('GET', $route, $callback);
+        return $this->respond('OPTIONS', $path, $callback);
+    }
+
+    /**
+     * HEAD alias for "respond()"
+     *
+     * @see Klein::respond()
+     * @param string $path
+     * @param callable $callback
+     * @access public
+     * @return callable
+     */
+    public function head($path = '*', $callback = null)
+    {
+        // Get the arguments in a very loose format
+        extract(
+            $this->parseLooseArgumentOrder(func_get_args()),
+            EXTR_OVERWRITE
+        );
+
+        return $this->respond('HEAD', $path, $callback);
+    }
+
+    /**
+     * GET alias for "respond()"
+     *
+     * @see Klein::respond()
+     * @param string $route
+     * @param callable $callback
+     * @access public
+     * @return callable
+     */
+    public function get($path = '*', $callback = null)
+    {
+        // Get the arguments in a very loose format
+        extract(
+            $this->parseLooseArgumentOrder(func_get_args()),
+            EXTR_OVERWRITE
+        );
+
+        return $this->respond('GET', $path, $callback);
     }
 
     /**
      * POST alias for "respond()"
      *
-     * @param string $route
+     * @see Klein::respond()
+     * @param string $path
      * @param callable $callback
      * @access public
      * @return callable
      */
-    public function post($route = '*', $callback = null)
+    public function post($path = '*', $callback = null)
     {
-        $args = func_get_args();
-        $callback = array_pop($args);
-        $route = array_pop($args);
+        // Get the arguments in a very loose format
+        extract(
+            $this->parseLooseArgumentOrder(func_get_args()),
+            EXTR_OVERWRITE
+        );
 
-        return $this->respond('POST', $route, $callback);
+        return $this->respond('POST', $path, $callback);
     }
 
     /**
      * PUT alias for "respond()"
      *
-     * @param string $route
+     * @see Klein::respond()
+     * @param string $path
      * @param callable $callback
      * @access public
      * @return callable
      */
-    public function put($route = '*', $callback = null)
+    public function put($path = '*', $callback = null)
     {
-        $args = func_get_args();
-        $callback = array_pop($args);
-        $route = array_pop($args);
+        // Get the arguments in a very loose format
+        extract(
+            $this->parseLooseArgumentOrder(func_get_args()),
+            EXTR_OVERWRITE
+        );
 
-        return $this->respond('PUT', $route, $callback);
+        return $this->respond('PUT', $path, $callback);
     }
 
     /**
      * DELETE alias for "respond()"
      *
-     * @param string $route
+     * @see Klein::respond()
+     * @param string $path
      * @param callable $callback
      * @access public
      * @return callable
      */
-    public function delete($route = '*', $callback = null)
+    public function delete($path = '*', $callback = null)
     {
-        $args = func_get_args();
-        $callback = array_pop($args);
-        $route = array_pop($args);
+        // Get the arguments in a very loose format
+        extract(
+            $this->parseLooseArgumentOrder(func_get_args()),
+            EXTR_OVERWRITE
+        );
 
-        return $this->respond('DELETE', $route, $callback);
+        return $this->respond('DELETE', $path, $callback);
     }
 }
