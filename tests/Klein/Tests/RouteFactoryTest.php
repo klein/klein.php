@@ -34,10 +34,10 @@ class RouteFactoryTest extends AbstractKleinTest
      * Helpers
      */
 
-    protected function getTestCallable()
+    protected function getTestCallable($message = self::TEST_CALLBACK_MESSAGE)
     {
-        return function () {
-            return self::TEST_CALLBACK_MESSAGE;
+        return function () use ($message) {
+            return $message;
         };
     }
 
