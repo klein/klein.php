@@ -136,11 +136,10 @@ class ServiceProvider
     public function startSession()
     {
         if (session_id() === '') {
-            if (!session_start()) {
-                return false;
-            }
+            // Attempt to start a session
+            session_start();
 
-            $this->session_id = session_id();
+            $this->session_id = session_id() ?: false;
         }
 
         return $this->session_id;
