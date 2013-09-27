@@ -265,6 +265,24 @@ class ResponsesTest extends AbstractKleinTest
         $response->send();
     }
 
+    /**
+     * This uses some crazy exploitation to make sure that the
+     * `fastcgi_finish_request()` function gets called.
+     * Because of this, this MUST be run in a separate process
+     *
+     * @runInSeparateProcess
+     */
+    public function testSendCallsFastCGIFinishRequest()
+    {
+        // Custom fastcgi function
+        implement_custom_fastcgi_function();
+
+        $response = new Response();
+        $response->send();
+
+        $this->expectOutputString('fastcgi_finish_request');
+    }
+
     public function testChunk()
     {
         $content = array(
