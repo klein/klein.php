@@ -1357,6 +1357,47 @@ class RoutingTest extends AbstractKleinTest
         }
     }
 
+    public function testHeadMethodMatch()
+    {
+        $test_strings = array(
+            'oh, hello',
+            'yea',
+        );
+
+        $test_result = null;
+
+        $this->klein_app->respond(
+            array('GET', 'HEAD'),
+            null,
+            function ($request, $response) use ($test_strings, &$test_result) {
+                $test_result .= $test_strings[0];
+            }
+        );
+        $this->klein_app->respond(
+            'GET',
+            '/',
+            function ($request, $response) use ($test_strings, &$test_result) {
+                $test_result .= $test_strings[1];
+            }
+        );
+        $this->klein_app->respond(
+            'POST',
+            '/',
+            function ($request, $response) use ($test_strings, &$test_result) {
+                $test_result .= 'nope';
+            }
+        );
+
+        $this->klein_app->dispatch(
+            MockRequestFactory::create('/', 'HEAD')
+        );
+
+        $this->assertSame(
+            implode('', $test_strings),
+            $test_result
+        );
+    }
+
     public function testGetPathFor()
     {
         $this->klein_app->respond(
