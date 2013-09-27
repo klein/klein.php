@@ -118,6 +118,117 @@ class ServiceProviderTest extends AbstractKleinTest
         error_reporting($old_error_val);
     }
 
+    public function testFlash()
+    {
+        // Test data
+        $test_session_key = '__flashes';
+        $test_flashes = array(
+            array(
+                'message' => 'Test info message',
+                'type' => 'info',
+            ),
+            array(
+                'message' => 'Test error message',
+                'type' => 'error',
+            ),
+        );
+
+        $service = new ServiceProvider();
+
+        $this->assertEmpty($_SESSION);
+
+        $service->flash($test_flashes[0]['message'], $test_flashes[0]['type']);
+        $service->flash($test_flashes[1]['message'], $test_flashes[1]['type']);
+
+        $this->assertNotEmpty($_SESSION);
+        $this->assertSame($test_flashes[0]['message'], $_SESSION[$test_session_key][$test_flashes[0]['type']][0]);
+        $this->assertSame($test_flashes[1]['message'], $_SESSION[$test_session_key][$test_flashes[1]['type']][0]);
+
+        // Clean up
+        session_destroy();
+        $_SESSION = array();
+    }
+
+    public function testFlashWithMarkdown()
+    {
+        // Test data
+        $test_session_key = '__flashes';
+        $test_type = 'info';
+        $test_message = 'Test message by %s %s';
+        $test_params = array(
+            'Trevor',
+            'Suarez',
+        );
+        $test_processed = 'Test message by ' . $test_params[0] . ' ' . $test_params[1];
+
+        $service = new ServiceProvider();
+
+        $this->assertEmpty($_SESSION);
+
+        $service->flash($test_message, $test_params);
+
+        $this->assertNotEmpty($_SESSION);
+        $this->assertSame($test_processed, $_SESSION[$test_session_key][$test_type][0]);
+
+        // Clean up
+        session_destroy();
+        $_SESSION = array();
+    }
+
+    public function testFlashes()
+    {
+        // Test data
+        $test_session_key = '__flashes';
+        $test_flashes = array(
+            array(
+                'message' => 'Test info message',
+                'type' => 'info',
+            ),
+            array(
+                'message' => 'Test error message',
+                'type' => 'error',
+            ),
+            array(
+                'message' => 'Test second error message',
+                'type' => 'error',
+            ),
+            array(
+                'message' => 'Test whatever message',
+                'type' => 'whatever',
+            ),
+        );
+        $test_error_flashes = array(
+            $test_flashes[1]['message'],
+            $test_flashes[2]['message'],
+        );
+
+        $service = new ServiceProvider();
+
+        $this->assertEmpty($_SESSION);
+        $this->assertEmpty($service->flashes());
+
+        $service->flash($test_flashes[0]['message'], $test_flashes[0]['type']);
+        $service->flash($test_flashes[1]['message'], $test_flashes[1]['type']);
+        $service->flash($test_flashes[2]['message'], $test_flashes[2]['type']);
+        $service->flash($test_flashes[3]['message'], $test_flashes[3]['type']);
+
+        // Test error flashes only
+        $error_flashes = $service->flashes('error');
+        $this->assertCount(2, $error_flashes);
+        $this->assertSame($test_error_flashes, $error_flashes);
+
+        // Test the rest
+        $all_flashes = $service->flashes();
+        $this->assertCount(
+            count($test_flashes) - count($error_flashes),
+            $all_flashes
+        );
+
+        // Clean up
+        session_destroy();
+        $_SESSION = array();
+    }
+
     public function testMarkdownParser()
     {
         // Test basic markdown conversion
