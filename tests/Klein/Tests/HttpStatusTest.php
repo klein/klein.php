@@ -32,7 +32,7 @@ class HttpStatusTests extends AbstractKleinTest
         $this->assertSame($message, HttpStatus::getMessageFromCode($code));
     }
 
-    public function testManualEntry()
+    public function testManualEntryViaConstructor()
     {
         // Set our manual test data
         $code = 666;
@@ -40,6 +40,22 @@ class HttpStatusTests extends AbstractKleinTest
 
         $http_status = new HttpStatus($code, $message);
 
+        $this->assertSame($code, $http_status->getCode());
+        $this->assertSame($message, $http_status->getMessage());
+    }
+
+    public function testManualEntryViaSetters()
+    {
+        // Set our manual test data
+        $constructor_code = 123;
+        $code = 666;
+        $message = 'The devil\'s mark';
+
+        $http_status = new HttpStatus($constructor_code);
+        $http_status->setCode($code);
+        $http_status->setMessage($message);
+
+        $this->assertNotSame($constructor_code, $http_status->getCode());
         $this->assertSame($code, $http_status->getCode());
         $this->assertSame($message, $http_status->getMessage());
     }
