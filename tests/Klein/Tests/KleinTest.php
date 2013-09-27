@@ -19,6 +19,7 @@ use Klein\Request;
 use Klein\Response;
 use Klein\Route;
 use Klein\ServiceProvider;
+use OutOfBoundsException;
 
 /**
  * KleinTest 
@@ -116,6 +117,13 @@ class KleinTest extends AbstractKleinTest
         $this->assertSame($route, $this->klein_app->routes()->get($object_id));
     }
 
+    /**
+     * Weird PHPUnit bug is causing scope errors for the
+     * isolated process tests, unless I run this also in an
+     * isolated process
+     *
+     * @runInSeparateProcess
+     */
     public function testWith()
     {
         // Test data
@@ -142,6 +150,44 @@ class KleinTest extends AbstractKleinTest
 
         $this->assertTrue($test_route instanceof Route);
         $this->assertSame($test_namespace . '/?', $test_route->getPath());
+    }
+
+    public function testDispatch()
+    {
+        $request = new Request();
+        $response = new Response();
+
+        $this->klein_app->dispatch($request, $response);
+
+        $this->assertSame($request, $this->klein_app->request());
+        $this->assertSame($response, $this->klein_app->response());
+    }
+
+    public function testGetPathFor()
+    {
+        // Test data
+        $test_path = '/test';
+        $test_name = 'Test Route Thing';
+
+        $route = new Route($this->getTestCallable());
+        $route->setPath($test_path);
+        $route->setName($test_name);
+
+        $this->klein_app->routes()->addRoute($route);
+
+        // Make sure it fails if not prepared
+        try {
+            $this->klein_app->getPathFor($test_name);
+        } catch (\Exception $e) {
+            $this->assertTrue($e instanceof OutOfBoundsException);
+        }
+
+        $this->klein_app->routes()->prepareNamed();
+
+        $returned_path = $this->klein_app->getPathFor($test_name);
+
+        $this->assertNotEmpty($returned_path);
+        $this->assertSame($test_path, $returned_path);
     }
 
     public function testSkipThis()
