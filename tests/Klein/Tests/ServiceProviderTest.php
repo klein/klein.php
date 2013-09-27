@@ -86,12 +86,37 @@ class ServiceProviderTest extends AbstractKleinTest
         $this->assertTrue($service->sharedData() instanceof DataCollection);
     }
 
+    public function testStartSession()
+    {
+        $service = new ServiceProvider();
 
-    /*
-     * TODO: Missing all of the "session" tests
-     * (not quite sure how to do that yet..)
-     */
+        $returned = $service->startSession();
 
+        $this->assertSame(session_id(), $returned);
+
+        // Clean up
+        session_destroy();
+    }
+
+    public function testStartSessionFails()
+    {
+        // Only care about some errors, and keep the old value
+        $old_error_val = error_reporting();
+        error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING);
+
+        session_start();
+        session_id('');
+
+        $service = new ServiceProvider();
+
+        $returned = $service->startSession();
+
+        $this->assertFalse($returned);
+
+        // Clean up
+        session_destroy();
+        error_reporting($old_error_val);
+    }
 
     public function testMarkdownParser()
     {
