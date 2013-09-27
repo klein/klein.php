@@ -18,6 +18,7 @@ use \Klein\HttpStatus;
 use \Klein\DataCollection\HeaderDataCollection;
 use \Klein\DataCollection\ResponseCookieDataCollection;
 use \Klein\Exceptions\LockedResponseException;
+use \Klein\ResponseCookie;
 
 use \Klein\Tests\Mocks\MockRequestFactory;
 
@@ -333,6 +334,62 @@ class ResponsesTest extends AbstractKleinTest
         }
     }
 
+    /**
+     * @group testCookie
+     */
+    public function testCookie()
+    {
+        $test_cookie_data = array(
+            'name'      => 'name',
+            'value'    => 'value',
+            'expiry'   => null,
+            'path'     => '/path',
+            'domain'   => 'whatever.com',
+            'secure'   => true,
+            'httponly' => true
+        );
+
+        $test_cookie = new ResponseCookie(
+            $test_cookie_data['name'],
+            $test_cookie_data['value'],
+            $test_cookie_data['expiry'],
+            $test_cookie_data['path'],
+            $test_cookie_data['domain'],
+            $test_cookie_data['secure'],
+            $test_cookie_data['httponly']
+        );
+
+        $response = new Response();
+
+        // Make sure the cookies are initially empty
+        $this->assertEmpty($response->cookies()->all());
+
+        // Set a cookies
+        $response->cookie(
+            $test_cookie_data['name'],
+            $test_cookie_data['value'],
+            $test_cookie_data['expiry'],
+            $test_cookie_data['path'],
+            $test_cookie_data['domain'],
+            $test_cookie_data['secure'],
+            $test_cookie_data['httponly']
+        );
+
+        $this->assertNotEmpty($response->cookies()->all());
+
+        $the_cookie = $response->cookies()->get($test_cookie_data['name']);
+
+        $this->assertNotNull($the_cookie);
+        $this->assertTrue($the_cookie instanceof ResponseCookie);
+        $this->assertSame($test_cookie_data['name'], $the_cookie->getName());
+        $this->assertSame($test_cookie_data['value'], $the_cookie->getValue());
+        $this->assertSame($test_cookie_data['path'], $the_cookie->getPath());
+        $this->assertSame($test_cookie_data['domain'], $the_cookie->getDomain());
+        $this->assertSame($test_cookie_data['secure'], $the_cookie->getSecure());
+        $this->assertSame($test_cookie_data['httponly'], $the_cookie->getHttpOnly());
+        $this->assertNotNull($the_cookie->getExpire());
+    }
+
     public function testNoCache()
     {
         $response = new Response();
@@ -369,6 +426,18 @@ class ResponsesTest extends AbstractKleinTest
         $this->assertContains('test', $response->body());
     }
 
+    public function testDumpArray()
+    {
+        $response = new Response();
+
+        $this->assertEmpty($response->body());
+
+        $response->dump(array('sure', 1, 10, 17, 'ok' => 'no'));
+
+        $this->assertNotEmpty($response->body());
+        $this->assertNotEquals('<pre></pre>', $response->body());
+    }
+
     public function testFileSend()
     {
         $file_name = 'testing';
@@ -398,6 +467,34 @@ class ResponsesTest extends AbstractKleinTest
         );
         $this->assertContains(
             $file_name,
+            $this->klein_app->response()->headers()->get('Content-Disposition')
+        );
+    }
+
+    public function testFileSendLooseArgs()
+    {
+        $this->klein_app->respond(
+            function ($request, $response, $service) {
+                $response->file(__FILE__);
+            }
+        );
+
+        $this->klein_app->dispatch();
+
+        // Expect our output to match our json encoded test object
+        $this->expectOutputString(
+            file_get_contents(__FILE__)
+        );
+
+        // Assert headers were passed
+        $this->assertEquals(
+            filesize(__FILE__),
+            $this->klein_app->response()->headers()->get('Content-Length')
+        );
+        $this->assertNotNull(
+            $this->klein_app->response()->headers()->get('Content-Type')
+        );
+        $this->assertNotNull(
             $this->klein_app->response()->headers()->get('Content-Disposition')
         );
     }
@@ -439,6 +536,42 @@ class ResponsesTest extends AbstractKleinTest
         );
         $this->assertEquals(
             'application/json',
+            $this->klein_app->response()->headers()->get('Content-Type')
+        );
+    }
+
+    public function testJSONWithPrefix()
+    {
+        // Create a test object to be JSON encoded/decoded
+        $test_object = array(
+            'cheese',
+        );
+        $prefix = 'dogma';
+
+        $this->klein_app->respond(
+            function ($request, $response, $service) use ($test_object, $prefix) {
+                $response->json($test_object, $prefix);
+            }
+        );
+
+        $this->klein_app->dispatch();
+
+        // Expect our output to match our json encoded test object
+        $this->expectOutputString(
+            'dogma('. json_encode($test_object) .');'
+        );
+
+        // Assert headers were passed
+        $this->assertEquals(
+            'no-cache',
+            $this->klein_app->response()->headers()->get('Pragma')
+        );
+        $this->assertEquals(
+            'no-store, no-cache',
+            $this->klein_app->response()->headers()->get('Cache-Control')
+        );
+        $this->assertEquals(
+            'text/javascript',
             $this->klein_app->response()->headers()->get('Content-Type')
         );
     }
