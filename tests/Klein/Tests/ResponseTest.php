@@ -189,6 +189,9 @@ class ResponsesTest extends AbstractKleinTest
      * Testing headers is a pain in the ass. ;)
      *
      * Technically... we can't. So, yea.
+     *
+     * Attempt to run in a separate process so we can
+     * at least call our internal methods
      */
     public function testSendHeaders()
     {
@@ -202,6 +205,14 @@ class ResponsesTest extends AbstractKleinTest
     }
 
     /**
+     * @runInSeparateProcess
+     */
+    public function testSendHeadersInIsolateProcess()
+    {
+        $this->testSendHeaders();
+    }
+
+    /**
      * Testing cookies is exactly like testing headers
      * ... So, yea.
      */
@@ -209,11 +220,19 @@ class ResponsesTest extends AbstractKleinTest
     {
         $response = new Response();
         $response->cookies()->set('test', 'woot!');
-        $response->cookies()->set('Cookie name!', 'wtf?');
+        $response->cookies()->set('Cookie-name', 'wtf?');
 
         $response->sendCookies();
 
         $this->expectOutputString(null);
+    }
+
+    /**
+     * @runInSeparateProcess
+     */
+    public function testSendCookiesInIsolateProcess()
+    {
+        $this->testSendCookies();
     }
 
     public function testSendBody()
@@ -231,6 +250,19 @@ class ResponsesTest extends AbstractKleinTest
 
         $this->expectOutputString('woot!');
         $this->assertTrue($response->isLocked());
+    }
+
+    /**
+     * @expectedException Klein\Exceptions\ResponseAlreadySentException
+     */
+    public function testSendWhenAlreadySent()
+    {
+        $response = new Response();
+        $response->send();
+
+        $this->assertTrue($response->isLocked());
+
+        $response->send();
     }
 
     public function testChunk()
