@@ -25,3 +25,8 @@ function implement_custom_apc_cache_functions() {
 		}
 	}
 }
+
+function test_num_args_wrapper($args)
+{
+	echo func_num_args();
+}

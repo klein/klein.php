@@ -11,6 +11,7 @@
 
 namespace Klein\Tests;
 
+use Exception;
 use Klein\App;
 use Klein\DataCollection\RouteCollection;
 use Klein\Exceptions\DispatchHaltedException;
@@ -178,7 +179,7 @@ class KleinTest extends AbstractKleinTest
         // Make sure it fails if not prepared
         try {
             $this->klein_app->getPathFor($test_name);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->assertTrue($e instanceof OutOfBoundsException);
         }
 
@@ -190,11 +191,69 @@ class KleinTest extends AbstractKleinTest
         $this->assertSame($test_path, $returned_path);
     }
 
+    public function testOnErrorWithStringCallables()
+    {
+        $this->klein_app->onError('test_num_args_wrapper');
+
+        $this->klein_app->respond(
+            function ($request, $response, $service) {
+                throw new Exception('testing');
+            }
+        );
+
+        $this->assertSame(
+            '4',
+            $this->dispatchAndReturnOutput()
+        );
+    }
+
+    public function testOnErrorWithBadCallables()
+    {
+        $this->klein_app->onError('this_function_doesnt_exist');
+
+        $this->klein_app->respond(
+            function ($request, $response, $service) {
+                throw new Exception('testing');
+            }
+        );
+
+        $this->assertEmpty($this->klein_app->service()->flashes());
+
+        $this->assertSame(
+            null,
+            $this->dispatchAndReturnOutput()
+        );
+
+        $this->assertNotEmpty($this->klein_app->service()->flashes());
+
+        // Clean up
+        session_destroy();
+    }
+
+    /**
+     * @expectedException Klein\Exceptions\UnhandledException
+     */
+    public function testErrorsWithNoCallbacks()
+    {
+        $this->klein_app->respond(
+            function ($request, $response, $service) {
+                throw new Exception('testing');
+            }
+        );
+
+        $this->klein_app->dispatch();
+
+        $this->assertSame(
+            500,
+            $this->klein_app->response()->code()
+        );
+    }
+
     public function testSkipThis()
     {
         try {
             $this->klein_app->skipThis();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->assertTrue($e instanceof DispatchHaltedException);
             $this->assertSame(DispatchHaltedException::SKIP_THIS, $e->getCode());
             $this->assertSame(1, $e->getNumberOfSkips());
@@ -207,7 +266,7 @@ class KleinTest extends AbstractKleinTest
 
         try {
             $this->klein_app->skipNext($number_of_skips);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->assertTrue($e instanceof DispatchHaltedException);
             $this->assertSame(DispatchHaltedException::SKIP_NEXT, $e->getCode());
             $this->assertSame($number_of_skips, $e->getNumberOfSkips());
@@ -218,7 +277,7 @@ class KleinTest extends AbstractKleinTest
     {
         try {
             $this->klein_app->skipRemaining();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->assertTrue($e instanceof DispatchHaltedException);
             $this->assertSame(DispatchHaltedException::SKIP_REMAINING, $e->getCode());
         }
@@ -236,7 +295,7 @@ class KleinTest extends AbstractKleinTest
 
         try {
             $this->klein_app->dispatch();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->assertTrue($e instanceof DispatchHaltedException);
             $this->assertSame(DispatchHaltedException::SKIP_REMAINING, $e->getCode());
         }
