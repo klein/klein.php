@@ -794,13 +794,13 @@ class Klein
             foreach (array_reverse($this->errorCallbacks) as $callback) {
                 if (is_callable($callback)) {
                     if (is_string($callback)) {
-                        if ($callback($this, $msg, $type, $err)) {
-                            return;
-                        }
+                        $callback($this, $msg, $type, $err);
+
+                        return;
                     } else {
-                        if (call_user_func($callback, $this, $msg, $type, $err)) {
-                            return;
-                        }
+                        call_user_func($callback, $this, $msg, $type, $err);
+
+                        return;
                     }
                 } else {
                     if (null !== $this->service && null !== $this->response) {
