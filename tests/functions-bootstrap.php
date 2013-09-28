@@ -7,8 +7,21 @@ function implement_custom_fastcgi_function() {
 	if (!function_exists('fastcgi_finish_request')) {
 		// Let's just define it then
 		function fastcgi_finish_request() {
-			ob_start();
 			echo 'fastcgi_finish_request';
+		}
+	}
+}
+
+function implement_custom_apc_cache_functions() {
+	// Check if the function doesn't exist
+	if (!function_exists('apc_fetch')) {
+
+		function apc_fetch($key) {
+			return false;
+		}
+
+		function apc_store($key, $value) {
+			return false;
 		}
 	}
 }
