@@ -1441,6 +1441,12 @@ class RoutingTest extends AbstractKleinTest
         )->setName('dog-foo');
 
         $this->klein_app->respond(
+            '/dog/[i:dog_id]?',
+            function () {
+            }
+        )->setName('dog-optional-details');
+
+        $this->klein_app->respond(
             '@/dog/regex',
             function () {
             }
@@ -1502,6 +1508,10 @@ class RoutingTest extends AbstractKleinTest
         $this->assertSame(
             '/dog/foo',
             $this->klein_app->getPathFor('dog-foo')
+        );
+        $this->assertSame(
+            '/dog',
+            $this->klein_app->getPathFor('dog-optional-details')
         );
         $this->assertSame(
             '/',
