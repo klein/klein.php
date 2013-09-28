@@ -597,7 +597,6 @@ class Klein
                     case self::DISPATCH_NO_CAPTURE:
                     default:
                         ob_end_flush();
-                        break;
                 }
             }
 
