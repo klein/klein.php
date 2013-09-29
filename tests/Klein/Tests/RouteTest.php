@@ -160,4 +160,30 @@ class RouteTest extends AbstractKleinTest
             call_user_func_array($route, $test_arguments)
         );
     }
+
+    /**
+     * Exception tests
+     */
+
+    /**
+     * @expectedException InvalidArgumentException
+     */
+    public function testCallbackSetWithIncorrectType()
+    {
+        $route = new Route($this->getTestCallable());
+
+        // Test setting with the WRONG type
+        $route->setCallback(100);
+    }
+
+    /**
+     * @expectedException InvalidArgumentException
+     */
+    public function testMethodSetWithIncorrectType()
+    {
+        $route = new Route($this->getTestCallable());
+
+        // Test setting with the WRONG type
+        $route->setMethod(100);
+    }
 }

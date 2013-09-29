@@ -12,16 +12,16 @@
 namespace Klein\Tests;
 
 
-use \Klein\Klein;
-
-use \Klein\Tests\Mocks\HeadersEcho;
-use \Klein\Tests\Mocks\HeadersSave;
-use \Klein\Tests\Mocks\MockRequestFactory;
-use \Klein\Request;
-use \Klein\Response;
-use \Klein\ServiceProvider;
-use \Klein\App;
-use \Klein\DataCollection\RouteCollection;
+use Klein\App;
+use Klein\DataCollection\RouteCollection;
+use Klein\Exceptions\DispatchHaltedException;
+use Klein\Klein;
+use Klein\Request;
+use Klein\Response;
+use Klein\ServiceProvider;
+use Klein\Tests\Mocks\HeadersEcho;
+use Klein\Tests\Mocks\HeadersSave;
+use Klein\Tests\Mocks\MockRequestFactory;
 
 /**
  * RoutingTest
@@ -522,6 +522,22 @@ class RoutingTest extends AbstractKleinTest
 
         $this->klein_app->dispatch(
             MockRequestFactory::create('/bar')
+        );
+    }
+
+    public function testNormalNegate()
+    {
+        $this->expectOutputString('');
+
+        $this->klein_app->respond(
+            '!/foo',
+            function () {
+                echo 'y';
+            }
+        );
+
+        $this->klein_app->dispatch(
+            MockRequestFactory::create('/foo')
         );
     }
 
@@ -1357,6 +1373,47 @@ class RoutingTest extends AbstractKleinTest
         }
     }
 
+    public function testHeadMethodMatch()
+    {
+        $test_strings = array(
+            'oh, hello',
+            'yea',
+        );
+
+        $test_result = null;
+
+        $this->klein_app->respond(
+            array('GET', 'HEAD'),
+            null,
+            function ($request, $response) use ($test_strings, &$test_result) {
+                $test_result .= $test_strings[0];
+            }
+        );
+        $this->klein_app->respond(
+            'GET',
+            '/',
+            function ($request, $response) use ($test_strings, &$test_result) {
+                $test_result .= $test_strings[1];
+            }
+        );
+        $this->klein_app->respond(
+            'POST',
+            '/',
+            function ($request, $response) use ($test_strings, &$test_result) {
+                $test_result .= 'nope';
+            }
+        );
+
+        $this->klein_app->dispatch(
+            MockRequestFactory::create('/', 'HEAD')
+        );
+
+        $this->assertSame(
+            implode('', $test_strings),
+            $test_result
+        );
+    }
+
     public function testGetPathFor()
     {
         $this->klein_app->respond(
@@ -1382,6 +1439,12 @@ class RoutingTest extends AbstractKleinTest
             function () {
             }
         )->setName('dog-foo');
+
+        $this->klein_app->respond(
+            '/dog/[i:dog_id]?',
+            function () {
+            }
+        )->setName('dog-optional-details');
 
         $this->klein_app->respond(
             '@/dog/regex',
@@ -1445,6 +1508,10 @@ class RoutingTest extends AbstractKleinTest
         $this->assertSame(
             '/dog/foo',
             $this->klein_app->getPathFor('dog-foo')
+        );
+        $this->assertSame(
+            '/dog',
+            $this->klein_app->getPathFor('dog-optional-details')
         );
         $this->assertSame(
             '/',
@@ -1591,6 +1658,27 @@ class RoutingTest extends AbstractKleinTest
         $this->klein_app->respond(
             function ($a, $b, $c, $d, $klein_app) {
                 echo '3,';
+            }
+        );
+
+        $this->klein_app->dispatch();
+
+        $this->assertSame(404, $this->klein_app->response()->code());
+    }
+
+    /**
+     * @expectedException Klein\Exceptions\DispatchHaltedException
+     */
+    public function testDispatchExceptionRethrowsUnknownCode()
+    {
+        $this->expectOutputString('');
+
+        $test_message = 'whatever';
+        $test_code = 666;
+
+        $this->klein_app->respond(
+            function ($a, $b, $c, $d, $klein_app) use ($test_message, $test_code) {
+                throw new DispatchHaltedException($test_message, $test_code);
             }
         );
 
@@ -1914,6 +2002,23 @@ class RoutingTest extends AbstractKleinTest
 
         $this->klein_app->dispatch(
             MockRequestFactory::create('/foooom/bar')
+        );
+        $this->assertSame(200, $this->klein_app->response()->code());
+    }
+
+    public function testSendCallsFastCGIFinishRequest()
+    {
+        // Custom apc function
+        implement_custom_apc_cache_functions();
+
+        $this->klein_app->respond(
+            '/test',
+            function () {
+            }
+        );
+
+        $this->klein_app->dispatch(
+            MockRequestFactory::create('/test')
         );
         $this->assertSame(200, $this->klein_app->response()->code());
     }

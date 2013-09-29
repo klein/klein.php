@@ -74,11 +74,11 @@ class App
      */
     public function __call($method, $args)
     {
-        if (!isset($this->$method) || !is_callable($this->$method)) {
+        if (!isset($this->services[$method]) || !is_callable($this->services[$method])) {
             throw new BadMethodCallException('Unknown method '. $method .'()');
         }
 
-        return call_user_func_array($this->$method, $args);
+        return call_user_func_array($this->services[$method], $args);
     }
 
     /**

@@ -203,6 +203,12 @@ class RequestTest extends AbstractKleinTest
         // Test data
         $body = '_why is an interesting guy<br> - Trevor';
 
+        // Blank constructor
+        $request = new Request();
+
+        $this->assertEmpty($request->body());
+
+        // In constructor
         $request = new Request(array(), array(), array(), array(), array(), $body);
 
         $this->assertSame($body, $request->body());
@@ -246,12 +252,14 @@ class RequestTest extends AbstractKleinTest
 
     public function testQueryModify()
     {
+        $test_uri = '/test?query';
         $query_string = 'search=string&page=2&per_page=3';
         $test_one = '';
         $test_two = '';
         $test_three = '';
 
         $request = new Request();
+        $request->server()->set('REQUEST_URI', $test_uri);
         $request->server()->set('QUERY_STRING', $query_string);
 
         $this->klein_app->respond(
@@ -269,18 +277,20 @@ class RequestTest extends AbstractKleinTest
 
         $this->klein_app->dispatch($request);
 
+        $expected_uri = parse_url($this->klein_app->request()->uri(), PHP_URL_PATH);
+
         $this->assertSame(
-            $this->klein_app->request()->uri() . '?' . $query_string . '&test=dog',
+            $expected_uri . '?' . $query_string . '&test=dog',
             $test_one
         );
 
         $this->assertSame(
-            $this->klein_app->request()->uri() . '?' . str_replace('page=2', 'page=7', $query_string),
+            $expected_uri . '?' . str_replace('page=2', 'page=7', $query_string),
             $test_two
         );
 
         $this->assertSame(
-            $this->klein_app->request()->uri() . '?' . str_replace('per_page=3', 'per_page=10', $query_string),
+            $expected_uri . '?' . str_replace('per_page=3', 'per_page=10', $query_string),
             $test_three
         );
     }
