@@ -14,6 +14,8 @@ namespace Klein\Tests;
 use \Klein\Klein;
 use \Klein\Tests\Mocks\MockRequestFactory;
 use \Klein\Validator;
+use \Klein\Request;
+use \Klein\Response;
 
 /**
  * ValidationsTest 
@@ -27,6 +29,9 @@ class ValidationsTest extends AbstractKleinTest
     public function setUp()
     {
         parent::setUp();
+
+        // Bind objects to our service
+        $this->klein_app->service()->bind(new Request(), new Response());
 
         // Setup our error handler
         $this->klein_app->onError(array($this, 'errorHandler'), false);
@@ -786,5 +791,59 @@ class ValidationsTest extends AbstractKleinTest
                 MockRequestFactory::create('/brown_donk')
             )
         );
+    }
+
+    public function testCustomValidatorWithManyArgs()
+    {
+        // Add our custom validator
+        $this->klein_app->service()->addValidator(
+            'booleanEqual',
+            function ($string, $args) {
+                // Get the args
+                $args = func_get_args();
+                array_shift($args);
+
+                $previous = null;
+
+                foreach ($args as $arg) {
+                    if (null !== $previous) {
+                        if ((bool) $arg != (bool) $previous) {
+                            echo 'nope';
+                            var_dump($arg, $previous);
+                            var_dump((bool) $arg, (bool) $previous);
+                            return false;
+                        }
+                    } else {
+                        $previous = $arg;
+                    }
+                }
+
+                return true;
+            }
+        );
+
+        $this->klein_app->service()->validateParam('tRUe')
+            ->isBooleanEqual(1, true, 'true');
+
+        $this->klein_app->service()->validateParam('false')
+            ->isBooleanEqual(0, null, '', array(), '0', false);
+    }
+
+    public function testValidatorReturnsResult()
+    {
+        $result = $this->klein_app->service()->validateParam('12', false)
+            ->isInt();
+
+        $this->assertNotNull($result);
+        $this->assertFalse($result);
+    }
+
+    /**
+     * @expectedException BadMethodCallException
+     */
+    public function testValidatorThatDoesntExist()
+    {
+        $result = $this->klein_app->service()->validateParam('12')
+            ->isALongNameOfAThingThatDoesntExist();
     }
 }

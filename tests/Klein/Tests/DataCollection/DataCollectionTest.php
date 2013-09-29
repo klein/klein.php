@@ -133,6 +133,10 @@ class DataCollectionTest extends AbstractKleinTest
         $this->assertContains($mask[0], $data_collection->keys($mask[0], $mask[1]));
         $this->assertContains($mask[1], $data_collection->keys($mask[0], $mask[1]));
         $this->assertNotContains(key($sample_data), $data_collection->keys($mask[0], $mask[1]));
+
+        // Test not filling will nulls
+        $this->assertContains($mask[0], $data_collection->keys($mask, false));
+        $this->assertNotContains($mask[1], $data_collection->keys($mask, false));
     }
 
     /**
@@ -154,6 +158,10 @@ class DataCollectionTest extends AbstractKleinTest
         $this->assertArrayHasKey($mask[0], $data_collection->all($mask[0], $mask[1]));
         $this->assertArrayHasKey($mask[1], $data_collection->all($mask[0], $mask[1]));
         $this->assertArrayNotHasKey(key($sample_data), $data_collection->all($mask[0], $mask[1]));
+
+        // Test not filling will nulls
+        $this->assertArrayHasKey($mask[0], $data_collection->all($mask, false));
+        $this->assertArrayNotHasKey($mask[1], $data_collection->all($mask, false));
     }
 
     /**
@@ -386,5 +394,14 @@ class DataCollectionTest extends AbstractKleinTest
         unset($data_collection[key($sample_data)]);
 
         $this->assertFalse(isset($data_collection[key($sample_data)]));
+    }
+
+    /**
+     * @dataProvider sampleDataProvider
+     */
+    public function testCount($sample_data, $data_collection)
+    {
+        $this->assertSame(count($sample_data), $data_collection->count());
+        $this->assertGreaterThan(1, $data_collection->count());
     }
 }
