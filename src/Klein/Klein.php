@@ -365,16 +365,16 @@ class Klein
      * Dispatch with optionally injected dependencies
      * This DI allows for easy testing, object mocking, or class extension
      *
-     * @param Request $request          The request object to give to each callback
-     * @param Response $response        The response object to give to each callback
-     * @param boolean $send_response    Whether or not to "send" the response after the last route has been matched
-     * @param int $capture              Specify a DISPATCH_* constant to change the output capturing behavior
+     * @param Request $request              The request object to give to each callback
+     * @param AbstractResponse $response    The response object to give to each callback
+     * @param boolean $send_response        Whether or not to "send" the response after the last route has been matched
+     * @param int $capture                  Specify a DISPATCH_* constant to change the output capturing behavior
      * @access public
      * @return void|string
      */
     public function dispatch(
         Request $request = null,
-        Response $response = null,
+        AbstractResponse $response = null,
         $send_response = true,
         $capture = self::DISPATCH_NO_CAPTURE
     ) {
@@ -751,7 +751,7 @@ class Klein
                 $methods_matched
             );
 
-            if ($returned instanceof Response) {
+            if ($returned instanceof AbstractResponse) {
                 $this->response = $returned;
             } else {
                 $this->response->append($returned);
