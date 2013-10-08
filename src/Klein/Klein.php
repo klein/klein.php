@@ -468,7 +468,7 @@ class Klein
 
                 // Easily handle 40x's
 
-                $this->handleRouteCallback($callback, $matched, $methods_matched);
+                $this->handleRouteCallback($route, $matched, $methods_matched);
 
                 continue;
 
@@ -536,7 +536,7 @@ class Klein
 
                     // Handle our response callback
                     try {
-                        $this->handleRouteCallback($callback, $matched, $methods_matched);
+                        $this->handleRouteCallback($route, $matched, $methods_matched);
 
                     } catch (DispatchHaltedException $e) {
                         switch ($e->getCode()) {
