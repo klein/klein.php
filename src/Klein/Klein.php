@@ -412,7 +412,6 @@ class Klein
             // Grab the properties of the route handler
             $method = $route->getMethod();
             $path = $route->getPath();
-            $callback = $route->getCallback();
             $count_match = $route->getCountMatch();
 
             // Keep track of whether this specific request method was matched
