@@ -402,7 +402,7 @@ class Klein
 
         ob_start();
 
-        foreach ($this->routes as $handler) {
+        foreach ($this->routes as $route) {
             // Are we skipping any matches?
             if ($skip_num > 0) {
                 $skip_num--;
@@ -410,10 +410,10 @@ class Klein
             }
 
             // Grab the properties of the route handler
-            $method = $handler->getMethod();
-            $_route = $handler->getPath();
-            $callback = $handler->getCallback();
-            $count_match = $handler->getCountMatch();
+            $method = $route->getMethod();
+            $path = $route->getPath();
+            $callback = $route->getCallback();
+            $count_match = $route->getCountMatch();
 
             // Keep track of whether this specific request method was matched
             $method_match = null;
@@ -451,7 +451,7 @@ class Klein
             $possible_match = (null === $method_match) || $method_match;
 
             // ! is used to negate a match
-            if (isset($_route[0]) && $_route[0] === '!') {
+            if (isset($path[0]) && $path[0] === '!') {
                 $negate = true;
                 $i = 1;
             } else {
@@ -460,41 +460,41 @@ class Klein
             }
 
             // Check for a wildcard (match all)
-            if ($_route === '*') {
+            if ($path === '*') {
                 $match = true;
 
-            } elseif (($_route === '404' && $matched->isEmpty() && count($methods_matched) <= 0)
-                   || ($_route === '405' && $matched->isEmpty() && count($methods_matched) > 0)) {
+            } elseif (($path === '404' && $matched->isEmpty() && count($methods_matched) <= 0)
+                   || ($path === '405' && $matched->isEmpty() && count($methods_matched) > 0)) {
 
                 // Easily handle 40x's
 
-                $this->handleResponseCallback($callback, $matched, $methods_matched);
+                $this->handleRouteCallback($callback, $matched, $methods_matched);
 
                 continue;
 
-            } elseif (isset($_route[$i]) && $_route[$i] === '@') {
+            } elseif (isset($path[$i]) && $path[$i] === '@') {
                 // @ is used to specify custom regex
 
-                $match = preg_match('`' . substr($_route, $i + 1) . '`', $uri, $params);
+                $match = preg_match('`' . substr($path, $i + 1) . '`', $uri, $params);
 
             } else {
                 // Compiling and matching regular expressions is relatively
                 // expensive, so try and match by a substring first
 
-                $route = null;
+                $expression = null;
                 $regex = false;
                 $j = 0;
-                $n = isset($_route[$i]) ? $_route[$i] : null;
+                $n = isset($path[$i]) ? $path[$i] : null;
 
                 // Find the longest non-regex substring and match it against the URI
                 while (true) {
-                    if (!isset($_route[$i])) {
+                    if (!isset($path[$i])) {
                         break;
                     } elseif (false === $regex) {
                         $c = $n;
                         $regex = $c === '[' || $c === '(' || $c === '.';
-                        if (false === $regex && false !== isset($_route[$i+1])) {
-                            $n = $_route[$i + 1];
+                        if (false === $regex && false !== isset($path[$i+1])) {
+                            $n = $path[$i + 1];
                             $regex = $n === '?' || $n === '+' || $n === '*' || $n === '{';
                         }
                         if (false === $regex && $c !== '/' && (!isset($uri[$j]) || $c !== $uri[$j])) {
@@ -502,18 +502,18 @@ class Klein
                         }
                         $j++;
                     }
-                    $route .= $_route[$i++];
+                    $expression .= $path[$i++];
                 }
 
                 // Check if there's a cached regex string
                 if (false !== $apc) {
-                    $regex = apc_fetch("route:$route");
+                    $regex = apc_fetch("route:$expression");
                     if (false === $regex) {
-                        $regex = $this->compileRoute($route);
-                        apc_store("route:$route", $regex);
+                        $regex = $this->compileRoute($expression);
+                        apc_store("route:$expression", $regex);
                     }
                 } else {
-                    $regex = $this->compileRoute($route);
+                    $regex = $this->compileRoute($expression);
                 }
 
                 $match = preg_match($regex, $uri, $params);
@@ -536,7 +536,7 @@ class Klein
 
                     // Handle our response callback
                     try {
-                        $this->handleResponseCallback($callback, $matched, $methods_matched);
+                        $this->handleRouteCallback($callback, $matched, $methods_matched);
 
                     } catch (DispatchHaltedException $e) {
                         switch ($e->getCode()) {
@@ -553,8 +553,8 @@ class Klein
                         }
                     }
 
-                    if ($_route !== '*') {
-                        $count_match && $matched->add($handler);
+                    if ($path !== '*') {
+                        $count_match && $matched->add($route);
                     }
                 }
 
@@ -725,7 +725,7 @@ class Klein
     }
 
     /**
-     * Handle a response callback
+     * Handle a route's callback
      *
      * This handles common exceptions and their output
      * to keep the "dispatch()" method DRY
@@ -736,7 +736,7 @@ class Klein
      * @access protected
      * @return void
      */
-    protected function handleResponseCallback($callback, $matched, $methods_matched)
+    protected function handleRouteCallback($callback, $matched, $methods_matched)
     {
         // Handle the callback
         try {
