@@ -730,18 +730,18 @@ class Klein
      * This handles common exceptions and their output
      * to keep the "dispatch()" method DRY
      *
-     * @param callable $callback
+     * @param Route $route
      * @param RouteCollection $matched
      * @param int $methods_matched
      * @access protected
      * @return void
      */
-    protected function handleRouteCallback($callback, $matched, $methods_matched)
+    protected function handleRouteCallback(Route $route, RouteCollection $matched, $methods_matched)
     {
         // Handle the callback
         try {
             $returned = call_user_func(
-                $callback,
+                $route->getCallback(), // Instead of relying on the slower "invoke" magic
                 $this->request,
                 $this->response,
                 $this->service,
