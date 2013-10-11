@@ -230,6 +230,84 @@ class KleinTest extends AbstractKleinTest
         session_destroy();
     }
 
+    public function testAfterDispatch()
+    {
+        $this->klein_app->afterDispatch(
+            function ($klein) {
+                $klein->response()->body('after callbacks!');
+            }
+        );
+
+        $this->klein_app->dispatch(null, null, false);
+
+        $this->assertSame(
+            'after callbacks!',
+            $this->klein_app->response()->body()
+        );
+    }
+
+    public function testAfterDispatchWithMultipleCallbacks()
+    {
+        $this->klein_app->afterDispatch(
+            function ($klein) {
+                $klein->response()->body('after callbacks!');
+            }
+        );
+
+        $this->klein_app->afterDispatch(
+            function ($klein) {
+                $klein->response()->body('whatever');
+            }
+        );
+
+        $this->klein_app->dispatch(null, null, false);
+
+        $this->assertSame(
+            'whatever',
+            $this->klein_app->response()->body()
+        );
+    }
+
+    public function testAfterDispatchWithStringCallables()
+    {
+        $this->klein_app->afterDispatch('test_response_edit_wrapper');
+
+        $this->klein_app->dispatch(null, null, false);
+
+        $this->assertSame(
+            'after callbacks!',
+            $this->klein_app->response()->body()
+        );
+    }
+
+    public function testAfterDispatchWithBadCallables()
+    {
+        $this->klein_app->afterDispatch('this_function_doesnt_exist');
+
+        $this->klein_app->dispatch();
+
+        $this->expectOutputString(null);
+    }
+
+    /**
+     * @expectedException Klein\Exceptions\UnhandledException
+     */
+    public function testAfterDispatchWithCallableThatThrowsException()
+    {
+        $this->klein_app->afterDispatch(
+            function ($klein) {
+                throw new Exception('testing');
+            }
+        );
+
+        $this->klein_app->dispatch();
+
+        $this->assertSame(
+            500,
+            $this->klein_app->response()->code()
+        );
+    }
+
     /**
      * @expectedException Klein\Exceptions\UnhandledException
      */

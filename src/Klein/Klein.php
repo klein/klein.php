@@ -121,6 +121,15 @@ class Klein
      */
     protected $errorCallbacks = array();
 
+    /**
+     * An array of callbacks to call after processing the dispatch loop
+     * and before the response is sent
+     *
+     * @var array[callable]
+     * @access protected
+     */
+    protected $afterFilterCallbacks = array();
+
 
     /**
      * Route objects
@@ -612,6 +621,9 @@ class Klein
             // Do nothing, since this is an automated behavior
         }
 
+        // Run our after dispatch callbacks
+        $this->callAfterDispatchCallbacks();
+
         if ($send_response && !$this->response->isSent()) {
             $this->response->send();
         }
@@ -811,6 +823,45 @@ class Klein
         } else {
             $this->response->code(500);
             throw new UnhandledException($err);
+        }
+    }
+
+    /**
+     * Adds a callback to the stack of handlers to run after the dispatch
+     * loop has handled all of the route callbacks and before the response
+     * is sent
+     *
+     * @param callable $callback            The callable function to execute in the after route chain
+     * @access public
+     * @return void
+     */
+    public function afterDispatch($callback)
+    {
+        $this->afterFilterCallbacks[] = $callback;
+    }
+
+    /**
+     * Runs through and executes the after dispatch callbacks
+     *
+     * @access protected
+     * @return void
+     */
+    protected function callAfterDispatchCallbacks()
+    {
+        try {
+            foreach ($this->afterFilterCallbacks as $callback) {
+                if (is_callable($callback)) {
+                    if (is_string($callback)) {
+                        $callback($this);
+
+                    } else {
+                        call_user_func($callback, $this);
+
+                    }
+                }
+            }
+        } catch (Exception $e) {
+            $this->error($e);
         }
     }
 
