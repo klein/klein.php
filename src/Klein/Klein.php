@@ -765,10 +765,13 @@ class Klein
             if ($returned instanceof AbstractResponse) {
                 $this->response = $returned;
             } else {
-                $this->response->append($returned);
+                // Otherwise, attempt to append the returned data
+                try {
+                    $this->response->append($returned);
+                } catch (LockedResponseException $e) {
+                    // Do nothing, since this is an automated behavior
+                }
             }
-        } catch (LockedResponseException $e) {
-            // Do nothing, since this is an automated behavior
         } catch (DispatchHaltedException $e) {
             throw $e;
         } catch (Exception $e) {
