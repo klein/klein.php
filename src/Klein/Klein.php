@@ -103,7 +103,7 @@ class Klein
      * @var RouteCollection
      * @access protected
      */
-    protected $routes;
+    protected $routes = array();
 
     /**
      * The Route factory object responsible for creating Route instances
