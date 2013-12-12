@@ -18,6 +18,8 @@ use \Klein\DataCollection\RouteCollection;
 use \Klein\Exceptions\LockedResponseException;
 use \Klein\Exceptions\UnhandledException;
 use \Klein\Exceptions\DispatchHaltedException;
+use \Klein\Exceptions\HttpException;
+use \Klein\Exceptions\HttpExceptionInterface;
 
 /**
  * Klein
@@ -120,6 +122,14 @@ class Klein
      * @access protected
      */
     protected $errorCallbacks = array();
+
+    /**
+     * An array of HTTP error callback callables
+     *
+     * @var array[callable]
+     * @access protected
+     */
+    protected $httpErrorCallbacks = array();
 
     /**
      * An array of callbacks to call after processing the dispatch loop
@@ -830,6 +840,44 @@ class Klein
         } else {
             $this->response->code(500);
             throw new UnhandledException($err);
+        }
+    }
+
+    /**
+     * Adds an HTTP error callback to the stack of HTTP error handlers
+     *
+     * @param callable $callback            The callable function to execute in the error handling chain
+     * @access public
+     * @return void
+     */
+    public function onHttpError($callback)
+    {
+        $this->httpErrorCallbacks[] = $callback;
+    }
+
+    /**
+     * Handles an HTTP error exception through our HTTP error callbacks
+     *
+     * @param HttpExceptionInterface $http_exception    The exception that occurred
+     * @access protected
+     * @return void
+     */
+    protected function httpError(HttpExceptionInterface $http_exception)
+    {
+        if (!$this->response->isLocked()) {
+            $this->response->code($http_exception->getCode());
+        }
+
+        if (count($this->httpErrorCallbacks) > 0) {
+            foreach (array_reverse($this->httpErrorCallbacks) as $callback) {
+                if (is_callable($callback)) {
+                    if (is_string($callback)) {
+                        $callback($http_exception->getCode(), $this, $http_exception);
+                    } else {
+                        call_user_func($callback, $http_exception->getCode(), $this, $http_exception);
+                    }
+                }
+            }
         }
     }
 
