@@ -814,6 +814,32 @@ class RoutingTest extends AbstractKleinTest
         );
     }
 
+    public function test404RouteDefinitionOrderDoesntEffectWhen404HandlersCalled()
+    {
+        $this->expectOutputString('onetwo404 Code');
+
+        $this->klein_app->respond(
+            function () {
+                echo 'one';
+            }
+        );
+        $this->klein_app->respond(
+            '404',
+            function () {
+                echo '404 Code';
+            }
+        );
+        $this->klein_app->respond(
+            function () {
+                echo 'two';
+            }
+        );
+
+        $this->klein_app->dispatch(
+            MockRequestFactory::create('/notroute')
+        );
+    }
+
     public function testMethodCatchAll()
     {
         $this->expectOutputString('yup!123');
@@ -1643,6 +1669,38 @@ class RoutingTest extends AbstractKleinTest
     public function testDispatchAbort()
     {
         $this->expectOutputString('1,');
+
+        $this->klein_app->respond(
+            function ($a, $b, $c, $d, $klein_app) {
+                echo '1,';
+            }
+        );
+        $this->klein_app->respond(
+            function ($a, $b, $c, $d, $klein_app) {
+                $klein_app->abort(404);
+                echo '2,';
+            }
+        );
+        $this->klein_app->respond(
+            function ($a, $b, $c, $d, $klein_app) {
+                echo '3,';
+            }
+        );
+
+        $this->klein_app->dispatch();
+
+        $this->assertSame(404, $this->klein_app->response()->code());
+    }
+
+    public function testDispatchAbortCallsHttpError()
+    {
+        $this->expectOutputString('1,aborted');
+
+        $this->klein_app->onHttpError(
+            function ($code, $klein_app) {
+                echo 'aborted';
+            }
+        );
 
         $this->klein_app->respond(
             function ($a, $b, $c, $d, $klein_app) {
