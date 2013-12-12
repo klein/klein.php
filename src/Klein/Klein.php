@@ -587,17 +587,24 @@ class Klein
             }
         }
 
+        // Handle our 404/405 conditions
         try {
             if ($matched->isEmpty() && count($methods_matched) > 0) {
-                if (strcasecmp($req_method, 'OPTIONS') !== 0) {
-                    $this->response->code(405);
-                }
-
+                // Add our methods to our allow header
                 $this->response->header('Allow', implode(', ', $methods_matched));
-            } elseif ($matched->isEmpty()) {
-                $this->response->code(404);
-            }
 
+                if (strcasecmp($req_method, 'OPTIONS') !== 0) {
+                    throw HttpException::createFromCode(405);
+                }
+            } elseif ($matched->isEmpty()) {
+                throw HttpException::createFromCode(404);
+            }
+        } catch (HttpExceptionInterface $e) {
+            // Call our http error handlers
+            $this->httpError($e);
+        }
+
+        try {
             if ($this->response->chunked) {
                 $this->response->chunk();
 
