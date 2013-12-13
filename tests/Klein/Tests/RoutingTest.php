@@ -15,6 +15,7 @@ namespace Klein\Tests;
 use Klein\App;
 use Klein\DataCollection\RouteCollection;
 use Klein\Exceptions\DispatchHaltedException;
+use Klein\Exceptions\HttpException;
 use Klein\Klein;
 use Klein\Request;
 use Klein\Response;
@@ -1743,6 +1744,24 @@ class RoutingTest extends AbstractKleinTest
         $this->klein_app->dispatch();
 
         $this->assertSame(404, $this->klein_app->response()->code());
+    }
+
+    public function testThrowHttpExceptionHandledProperly()
+    {
+        $this->expectOutputString('');
+
+        $this->klein_app->respond(
+            '/',
+            function ($a, $b, $c, $d, $klein_app) {
+                throw HttpException::createFromCode(400);
+
+                echo 'hi!';
+            }
+        );
+
+        $this->klein_app->dispatch();
+
+        $this->assertSame(400, $this->klein_app->response()->code());
     }
 
     public function testOptionsAlias()
