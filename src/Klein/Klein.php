@@ -490,12 +490,7 @@ class Klein
 
                 // Easily handle 40x's
                 // TODO: Possibly remove in future, here for backwards compatibility
-                $self = $this;
-                $this->onHttpError(
-                    function ($code, $klein, $matched, $methods_matched, $exception) use ($self, $route) {
-                        $self->handleRouteCallback($route, $matched, $methods_matched);
-                    }
-                );
+                $this->onHttpError($route);
 
                 continue;
 
@@ -887,7 +882,9 @@ class Klein
 
         if (count($this->httpErrorCallbacks) > 0) {
             foreach (array_reverse($this->httpErrorCallbacks) as $callback) {
-                if (is_callable($callback)) {
+                if ($callback instanceof Route) {
+                    $this->handleRouteCallback($callback, $matched, $methods_matched);
+                } elseif (is_callable($callback)) {
                     if (is_string($callback)) {
                         $callback(
                             $http_exception->getCode(),
