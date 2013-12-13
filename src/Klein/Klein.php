@@ -601,7 +601,7 @@ class Klein
             }
         } catch (HttpExceptionInterface $e) {
             // Call our http error handlers
-            $this->httpError($e);
+            $this->httpError($e, $matched, $methods_matched);
         }
 
         try {
@@ -795,6 +795,9 @@ class Klein
             }
         } catch (DispatchHaltedException $e) {
             throw $e;
+        } catch (HttpExceptionInterface $e) {
+            // Call our http error handlers
+            $this->httpError($e, $matched, $methods_matched);
         } catch (Exception $e) {
             $this->error($e);
         }
@@ -866,10 +869,12 @@ class Klein
      * Handles an HTTP error exception through our HTTP error callbacks
      *
      * @param HttpExceptionInterface $http_exception    The exception that occurred
+     * @param RouteCollection $matched                  The collection of routes that were matched in dispatch
+     * @param array $methods_matched                    The HTTP methods that were matched in dispatch
      * @access protected
      * @return void
      */
-    protected function httpError(HttpExceptionInterface $http_exception)
+    protected function httpError(HttpExceptionInterface $http_exception, RouteCollection $matched, $methods_matched)
     {
         if (!$this->response->isLocked()) {
             $this->response->code($http_exception->getCode());
@@ -879,9 +884,22 @@ class Klein
             foreach (array_reverse($this->httpErrorCallbacks) as $callback) {
                 if (is_callable($callback)) {
                     if (is_string($callback)) {
-                        $callback($http_exception->getCode(), $this, $http_exception);
+                        $callback(
+                            $http_exception->getCode(),
+                            $this,
+                            $matched,
+                            $methods_matched,
+                            $http_exception
+                        );
                     } else {
-                        call_user_func($callback, $http_exception->getCode(), $this, $http_exception);
+                        call_user_func(
+                            $callback,
+                            $http_exception->getCode(),
+                            $this,
+                            $matched,
+                            $methods_matched,
+                            $http_exception
+                        );
                     }
                 }
             }
