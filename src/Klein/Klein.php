@@ -489,8 +489,13 @@ class Klein
                    || ($path === '405' && $matched->isEmpty() && count($methods_matched) > 0)) {
 
                 // Easily handle 40x's
-
-                $this->handleRouteCallback($route, $matched, $methods_matched);
+                // TODO: Possibly remove in future, here for backwards compatibility
+                $self = $this;
+                $this->onHttpError(
+                    function ($code, $klein, $matched, $methods_matched, $exception) use ($self, $route) {
+                        $self->handleRouteCallback($route, $matched, $methods_matched);
+                    }
+                );
 
                 continue;
 
