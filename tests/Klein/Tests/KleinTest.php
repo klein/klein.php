@@ -257,17 +257,21 @@ class KleinTest extends AbstractKleinTest
         // Create expected arguments
         $num_of_args = 0;
         $expected_arguments = array(
-            'code'      => null,
-            'klein'     => null,
-            'exception' => null,
+            'code'            => null,
+            'klein'           => null,
+            'matched'         => null,
+            'methods_matched' => null,
+            'exception'       => null,
         );
 
         $this->klein_app->onHttpError(
-            function ($code, $klein, $exception) use (&$num_of_args, &$expected_arguments) {
+            function ($code, $klein, $matched, $methods_matched, $exception) use (&$num_of_args, &$expected_arguments) {
                 // Keep track of our arguments
                 $num_of_args = func_num_args();
                 $expected_arguments['code'] = $code;
                 $expected_arguments['klein'] = $klein;
+                $expected_arguments['matched'] = $matched;
+                $expected_arguments['methods_matched'] = $methods_matched;
                 $expected_arguments['exception'] = $exception;
 
                 $klein->response()->body($code .' error');
@@ -285,6 +289,8 @@ class KleinTest extends AbstractKleinTest
 
         $this->assertTrue(is_int($expected_arguments['code']));
         $this->assertTrue($expected_arguments['klein'] instanceof Klein);
+        $this->assertTrue($expected_arguments['matched'] instanceof RouteCollection);
+        $this->assertTrue(is_array($expected_arguments['methods_matched']));
         $this->assertTrue($expected_arguments['exception'] instanceof HttpExceptionInterface);
 
         $this->assertSame($expected_arguments['klein'], $this->klein_app);
@@ -295,7 +301,7 @@ class KleinTest extends AbstractKleinTest
         $this->klein_app->onHttpError('test_num_args_wrapper');
 
         $this->assertSame(
-            '3',
+            '5',
             $this->dispatchAndReturnOutput()
         );
     }
