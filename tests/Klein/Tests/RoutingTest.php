@@ -1276,6 +1276,47 @@ class RoutingTest extends AbstractKleinTest
         $this->assertSame(405, $this->klein_app->response()->code());
     }
 
+    public function test405ErrorHandler()
+    {
+        $resultArray = array();
+
+        $this->expectOutputString('_');
+
+        $this->klein_app->respond(
+            function () {
+                echo '_';
+            }
+        );
+        $this->klein_app->respond(
+            'GET',
+            null,
+            function () {
+                echo 'fail';
+            }
+        );
+        $this->klein_app->respond(
+            array('GET', 'POST'),
+            null,
+            function () {
+                echo 'fail';
+            }
+        );
+        $this->klein_app->onHttpError(
+            function ($code, $klein, $matched, $methods, $exception) use (&$resultArray) {
+                $resultArray = $methods;
+            }
+        );
+
+        $this->klein_app->dispatch(
+            MockRequestFactory::create('/sure', 'DELETE')
+        );
+
+        $this->assertCount(2, $resultArray);
+        $this->assertContains('GET', $resultArray);
+        $this->assertContains('POST', $resultArray);
+        $this->assertSame(405, $this->klein_app->response()->code());
+    }
+
     public function testOptionsDefaultRequest()
     {
         $this->klein_app->respond(
