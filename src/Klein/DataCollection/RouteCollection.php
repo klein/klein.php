@@ -118,22 +118,30 @@ class RouteCollection extends DataCollection
      * key name for that route to equal the routes name, if
      * its changed
      *
+     * Thankfully, because routes are all objects, this doesn't
+     * take much memory as its simply moving references around
+     *
      * @access public
      * @return RouteCollection
      */
     public function prepareNamed()
     {
+        // Create a new collection so we can keep our order
+        $prepared = new static();
+
         foreach ($this as $key => $route) {
             $route_name = $route->getName();
 
             if (null !== $route_name) {
-                // Remove the route from the collection
-                $this->remove($key);
-
-                // Add the route back to the set with the new name
-                $this->set($route_name, $route);
+                // Add the route to the new set with the new name
+                $prepared->set($route_name, $route);
+            } else {
+                $prepared->add($route);
             }
         }
+
+        // Replace our collection's items with our newly prepared collection's items
+        $this->replace($prepared->all());
 
         return $this;
     }
