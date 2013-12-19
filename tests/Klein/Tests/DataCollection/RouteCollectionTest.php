@@ -190,4 +190,31 @@ class RouteCollectionTest extends AbstractKleinTest
         $this->assertSame(count($original_keys), count($routes->keys()));
         $this->assertSame($sample_named_route, $routes->get($route_name));
     }
+
+    /**
+     * @dataProvider sampleDataProvider
+     */
+    public function testRouteOrderDoesntChangeAfterPreparing()
+    {
+        // Get the provided data dynamically
+        $array_of_routes = func_get_args();
+
+        // Set the number of times we should loop
+        $loop_num = 10;
+
+        // Loop a set number of times to check different permutations
+        for ($i = 0; $i < $loop_num; $i++) {
+            // Shuffle the sample routes array
+            shuffle($array_of_routes);
+
+            // Create our collection and prepare the routes
+            $routes = new RouteCollection($array_of_routes);
+            $routes->prepareNamed();
+
+            $this->assertSame(
+                array_values($routes->all()),
+                array_values($array_of_routes)
+            );
+        }
+    }
 }
