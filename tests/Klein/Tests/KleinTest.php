@@ -118,6 +118,35 @@ class KleinTest extends AbstractKleinTest
         $this->assertSame($route, $this->klein_app->routes()->get($object_id));
     }
 
+    public function testWith()
+    {
+        // Test data
+        $test_namespace = '/test/namespace';
+        $passed_context = null;
+
+        $this->klein_app->with(
+            $test_namespace,
+            function ($context) use (&$passed_context) {
+                $passed_context = $context;
+            }
+        );
+
+        $this->assertTrue($passed_context instanceof Klein);
+    }
+
+    public function testWithStringCallable()
+    {
+        // Test data
+        $test_namespace = '/test/namespace';
+
+        $this->klein_app->with(
+            $test_namespace,
+            'test_num_args_wrapper'
+        );
+
+        $this->expectOutputString('1');
+    }
+
     /**
      * Weird PHPUnit bug is causing scope errors for the
      * isolated process tests, unless I run this also in an
@@ -125,20 +154,11 @@ class KleinTest extends AbstractKleinTest
      *
      * @runInSeparateProcess
      */
-    public function testWith()
+    public function testWithUsingFileInclude()
     {
         // Test data
-        $test_context = $this;
         $test_namespace = '/test/namespace';
         $test_routes_include = __DIR__ .'/routes/random.php';
-
-        // Test callable and scope
-        $this->klein_app->with(
-            $test_namespace,
-            function ($context) use ($test_context) {
-                $test_context->assertTrue($context instanceof Klein);
-            }
-        );
 
         // Test file include
         $this->assertEmpty($this->klein_app->routes()->all());
