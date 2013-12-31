@@ -360,7 +360,11 @@ class Klein
         $this->route_factory->appendNamespace($namespace);
 
         if (is_callable($routes)) {
-            $routes($this);
+            if (is_string($routes)) {
+                $routes($this);
+            } else {
+                call_user_func($routes, $this);
+            }
         } else {
             require $routes;
         }
