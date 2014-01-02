@@ -310,7 +310,7 @@ class Klein
      * @param string $path              Route URI path to match
      * @param callable $callback        Callable callback method to execute on route match
      * @access public
-     * @return callable $callback
+     * @return Route
      */
     public function respond($method, $path = '*', $callback = null)
     {
@@ -944,7 +944,7 @@ class Klein
      * @param string $route
      * @param callable $callback
      * @access public
-     * @return callable
+     * @return Route
      */
     public function options($path = '*', $callback = null)
     {
@@ -964,7 +964,7 @@ class Klein
      * @param string $path
      * @param callable $callback
      * @access public
-     * @return callable
+     * @return Route
      */
     public function head($path = '*', $callback = null)
     {
@@ -984,7 +984,7 @@ class Klein
      * @param string $route
      * @param callable $callback
      * @access public
-     * @return callable
+     * @return Route
      */
     public function get($path = '*', $callback = null)
     {
@@ -1004,7 +1004,7 @@ class Klein
      * @param string $path
      * @param callable $callback
      * @access public
-     * @return callable
+     * @return Route
      */
     public function post($path = '*', $callback = null)
     {
@@ -1024,7 +1024,7 @@ class Klein
      * @param string $path
      * @param callable $callback
      * @access public
-     * @return callable
+     * @return Route
      */
     public function put($path = '*', $callback = null)
     {
@@ -1044,7 +1044,7 @@ class Klein
      * @param string $path
      * @param callable $callback
      * @access public
-     * @return callable
+     * @return Route
      */
     public function delete($path = '*', $callback = null)
     {
