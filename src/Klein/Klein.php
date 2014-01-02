@@ -1056,4 +1056,27 @@ class Klein
 
         return $this->respond('DELETE', $path, $callback);
     }
+
+    /**
+     * PATCH alias for "respond()"
+     *
+     * PATCH was added to HTTP/1.1 in RFC5789
+     *
+     * @link http://tools.ietf.org/html/rfc5789
+     * @see Klein::respond()
+     * @param string $path
+     * @param callable $callback
+     * @access public
+     * @return Route
+     */
+    public function patch($path = '*', $callback = null)
+    {
+        // Get the arguments in a very loose format
+        extract(
+            $this->parseLooseArgumentOrder(func_get_args()),
+            EXTR_OVERWRITE
+        );
+
+        return $this->respond('PATCH', $path, $callback);
+    }
 }
