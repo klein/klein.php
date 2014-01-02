@@ -455,4 +455,13 @@ class KleinTest extends AbstractKleinTest
         $this->assertTrue($route instanceof Route);
         $this->assertSame('DELETE', $route->getMethod());
     }
+
+    public function testPatch()
+    {
+        $route = $this->klein_app->patch($this->getTestCallable());
+
+        $this->assertNotNull($route);
+        $this->assertTrue($route instanceof Route);
+        $this->assertSame('PATCH', $route->getMethod());
+    }
 }
