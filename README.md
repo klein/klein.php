@@ -58,7 +58,7 @@ $klein->respond('/[:name]', function ($request) {
 
 ```php
 $klein->respond('GET', '/posts', $callback);
-$klein->respond('POST', '/posts/create', $callback);
+$klein->respond('POST', '/posts', $callback);
 $klein->respond('PUT', '/posts/[i:id]', $callback);
 $klein->respond('DELETE', '/posts/[i:id]', $callback);
 $klein->respond('OPTIONS', null, $callback);
