@@ -3,6 +3,7 @@ php:
   - 5.3
   - 5.4
   - 5.5
+  - hhvm
 
 before_script:
   - composer install --prefer-dist --dev
@@ -10,3 +11,8 @@ before_script:
 script:
   - ./vendor/bin/phpunit
   - ./vendor/bin/phpcs --standard=PSR2 --encoding=utf-8 -p src/ tests/
+
+matrix:
+  allow_failures:
+    - php: hhvm
+  fast_finish: true
