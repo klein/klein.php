@@ -27,6 +27,6 @@
    "require-dev": {
       "phpunit/phpunit": "3.7.x",
       "phpunit/php-code-coverage": "1.2.x",
-      "squizlabs/php_codesniffer": "1.4.6"
+      "squizlabs/php_codesniffer": "1.4.8"
    }
 }
