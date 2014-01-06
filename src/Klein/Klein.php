@@ -600,8 +600,16 @@ class Klein
                 throw HttpException::createFromCode(404);
             }
         } catch (HttpExceptionInterface $e) {
+            // Grab our original response lock state
+            $locked = $this->response->isLocked();
+
             // Call our http error handlers
             $this->httpError($e, $matched, $methods_matched);
+
+            // Make sure we return our response to its original lock state
+            if (!$locked) {
+                $this->response->unlock();
+            }
         }
 
         try {
@@ -853,6 +861,10 @@ class Klein
             $this->response->code(500);
             throw new UnhandledException($err);
         }
+
+        // Lock our response, since we probably don't want
+        // anything else messing with our error code/body
+        $this->response->lock();
     }
 
     /**
@@ -908,6 +920,10 @@ class Klein
                 }
             }
         }
+
+        // Lock our response, since we probably don't want
+        // anything else messing with our error code/body
+        $this->response->lock();
     }
 
     /**
