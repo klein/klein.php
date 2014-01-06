@@ -798,6 +798,8 @@ class Klein
         } catch (HttpExceptionInterface $e) {
             // Call our http error handlers
             $this->httpError($e, $matched, $methods_matched);
+
+            throw new DispatchHaltedException();
         } catch (Exception $e) {
             $this->error($e);
         }
