@@ -1805,6 +1805,28 @@ class RoutingTest extends AbstractKleinTest
         $this->assertSame(400, $this->klein_app->response()->code());
     }
 
+    public function testHttpExceptionStopsRouteMatching()
+    {
+        $this->expectOutputString('one');
+
+        $this->klein_app->respond(
+            function () {
+                echo 'one';
+
+                throw HttpException::createFromCode(404);
+            }
+        );
+        $this->klein_app->respond(
+            function () {
+                echo 'two';
+            }
+        );
+
+        $this->klein_app->dispatch(
+            MockRequestFactory::create('/notroute')
+        );
+    }
+
     public function testOptionsAlias()
     {
         $this->expectOutputString('1,2,');
