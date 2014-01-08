@@ -18,6 +18,8 @@ use \Klein\DataCollection\RouteCollection;
 use \Klein\Exceptions\LockedResponseException;
 use \Klein\Exceptions\UnhandledException;
 use \Klein\Exceptions\DispatchHaltedException;
+use \Klein\Exceptions\HttpException;
+use \Klein\Exceptions\HttpExceptionInterface;
 
 /**
  * Klein
@@ -120,6 +122,14 @@ class Klein
      * @access protected
      */
     protected $errorCallbacks = array();
+
+    /**
+     * An array of HTTP error callback callables
+     *
+     * @var array[callable]
+     * @access protected
+     */
+    protected $httpErrorCallbacks = array();
 
     /**
      * An array of callbacks to call after processing the dispatch loop
@@ -479,8 +489,8 @@ class Klein
                    || ($path === '405' && $matched->isEmpty() && count($methods_matched) > 0)) {
 
                 // Easily handle 40x's
-
-                $this->handleRouteCallback($route, $matched, $methods_matched);
+                // TODO: Possibly remove in future, here for backwards compatibility
+                $this->onHttpError($route);
 
                 continue;
 
@@ -577,17 +587,32 @@ class Klein
             }
         }
 
+        // Handle our 404/405 conditions
         try {
             if ($matched->isEmpty() && count($methods_matched) > 0) {
-                if (strcasecmp($req_method, 'OPTIONS') !== 0) {
-                    $this->response->code(405);
-                }
-
+                // Add our methods to our allow header
                 $this->response->header('Allow', implode(', ', $methods_matched));
-            } elseif ($matched->isEmpty()) {
-                $this->response->code(404);
-            }
 
+                if (strcasecmp($req_method, 'OPTIONS') !== 0) {
+                    throw HttpException::createFromCode(405);
+                }
+            } elseif ($matched->isEmpty()) {
+                throw HttpException::createFromCode(404);
+            }
+        } catch (HttpExceptionInterface $e) {
+            // Grab our original response lock state
+            $locked = $this->response->isLocked();
+
+            // Call our http error handlers
+            $this->httpError($e, $matched, $methods_matched);
+
+            // Make sure we return our response to its original lock state
+            if (!$locked) {
+                $this->response->unlock();
+            }
+        }
+
+        try {
             if ($this->response->chunked) {
                 $this->response->chunk();
 
@@ -778,6 +803,11 @@ class Klein
             }
         } catch (DispatchHaltedException $e) {
             throw $e;
+        } catch (HttpExceptionInterface $e) {
+            // Call our http error handlers
+            $this->httpError($e, $matched, $methods_matched);
+
+            throw new DispatchHaltedException();
         } catch (Exception $e) {
             $this->error($e);
         }
@@ -831,6 +861,69 @@ class Klein
             $this->response->code(500);
             throw new UnhandledException($err);
         }
+
+        // Lock our response, since we probably don't want
+        // anything else messing with our error code/body
+        $this->response->lock();
+    }
+
+    /**
+     * Adds an HTTP error callback to the stack of HTTP error handlers
+     *
+     * @param callable $callback            The callable function to execute in the error handling chain
+     * @access public
+     * @return void
+     */
+    public function onHttpError($callback)
+    {
+        $this->httpErrorCallbacks[] = $callback;
+    }
+
+    /**
+     * Handles an HTTP error exception through our HTTP error callbacks
+     *
+     * @param HttpExceptionInterface $http_exception    The exception that occurred
+     * @param RouteCollection $matched                  The collection of routes that were matched in dispatch
+     * @param array $methods_matched                    The HTTP methods that were matched in dispatch
+     * @access protected
+     * @return void
+     */
+    protected function httpError(HttpExceptionInterface $http_exception, RouteCollection $matched, $methods_matched)
+    {
+        if (!$this->response->isLocked()) {
+            $this->response->code($http_exception->getCode());
+        }
+
+        if (count($this->httpErrorCallbacks) > 0) {
+            foreach (array_reverse($this->httpErrorCallbacks) as $callback) {
+                if ($callback instanceof Route) {
+                    $this->handleRouteCallback($callback, $matched, $methods_matched);
+                } elseif (is_callable($callback)) {
+                    if (is_string($callback)) {
+                        $callback(
+                            $http_exception->getCode(),
+                            $this,
+                            $matched,
+                            $methods_matched,
+                            $http_exception
+                        );
+                    } else {
+                        call_user_func(
+                            $callback,
+                            $http_exception->getCode(),
+                            $this,
+                            $matched,
+                            $methods_matched,
+                            $http_exception
+                        );
+                    }
+                }
+            }
+        }
+
+        // Lock our response, since we probably don't want
+        // anything else messing with our error code/body
+        $this->response->lock();
     }
 
     /**

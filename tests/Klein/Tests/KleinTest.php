@@ -15,6 +15,8 @@ use Exception;
 use Klein\App;
 use Klein\DataCollection\RouteCollection;
 use Klein\Exceptions\DispatchHaltedException;
+use Klein\Exceptions\HttpException;
+use Klein\Exceptions\HttpExceptionInterface;
 use Klein\Klein;
 use Klein\Request;
 use Klein\Response;
@@ -240,7 +242,7 @@ class KleinTest extends AbstractKleinTest
         $this->assertEmpty($this->klein_app->service()->flashes());
 
         $this->assertSame(
-            null,
+            '',
             $this->dispatchAndReturnOutput()
         );
 
@@ -248,6 +250,70 @@ class KleinTest extends AbstractKleinTest
 
         // Clean up
         session_destroy();
+    }
+
+    public function testOnHttpError()
+    {
+        // Create expected arguments
+        $num_of_args = 0;
+        $expected_arguments = array(
+            'code'            => null,
+            'klein'           => null,
+            'matched'         => null,
+            'methods_matched' => null,
+            'exception'       => null,
+        );
+
+        $this->klein_app->onHttpError(
+            function ($code, $klein, $matched, $methods_matched, $exception) use (&$num_of_args, &$expected_arguments) {
+                // Keep track of our arguments
+                $num_of_args = func_num_args();
+                $expected_arguments['code'] = $code;
+                $expected_arguments['klein'] = $klein;
+                $expected_arguments['matched'] = $matched;
+                $expected_arguments['methods_matched'] = $methods_matched;
+                $expected_arguments['exception'] = $exception;
+
+                $klein->response()->body($code .' error');
+            }
+        );
+
+        $this->klein_app->dispatch(null, null, false);
+
+        $this->assertSame(
+            '404 error',
+            $this->klein_app->response()->body()
+        );
+
+        $this->assertSame(count($expected_arguments), $num_of_args);
+
+        $this->assertTrue(is_int($expected_arguments['code']));
+        $this->assertTrue($expected_arguments['klein'] instanceof Klein);
+        $this->assertTrue($expected_arguments['matched'] instanceof RouteCollection);
+        $this->assertTrue(is_array($expected_arguments['methods_matched']));
+        $this->assertTrue($expected_arguments['exception'] instanceof HttpExceptionInterface);
+
+        $this->assertSame($expected_arguments['klein'], $this->klein_app);
+    }
+
+    public function testOnHttpErrorWithStringCallables()
+    {
+        $this->klein_app->onHttpError('test_num_args_wrapper');
+
+        $this->assertSame(
+            '5',
+            $this->dispatchAndReturnOutput()
+        );
+    }
+
+    public function testOnHttpErrorWithBadCallables()
+    {
+        $this->klein_app->onError('this_function_doesnt_exist');
+
+        $this->assertSame(
+            '',
+            $this->dispatchAndReturnOutput()
+        );
     }
 
     public function testAfterDispatch()

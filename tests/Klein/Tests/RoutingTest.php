@@ -15,6 +15,7 @@ namespace Klein\Tests;
 use Klein\App;
 use Klein\DataCollection\RouteCollection;
 use Klein\Exceptions\DispatchHaltedException;
+use Klein\Exceptions\HttpException;
 use Klein\Klein;
 use Klein\Request;
 use Klein\Response;
@@ -814,6 +815,32 @@ class RoutingTest extends AbstractKleinTest
         );
     }
 
+    public function test404RouteDefinitionOrderDoesntEffectWhen404HandlersCalled()
+    {
+        $this->expectOutputString('onetwo404 Code');
+
+        $this->klein_app->respond(
+            function () {
+                echo 'one';
+            }
+        );
+        $this->klein_app->respond(
+            '404',
+            function () {
+                echo '404 Code';
+            }
+        );
+        $this->klein_app->respond(
+            function () {
+                echo 'two';
+            }
+        );
+
+        $this->klein_app->dispatch(
+            MockRequestFactory::create('/notroute')
+        );
+    }
+
     public function testMethodCatchAll()
     {
         $this->expectOutputString('yup!123');
@@ -1249,6 +1276,47 @@ class RoutingTest extends AbstractKleinTest
         $this->assertSame(405, $this->klein_app->response()->code());
     }
 
+    public function test405ErrorHandler()
+    {
+        $resultArray = array();
+
+        $this->expectOutputString('_');
+
+        $this->klein_app->respond(
+            function () {
+                echo '_';
+            }
+        );
+        $this->klein_app->respond(
+            'GET',
+            null,
+            function () {
+                echo 'fail';
+            }
+        );
+        $this->klein_app->respond(
+            array('GET', 'POST'),
+            null,
+            function () {
+                echo 'fail';
+            }
+        );
+        $this->klein_app->onHttpError(
+            function ($code, $klein, $matched, $methods, $exception) use (&$resultArray) {
+                $resultArray = $methods;
+            }
+        );
+
+        $this->klein_app->dispatch(
+            MockRequestFactory::create('/sure', 'DELETE')
+        );
+
+        $this->assertCount(2, $resultArray);
+        $this->assertContains('GET', $resultArray);
+        $this->assertContains('POST', $resultArray);
+        $this->assertSame(405, $this->klein_app->response()->code());
+    }
+
     public function testOptionsDefaultRequest()
     {
         $this->klein_app->respond(
@@ -1666,6 +1734,38 @@ class RoutingTest extends AbstractKleinTest
         $this->assertSame(404, $this->klein_app->response()->code());
     }
 
+    public function testDispatchAbortCallsHttpError()
+    {
+        $this->expectOutputString('1,aborted');
+
+        $this->klein_app->onHttpError(
+            function ($code, $klein_app) {
+                echo 'aborted';
+            }
+        );
+
+        $this->klein_app->respond(
+            function ($a, $b, $c, $d, $klein_app) {
+                echo '1,';
+            }
+        );
+        $this->klein_app->respond(
+            function ($a, $b, $c, $d, $klein_app) {
+                $klein_app->abort(404);
+                echo '2,';
+            }
+        );
+        $this->klein_app->respond(
+            function ($a, $b, $c, $d, $klein_app) {
+                echo '3,';
+            }
+        );
+
+        $this->klein_app->dispatch();
+
+        $this->assertSame(404, $this->klein_app->response()->code());
+    }
+
     /**
      * @expectedException Klein\Exceptions\DispatchHaltedException
      */
@@ -1685,6 +1785,46 @@ class RoutingTest extends AbstractKleinTest
         $this->klein_app->dispatch();
 
         $this->assertSame(404, $this->klein_app->response()->code());
+    }
+
+    public function testThrowHttpExceptionHandledProperly()
+    {
+        $this->expectOutputString('');
+
+        $this->klein_app->respond(
+            '/',
+            function ($a, $b, $c, $d, $klein_app) {
+                throw HttpException::createFromCode(400);
+
+                echo 'hi!';
+            }
+        );
+
+        $this->klein_app->dispatch();
+
+        $this->assertSame(400, $this->klein_app->response()->code());
+    }
+
+    public function testHttpExceptionStopsRouteMatching()
+    {
+        $this->expectOutputString('one');
+
+        $this->klein_app->respond(
+            function () {
+                echo 'one';
+
+                throw HttpException::createFromCode(404);
+            }
+        );
+        $this->klein_app->respond(
+            function () {
+                echo 'two';
+            }
+        );
+
+        $this->klein_app->dispatch(
+            MockRequestFactory::create('/notroute')
+        );
     }
 
     public function testOptionsAlias()
