@@ -620,20 +620,32 @@ class Klein
                 // Output capturing behavior
                 switch($capture) {
                     case self::DISPATCH_CAPTURE_AND_RETURN:
-                        return ob_get_clean();
+                        $buffed_content = null;
+                        if (ob_get_level()) {
+                            $buffed_content = ob_get_clean();
+                        }
+                        return $buffed_content;
                         break;
                     case self::DISPATCH_CAPTURE_AND_REPLACE:
-                        $this->response->body(ob_get_clean());
+                        if (ob_get_level()) {
+                            $this->response->body(ob_get_clean());
+                        }
                         break;
                     case self::DISPATCH_CAPTURE_AND_PREPEND:
-                        $this->response->prepend(ob_get_clean());
+                        if (ob_get_level()) {
+                            $this->response->prepend(ob_get_clean());
+                        }
                         break;
                     case self::DISPATCH_CAPTURE_AND_APPEND:
-                        $this->response->append(ob_get_clean());
+                        if (ob_get_level()) {
+                            $this->response->append(ob_get_clean());
+                        }
                         break;
                     case self::DISPATCH_NO_CAPTURE:
                     default:
-                        ob_end_flush();
+                        if (ob_get_level()) {
+                            ob_end_flush();
+                        }
                 }
             }
 
