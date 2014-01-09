@@ -78,8 +78,6 @@ class Response extends AbstractResponse
         $this->body('');
         $this->noCache();
 
-        set_time_limit(1200);
-
         if (null === $filename) {
             $filename = basename($path);
         }
@@ -110,8 +108,6 @@ class Response extends AbstractResponse
     {
         $this->body('');
         $this->noCache();
-
-        set_time_limit(1200);
 
         $json = json_encode($object);
 
