@@ -239,16 +239,21 @@ class ServiceProvider
     }
 
     /**
-     * Escapes a string
+     * Escapes a string for UTF-8 HTML displaying
+     *
+     * This is a quick macro for escaping strings designed
+     * to be shown in a UTF-8 HTML environment. Its options
+     * are otherwise limited by design
      *
      * @param string $str   The string to escape
+     * @param int $flags    A bitmask of `htmlentities()` compatible flags
      * @static
      * @access public
-     * @return void
+     * @return string
      */
-    public static function escape($str)
+    public static function escape($str, $flags = ENT_QUOTES)
     {
-        return htmlentities($str, ENT_QUOTES, 'UTF-8');
+        return htmlentities($str, $flags, 'UTF-8');
     }
 
     /**
