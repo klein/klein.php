@@ -239,7 +239,11 @@ class ServiceProvider
     }
 
     /**
-     * Escapes a string
+     * Escapes a string for UTF-8 HTML displaying
+     *
+     * This is a quick macro for escaping strings designed
+     * to be shown in a UTF-8 HTML environment. Its options
+     * are otherwise limited by design
      *
      * @param string $str   The string to escape
      * @param int $flags    A bitmask of `htmlentities()` compatible flags
