@@ -67,6 +67,15 @@ class Response extends AbstractResponse
     /**
      * Sends a file
      *
+     * It should be noted that this method disables caching
+     * of the response by default, as dynamically created
+     * files responses are usually downloads of some type
+     * and rarely make sense to be HTTP cached
+     *
+     * Also, this method removes any data/content that is
+     * currently in the response body and replaces it with
+     * the file's data
+     *
      * @param string $path      The path of the file to send
      * @param string $filename  The file's name
      * @param string $mimetype  The MIME type of the file
@@ -77,8 +86,6 @@ class Response extends AbstractResponse
     {
         $this->body('');
         $this->noCache();
-
-        set_time_limit(1200);
 
         if (null === $filename) {
             $filename = basename($path);
@@ -101,6 +108,14 @@ class Response extends AbstractResponse
     /**
      * Sends an object as json or jsonp by providing the padding prefix
      *
+     * It should be noted that this method disables caching
+     * of the response by default, as json responses are usually
+     * dynamic and rarely make sense to be HTTP cached
+     *
+     * Also, this method removes any data/content that is
+     * currently in the response body and replaces it with
+     * the passed json encoded object
+     *
      * @param mixed $object         The data to encode as JSON
      * @param string $jsonp_prefix  The name of the JSON-P function prefix
      * @access public
@@ -110,8 +125,6 @@ class Response extends AbstractResponse
     {
         $this->body('');
         $this->noCache();
-
-        set_time_limit(1200);
 
         $json = json_encode($object);
 
