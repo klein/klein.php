@@ -245,7 +245,7 @@ class ServiceProvider
      * @param int $flags    A bitmask of `htmlentities()` compatible flags
      * @static
      * @access public
-     * @return void
+     * @return string
      */
     public static function escape($str, $flags = ENT_QUOTES)
     {
