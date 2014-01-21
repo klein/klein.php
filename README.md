@@ -107,7 +107,7 @@ $klein->respond(function ($request, $response, $service, $app) use ($klein) {
         $klein->service()->back();
     });
 
-    // The third parameter can be used to share scope and global objects
+    // The fourth parameter can be used to share scope and global objects
     $app->db = new PDO(...);
 
     // $app also can store lazy services, e.g. if you don't want to
