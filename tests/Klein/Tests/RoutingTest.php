@@ -70,7 +70,7 @@ class RoutingTest extends AbstractKleinTest
     public function testCallbackArguments()
     {
         // Create expected objects
-        $expected_objects = array(
+        $expected = array(
             'request'         => null,
             'response'        => null,
             'service'         => null,
@@ -81,32 +81,32 @@ class RoutingTest extends AbstractKleinTest
         );
 
         $this->klein_app->respond(
-            function ($request, $response, $service, $app, $klein, $matched, $methods_matched) use (&$expected_objects) {
-                $expected_objects['request']         = $request;
-                $expected_objects['response']        = $response;
-                $expected_objects['service']         = $service;
-                $expected_objects['app']             = $app;
-                $expected_objects['klein']           = $klein;
-                $expected_objects['matched']         = $matched;
-                $expected_objects['methods_matched'] = $methods_matched;
+            function ($request, $response, $service, $app, $klein, $matched, $methods_matched) use (&$expected) {
+                $expected['request']         = $request;
+                $expected['response']        = $response;
+                $expected['service']         = $service;
+                $expected['app']             = $app;
+                $expected['klein']           = $klein;
+                $expected['matched']         = $matched;
+                $expected['methods_matched'] = $methods_matched;
             }
         );
 
         $this->klein_app->dispatch();
 
-        $this->assertTrue($expected_objects['request'] instanceof Request);
-        $this->assertTrue($expected_objects['response'] instanceof Response);
-        $this->assertTrue($expected_objects['service'] instanceof ServiceProvider);
-        $this->assertTrue($expected_objects['app'] instanceof App);
-        $this->assertTrue($expected_objects['klein'] instanceof Klein);
-        $this->assertTrue($expected_objects['matched'] instanceof RouteCollection);
-        $this->assertTrue(is_array($expected_objects['methods_matched']));
+        $this->assertTrue($expected['request'] instanceof Request);
+        $this->assertTrue($expected['response'] instanceof Response);
+        $this->assertTrue($expected['service'] instanceof ServiceProvider);
+        $this->assertTrue($expected['app'] instanceof App);
+        $this->assertTrue($expected['klein'] instanceof Klein);
+        $this->assertTrue($expected['matched'] instanceof RouteCollection);
+        $this->assertTrue(is_array($expected['methods_matched']));
 
-        $this->assertSame($expected_objects['request'], $this->klein_app->request());
-        $this->assertSame($expected_objects['response'], $this->klein_app->response());
-        $this->assertSame($expected_objects['service'], $this->klein_app->service());
-        $this->assertSame($expected_objects['app'], $this->klein_app->app());
-        $this->assertSame($expected_objects['klein'], $this->klein_app);
+        $this->assertSame($expected['request'], $this->klein_app->request());
+        $this->assertSame($expected['response'], $this->klein_app->response());
+        $this->assertSame($expected['service'], $this->klein_app->service());
+        $this->assertSame($expected['app'], $this->klein_app->app());
+        $this->assertSame($expected['klein'], $this->klein_app);
     }
 
     public function testCallbackArgumentsAreNullWhenUndefined() {
