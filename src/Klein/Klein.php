@@ -804,8 +804,8 @@ class Klein
 
             $method_params = GetParameters::forMethod($route->getCallback());
 
-            $args = array_map(function($name) use($sources) {
-              return array_key_exists($name, $sources) ? $sources[$name] : null;
+            $args = array_map(function ($name) use ($sources) {
+                return array_key_exists($name, $sources) ? $sources[$name] : null;
             }, $method_params);
 
             $returned = call_user_func_array($route->getCallback(), $args);
