@@ -452,8 +452,8 @@ class KleinTest extends AbstractKleinTest
         $test_code = 503;
 
         $this->klein_app->respond(
-            function ($a, $b, $c, $d, $klein_app) use ($test_code) {
-                $klein_app->abort($test_code);
+            function ($klein) use ($test_code) {
+                $klein->abort($test_code);
             }
         );
 
