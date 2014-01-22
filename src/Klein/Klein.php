@@ -792,16 +792,23 @@ class Klein
     {
         // Handle the callback
         try {
-            $returned = call_user_func(
-                $route->getCallback(), // Instead of relying on the slower "invoke" magic
-                $this->request,
-                $this->response,
-                $this->service,
-                $this->app,
-                $this, // Pass the Klein instance
-                $matched,
-                $methods_matched
+            $sources = array(
+              'request' => $this->request,
+              'response' => $this->response,
+              'service' => $this->service,
+              'app' => $this->app,
+              'klein' => $this,
+              'matched' => $matched,
+              'methods_matched' => $methods_matched
             );
+
+            $method_params = GetParameters::forMethod($route->getCallback());
+
+            $args = array_map(function ($name) use ($sources) {
+                return array_key_exists($name, $sources) ? $sources[$name] : null;
+            }, $method_params);
+
+            $returned = call_user_func_array($route->getCallback(), $args);
 
             if ($returned instanceof AbstractResponse) {
                 $this->response = $returned;
