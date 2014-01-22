@@ -109,6 +109,20 @@ class RoutingTest extends AbstractKleinTest
         $this->assertSame($expected_objects['klein'], $this->klein_app);
     }
 
+    public function testCallbackArgumentsAreNullWhenUndefined() {
+      $expected_objects = array(
+        'foobar' => true
+      );
+
+      $this->klein_app->respond(function($foobar) use (&$expected_objects) {
+        $expected_objects['foobar'] = $foobar;
+      });
+
+      $this->klein_app->dispatch();
+
+      $this->assertNull($expected_objects['foobar']);
+    }
+
     public function testAppReference()
     {
         $this->expectOutputString('ab');
