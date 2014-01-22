@@ -11,10 +11,14 @@ class GetParameters {
   private $reflection;
 
   public function __construct($callable) {
-    if( is_array($callable) ) {
-      $this->reflection = new \ReflectionMethod($callable[0], $callable[1]);
-    }else {
-      $this->reflection = new \ReflectionFunction($callable);
+    try {
+      if( is_array($callable) ) {
+        $this->reflection = new \ReflectionMethod($callable[0], $callable[1]);
+      }else {
+        $this->reflection = new \ReflectionFunction($callable);
+      }
+    }catch (\ReflectionException $e) {
+      $this->reflection = new \ReflectionFunction(function() {});
     }
   }
 

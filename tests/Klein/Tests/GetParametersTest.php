@@ -28,4 +28,9 @@ class GetParametersTest extends AbstractKleinTest {
     $this->assertEquals(array('foo', 'bar', 'baz'), $params);
   }
 
+  public function testReturnsEmptyArrayForMissingFunction() {
+    $params = GetParameters::forMethod('missing_for_lols');
+    $this->assertEquals(array(), $params);
+  }
+
 }
