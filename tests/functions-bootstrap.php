@@ -50,3 +50,10 @@ function test_response_edit_wrapper($klein)
 {
     $klein->response()->body('after callbacks!');
 }
+
+function parameter_foobar($foo, $bar) {}
+
+class ParameterFooBar {
+  public function barBaz($bar, $baz) {}
+  public static function fooBarBaz($foo, $bar, $baz) {}
+}
