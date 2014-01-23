@@ -22,7 +22,9 @@ Some more complicated examples
     /output.[xml|json:format]? // Matches "/output", "output.xml", "output.json"
     /[:controller]?/[:action]? // Matches the typical /controller/action format
 
-**Note** - *all* routes that match the request URI are called - this
+## Matching Multiple Routes
+
+*All* routes that match the request URI are called - this
 allows you to incorporate complex conditional logic such as user
 authentication or view layouts. e.g. as a basic example, the following
 code will wrap other routes with a header and footer
@@ -32,6 +34,30 @@ $klein->respond('*', function ($request, $response, $service) { $service->render
 //other routes
 $klein->respond('*', function ($request, $response, $service) { $service->render('footer.phtml'); });
 ```
+
+In some cases, you may need to override this matching behavior.  For instance, if you have several specific routes, followed by a much broader route.
+
+```php
+// Backend (Admin panel)
+
+$klein->respond('/admin/?', function ($request, $response, $service) {
+   if(isAdmin()) {
+      $service->render('admin.phtml');
+   } else {
+      permissionDenied();
+   }
+});
+
+// Main Views
+
+$klein->respond('/[:page]/?', function ($request, $response, $service) {
+    $service->render($request->page.'.phtml');
+});
+```
+
+The code above will match both routes, for `/admin` and render both views, making a big mess.  You can either call `$klein->skipRemaining()` to skip the other routes, or you could call `$response->send()`.  It looks like either would accomplish the goal, but I'm not sure what the difference in effect would be, or the scenarios where one is more appropriate than the other.
+
+## Matching Partial URIs
 
 Routes automatically match the entire request URI. If you need to match
 only a part of the request URI or use a custom regular expression, use the `@` operator. If you need to
