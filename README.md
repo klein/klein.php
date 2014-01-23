@@ -40,25 +40,25 @@ $klein->dispatch();
 
 ## Manual
 
-### Routes
+#### Routes
 + [Examples](manual/Examples.md)
 + [Route Namespaces](manual/Route_Namespaces.md)
 + [Routing](manual/Routing.md)
 + [HTTP Errors](manual/HTTP_Errors.md)
 
-### Services
+#### Services
 + [Lazy Services](manual/Routing.md)
 + [Validators](manual/Validators.md)
 
-### Views
+#### Views
 + [Views](manual/Views.md)
 + [Flash Messages](manual/Flash_Messages.md)
 
-### Advanced Installation and Configuration
+#### Advanced Installation and Configuration
 + [Sub-Directory Installation](manual/Sub-Directory_Installation.md)
 + [URL Rewrite Config](manual/URL_rewrite.md)
 
-### Development
+#### Development
 + [API](manual/API.md)
 + [Unit Testing](manual/Unit_Testing.md)
 + [Contributing](CONTRIBUTING.md)
