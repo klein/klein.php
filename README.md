@@ -46,6 +46,7 @@ $klein->dispatch();
 + [Validators](manual/Validators.md)
 + [Routing](manual/Routing.md)
 + [Views](manual/Views.md)
++ [Flash Messages](manual/Views.md)
 + [HTTP Errors](manual/HTTP_Errors.md)
 + [Sub-Directory Installation](manual/Sub-Directory_Installation.md)
 + [URL Rewrite Config](manual/URL_rewrite.md)
