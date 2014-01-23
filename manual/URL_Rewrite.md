@@ -20,7 +20,7 @@ If you're trying to route requests for an app that is *not* in the document root
 
     <?php
        define('APP_PATH', '/your/webapp');
-       dispatch(substr($_SERVER['REQUEST_URI'], strlen(APP_PATH)));
+       $klein->dispatch(substr($_SERVER['REQUEST_URI'], strlen(APP_PATH)));
     ?>
 
 Then in your `nginx.conf` file, use:
