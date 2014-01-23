@@ -48,6 +48,7 @@ $klein->dispatch();
 + [Views](manual/Views.md)
 + [HTTP Errors](manual/HTTP_Errors.md)
 + [Sub-Directory Installation](manual/Sub-Directory_Installation.md)
++ [URL Rewrite Config](manual/URL_rewrite.md)
 + [API](manual/API.md)
 + [Unit Testing](manual/Unit_Testing.md)
 + [Contributing](CONTRIBUTING.md)
