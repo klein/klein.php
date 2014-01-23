@@ -38,16 +38,16 @@ $klein->respond('GET', '/hello-world', function () {
 $klein->dispatch();
 ```
 
-## Documentation
+## Manual
 
-+ [Examples](docs/Examples.md)
-+ [Route Namespaces](docs/Route_Namespaces.md)
-+ [Lazy Services](docs/Routing.md)
-+ [Validators](docs/Validators.md)
-+ [Routing](docs/Routing.md)
-+ [Views](docs/Views.md)
-+ [API](docs/API.md)
-+ [Unit Testing](docs/Unit_Testing.md)
++ [Examples](manual/Examples.md)
++ [Route Namespaces](manual/Route_Namespaces.md)
++ [Lazy Services](manual/Routing.md)
++ [Validators](manual/Validators.md)
++ [Routing](manual/Routing.md)
++ [Views](manual/Views.md)
++ [API](manual/API.md)
++ [Unit Testing](manual/Unit_Testing.md)
 + [Contributing](CONTRIBUTING.md)
 
 ## Contributors
