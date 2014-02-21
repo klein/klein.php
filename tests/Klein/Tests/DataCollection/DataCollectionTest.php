@@ -323,9 +323,9 @@ class DataCollectionTest extends AbstractKleinTest
      */
     public function testMagicIsset($sample_data, $data_collection)
     {
-        $this->assertTrue(isset($data_collection->{"id"}));
-        $this->assertTrue(isset($data_collection->{"name"}));
-        $this->assertTrue(isset($data_collection->{"float"}));
+        $this->assertTrue(isset($data_collection->id));
+        $this->assertTrue(isset($data_collection->name));
+        $this->assertTrue(isset($data_collection->float));
         $this->assertFalse(isset($data_collection->{static::$nonexistent_key}));
     }
 
@@ -334,11 +334,11 @@ class DataCollectionTest extends AbstractKleinTest
      */
     public function testMagicUnset($sample_data, $data_collection)
     {
-        $this->assertTrue(isset($data_collection->{"id"}));
+        $this->assertTrue(isset($data_collection->id));
 
-        unset($data_collection->{"id"});
+        unset($data_collection->id);
 
-        $this->assertFalse(isset($data_collection->{"id"}));
+        $this->assertFalse(isset($data_collection->id));
     }
 
     /**
