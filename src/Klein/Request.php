@@ -434,8 +434,7 @@ class Request
     public function uri()
     {
         $p = $this->server->get('PATH_INFO');
-        if(!$p)
-        {
+        if (!$p) {
             $p = $this->server->get('REQUEST_URI', '/');
         }
         return $p;
