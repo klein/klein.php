@@ -93,7 +93,7 @@ $klein->respond('/report.[xml|csv|json:format]?', function ($request, $response,
 });
 
 $klein->respond('/report/latest', function ($request, $response, $service) {
-    $service->file('/tmp/cached_report.zip');
+    $response->file('/tmp/cached_report.zip');
 });
 ```
 
