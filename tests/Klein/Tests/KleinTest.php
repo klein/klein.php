@@ -149,13 +149,6 @@ class KleinTest extends AbstractKleinTest
         $this->expectOutputString('1');
     }
 
-    /**
-     * Weird PHPUnit bug is causing scope errors for the
-     * isolated process tests, unless I run this also in an
-     * isolated process
-     *
-     * @runInSeparateProcess
-     */
     public function testWithUsingFileInclude()
     {
         // Test data
