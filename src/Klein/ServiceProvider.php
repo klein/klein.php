@@ -25,10 +25,6 @@ class ServiceProvider
 {
 
     /**
-     * Class properties
-     */
-
-    /**
      * The Request instance containing HTTP request data and behaviors
      *
      * @var Request
@@ -76,10 +72,6 @@ class ServiceProvider
      */
     protected $shared_data;
 
-
-    /**
-     * Methods
-     */
 
     /**
      * Constructor

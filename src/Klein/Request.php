@@ -24,10 +24,6 @@ class Request
 {
 
     /**
-     * Class properties
-     */
-
-    /**
      * Unique identifier for the request
      *
      * @var string
@@ -99,10 +95,6 @@ class Request
      */
     protected $body;
 
-
-    /**
-     * Methods
-     */
 
     /**
      * Constructor

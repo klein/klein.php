@@ -23,10 +23,6 @@ abstract class AbstractRouteFactory
 {
 
     /**
-     * Properties
-     */
-
-    /**
      * The namespace of which to collect the routes in
      * when matching, so you can define routes under a
      * common endpoint
@@ -36,10 +32,6 @@ abstract class AbstractRouteFactory
      */
     protected $namespace;
 
-
-    /**
-     * Methods
-     */
 
     /**
      * Constructor

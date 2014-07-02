@@ -21,10 +21,6 @@ class Response extends AbstractResponse
 {
 
     /**
-     * Methods
-     */
-
-    /**
      * Enable response chunking
      *
      * @link https://github.com/chriso/klein.php/wiki/Response-Chunking

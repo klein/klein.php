@@ -24,10 +24,6 @@ class App
 {
 
     /**
-     * Class properties
-     */
-
-    /**
      * The array of app services
      *
      * @var array

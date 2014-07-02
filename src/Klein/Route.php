@@ -24,10 +24,6 @@ class Route
 {
 
     /**
-     * Properties
-     */
-
-    /**
      * The callback method to execute when the route is matched
      *
      * Any valid "callable" type is allowed
@@ -85,10 +81,6 @@ class Route
      */
     protected $name;
 
-
-    /**
-     * Methods
-     */
 
     /**
      * Constructor

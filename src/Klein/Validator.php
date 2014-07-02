@@ -23,10 +23,6 @@ class Validator
 {
 
     /**
-     * Class properties
-     */
-
-    /**
      * The available validator methods
      *
      * @static
@@ -57,10 +53,6 @@ class Validator
      */
     protected $err;
 
-
-    /**
-     * Methods
-     */
 
     /**
      * Sets up the validator chain with the string and optional error message

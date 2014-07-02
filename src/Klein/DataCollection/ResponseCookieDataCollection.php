@@ -25,10 +25,6 @@ class ResponseCookieDataCollection extends DataCollection
 {
 
     /**
-     * Methods
-     */
-
-    /**
      * Constructor
      *
      * @override (doesn't call our parent)

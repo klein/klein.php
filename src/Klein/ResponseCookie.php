@@ -22,10 +22,6 @@ class ResponseCookie
 {
 
     /**
-     * Class properties
-     */
-
-    /**
      * The name of the cookie
      *
      * @var string
@@ -87,10 +83,6 @@ class ResponseCookie
      */
     protected $http_only;
 
-
-    /**
-     * Methods
-     */
 
     /**
      * Constructor

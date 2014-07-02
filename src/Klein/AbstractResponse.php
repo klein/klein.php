@@ -26,10 +26,6 @@ abstract class AbstractResponse
 {
 
     /**
-     * Properties
-     */
-
-    /**
      * The default response HTTP status code
      *
      * @static
@@ -95,10 +91,6 @@ abstract class AbstractResponse
      */
     protected $sent = false;
 
-
-    /**
-     * Methods
-     */
 
     /**
      * Constructor

@@ -25,10 +25,6 @@ class DispatchHaltedException extends RuntimeException implements KleinException
 {
 
     /**
-     * Constants
-     */
-
-    /**
      * Skip this current match/callback
      *
      * @const int
@@ -51,10 +47,6 @@ class DispatchHaltedException extends RuntimeException implements KleinException
 
 
     /**
-     * Properties
-     */
-
-    /**
      * The number of next matches to skip on a "next" skip
      *
      * @var int
@@ -62,10 +54,6 @@ class DispatchHaltedException extends RuntimeException implements KleinException
      */
     protected $number_of_skips = 1;
 
-
-    /**
-     * Methods
-     */
 
     /**
      * Gets the number of matches to skip on a "next" skip

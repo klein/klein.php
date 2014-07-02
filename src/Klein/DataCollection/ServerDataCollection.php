@@ -28,10 +28,6 @@ class ServerDataCollection extends DataCollection
 {
 
     /**
-     * Class properties
-     */
-
-    /**
      * The prefix of HTTP headers normally
      * stored in the Server data
      *
@@ -55,10 +51,6 @@ class ServerDataCollection extends DataCollection
         'CONTENT_MD5',
     );
 
-
-    /**
-     * Methods
-     */
 
     /**
      * Get our headers from our server data collection

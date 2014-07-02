@@ -23,20 +23,12 @@ class RouteFactory extends AbstractRouteFactory
 {
 
     /**
-     * Constants
-     */
-
-    /**
      * The value given to path's when they are entered as null values
      *
      * @const string
      */
     const NULL_PATH_VALUE = '*';
 
-
-    /**
-     * Methods
-     */
 
     /**
      * Build a Route instance

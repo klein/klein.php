@@ -22,10 +22,6 @@ use Klein\ResponseCookie;
 class ResponseCookieTest extends AbstractKleinTest
 {
 
-    /*
-     * Data Providers and Methods
-     */
-
     /**
      * Sample data provider
      *

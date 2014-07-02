@@ -95,10 +95,6 @@ class Klein
 
 
     /**
-     * Class properties
-     */
-
-    /**
      * Collection of the routes to match on dispatch
      *
      * @var RouteCollection
@@ -176,10 +172,6 @@ class Klein
      */
     protected $app;
 
-
-    /**
-     * Methods
-     */
 
     /**
      * Constructor
