@@ -11,7 +11,7 @@
 
 namespace Klein\Tests;
 
-use \Klein\ResponseCookie;
+use Klein\ResponseCookie;
 
 /**
  * ResponseCookieTest

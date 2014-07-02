@@ -11,7 +11,6 @@
 
 namespace Klein\Tests;
 
-
 use Klein\App;
 use Klein\DataCollection\RouteCollection;
 use Klein\Exceptions\DispatchHaltedException;
@@ -20,8 +19,6 @@ use Klein\Klein;
 use Klein\Request;
 use Klein\Response;
 use Klein\ServiceProvider;
-use Klein\Tests\Mocks\HeadersEcho;
-use Klein\Tests\Mocks\HeadersSave;
 use Klein\Tests\Mocks\MockRequestFactory;
 
 /**

@@ -15,7 +15,6 @@ use Klein\DataCollection\HeaderDataCollection;
 use Klein\DataCollection\ResponseCookieDataCollection;
 use Klein\Exceptions\LockedResponseException;
 use Klein\Exceptions\ResponseAlreadySentException;
-use Klein\ResponseCookie;
 
 /**
  * AbstractResponse

@@ -11,7 +11,7 @@
 
 namespace Klein\Exceptions;
 
-use \OverflowException;
+use OverflowException;
 
 /**
  * DuplicateServiceException

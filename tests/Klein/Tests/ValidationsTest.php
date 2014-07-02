@@ -11,11 +11,10 @@
 
 namespace Klein\Tests;
 
-use \Klein\Klein;
-use \Klein\Tests\Mocks\MockRequestFactory;
-use \Klein\Validator;
-use \Klein\Request;
-use \Klein\Response;
+use Klein\Tests\Mocks\MockRequestFactory;
+use Klein\Validator;
+use Klein\Request;
+use Klein\Response;
 
 /**
  * ValidationsTest 

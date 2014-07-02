@@ -11,16 +11,12 @@
 
 namespace Klein\Tests;
 
-
-use \Klein\Klein;
-use \Klein\Response;
-use \Klein\HttpStatus;
-use \Klein\DataCollection\HeaderDataCollection;
-use \Klein\DataCollection\ResponseCookieDataCollection;
-use \Klein\Exceptions\LockedResponseException;
-use \Klein\ResponseCookie;
-
-use \Klein\Tests\Mocks\MockRequestFactory;
+use Klein\Response;
+use Klein\HttpStatus;
+use Klein\DataCollection\HeaderDataCollection;
+use Klein\DataCollection\ResponseCookieDataCollection;
+use Klein\Exceptions\LockedResponseException;
+use Klein\ResponseCookie;
 
 /**
  * ResponsesTest 

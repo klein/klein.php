@@ -11,9 +11,6 @@
 
 namespace Klein\Tests;
 
-use Klein\AbstractRouteFactory;
-use Klein\Route;
-
 /**
  * AbstractRouteFactoryTest
  *

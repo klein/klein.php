@@ -11,9 +11,8 @@
 
 namespace Klein;
 
-use \BadMethodCallException;
-
-use \Klein\Exceptions\ValidationException;
+use BadMethodCallException;
+use Klein\Exceptions\ValidationException;
 
 /**
  * Validator 
