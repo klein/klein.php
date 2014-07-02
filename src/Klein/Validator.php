@@ -21,7 +21,6 @@ use Klein\Exceptions\ValidationException;
  */
 class Validator
 {
-
     /**
      * The available validator methods
      *
@@ -30,6 +29,7 @@ class Validator
      * @access protected
      */
     public static $methods = array();
+
     /**
      * Flag for whether the default validation methods have been added or not
      *
@@ -38,6 +38,7 @@ class Validator
      * @access protected
      */
     protected static $defaultAdded = false;
+
     /**
      * The string to validate
      *
@@ -45,6 +46,7 @@ class Validator
      * @access protected
      */
     protected $str;
+
     /**
      * The custom exception message to throw on validation failure
      *
@@ -52,7 +54,6 @@ class Validator
      * @access protected
      */
     protected $err;
-
 
     /**
      * Sets up the validator chain with the string and optional error message

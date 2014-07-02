@@ -32,7 +32,6 @@ use IteratorAggregate;
  */
 class DataCollection implements IteratorAggregate, ArrayAccess, Countable
 {
-
     /**
      * Collection of data attributes
      *
@@ -40,7 +39,6 @@ class DataCollection implements IteratorAggregate, ArrayAccess, Countable
      * @access protected
      */
     protected $attributes = array();
-
 
     /**
      * Constructor

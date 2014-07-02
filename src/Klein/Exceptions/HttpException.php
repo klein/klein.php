@@ -23,7 +23,6 @@ use RuntimeException;
  */
 class HttpException extends RuntimeException implements HttpExceptionInterface
 {
-
     /**
      * Create an HTTP exception from nothing but an HTTP code
      *

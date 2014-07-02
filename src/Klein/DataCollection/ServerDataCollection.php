@@ -26,7 +26,6 @@ namespace Klein\DataCollection;
  */
 class ServerDataCollection extends DataCollection
 {
-
     /**
      * The prefix of HTTP headers normally
      * stored in the Server data

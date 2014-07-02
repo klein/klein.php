@@ -23,7 +23,6 @@ use Klein\DataCollection\DataCollection;
  */
 class ServiceProvider
 {
-
     /**
      * The Request instance containing HTTP request data and behaviors
      *
@@ -71,7 +70,6 @@ class ServiceProvider
      * @access protected
      */
     protected $shared_data;
-
 
     /**
      * Constructor

@@ -23,7 +23,6 @@ use RuntimeException;
  */
 class DispatchHaltedException extends RuntimeException implements KleinExceptionInterface
 {
-
     /**
      * Skip this current match/callback
      *

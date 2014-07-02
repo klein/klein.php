@@ -21,7 +21,6 @@ namespace Klein\DataCollection;
  */
 class HeaderDataCollection extends DataCollection
 {
-
     /**
      * Constructor
      *

@@ -20,7 +20,6 @@ namespace Klein;
  */
 class ResponseCookie
 {
-
     /**
      * The name of the cookie
      *
@@ -82,7 +81,6 @@ class ResponseCookie
      * @access protected
      */
     protected $http_only;
-
 
     /**
      * Constructor

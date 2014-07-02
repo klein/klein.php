@@ -24,7 +24,6 @@ use Klein\Exceptions\ResponseAlreadySentException;
  */
 abstract class AbstractResponse
 {
-
     /**
      * The default response HTTP status code
      *
@@ -33,6 +32,7 @@ abstract class AbstractResponse
      * @access protected
      */
     protected static $default_status_code = 200;
+
     /**
      * Whether the response has been chunked or not
      *
@@ -40,6 +40,7 @@ abstract class AbstractResponse
      * @access public
      */
     public $chunked = false;
+
     /**
      * The HTTP version of the response
      *
@@ -47,6 +48,7 @@ abstract class AbstractResponse
      * @access protected
      */
     protected $protocol_version = '1.1';
+
     /**
      * The response body
      *
@@ -54,6 +56,7 @@ abstract class AbstractResponse
      * @access protected
      */
     protected $body;
+
     /**
      * HTTP response status
      *
@@ -61,6 +64,7 @@ abstract class AbstractResponse
      * @access protected
      */
     protected $status;
+
     /**
      * HTTP response headers
      *
@@ -68,6 +72,7 @@ abstract class AbstractResponse
      * @access protected
      */
     protected $headers;
+
     /**
      * HTTP response cookies
      *
@@ -75,6 +80,7 @@ abstract class AbstractResponse
      * @access protected
      */
     protected $cookies;
+
     /**
      * Whether or not the response is "locked" from
      * any further modification
@@ -83,6 +89,7 @@ abstract class AbstractResponse
      * @access protected
      */
     protected $locked = false;
+
     /**
      * Whether or not the response has been sent
      *
@@ -90,7 +97,6 @@ abstract class AbstractResponse
      * @access protected
      */
     protected $sent = false;
-
 
     /**
      * Constructor

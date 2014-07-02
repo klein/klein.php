@@ -23,7 +23,6 @@ use Klein\ResponseCookie;
  */
 class ResponseCookieDataCollection extends DataCollection
 {
-
     /**
      * Constructor
      *

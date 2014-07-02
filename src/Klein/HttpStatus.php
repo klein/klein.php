@@ -20,7 +20,6 @@ namespace Klein;
  */
 class HttpStatus
 {
-
     /**
      * HTTP 1.1 status messages based on code
      *
@@ -102,7 +101,6 @@ class HttpStatus
      * @param int $code The HTTP code
      * @param string $message (optional) HTTP message for the corresponding code
      * @access public
-     * @return void
      */
     public function __construct($code, $message = null)
     {

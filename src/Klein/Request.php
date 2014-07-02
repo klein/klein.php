@@ -22,7 +22,6 @@ use Klein\DataCollection\ServerDataCollection;
  */
 class Request
 {
-
     /**
      * Unique identifier for the request
      *
@@ -94,7 +93,6 @@ class Request
      * @access protected
      */
     protected $body;
-
 
     /**
      * Constructor

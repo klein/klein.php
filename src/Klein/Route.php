@@ -22,7 +22,6 @@ use InvalidArgumentException;
  */
 class Route
 {
-
     /**
      * The callback method to execute when the route is matched
      *
@@ -240,7 +239,6 @@ class Route
 
         return $this;
     }
-
 
     /**
      * Magic "__invoke" method

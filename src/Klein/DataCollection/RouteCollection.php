@@ -23,7 +23,6 @@ use Klein\Route;
  */
 class RouteCollection extends DataCollection
 {
-
     /**
      * Constructor
      *

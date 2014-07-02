@@ -29,11 +29,6 @@ use OutOfBoundsException;
  */
 class Klein
 {
-
-    /**
-     * Class constants
-     */
-
     /**
      * The regular expression used to compile and match URL's
      *
@@ -93,7 +88,6 @@ class Klein
      */
     const DISPATCH_CAPTURE_AND_APPEND = 4;
 
-
     /**
      * Collection of the routes to match on dispatch
      *
@@ -135,11 +129,6 @@ class Klein
      */
     protected $afterFilterCallbacks = array();
 
-
-    /**
-     * Route objects
-     */
-
     /**
      * The Request object passed to each matched route
      *
@@ -171,7 +160,6 @@ class Klein
      * @access protected
      */
     protected $app;
-
 
     /**
      * Constructor
@@ -608,7 +596,7 @@ class Klein
      *
      * @param string $route The route string to compile
      * @access protected
-     * @return void
+     * @return string
      */
     protected function compileRoute($route)
     {
@@ -967,7 +955,7 @@ class Klein
      * OPTIONS alias for "respond()"
      *
      * @see Klein::respond()
-     * @param string $route
+     * @param string $path
      * @param callable $callback
      * @access public
      * @return Route
@@ -1082,7 +1070,7 @@ class Klein
      * GET alias for "respond()"
      *
      * @see Klein::respond()
-     * @param string $route
+     * @param string $path
      * @param callable $callback
      * @access public
      * @return Route
