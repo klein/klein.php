@@ -26,7 +26,6 @@ use Klein\ResponseCookie;
  */
 class ResponsesTest extends AbstractKleinTest
 {
-
     public function testProtocolVersionGetSet()
     {
         $version_reg_ex = '/^[0-9]\.[0-9]$/';
@@ -250,7 +249,7 @@ class ResponsesTest extends AbstractKleinTest
     }
 
     /**
-     * @expectedException Klein\Exceptions\ResponseAlreadySentException
+     * @expectedException \Klein\Exceptions\ResponseAlreadySentException
      */
     public function testSendWhenAlreadySent()
     {

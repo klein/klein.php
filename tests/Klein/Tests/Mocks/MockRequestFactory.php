@@ -23,7 +23,6 @@ use Klein\Request;
  */
 class MockRequestFactory
 {
-
     /**
      * Create a new mock request
      *
@@ -34,9 +33,7 @@ class MockRequestFactory
      * @param array $server
      * @param array $files
      * @param string $body
-     * @static
-     * @access public
-     * @return void
+     * @return Request
      */
     public static function create(
         $uri = '/',

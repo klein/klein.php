@@ -22,7 +22,6 @@ use Klein\Tests\Mocks\MockRequestFactory;
  */
 class RequestTest extends AbstractKleinTest
 {
-
     public function testConstructorAndGetters()
     {
         // Test data

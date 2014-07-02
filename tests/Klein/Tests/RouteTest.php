@@ -21,7 +21,6 @@ use Klein\Route;
  */
 class RouteTest extends AbstractKleinTest
 {
-
     public function testCallbackGetSet()
     {
         // Test functions

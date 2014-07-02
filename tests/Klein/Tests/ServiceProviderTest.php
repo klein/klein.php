@@ -25,7 +25,6 @@ use Klein\Validator;
  */
 class ServiceProviderTest extends AbstractKleinTest
 {
-
     public function testConstructor()
     {
         $service = new ServiceProvider();

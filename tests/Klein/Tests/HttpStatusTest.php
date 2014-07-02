@@ -21,7 +21,6 @@ use Klein\HttpStatus;
  */
 class HttpStatusTests extends AbstractKleinTest
 {
-
     public function testStaticMessageFromCode()
     {
         // Set our test data

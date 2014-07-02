@@ -22,11 +22,9 @@ use Klein\Tests\AbstractKleinTest;
  */
 class ServerDataCollectionTest extends AbstractKleinTest
 {
-
     /**
      * Sample data provider
      *
-     * @access public
      * @return array
      */
     public function sampleDataProvider()
@@ -70,11 +68,6 @@ class ServerDataCollectionTest extends AbstractKleinTest
             array($sample_data, $data_collection),
         );
     }
-
-
-    /*
-     * Tests
-     */
 
     public function testHasPrefix()
     {

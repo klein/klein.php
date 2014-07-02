@@ -22,11 +22,6 @@ use Klein\RouteFactory;
  */
 class RouteFactoryTest extends AbstractKleinTest
 {
-
-    /**
-     * Constants
-     */
-
     const TEST_CALLBACK_MESSAGE = 'yay';
 
     public function testBuildWithNamespacedPath()
@@ -37,10 +32,6 @@ class RouteFactoryTest extends AbstractKleinTest
 
         $this->testBuildBasic($test_namespace, $test_path, false);
     }
-
-    /**
-     * Tests
-     */
 
     public function testBuildBasic(
         $test_namespace = null,
@@ -72,10 +63,6 @@ class RouteFactoryTest extends AbstractKleinTest
             $this->assertSame($test_path, $route->getPath());
         }
     }
-
-    /**
-     * Helpers
-     */
 
     protected function getTestCallable($message = self::TEST_CALLBACK_MESSAGE)
     {

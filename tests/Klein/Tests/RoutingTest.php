@@ -29,7 +29,6 @@ use Klein\Tests\Mocks\MockRequestFactory;
  */
 class RoutingTest extends AbstractKleinTest
 {
-
     public function testBasic()
     {
         $this->expectOutputString('x');

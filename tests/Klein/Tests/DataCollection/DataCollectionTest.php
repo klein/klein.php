@@ -23,21 +23,16 @@ use stdClass;
  */
 class DataCollectionTest extends AbstractKleinTest
 {
-
     /**
      * Non existent key in the sample data
      *
-     * @static
      * @var string
-     * @access protected
      */
     protected static $nonexistent_key = 'key-name-doesnt-exist';
-
 
     /**
      * Sample data provider
      *
-     * @access public
      * @return array
      */
     public function sampleDataProvider()
@@ -67,8 +62,6 @@ class DataCollectionTest extends AbstractKleinTest
      * have any keys that match the "nonexistent_key"
      *
      * @param array $sample_data
-     * @access protected
-     * @return void
      */
     protected function prepareSampleData(&$sample_data)
     {
@@ -107,11 +100,6 @@ class DataCollectionTest extends AbstractKleinTest
         $this->assertContains($mask[0], $data_collection->keys($mask, false));
         $this->assertNotContains($mask[1], $data_collection->keys($mask, false));
     }
-
-
-    /*
-     * Tests
-     */
 
     /**
      * @dataProvider sampleDataProvider
@@ -193,7 +181,6 @@ class DataCollectionTest extends AbstractKleinTest
     /**
      * Totally different sample data provider
      *
-     * @access public
      * @return array
      */
     public function totallyDifferentSampleDataProvider()

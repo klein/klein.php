@@ -22,16 +22,12 @@ use Klein\Tests\AbstractKleinTest;
  */
 class HeaderDataCollectionTest extends AbstractKleinTest
 {
-
     /**
      * Non existent key in the sample data
      *
-     * @static
      * @var string
-     * @access protected
      */
     protected static $nonexistent_key = 'non-standard-header';
-
 
     /**
      * Sample data provider
@@ -87,11 +83,6 @@ class HeaderDataCollectionTest extends AbstractKleinTest
             }
         }
     }
-
-
-    /*
-     * Tests
-     */
 
     /**
      * @dataProvider sampleDataProvider

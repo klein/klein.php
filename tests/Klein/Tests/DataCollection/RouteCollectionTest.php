@@ -23,7 +23,6 @@ use Klein\Tests\AbstractKleinTest;
  */
 class RouteCollectionTest extends AbstractKleinTest
 {
-
     /**
      * Sample data provider
      *
@@ -65,11 +64,6 @@ class RouteCollectionTest extends AbstractKleinTest
             array($sample_route, $sample_other_route, $sample_named_route),
         );
     }
-
-
-    /*
-     * Tests
-     */
 
     /**
      * @dataProvider sampleDataProvider

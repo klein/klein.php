@@ -31,16 +31,7 @@ use OutOfBoundsException;
  */
 class KleinTest extends AbstractKleinTest
 {
-
-    /**
-     * Constants
-     */
-
     const TEST_CALLBACK_MESSAGE = 'yay';
-
-    /**
-     * Tests
-     */
 
     public function testConstructor()
     {
@@ -366,7 +357,7 @@ class KleinTest extends AbstractKleinTest
     }
 
     /**
-     * @expectedException Klein\Exceptions\UnhandledException
+     * @expectedException \Klein\Exceptions\UnhandledException
      */
     public function testAfterDispatchWithCallableThatThrowsException()
     {
@@ -385,7 +376,7 @@ class KleinTest extends AbstractKleinTest
     }
 
     /**
-     * @expectedException Klein\Exceptions\UnhandledException
+     * @expectedException \Klein\Exceptions\UnhandledException
      */
     public function testErrorsWithNoCallbacks()
     {

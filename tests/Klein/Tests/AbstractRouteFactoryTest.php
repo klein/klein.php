@@ -19,11 +19,6 @@ namespace Klein\Tests;
  */
 class AbstractRouteFactoryTest extends AbstractKleinTest
 {
-
-    /**
-     * Tests
-     */
-
     public function testNamespaceGetSet()
     {
         // Test data
@@ -64,10 +59,6 @@ class AbstractRouteFactoryTest extends AbstractKleinTest
         return $this->getMockBuilder('\Klein\AbstractRouteFactory')
             ->setMethods($methods_to_mock);
     }
-
-    /**
-     * Helpers
-     */
 
     protected function getDefaultMethodsToMock()
     {
