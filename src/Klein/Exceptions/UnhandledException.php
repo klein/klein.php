@@ -17,7 +17,7 @@ use RuntimeException;
  * UnhandledException
  *
  * Exception used for when a exception isn't correctly handled by the Klein error callbacks
- * 
+ *
  * @uses       Exception
  * @package    Klein\Exceptions
  */

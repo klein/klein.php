@@ -43,31 +43,23 @@ class RouteCollection extends DataCollection
     }
 
     /**
-     * Set a route
+     * Add a route to the collection
      *
-     * {@inheritdoc}
+     * This allows a more generic form that
+     * will take a Route instance, string callable
+     * or any other Route class compatible callback
      *
-     * A value may either be a callable or a Route instance
-     * Callable values will be converted into a Route with
-     * the "name" of the route being set from the "key"
-     *
-     * A developer may add a named route to the collection
-     * by passing the name of the route as the "$key" and an
-     * instance of a Route as the "$value"
-     *
-     * @see DataCollection::set()
-     * @param string $key                   The name of the route to set
-     * @param Route|callable $value         The value of the route to set
+     * @param mixed $route
      * @access public
      * @return RouteCollection
      */
-    public function set($key, $value)
+    public function add($route)
     {
-        if (!$value instanceof Route) {
-            $value = new Route($value);
+        if (!$route instanceof Route) {
+            $route = new Route($route);
         }
 
-        return parent::set($key, $value);
+        return $this->addRoute($route);
     }
 
     /**
@@ -92,23 +84,31 @@ class RouteCollection extends DataCollection
     }
 
     /**
-     * Add a route to the collection
+     * Set a route
      *
-     * This allows a more generic form that
-     * will take a Route instance, string callable
-     * or any other Route class compatible callback
+     * {@inheritdoc}
      *
-     * @param mixed $route
+     * A value may either be a callable or a Route instance
+     * Callable values will be converted into a Route with
+     * the "name" of the route being set from the "key"
+     *
+     * A developer may add a named route to the collection
+     * by passing the name of the route as the "$key" and an
+     * instance of a Route as the "$value"
+     *
+     * @see DataCollection::set()
+     * @param string $key The name of the route to set
+     * @param Route|callable $value The value of the route to set
      * @access public
      * @return RouteCollection
      */
-    public function add($route)
+    public function set($key, $value)
     {
-        if (!$route instanceof Route) {
-            $route = new Route($route);
+        if (!$value instanceof Route) {
+            $value = new Route($value);
         }
 
-        return $this->addRoute($route);
+        return parent::set($key, $value);
     }
 
     /**

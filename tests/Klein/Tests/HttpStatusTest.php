@@ -14,8 +14,8 @@ namespace Klein\Tests;
 use Klein\HttpStatus;
 
 /**
- * HttpStatusTests 
- * 
+ * HttpStatusTests
+ *
  * @uses AbstractKleinTest
  * @package Klein\Tests
  */

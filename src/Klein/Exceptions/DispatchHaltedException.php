@@ -17,7 +17,7 @@ use RuntimeException;
  * DispatchHaltedException
  *
  * Exception used to halt a route callback from executing in a dispatch loop
- * 
+ *
  * @uses       RuntimeException
  * @package    Klein\Exceptions
  */
@@ -76,7 +76,7 @@ class DispatchHaltedException extends RuntimeException implements KleinException
     {
         return $this->number_of_skips;
     }
-    
+
     /**
      * Sets the number of matches to skip on a "next" skip
      *
@@ -86,7 +86,7 @@ class DispatchHaltedException extends RuntimeException implements KleinException
      */
     public function setNumberOfSkips($number_of_skips)
     {
-        $this->number_of_skips = (int) $number_of_skips;
+        $this->number_of_skips = (int)$number_of_skips;
 
         return $this;
     }

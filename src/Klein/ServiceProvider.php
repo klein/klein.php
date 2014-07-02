@@ -14,11 +14,11 @@ namespace Klein;
 use Klein\DataCollection\DataCollection;
 
 /**
- * ServiceProvider 
+ * ServiceProvider
  *
  * Service provider class for handling logic extending between
  * a request's data and a response's behavior
- * 
+ *
  * @package     Klein
  */
 class ServiceProvider
@@ -84,8 +84,8 @@ class ServiceProvider
     /**
      * Constructor
      *
-     * @param Request $request              Object containing all HTTP request data and behaviors
-     * @param AbstractResponse $response    Object containing all HTTP response data and behaviors
+     * @param Request $request Object containing all HTTP request data and behaviors
+     * @param AbstractResponse $response Object containing all HTTP response data and behaviors
      * @access public
      */
     public function __construct(Request $request = null, AbstractResponse $response = null)
@@ -100,18 +100,36 @@ class ServiceProvider
     /**
      * Bind object instances to this service
      *
-     * @param Request $request              Object containing all HTTP request data and behaviors
-     * @param AbstractResponse $response    Object containing all HTTP response data and behaviors
+     * @param Request $request Object containing all HTTP request data and behaviors
+     * @param AbstractResponse $response Object containing all HTTP response data and behaviors
      * @access public
      * @return ServiceProvider
      */
     public function bind(Request $request = null, AbstractResponse $response = null)
     {
         // Keep references
-        $this->request  = $request  ?: $this->request;
+        $this->request = $request ?: $this->request;
         $this->response = $response ?: $this->response;
 
         return $this;
+    }
+
+    /**
+     * Escapes a string for UTF-8 HTML displaying
+     *
+     * This is a quick macro for escaping strings designed
+     * to be shown in a UTF-8 HTML environment. Its options
+     * are otherwise limited by design
+     *
+     * @param string $str The string to escape
+     * @param int $flags A bitmask of `htmlentities()` compatible flags
+     * @static
+     * @access public
+     * @return string
+     */
+    public static function escape($str, $flags = ENT_QUOTES)
+    {
+        return htmlentities($str, $flags, 'UTF-8');
     }
 
     /**
@@ -123,6 +141,30 @@ class ServiceProvider
     public function sharedData()
     {
         return $this->shared_data;
+    }
+
+    /**
+     * Stores a flash message of $type
+     *
+     * @param string $msg The message to flash
+     * @param string $type The flash message type
+     * @param array $params Optional params to be parsed by markdown
+     * @access public
+     * @return void
+     */
+    public function flash($msg, $type = 'info', $params = null)
+    {
+        $this->startSession();
+        if (is_array($type)) {
+            $params = $type;
+            $type = 'info';
+        }
+        if (!isset($_SESSION['__flashes'])) {
+            $_SESSION['__flashes'] = array($type => array());
+        } elseif (!isset($_SESSION['__flashes'][$type])) {
+            $_SESSION['__flashes'][$type] = array();
+        }
+        $_SESSION['__flashes'][$type][] = $this->markdown($msg, $params);
     }
 
     /**
@@ -146,56 +188,6 @@ class ServiceProvider
     }
 
     /**
-     * Stores a flash message of $type
-     *
-     * @param string $msg       The message to flash
-     * @param string $type      The flash message type
-     * @param array $params     Optional params to be parsed by markdown
-     * @access public
-     * @return void
-     */
-    public function flash($msg, $type = 'info', $params = null)
-    {
-        $this->startSession();
-        if (is_array($type)) {
-            $params = $type;
-            $type = 'info';
-        }
-        if (!isset($_SESSION['__flashes'])) {
-            $_SESSION['__flashes'] = array($type => array());
-        } elseif (!isset($_SESSION['__flashes'][$type])) {
-            $_SESSION['__flashes'][$type] = array();
-        }
-        $_SESSION['__flashes'][$type][] = $this->markdown($msg, $params);
-    }
-
-    /**
-     * Returns and clears all flashes of optional $type
-     *
-     * @param string $type  The name of the flash message type
-     * @access public
-     * @return array
-     */
-    public function flashes($type = null)
-    {
-        $this->startSession();
-        if (!isset($_SESSION['__flashes'])) {
-            return array();
-        }
-        if (null === $type) {
-            $flashes = $_SESSION['__flashes'];
-            unset($_SESSION['__flashes']);
-        } elseif (null !== $type) {
-            $flashes = array();
-            if (isset($_SESSION['__flashes'][$type])) {
-                $flashes = $_SESSION['__flashes'][$type];
-                unset($_SESSION['__flashes'][$type]);
-            }
-        }
-        return $flashes;
-    }
-
-    /**
      * Render a text string as markdown
      *
      * Supports basic markdown syntax
@@ -203,8 +195,8 @@ class ServiceProvider
      * Also, this method takes in EITHER an array of optional arguments (as the second parameter)
      * ... OR this method will simply take a variable number of arguments (after the initial str arg)
      *
-     * @param string $str   The text string to parse
-     * @param array $args   Optional arguments to be parsed by markdown
+     * @param string $str The text string to parse
+     * @param array $args Optional arguments to be parsed by markdown
      * @static
      * @access public
      * @return string
@@ -214,8 +206,8 @@ class ServiceProvider
         // Create our markdown parse/conversion regex's
         $md = array(
             '/\[([^\]]++)\]\(([^\)]++)\)/' => '<a href="$2">$1</a>',
-            '/\*\*([^\*]++)\*\*/'          => '<strong>$1</strong>',
-            '/\*([^\*]++)\*/'              => '<em>$1</em>'
+            '/\*\*([^\*]++)\*\*/' => '<strong>$1</strong>',
+            '/\*([^\*]++)\*/' => '<em>$1</em>'
         );
 
         // Let's make our arguments more "magical"
@@ -239,36 +231,29 @@ class ServiceProvider
     }
 
     /**
-     * Escapes a string for UTF-8 HTML displaying
+     * Returns and clears all flashes of optional $type
      *
-     * This is a quick macro for escaping strings designed
-     * to be shown in a UTF-8 HTML environment. Its options
-     * are otherwise limited by design
-     *
-     * @param string $str   The string to escape
-     * @param int $flags    A bitmask of `htmlentities()` compatible flags
-     * @static
+     * @param string $type The name of the flash message type
      * @access public
-     * @return string
+     * @return array
      */
-    public static function escape($str, $flags = ENT_QUOTES)
+    public function flashes($type = null)
     {
-        return htmlentities($str, $flags, 'UTF-8');
-    }
-
-    /**
-     * Redirects the request to the current URL
-     *
-     * @access public
-     * @return ServiceProvider
-     */
-    public function refresh()
-    {
-        $this->response->redirect(
-            $this->request->uri()
-        );
-
-        return $this;
+        $this->startSession();
+        if (!isset($_SESSION['__flashes'])) {
+            return array();
+        }
+        if (null === $type) {
+            $flashes = $_SESSION['__flashes'];
+            unset($_SESSION['__flashes']);
+        } elseif (null !== $type) {
+            $flashes = array();
+            if (isset($_SESSION['__flashes'][$type])) {
+                $flashes = $_SESSION['__flashes'][$type];
+                unset($_SESSION['__flashes'][$type]);
+            }
+        }
+        return $flashes;
     }
 
     /**
@@ -291,12 +276,27 @@ class ServiceProvider
     }
 
     /**
+     * Redirects the request to the current URL
+     *
+     * @access public
+     * @return ServiceProvider
+     */
+    public function refresh()
+    {
+        $this->response->redirect(
+            $this->request->uri()
+        );
+
+        return $this;
+    }
+
+    /**
      * Get (or set) the view's layout
      *
      * Simply calling this method without any arguments returns the current layout.
      * Calling with an argument, however, sets the layout to what was provided by the argument.
      *
-     * @param string $layout    The layout of the view
+     * @param string $layout The layout of the view
      * @access public
      * @return string|ServiceProvider
      */
@@ -312,21 +312,26 @@ class ServiceProvider
     }
 
     /**
-     * Renders the current view
+     * Renders a view without a layout
      *
+     * @param string $view The view to render
+     * @param array $data The data to render in the view
      * @access public
      * @return void
      */
-    public function yieldView()
+    public function partial($view, array $data = array())
     {
-        require $this->view;
+        $layout = $this->layout;
+        $this->layout = null;
+        $this->render($view, $data);
+        $this->layout = $layout;
     }
 
     /**
      * Renders a view + optional layout
      *
-     * @param string $view  The view to render
-     * @param array $data   The data to render in the view
+     * @param string $view The view to render
+     * @param array $data The data to render in the view
      * @access public
      * @return void
      */
@@ -355,26 +360,21 @@ class ServiceProvider
     }
 
     /**
-     * Renders a view without a layout
+     * Renders the current view
      *
-     * @param string $view  The view to render
-     * @param array $data   The data to render in the view
      * @access public
      * @return void
      */
-    public function partial($view, array $data = array())
+    public function yieldView()
     {
-        $layout = $this->layout;
-        $this->layout = null;
-        $this->render($view, $data);
-        $this->layout = $layout;
+        require $this->view;
     }
 
     /**
      * Add a custom validator for our validation method
      *
-     * @param string $method        The name of the validator method
-     * @param callable $callback    The callback to perform on validation
+     * @param string $method The name of the validator method
+     * @param callable $callback The callback to perform on validation
      * @access public
      * @return void
      */
@@ -384,10 +384,23 @@ class ServiceProvider
     }
 
     /**
+     * Start a validator chain for the specified parameter
+     *
+     * @param string $param The name of the parameter to validate
+     * @param string $err The custom exception message to throw
+     * @access public
+     * @return Validator
+     */
+    public function validateParam($param, $err = null)
+    {
+        return $this->validate($this->request->param($param), $err);
+    }
+
+    /**
      * Start a validator chain for the specified string
      *
-     * @param string $string    The string to validate
-     * @param string $err       The custom exception message to throw
+     * @param string $string The string to validate
+     * @param string $err The custom exception message to throw
      * @access public
      * @return Validator
      */
@@ -397,26 +410,12 @@ class ServiceProvider
     }
 
     /**
-     * Start a validator chain for the specified parameter
-     *
-     * @param string $param     The name of the parameter to validate
-     * @param string $err       The custom exception message to throw
-     * @access public
-     * @return Validator
-     */
-    public function validateParam($param, $err = null)
-    {
-        return $this->validate($this->request->param($param), $err);
-    }
-
-
-    /**
      * Magic "__isset" method
      *
      * Allows the ability to arbitrarily check the existence of shared data
      * from this instance while treating it as an instance property
      *
-     * @param string $key     The name of the shared data
+     * @param string $key The name of the shared data
      * @access public
      * @return boolean
      */
@@ -431,7 +430,7 @@ class ServiceProvider
      * Allows the ability to arbitrarily request shared data from this instance
      * while treating it as an instance property
      *
-     * @param string $key     The name of the shared data
+     * @param string $key The name of the shared data
      * @access public
      * @return string
      */
@@ -446,8 +445,8 @@ class ServiceProvider
      * Allows the ability to arbitrarily set shared data from this instance
      * while treating it as an instance property
      *
-     * @param string $key     The name of the shared data
-     * @param mixed $value      The value of the shared data
+     * @param string $key The name of the shared data
+     * @param mixed $value The value of the shared data
      * @access public
      * @return void
      */
@@ -462,7 +461,7 @@ class ServiceProvider
      * Allows the ability to arbitrarily remove shared data from this instance
      * while treating it as an instance property
      *
-     * @param string $key     The name of the shared data
+     * @param string $key The name of the shared data
      * @access public
      * @return void
      */

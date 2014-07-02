@@ -14,10 +14,10 @@ namespace Klein\Exceptions;
 use UnexpectedValueException;
 
 /**
- * ValidationException 
+ * ValidationException
  *
  * Exception used for Validation errors
- * 
+ *
  * @uses       Exception
  * @package    Klein\Exceptions
  */

@@ -17,7 +17,7 @@ use RuntimeException;
  * LockedResponseException
  *
  * Exception used for when a response is attempted to be modified while its locked
- * 
+ *
  * @uses       RuntimeException
  * @package    Klein\Exceptions
  */

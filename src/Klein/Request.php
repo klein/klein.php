@@ -12,12 +12,12 @@
 namespace Klein;
 
 use Klein\DataCollection\DataCollection;
-use Klein\DataCollection\ServerDataCollection;
 use Klein\DataCollection\HeaderDataCollection;
+use Klein\DataCollection\ServerDataCollection;
 
 /**
  * Request
- * 
+ *
  * @package     Klein
  */
 class Request
@@ -109,11 +109,11 @@ class Request
      *
      * Create a new Request object and define all of its request data
      *
-     * @param array  $params_get
-     * @param array  $params_post
-     * @param array  $cookies
-     * @param array  $server
-     * @param array  $files
+     * @param array $params_get
+     * @param array $params_post
+     * @param array $cookies
+     * @param array $server
+     * @param array $files
      * @param string $body
      * @access public
      */
@@ -124,15 +124,16 @@ class Request
         array $server = array(),
         array $files = array(),
         $body = null
-    ) {
+    )
+    {
         // Assignment city...
-        $this->params_get   = new DataCollection($params_get);
-        $this->params_post  = new DataCollection($params_post);
-        $this->cookies      = new DataCollection($cookies);
-        $this->server       = new ServerDataCollection($server);
-        $this->headers      = new HeaderDataCollection($this->server->getHeaders());
-        $this->files        = new DataCollection($files);
-        $this->body         = $body ? (string) $body : null;
+        $this->params_get = new DataCollection($params_get);
+        $this->params_post = new DataCollection($params_post);
+        $this->cookies = new DataCollection($cookies);
+        $this->server = new ServerDataCollection($server);
+        $this->headers = new HeaderDataCollection($this->server->getHeaders());
+        $this->files = new DataCollection($files);
+        $this->body = $body ? (string)$body : null;
 
         // Non-injected assignments
         $this->params_named = new DataCollection();
@@ -164,7 +165,7 @@ class Request
      *
      * Generates one on the first call
      *
-     * @param boolean $hash     Whether or not to hash the ID on creation
+     * @param boolean $hash Whether or not to hash the ID on creation
      * @access public
      * @return string
      */
@@ -226,17 +227,6 @@ class Request
     }
 
     /**
-     * Returns the server collection
-     *
-     * @access public
-     * @return \Klein\DataCollection\DataCollection
-     */
-    public function server()
-    {
-        return $this->server;
-    }
-
-    /**
      * Returns the headers collection
      *
      * @access public
@@ -275,14 +265,32 @@ class Request
     }
 
     /**
+     * Magic "__isset" method
+     *
+     * Allows the ability to arbitrarily check the existence of a parameter
+     * from this instance while treating it as an instance property
+     *
+     * @param string $param The name of the parameter
+     * @access public
+     * @return boolean
+     */
+    public function __isset($param)
+    {
+        // Get all of our request params
+        $params = $this->params();
+
+        return isset($params[$param]);
+    }
+
+    /**
      * Returns all parameters (GET, POST, named, and cookies) that match the mask
      *
      * Takes an optional mask param that contains the names of any params
      * you'd like this method to exclude in the returned array
      *
      * @see \Klein\DataCollection\DataCollection::all()
-     * @param array $mask               The parameter mask array
-     * @param boolean $fill_with_nulls  Whether or not to fill the returned array
+     * @param array $mask The parameter mask array
+     * @param boolean $fill_with_nulls Whether or not to fill the returned array
      *  with null values to match the given mask
      * @access public
      * @return array
@@ -310,46 +318,12 @@ class Request
     }
 
     /**
-     * Return a request parameter, or $default if it doesn't exist
-     *
-     * @param string $key       The name of the parameter to return
-     * @param mixed $default    The default value of the parameter if it contains no value
-     * @access public
-     * @return string
-     */
-    public function param($key, $default = null)
-    {
-        // Get all of our request params
-        $params = $this->params();
-
-        return isset($params[$key]) ? $params[$key] : $default;
-    }
-
-    /**
-     * Magic "__isset" method
-     *
-     * Allows the ability to arbitrarily check the existence of a parameter
-     * from this instance while treating it as an instance property
-     *
-     * @param string $param     The name of the parameter
-     * @access public
-     * @return boolean
-     */
-    public function __isset($param)
-    {
-        // Get all of our request params
-        $params = $this->params();
-
-        return isset($params[$param]);
-    }
-
-    /**
      * Magic "__get" method
      *
      * Allows the ability to arbitrarily request a parameter from this instance
      * while treating it as an instance property
      *
-     * @param string $param     The name of the parameter
+     * @param string $param The name of the parameter
      * @access public
      * @return string
      */
@@ -367,8 +341,8 @@ class Request
      * NOTE: This currently sets the "named" parameters, since that's the
      * one collection that we have the most sane control over
      *
-     * @param string $param     The name of the parameter
-     * @param mixed $value      The value of the parameter
+     * @param string $param The name of the parameter
+     * @param mixed $value The value of the parameter
      * @access public
      * @return void
      */
@@ -378,12 +352,28 @@ class Request
     }
 
     /**
+     * Return a request parameter, or $default if it doesn't exist
+     *
+     * @param string $key The name of the parameter to return
+     * @param mixed $default The default value of the parameter if it contains no value
+     * @access public
+     * @return string
+     */
+    public function param($key, $default = null)
+    {
+        // Get all of our request params
+        $params = $this->params();
+
+        return isset($params[$key]) ? $params[$key] : $default;
+    }
+
+    /**
      * Magic "__unset" method
      *
      * Allows the ability to arbitrarily remove a parameter from this instance
      * while treating it as an instance property
      *
-     * @param string $param     The name of the parameter
+     * @param string $param The name of the parameter
      * @access public
      * @return void
      */
@@ -426,17 +416,6 @@ class Request
     }
 
     /**
-     * Gets the request URI
-     *
-     * @access public
-     * @return string
-     */
-    public function uri()
-    {
-        return $this->server->get('REQUEST_URI', '/');
-    }
-
-    /**
      * Get the request's pathname
      *
      * @access public
@@ -453,6 +432,17 @@ class Request
     }
 
     /**
+     * Gets the request URI
+     *
+     * @access public
+     * @return string
+     */
+    public function uri()
+    {
+        return $this->server->get('REQUEST_URI', '/');
+    }
+
+    /**
      * Gets the request method, or checks it against $is
      *
      * <code>
@@ -461,9 +451,9 @@ class Request
      * $request->method('post') // returns true
      * $request->method('get') // returns false
      * </code>
-     * 
-     * @param string $is				The method to check the current request method against
-     * @param boolean $allow_override	Whether or not to allow HTTP method overriding via header or params
+     *
+     * @param string $is The method to check the current request method against
+     * @param boolean $allow_override Whether or not to allow HTTP method overriding via header or params
      * @access public
      * @return string | boolean
      */
@@ -494,8 +484,8 @@ class Request
     /**
      * Adds to or modifies the current query string
      *
-     * @param string $key   The name of the query param
-     * @param mixed $value  The value of the query param
+     * @param string $key The name of the query param
+     * @param mixed $value The value of the query param
      * @access public
      * @return string
      */
@@ -521,5 +511,16 @@ class Request
         }
 
         return $request_uri . (!empty($query) ? '?' . http_build_query($query) : null);
+    }
+
+    /**
+     * Returns the server collection
+     *
+     * @access public
+     * @return \Klein\DataCollection\DataCollection
+     */
+    public function server()
+    {
+        return $this->server;
     }
 }
