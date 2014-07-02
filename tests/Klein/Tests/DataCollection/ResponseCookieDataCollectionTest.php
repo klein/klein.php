@@ -23,7 +23,6 @@ use Klein\Tests\AbstractKleinTest;
  */
 class ResponseCookieDataCollectionTest extends AbstractKleinTest
 {
-
     /**
      * Sample data provider
      *
@@ -56,11 +55,6 @@ class ResponseCookieDataCollectionTest extends AbstractKleinTest
             array($sample_cookie, $sample_other_cookie),
         );
     }
-
-
-    /*
-     * Tests
-     */
 
     /**
      * @dataProvider sampleDataProvider

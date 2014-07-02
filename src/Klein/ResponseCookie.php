@@ -11,12 +11,14 @@
 
 namespace Klein;
 
+use DateTime;
+
 /**
  * ResponseCookie
  *
  * Class to represent an HTTP response cookie
  *
- * @package     Klein
+ * @package Klein
  */
 class ResponseCookie
 {
@@ -24,7 +26,6 @@ class ResponseCookie
      * The name of the cookie
      *
      * @var string
-     * @access protected
      */
     protected $name;
 
@@ -32,17 +33,15 @@ class ResponseCookie
      * The string "value" of the cookie
      *
      * @var string
-     * @access protected
      */
     protected $value;
 
     /**
      * The date/time that the cookie should expire
      *
-     * Represented by a Unix "Timestamp"
+     * Represented by a Unix "Timestamp" or a DateTime object
      *
-     * @var int
-     * @access protected
+     * @var DateTime
      */
     protected $expire;
 
@@ -51,7 +50,6 @@ class ResponseCookie
      * be available on
      *
      * @var string
-     * @access protected
      */
     protected $path;
 
@@ -59,7 +57,6 @@ class ResponseCookie
      * The domain that the cookie is available to
      *
      * @var string
-     * @access protected
      */
     protected $domain;
 
@@ -68,7 +65,6 @@ class ResponseCookie
      * over an HTTPS connection or not
      *
      * @var boolean
-     * @access protected
      */
     protected $secure;
 
@@ -78,21 +74,19 @@ class ResponseCookie
      * client-side scripting languages like JavaScript)
      *
      * @var boolean
-     * @access protected
      */
-    protected $http_only;
+    protected $httpOnly;
 
     /**
      * Constructor
      *
      * @param string $name The name of the cookie
      * @param string $value The value to set the cookie with
-     * @param int $expire The time that the cookie should expire
+     * @param int|DateTime $expire The time that the cookie should expire
      * @param string $path The path of which to restrict the cookie
      * @param string $domain The domain of which to restrict the cookie
      * @param boolean $secure Flag of whether the cookie should only be sent over a HTTPS connection
-     * @param boolean $http_only Flag of whether the cookie should only be accessible over the HTTP protocol
-     * @access public
+     * @param boolean $httpOnly Flag of whether the cookie should only be accessible over the HTTP protocol
      */
     public function __construct(
         $name,
@@ -101,7 +95,7 @@ class ResponseCookie
         $path = null,
         $domain = null,
         $secure = false,
-        $http_only = false
+        $httpOnly = false
     )
     {
         // Initialize our properties
@@ -111,13 +105,12 @@ class ResponseCookie
         $this->setPath($path);
         $this->setDomain($domain);
         $this->setSecure($secure);
-        $this->setHttpOnly($http_only);
+        $this->setHttpOnly($httpOnly);
     }
 
     /**
      * Gets the cookie's name
      *
-     * @access public
      * @return string
      */
     public function getName()
@@ -129,7 +122,6 @@ class ResponseCookie
      * Sets the cookie's name
      *
      * @param string $name
-     * @access public
      * @return ResponseCookie
      */
     public function setName($name)
@@ -142,7 +134,6 @@ class ResponseCookie
     /**
      * Gets the cookie's value
      *
-     * @access public
      * @return string
      */
     public function getValue()
@@ -154,7 +145,6 @@ class ResponseCookie
      * Sets the cookie's value
      *
      * @param string $value
-     * @access public
      * @return ResponseCookie
      */
     public function setValue($value)
@@ -171,8 +161,7 @@ class ResponseCookie
     /**
      * Gets the cookie's expire time
      *
-     * @access public
-     * @return int
+     * @return DateTime|int
      */
     public function getExpire()
     {
@@ -185,14 +174,15 @@ class ResponseCookie
      * The time should be an integer
      * representing a Unix timestamp
      *
-     * @param int $expire
-     * @access public
+     * @param int|DateTime $expire
      * @return ResponseCookie
      */
     public function setExpire($expire)
     {
-        if (null !== $expire) {
-            $this->expire = (int)$expire;
+        if ($expire instanceof DateTime) {
+            $this->expire = $expire;
+        } elseif (null !== $expire) {
+            $this->expire = $expire;
         } else {
             $this->expire = $expire;
         }
@@ -203,7 +193,6 @@ class ResponseCookie
     /**
      * Gets the cookie's path
      *
-     * @access public
      * @return string
      */
     public function getPath()
@@ -215,7 +204,6 @@ class ResponseCookie
      * Sets the cookie's path
      *
      * @param string $path
-     * @access public
      * @return ResponseCookie
      */
     public function setPath($path)
@@ -232,7 +220,6 @@ class ResponseCookie
     /**
      * Gets the cookie's domain
      *
-     * @access public
      * @return string
      */
     public function getDomain()
@@ -244,7 +231,6 @@ class ResponseCookie
      * Sets the cookie's domain
      *
      * @param string $domain
-     * @access public
      * @return ResponseCookie
      */
     public function setDomain($domain)
@@ -261,7 +247,6 @@ class ResponseCookie
     /**
      * Gets the cookie's secure only flag
      *
-     * @access public
      * @return boolean
      */
     public function getSecure()
@@ -273,7 +258,6 @@ class ResponseCookie
      * Sets the cookie's secure only flag
      *
      * @param boolean $secure
-     * @access public
      * @return ResponseCookie
      */
     public function setSecure($secure)
@@ -286,24 +270,22 @@ class ResponseCookie
     /**
      * Gets the cookie's HTTP only flag
      *
-     * @access public
      * @return boolean
      */
     public function getHttpOnly()
     {
-        return $this->http_only;
+        return $this->httpOnly;
     }
 
     /**
      * Sets the cookie's HTTP only flag
      *
-     * @param boolean $http_only
-     * @access public
+     * @param boolean $httpOnly
      * @return ResponseCookie
      */
-    public function setHttpOnly($http_only)
+    public function setHttpOnly($httpOnly)
     {
-        $this->http_only = (boolean)$http_only;
+        $this->httpOnly = (boolean)$httpOnly;
 
         return $this;
     }
