@@ -11,8 +11,8 @@
 
 namespace Klein\Tests\DataCollection;
 
-use \Klein\Tests\AbstractKleinTest;
-use \Klein\DataCollection\ServerDataCollection;
+use Klein\DataCollection\ServerDataCollection;
+use Klein\Tests\AbstractKleinTest;
 
 /**
  * ServerDataCollectionTest
@@ -22,15 +22,9 @@ use \Klein\DataCollection\ServerDataCollection;
  */
 class ServerDataCollectionTest extends AbstractKleinTest
 {
-
-    /*
-     * Data Providers and Methods
-     */
-
     /**
      * Sample data provider
      *
-     * @access public
      * @return array
      */
     public function sampleDataProvider()
@@ -53,7 +47,7 @@ class ServerDataCollectionTest extends AbstractKleinTest
             'HTTP_CONNECTION' => 'keep-alive',
             'HTTP_CONTENT_LENGTH' => '137',
             'HTTP_USER_AGENT' => 'Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.31'
-                .' (KHTML, like Gecko) Chrome/26.0.1410.64 Safari/537.31',
+                . ' (KHTML, like Gecko) Chrome/26.0.1410.64 Safari/537.31',
             'HTTP_CACHE_CONTROL' => 'no-cache',
             'HTTP_ORIGIN' => 'chrome-extension://fdmmgilgnpjigdojojpjoooidkmcomcm',
             'HTTP_AUTHORIZATION' => 'Basic MTIzOjQ1Ng==',
@@ -74,11 +68,6 @@ class ServerDataCollectionTest extends AbstractKleinTest
             array($sample_data, $data_collection),
         );
     }
-
-
-    /*
-     * Tests
-     */
 
     public function testHasPrefix()
     {

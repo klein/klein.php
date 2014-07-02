@@ -11,23 +11,18 @@
 
 namespace Klein\Exceptions;
 
-use \RuntimeException;
+use RuntimeException;
 
 /**
  * HttpException
  *
  * An HTTP error exception
- * 
+ *
  * @uses       RuntimeException
  * @package    Klein\Exceptions
  */
 class HttpException extends RuntimeException implements HttpExceptionInterface
 {
-
-    /**
-     * Methods
-     */
-
     /**
      * Create an HTTP exception from nothing but an HTTP code
      *
@@ -38,6 +33,6 @@ class HttpException extends RuntimeException implements HttpExceptionInterface
      */
     public static function createFromCode($code)
     {
-        return new static(null, (int) $code);
+        return new static(null, (int)$code);
     }
 }

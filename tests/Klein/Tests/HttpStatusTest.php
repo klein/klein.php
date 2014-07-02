@@ -11,18 +11,16 @@
 
 namespace Klein\Tests;
 
-
-use \Klein\HttpStatus;
+use Klein\HttpStatus;
 
 /**
- * HttpStatusTests 
- * 
+ * HttpStatusTests
+ *
  * @uses AbstractKleinTest
  * @package Klein\Tests
  */
 class HttpStatusTests extends AbstractKleinTest
 {
-
     public function testStaticMessageFromCode()
     {
         // Set our test data

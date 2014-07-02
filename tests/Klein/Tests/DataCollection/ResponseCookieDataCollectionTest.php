@@ -11,27 +11,21 @@
 
 namespace Klein\Tests\DataCollection;
 
-use \Klein\Tests\AbstractKleinTest;
-use \Klein\DataCollection\ResponseCookieDataCollection;
-use \Klein\ResponseCookie;
+use Klein\DataCollection\ResponseCookieDataCollection;
+use Klein\ResponseCookie;
+use Klein\Tests\AbstractKleinTest;
 
 /**
- * ResponseCookieDataCollectionTest 
+ * ResponseCookieDataCollectionTest
  *
  * @uses AbstractKleinTest
  * @package Klein\Tests\DataCollection
  */
 class ResponseCookieDataCollectionTest extends AbstractKleinTest
 {
-
-    /*
-     * Data Providers and Methods
-     */
-
     /**
      * Sample data provider
      *
-     * @access public
      * @return array
      */
     public function sampleDataProvider()
@@ -60,11 +54,6 @@ class ResponseCookieDataCollectionTest extends AbstractKleinTest
             array($sample_cookie, $sample_other_cookie),
         );
     }
-
-
-    /*
-     * Tests
-     */
 
     /**
      * @dataProvider sampleDataProvider

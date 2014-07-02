@@ -11,22 +11,16 @@
 
 namespace Klein;
 
-use \BadMethodCallException;
-
-use \Klein\Exceptions\ValidationException;
+use BadMethodCallException;
+use Klein\Exceptions\ValidationException;
 
 /**
- * Validator 
- * 
+ * Validator
+ *
  * @package    Klein
  */
 class Validator
 {
-
-    /**
-     * Class properties
-     */
-
     /**
      * The available validator methods
      *
@@ -35,6 +29,15 @@ class Validator
      * @access protected
      */
     public static $methods = array();
+
+    /**
+     * Flag for whether the default validation methods have been added or not
+     *
+     * @static
+     * @var boolean
+     * @access protected
+     */
+    protected static $defaultAdded = false;
 
     /**
      * The string to validate
@@ -53,24 +56,10 @@ class Validator
     protected $err;
 
     /**
-     * Flag for whether the default validation methods have been added or not
-     *
-     * @static
-     * @var boolean
-     * @access protected
-     */
-    protected static $defaultAdded = false;
-
-
-    /**
-     * Methods
-     */
-
-    /**
      * Sets up the validator chain with the string and optional error message
      *
-     * @param string $str   The string to validate
-     * @param string $err   The optional custom exception message to throw on validation failure
+     * @param string $str The string to validate
+     * @param string $err The optional custom exception message to throw on validation failure
      * @access public
      */
     public function __construct($str, $err = null)
@@ -139,8 +128,8 @@ class Validator
     /**
      * Add a custom validator to our list of validation methods
      *
-     * @param string $method        The name of the validator method
-     * @param callable $callback    The callback to perform on validation
+     * @param string $method The name of the validator method
+     * @param callable $callback The callback to perform on validation
      * @static
      * @access public
      * @return void
@@ -156,8 +145,8 @@ class Validator
      * Allows the ability to arbitrarily call a validator with an optional prefix
      * of "is" or "not" by simply calling an instance property like a callback
      *
-     * @param callable $method          The callable method to execute
-     * @param array $args               The argument array to pass to our callback
+     * @param callable $method The callable method to execute
+     * @param array $args The argument array to pass to our callback
      * @throws BadMethodCallException   If an attempt was made to call a validator modifier that doesn't exist
      * @throws ValidationException      If the validation check returns false
      * @access public
@@ -169,7 +158,7 @@ class Validator
         $validator = $method;
         $method_substr = substr($method, 0, 2);
 
-        if ($method_substr === 'is') {       // is<$validator>()
+        if ($method_substr === 'is') { // is<$validator>()
             $validator = substr($method, 2);
         } elseif ($method_substr === 'no') { // not<$validator>()
             $validator = substr($method, 3);
@@ -179,7 +168,7 @@ class Validator
         $validator = strtolower($validator);
 
         if (!$validator || !isset(static::$methods[$validator])) {
-            throw new BadMethodCallException('Unknown method '. $method .'()');
+            throw new BadMethodCallException('Unknown method ' . $method . '()');
         }
 
         $validator = static::$methods[$validator];

@@ -25,8 +25,8 @@
       "psr-0": { "Klein": "src/" }
    },
    "require-dev": {
-      "phpunit/phpunit": "3.7.x",
-      "phpunit/php-code-coverage": "1.2.x",
-      "squizlabs/php_codesniffer": "1.4.8"
+      "phpunit/phpunit": "~4",
+      "phpunit/php-code-coverage": "~2",
+      "squizlabs/php_codesniffer": "~1"
    }
 }

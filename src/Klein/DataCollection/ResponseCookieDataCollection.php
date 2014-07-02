@@ -23,11 +23,6 @@ use Klein\ResponseCookie;
  */
 class ResponseCookieDataCollection extends DataCollection
 {
-
-    /**
-     * Methods
-     */
-
     /**
      * Constructor
      *
@@ -57,8 +52,8 @@ class ResponseCookieDataCollection extends DataCollection
      * instance of a ResponseCookie as the "$value"
      *
      * @see DataCollection::set()
-     * @param string $key                   The name of the cookie to set
-     * @param ResponseCookie|string $value  The value of the cookie to set
+     * @param string $key The name of the cookie to set
+     * @param ResponseCookie|string $value The value of the cookie to set
      * @access public
      * @return ResponseCookieDataCollection
      */

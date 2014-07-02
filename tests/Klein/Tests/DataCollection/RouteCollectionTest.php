@@ -11,9 +11,9 @@
 
 namespace Klein\Tests\DataCollection;
 
-use \Klein\Tests\AbstractKleinTest;
-use \Klein\DataCollection\RouteCollection;
-use \Klein\Route;
+use Klein\DataCollection\RouteCollection;
+use Klein\Route;
+use Klein\Tests\AbstractKleinTest;
 
 /**
  * RouteCollectionTest
@@ -23,11 +23,6 @@ use \Klein\Route;
  */
 class RouteCollectionTest extends AbstractKleinTest
 {
-
-    /*
-     * Data Providers and Methods
-     */
-
     /**
      * Sample data provider
      *
@@ -69,11 +64,6 @@ class RouteCollectionTest extends AbstractKleinTest
             array($sample_route, $sample_other_route, $sample_named_route),
         );
     }
-
-
-    /*
-     * Tests
-     */
 
     /**
      * @dataProvider sampleDataProvider
