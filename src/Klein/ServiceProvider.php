@@ -236,7 +236,7 @@ class ServiceProvider
         if (null === $type) {
             $flashes = $_SESSION['__flashes'];
             unset($_SESSION['__flashes']);
-        } elseif (null !== $type) {
+        } else {
             $flashes = array();
             if (isset($_SESSION['__flashes'][$type])) {
                 $flashes = $_SESSION['__flashes'][$type];
