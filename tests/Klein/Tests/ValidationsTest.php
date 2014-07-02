@@ -11,15 +11,14 @@
 
 namespace Klein\Tests;
 
-use \Klein\Klein;
-use \Klein\Tests\Mocks\MockRequestFactory;
-use \Klein\Validator;
-use \Klein\Request;
-use \Klein\Response;
+use Klein\Request;
+use Klein\Response;
+use Klein\Tests\Mocks\MockRequestFactory;
+use Klein\Validator;
 
 /**
- * ValidationsTest 
- * 
+ * ValidationsTest
+ *
  * @uses AbstractKleinTest
  * @package Klein\Tests
  */
@@ -44,11 +43,6 @@ class ValidationsTest extends AbstractKleinTest
         } else {
             echo 'fail';
         }
-    }
-
-    protected function validator($string, $error_message = null)
-    {
-        return new Validator($string, $error_message);
     }
 
     public function testCustomValidationMessage()
@@ -346,6 +340,11 @@ class ValidationsTest extends AbstractKleinTest
         $this->validator('test.com')->notUrl();
         $this->validator('test')->notUrl();
         $this->validator('www.com')->notUrl();
+    }
+
+    protected function validator($string, $error_message = null)
+    {
+        return new Validator($string, $error_message);
     }
 
     public function testIp()
@@ -807,10 +806,10 @@ class ValidationsTest extends AbstractKleinTest
 
                 foreach ($args as $arg) {
                     if (null !== $previous) {
-                        if ((bool) $arg != (bool) $previous) {
+                        if ((bool)$arg != (bool)$previous) {
                             echo 'nope';
                             var_dump($arg, $previous);
-                            var_dump((bool) $arg, (bool) $previous);
+                            var_dump((bool)$arg, (bool)$previous);
                             return false;
                         }
                     } else {

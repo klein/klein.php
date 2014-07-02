@@ -11,9 +11,6 @@
 
 namespace Klein\Tests;
 
-use Klein\AbstractRouteFactory;
-use Klein\Route;
-
 /**
  * AbstractRouteFactoryTest
  *
@@ -22,31 +19,6 @@ use Klein\Route;
  */
 class AbstractRouteFactoryTest extends AbstractKleinTest
 {
-
-    /**
-     * Helpers
-     */
-
-    protected function getDefaultMethodsToMock()
-    {
-        return array(
-            'build',
-        );
-    }
-
-    protected function getMockForFactory()
-    {
-        return $this->getMockForAbstractClass('\Klein\AbstractRouteFactory');
-    }
-
-    protected function getMockBuilderForFactory(array $methods_to_mock = null)
-    {
-        $methods_to_mock = $methods_to_mock ?: $this->getDefaultMethodsToMock();
-
-        return $this->getMockBuilder('\Klein\AbstractRouteFactory')
-            ->setMethods($methods_to_mock);
-    }
-
 
     /**
      * Tests
@@ -78,6 +50,30 @@ class AbstractRouteFactoryTest extends AbstractKleinTest
         $factory->setNamespace($test_namespace);
 
         $this->assertSame($test_namespace, $factory->getNamespace());
+    }
+
+    protected function getMockForFactory()
+    {
+        return $this->getMockForAbstractClass('\Klein\AbstractRouteFactory');
+    }
+
+    protected function getMockBuilderForFactory(array $methods_to_mock = null)
+    {
+        $methods_to_mock = $methods_to_mock ?: $this->getDefaultMethodsToMock();
+
+        return $this->getMockBuilder('\Klein\AbstractRouteFactory')
+            ->setMethods($methods_to_mock);
+    }
+
+    /**
+     * Helpers
+     */
+
+    protected function getDefaultMethodsToMock()
+    {
+        return array(
+            'build',
+        );
     }
 
     public function testAppendNamespace()

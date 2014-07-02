@@ -15,7 +15,6 @@ use Exception;
 use Klein\App;
 use Klein\DataCollection\RouteCollection;
 use Klein\Exceptions\DispatchHaltedException;
-use Klein\Exceptions\HttpException;
 use Klein\Exceptions\HttpExceptionInterface;
 use Klein\Klein;
 use Klein\Request;
@@ -25,7 +24,7 @@ use Klein\ServiceProvider;
 use OutOfBoundsException;
 
 /**
- * KleinTest 
+ * KleinTest
  *
  * @uses AbstractKleinTest
  * @package Klein\Tests
@@ -38,19 +37,6 @@ class KleinTest extends AbstractKleinTest
      */
 
     const TEST_CALLBACK_MESSAGE = 'yay';
-
-
-    /**
-     * Helpers
-     */
-
-    protected function getTestCallable($message = self::TEST_CALLBACK_MESSAGE)
-    {
-        return function () use ($message) {
-            return $message;
-        };
-    }
-
 
     /**
      * Tests
@@ -120,6 +106,17 @@ class KleinTest extends AbstractKleinTest
         $this->assertSame($route, $this->klein_app->routes()->get($object_id));
     }
 
+    /**
+     * Helpers
+     */
+
+    protected function getTestCallable($message = self::TEST_CALLBACK_MESSAGE)
+    {
+        return function () use ($message) {
+            return $message;
+        };
+    }
+
     public function testWith()
     {
         // Test data
@@ -149,18 +146,11 @@ class KleinTest extends AbstractKleinTest
         $this->expectOutputString('1');
     }
 
-    /**
-     * Weird PHPUnit bug is causing scope errors for the
-     * isolated process tests, unless I run this also in an
-     * isolated process
-     *
-     * @runInSeparateProcess
-     */
     public function testWithUsingFileInclude()
     {
         // Test data
         $test_namespace = '/test/namespace';
-        $test_routes_include = __DIR__ .'/routes/random.php';
+        $test_routes_include = __DIR__ . '/routes/random.php';
 
         // Test file include
         $this->assertEmpty($this->klein_app->routes()->all());
@@ -257,11 +247,11 @@ class KleinTest extends AbstractKleinTest
         // Create expected arguments
         $num_of_args = 0;
         $expected_arguments = array(
-            'code'            => null,
-            'klein'           => null,
-            'matched'         => null,
+            'code' => null,
+            'klein' => null,
+            'matched' => null,
             'methods_matched' => null,
-            'exception'       => null,
+            'exception' => null,
         );
 
         $this->klein_app->onHttpError(
@@ -274,7 +264,7 @@ class KleinTest extends AbstractKleinTest
                 $expected_arguments['methods_matched'] = $methods_matched;
                 $expected_arguments['exception'] = $exception;
 
-                $klein->response()->body($code .' error');
+                $klein->response()->body($code . ' error');
             }
         );
 

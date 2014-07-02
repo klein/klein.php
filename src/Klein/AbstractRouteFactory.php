@@ -21,11 +21,6 @@ namespace Klein;
  */
 abstract class AbstractRouteFactory
 {
-
-    /**
-     * Properties
-     */
-
     /**
      * The namespace of which to collect the routes in
      * when matching, so you can define routes under a
@@ -35,11 +30,6 @@ abstract class AbstractRouteFactory
      * @access protected
      */
     protected $namespace;
-
-
-    /**
-     * Methods
-     */
 
     /**
      * Constructor
@@ -72,7 +62,7 @@ abstract class AbstractRouteFactory
      */
     public function setNamespace($namespace)
     {
-        $this->namespace = (string) $namespace;
+        $this->namespace = (string)$namespace;
 
         return $this;
     }
@@ -86,7 +76,7 @@ abstract class AbstractRouteFactory
      */
     public function appendNamespace($namespace)
     {
-        $this->namespace .= (string) $namespace;
+        $this->namespace .= (string)$namespace;
 
         return $this;
     }
@@ -96,14 +86,14 @@ abstract class AbstractRouteFactory
      *
      * This method should be implemented to return a Route instance
      *
-     * @param callable $callback    Callable callback method to execute on route match
-     * @param string $path          Route URI path to match
-     * @param string|array $method  HTTP Method to match
-     * @param boolean $count_match  Whether or not to count the route as a match when counting total matches
-     * @param string $name          The name of the route
+     * @param callable $callback Callable callback method to execute on route match
+     * @param string $path Route URI path to match
+     * @param string|array $method HTTP Method to match
+     * @param boolean $count_match Whether or not to count the route as a match when counting total matches
+     * @param string $name The name of the route
      * @abstract
      * @access public
-     * @return Klein\Route
+     * @return Route
      */
     abstract public function build($callback, $path = null, $method = null, $count_match = true, $name = null);
 }

@@ -11,8 +11,8 @@
 
 namespace Klein\Tests;
 
-use Klein\RouteFactory;
 use Klein\Route;
+use Klein\RouteFactory;
 
 /**
  * RouteFactoryTest
@@ -29,18 +29,14 @@ class RouteFactoryTest extends AbstractKleinTest
 
     const TEST_CALLBACK_MESSAGE = 'yay';
 
-
-    /**
-     * Helpers
-     */
-
-    protected function getTestCallable($message = self::TEST_CALLBACK_MESSAGE)
+    public function testBuildWithNamespacedPath()
     {
-        return function () use ($message) {
-            return $message;
-        };
-    }
+        // Test data
+        $test_namespace = '/users';
+        $test_path = '/test';
 
+        $this->testBuildBasic($test_namespace, $test_path, false);
+    }
 
     /**
      * Tests
@@ -51,7 +47,8 @@ class RouteFactoryTest extends AbstractKleinTest
         $test_path = null,
         $test_paths_match = true,
         $should_match = true
-    ) {
+    )
+    {
         // Test data
         $test_path = $test_path ?: '/test';
         $test_callable = $this->getTestCallable();
@@ -76,13 +73,15 @@ class RouteFactoryTest extends AbstractKleinTest
         }
     }
 
-    public function testBuildWithNamespacedPath()
-    {
-        // Test data
-        $test_namespace = '/users';
-        $test_path = '/test';
+    /**
+     * Helpers
+     */
 
-        $this->testBuildBasic($test_namespace, $test_path, false);
+    protected function getTestCallable($message = self::TEST_CALLBACK_MESSAGE)
+    {
+        return function () use ($message) {
+            return $message;
+        };
     }
 
     public function testBuildWithNamespacedCatchAllPath()
