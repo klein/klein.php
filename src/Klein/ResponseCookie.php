@@ -20,11 +20,6 @@ namespace Klein;
  */
 class ResponseCookie
 {
-
-    /**
-     * Class properties
-     */
-
     /**
      * The name of the cookie
      *
@@ -87,21 +82,16 @@ class ResponseCookie
      */
     protected $http_only;
 
-
-    /**
-     * Methods
-     */
-
     /**
      * Constructor
      *
-     * @param string  $name         The name of the cookie
-     * @param string  $value        The value to set the cookie with
-     * @param int     $expire       The time that the cookie should expire
-     * @param string  $path         The path of which to restrict the cookie
-     * @param string  $domain       The domain of which to restrict the cookie
-     * @param boolean $secure       Flag of whether the cookie should only be sent over a HTTPS connection
-     * @param boolean $http_only    Flag of whether the cookie should only be accessible over the HTTP protocol
+     * @param string $name The name of the cookie
+     * @param string $value The value to set the cookie with
+     * @param int $expire The time that the cookie should expire
+     * @param string $path The path of which to restrict the cookie
+     * @param string $domain The domain of which to restrict the cookie
+     * @param boolean $secure Flag of whether the cookie should only be sent over a HTTPS connection
+     * @param boolean $http_only Flag of whether the cookie should only be accessible over the HTTP protocol
      * @access public
      */
     public function __construct(
@@ -112,7 +102,8 @@ class ResponseCookie
         $domain = null,
         $secure = false,
         $http_only = false
-    ) {
+    )
+    {
         // Initialize our properties
         $this->setName($name);
         $this->setValue($value);
@@ -133,7 +124,7 @@ class ResponseCookie
     {
         return $this->name;
     }
-    
+
     /**
      * Sets the cookie's name
      *
@@ -143,7 +134,7 @@ class ResponseCookie
      */
     public function setName($name)
     {
-        $this->name = (string) $name;
+        $this->name = (string)$name;
 
         return $this;
     }
@@ -158,7 +149,7 @@ class ResponseCookie
     {
         return $this->value;
     }
-    
+
     /**
      * Sets the cookie's value
      *
@@ -169,7 +160,7 @@ class ResponseCookie
     public function setValue($value)
     {
         if (null !== $value) {
-            $this->value = (string) $value;
+            $this->value = (string)$value;
         } else {
             $this->value = $value;
         }
@@ -187,7 +178,7 @@ class ResponseCookie
     {
         return $this->expire;
     }
-    
+
     /**
      * Sets the cookie's expire time
      *
@@ -201,7 +192,7 @@ class ResponseCookie
     public function setExpire($expire)
     {
         if (null !== $expire) {
-            $this->expire = (int) $expire;
+            $this->expire = (int)$expire;
         } else {
             $this->expire = $expire;
         }
@@ -219,7 +210,7 @@ class ResponseCookie
     {
         return $this->path;
     }
-    
+
     /**
      * Sets the cookie's path
      *
@@ -230,7 +221,7 @@ class ResponseCookie
     public function setPath($path)
     {
         if (null !== $path) {
-            $this->path = (string) $path;
+            $this->path = (string)$path;
         } else {
             $this->path = $path;
         }
@@ -248,7 +239,7 @@ class ResponseCookie
     {
         return $this->domain;
     }
-    
+
     /**
      * Sets the cookie's domain
      *
@@ -259,7 +250,7 @@ class ResponseCookie
     public function setDomain($domain)
     {
         if (null !== $domain) {
-            $this->domain = (string) $domain;
+            $this->domain = (string)$domain;
         } else {
             $this->domain = $domain;
         }
@@ -277,7 +268,7 @@ class ResponseCookie
     {
         return $this->secure;
     }
-    
+
     /**
      * Sets the cookie's secure only flag
      *
@@ -287,7 +278,7 @@ class ResponseCookie
      */
     public function setSecure($secure)
     {
-        $this->secure = (boolean) $secure;
+        $this->secure = (boolean)$secure;
 
         return $this;
     }
@@ -302,7 +293,7 @@ class ResponseCookie
     {
         return $this->http_only;
     }
-    
+
     /**
      * Sets the cookie's HTTP only flag
      *
@@ -312,7 +303,7 @@ class ResponseCookie
      */
     public function setHttpOnly($http_only)
     {
-        $this->http_only = (boolean) $http_only;
+        $this->http_only = (boolean)$http_only;
 
         return $this;
     }

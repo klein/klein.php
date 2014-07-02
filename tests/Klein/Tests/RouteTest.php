@@ -11,9 +11,7 @@
 
 namespace Klein\Tests;
 
-
-use \Klein\Klein;
-use \Klein\Route;
+use Klein\Route;
 
 /**
  * RouteTest
@@ -23,13 +21,6 @@ use \Klein\Route;
  */
 class RouteTest extends AbstractKleinTest
 {
-
-    protected function getTestCallable()
-    {
-        return function () {
-            echo 'dog';
-        };
-    }
 
     public function testCallbackGetSet()
     {
@@ -49,6 +40,13 @@ class RouteTest extends AbstractKleinTest
 
         $this->assertSame($test_class_callable, $route->getCallback());
         $this->assertInternalType('callable', $route->getCallback());
+    }
+
+    protected function getTestCallable()
+    {
+        return function () {
+            echo 'dog';
+        };
     }
 
     public function testPathGetSet()

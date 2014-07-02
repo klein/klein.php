@@ -11,13 +11,13 @@
 
 namespace Klein\Exceptions;
 
-use \RuntimeException;
+use RuntimeException;
 
 /**
  * ResponseAlreadySentException
  *
  * Exception used for when a response is attempted to be sent after its already been sent
- * 
+ *
  * @uses       RuntimeException
  * @package    Klein\Exceptions
  */
