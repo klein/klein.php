@@ -11,8 +11,8 @@
 
 namespace Klein\Tests\DataCollection;
 
-use \Klein\Tests\AbstractKleinTest;
-use \Klein\DataCollection\HeaderDataCollection;
+use Klein\DataCollection\HeaderDataCollection;
+use Klein\Tests\AbstractKleinTest;
 
 /**
  * HeaderDataCollectionTest
@@ -22,20 +22,46 @@ use \Klein\DataCollection\HeaderDataCollection;
  */
 class HeaderDataCollectionTest extends AbstractKleinTest
 {
-
     /**
      * Non existent key in the sample data
      *
-     * @static
      * @var string
-     * @access protected
      */
     protected static $nonexistent_key = 'non-standard-header';
 
-
-    /*
-     * Data Providers and Methods
+    /**
+     * Sample data provider
+     *
+     * @access public
+     * @return array
      */
+    public function sampleDataProvider()
+    {
+        // Populate our sample data
+        $sample_data = array(
+            'HOST' => 'localhost:8000',
+            'CONNECTION' => 'keep-alive',
+            'CONTENT_LENGTH' => '137',
+            'USER_AGENT' => 'Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.31'
+                . ' (KHTML, like Gecko) Chrome/26.0.1410.64 Safari/537.31',
+            'CACHE_CONTROL' => 'no-cache',
+            'ORIGIN' => 'chrome-extension://fdmmgilgnpjigdojojpjoooidkmcomcm',
+            'AUTHORIZATION' => 'Basic MTIzOjQ1Ng==',
+            'CONTENT_TYPE' => 'multipart/form-data; boundary=----WebKitFormBoundaryDhtDHBYppyHdrZe7',
+            'ACCEPT' => '*/*',
+            'ACCEPT_ENCODING' => 'gzip,deflate,sdch',
+            'ACCEPT_LANGUAGE' => 'en-US,en;q=0.8',
+            'ACCEPT_CHARSET' => 'ISO-8859-1,utf-8;q=0.7,*;q=0.3',
+        );
+
+        $this->prepareSampleData($sample_data);
+
+        $data_collection = new HeaderDataCollection($sample_data);
+
+        return array(
+            array($sample_data, $data_collection),
+        );
+    }
 
     /**
      * Quickly makes sure that no sample data arrays
@@ -57,45 +83,6 @@ class HeaderDataCollectionTest extends AbstractKleinTest
             }
         }
     }
-
-    /**
-     * Sample data provider
-     *
-     * @access public
-     * @return array
-     */
-    public function sampleDataProvider()
-    {
-        // Populate our sample data
-        $sample_data = array(
-            'HOST' => 'localhost:8000',
-            'CONNECTION' => 'keep-alive',
-            'CONTENT_LENGTH' => '137',
-            'USER_AGENT' => 'Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.31'
-                .' (KHTML, like Gecko) Chrome/26.0.1410.64 Safari/537.31',
-            'CACHE_CONTROL' => 'no-cache',
-            'ORIGIN' => 'chrome-extension://fdmmgilgnpjigdojojpjoooidkmcomcm',
-            'AUTHORIZATION' => 'Basic MTIzOjQ1Ng==',
-            'CONTENT_TYPE' => 'multipart/form-data; boundary=----WebKitFormBoundaryDhtDHBYppyHdrZe7',
-            'ACCEPT' => '*/*',
-            'ACCEPT_ENCODING' => 'gzip,deflate,sdch',
-            'ACCEPT_LANGUAGE' => 'en-US,en;q=0.8',
-            'ACCEPT_CHARSET' => 'ISO-8859-1,utf-8;q=0.7,*;q=0.3',
-        );
-
-        $this->prepareSampleData($sample_data);
-
-        $data_collection = new HeaderDataCollection($sample_data);
-
-        return array(
-            array($sample_data, $data_collection),
-        );
-    }
-
-
-    /*
-     * Tests
-     */
 
     /**
      * @dataProvider sampleDataProvider

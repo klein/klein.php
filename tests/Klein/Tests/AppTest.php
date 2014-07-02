@@ -21,29 +21,7 @@ use Klein\App;
  */
 class AppTest extends AbstractKleinTest
 {
-
-    /**
-     * Constants
-     */
-
     const TEST_CALLBACK_MESSAGE = 'yay';
-
-
-    /**
-     * Helpers
-     */
-
-    protected function getTestCallable($message = self::TEST_CALLBACK_MESSAGE)
-    {
-        return function () use ($message) {
-            return $message;
-        };
-    }
-
-
-    /**
-     * Tests
-     */
 
     public function testRegisterFiller()
     {
@@ -57,6 +35,13 @@ class AppTest extends AbstractKleinTest
             'app' => $app,
             'func_name' => $func_name,
         );
+    }
+
+    protected function getTestCallable($message = self::TEST_CALLBACK_MESSAGE)
+    {
+        return function () use ($message) {
+            return $message;
+        };
     }
 
     /**
@@ -74,7 +59,7 @@ class AppTest extends AbstractKleinTest
     }
 
     /**
-     * @expectedException Klein\Exceptions\UnknownServiceException
+     * @expectedException \Klein\Exceptions\UnknownServiceException
      */
     public function testGetBadMethod()
     {
@@ -97,7 +82,7 @@ class AppTest extends AbstractKleinTest
     }
 
     /**
-     * @expectedException BadMethodCallException
+     * @expectedException \BadMethodCallException
      */
     public function testCallBadMethod()
     {
@@ -107,7 +92,7 @@ class AppTest extends AbstractKleinTest
 
     /**
      * @depends testRegisterFiller
-     * @expectedException Klein\Exceptions\DuplicateServiceException
+     * @expectedException \Klein\Exceptions\DuplicateServiceException
      */
     public function testRegisterDuplicateMethod(array $args)
     {

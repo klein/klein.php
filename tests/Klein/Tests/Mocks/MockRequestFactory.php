@@ -11,10 +11,10 @@
 
 namespace Klein\Tests\Mocks;
 
-use \Klein\Request;
+use Klein\Request;
 
 /**
- * MockRequestFactory 
+ * MockRequestFactory
  *
  * Allow for the simple creation of mock requests
  * (great for testing... ;))
@@ -23,7 +23,6 @@ use \Klein\Request;
  */
 class MockRequestFactory
 {
-
     /**
      * Create a new mock request
      *
@@ -34,9 +33,7 @@ class MockRequestFactory
      * @param array $server
      * @param array $files
      * @param string $body
-     * @static
-     * @access public
-     * @return void
+     * @return Request
      */
     public static function create(
         $uri = '/',
@@ -46,7 +43,8 @@ class MockRequestFactory
         $server = array(),
         $files = array(),
         $body = null
-    ) {
+    )
+    {
         // Create a new Request object
         $request = new Request(
             array(),

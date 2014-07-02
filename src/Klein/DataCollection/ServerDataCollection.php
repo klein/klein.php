@@ -26,11 +26,6 @@ namespace Klein\DataCollection;
  */
 class ServerDataCollection extends DataCollection
 {
-
-    /**
-     * Class properties
-     */
-
     /**
      * The prefix of HTTP headers normally
      * stored in the Server data
@@ -57,28 +52,6 @@ class ServerDataCollection extends DataCollection
 
 
     /**
-     * Methods
-     */
-
-    /**
-     * Quickly check if a string has a passed prefix
-     *
-     * @param string $string    The string to check
-     * @param string $prefix    The prefix to test
-     * @static
-     * @access public
-     * @return boolean
-     */
-    public static function hasPrefix($string, $prefix)
-    {
-        if (strpos($string, $prefix) === 0) {
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
      * Get our headers from our server data collection
      *
      * PHP is weird... it puts all of the HTTP request
@@ -96,9 +69,7 @@ class ServerDataCollection extends DataCollection
             // Does our server attribute have our header prefix?
             if (self::hasPrefix($key, self::$http_header_prefix)) {
                 // Add our server attribute to our header array
-                $headers[
-                    substr($key, strlen(self::$http_header_prefix))
-                ] = $value;
+                $headers[substr($key, strlen(self::$http_header_prefix))] = $value;
 
             } elseif (in_array($key, self::$http_nonprefixed_headers)) {
                 // Add our server attribute to our header array
@@ -107,5 +78,23 @@ class ServerDataCollection extends DataCollection
         }
 
         return $headers;
+    }
+
+    /**
+     * Quickly check if a string has a passed prefix
+     *
+     * @param string $string The string to check
+     * @param string $prefix The prefix to test
+     * @static
+     * @access public
+     * @return boolean
+     */
+    public static function hasPrefix($string, $prefix)
+    {
+        if (strpos($string, $prefix) === 0) {
+            return true;
+        }
+
+        return false;
     }
 }

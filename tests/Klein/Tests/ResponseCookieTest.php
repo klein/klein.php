@@ -11,7 +11,7 @@
 
 namespace Klein\Tests;
 
-use \Klein\ResponseCookie;
+use Klein\ResponseCookie;
 
 /**
  * ResponseCookieTest
@@ -21,11 +21,6 @@ use \Klein\ResponseCookie;
  */
 class ResponseCookieTest extends AbstractKleinTest
 {
-
-    /*
-     * Data Providers and Methods
-     */
-
     /**
      * Sample data provider
      *
@@ -69,11 +64,6 @@ class ResponseCookieTest extends AbstractKleinTest
             array($default_sample_data, $sample_data, $sample_data_other),
         );
     }
-
-
-    /*
-     * Tests
-     */
 
     /**
      * @dataProvider sampleDataProvider

@@ -6,3 +6,9 @@ docs/
 
 # Auto-generated code coverage report
 report/
+
+/phpunit.phar
+/phpunit.xml
+/phpdoc.xml
+/.idea
+/vendor

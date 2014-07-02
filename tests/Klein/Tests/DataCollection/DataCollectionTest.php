@@ -11,9 +11,9 @@
 
 namespace Klein\Tests\DataCollection;
 
-use \stdClass;
-use \Klein\Tests\AbstractKleinTest;
-use \Klein\DataCollection\DataCollection;
+use Klein\DataCollection\DataCollection;
+use Klein\Tests\AbstractKleinTest;
+use stdClass;
 
 /**
  * DataCollectionTest
@@ -23,46 +23,16 @@ use \Klein\DataCollection\DataCollection;
  */
 class DataCollectionTest extends AbstractKleinTest
 {
-
     /**
      * Non existent key in the sample data
      *
-     * @static
      * @var string
-     * @access protected
      */
     protected static $nonexistent_key = 'key-name-doesnt-exist';
-
-
-    /*
-     * Data Providers and Methods
-     */
-
-    /**
-     * Quickly makes sure that no sample data arrays
-     * have any keys that match the "nonexistent_key"
-     *
-     * @param array $sample_data
-     * @access protected
-     * @return void
-     */
-    protected function prepareSampleData(&$sample_data)
-    {
-        if (isset($sample_data[static::$nonexistent_key])) {
-            unset($sample_data[static::$nonexistent_key]);
-        }
-
-        foreach ($sample_data as &$data) {
-            if (is_array($data)) {
-                $this->prepareSampleData($data);
-            }
-        }
-    }
 
     /**
      * Sample data provider
      *
-     * @access public
      * @return array
      */
     public function sampleDataProvider()
@@ -72,7 +42,7 @@ class DataCollectionTest extends AbstractKleinTest
             'id' => 1337,
             'name' => array(
                 'first' => 'Trevor',
-                'last'  => 'Suarez',
+                'last' => 'Suarez',
             ),
             'float' => 13.37,
             'thing' => new stdClass(),
@@ -88,31 +58,23 @@ class DataCollectionTest extends AbstractKleinTest
     }
 
     /**
-     * Totally different sample data provider
+     * Quickly makes sure that no sample data arrays
+     * have any keys that match the "nonexistent_key"
      *
-     * @access public
-     * @return array
+     * @param array $sample_data
      */
-    public function totallyDifferentSampleDataProvider()
+    protected function prepareSampleData(&$sample_data)
     {
-        // Populate our sample data
-        $totally_different_sample_data = array(
-            '_why' => 'the lucky stiff',
-            'php'  => 'has become beautiful',
-            'yay'  => 'life is very good. :)',
-        );
+        if (isset($sample_data[static::$nonexistent_key])) {
+            unset($sample_data[static::$nonexistent_key]);
+        }
 
-        $this->prepareSampleData($totally_different_sample_data);
-
-        return array(
-            array($totally_different_sample_data),
-        );
+        foreach ($sample_data as &$data) {
+            if (is_array($data)) {
+                $this->prepareSampleData($data);
+            }
+        }
     }
-
-
-    /*
-     * Tests
-     */
 
     /**
      * @dataProvider sampleDataProvider
@@ -214,6 +176,27 @@ class DataCollectionTest extends AbstractKleinTest
         $this->assertNotSame($sample_data, $totally_different_sample_data);
         $this->assertNotSame($sample_data, $data_collection->all());
         $this->assertSame($totally_different_sample_data, $data_collection->all());
+    }
+
+    /**
+     * Totally different sample data provider
+     *
+     * @return array
+     */
+    public function totallyDifferentSampleDataProvider()
+    {
+        // Populate our sample data
+        $totally_different_sample_data = array(
+            '_why' => 'the lucky stiff',
+            'php' => 'has become beautiful',
+            'yay' => 'life is very good. :)',
+        );
+
+        $this->prepareSampleData($totally_different_sample_data);
+
+        return array(
+            array($totally_different_sample_data),
+        );
     }
 
     /**

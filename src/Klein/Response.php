@@ -12,25 +12,19 @@
 namespace Klein;
 
 /**
- * Response 
- * 
- * @uses        AbstractResponse
- * @package     Klein
+ * Response
+ *
+ * @uses AbstractResponse
+ * @package Klein
  */
 class Response extends AbstractResponse
 {
-
-    /**
-     * Methods
-     */
-
     /**
      * Enable response chunking
      *
      * @link https://github.com/chriso/klein.php/wiki/Response-Chunking
      * @link http://bit.ly/hg3gHb
-     * @param string $str   An optional string to send as a response "chunk"
-     * @access public
+     * @param string $str An optional string to send as a response "chunk"
      * @return Response
      */
     public function chunk($str = null)
@@ -49,8 +43,7 @@ class Response extends AbstractResponse
     /**
      * Dump a variable
      *
-     * @param mixed $obj    The variable to dump
-     * @access public
+     * @param mixed $obj The variable to dump
      * @return Response
      */
     public function dump($obj)
@@ -59,7 +52,7 @@ class Response extends AbstractResponse
             $obj = print_r($obj, true);
         }
 
-        $this->append('<pre>' .  htmlentities($obj, ENT_QUOTES) . "</pre><br />\n");
+        $this->append('<pre>' . htmlentities($obj, ENT_QUOTES) . "</pre><br />\n");
 
         return $this;
     }
@@ -76,10 +69,9 @@ class Response extends AbstractResponse
      * currently in the response body and replaces it with
      * the file's data
      *
-     * @param string $path      The path of the file to send
-     * @param string $filename  The file's name
-     * @param string $mimetype  The MIME type of the file
-     * @access public
+     * @param string $path The path of the file to send
+     * @param string $filename The file's name
+     * @param string $mimetype The MIME type of the file
      * @return Response
      */
     public function file($path, $filename = null, $mimetype = null)
@@ -96,7 +88,7 @@ class Response extends AbstractResponse
 
         $this->header('Content-type', $mimetype);
         $this->header('Content-length', filesize($path));
-        $this->header('Content-Disposition', 'attachment; filename="'.$filename.'"');
+        $this->header('Content-Disposition', 'attachment; filename="' . $filename . '"');
 
         $this->send();
 
@@ -116,9 +108,8 @@ class Response extends AbstractResponse
      * currently in the response body and replaces it with
      * the passed json encoded object
      *
-     * @param mixed $object         The data to encode as JSON
-     * @param string $jsonp_prefix  The name of the JSON-P function prefix
-     * @access public
+     * @param mixed $object The data to encode as JSON
+     * @param string $jsonp_prefix The name of the JSON-P function prefix
      * @return Response
      */
     public function json($object, $jsonp_prefix = null)

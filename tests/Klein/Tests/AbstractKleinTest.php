@@ -11,41 +11,33 @@
 
 namespace Klein\Tests;
 
-
-use \PHPUnit_Framework_TestCase;
-
-use \Klein\Klein;
-
-use \Klein\Tests\Mocks\HeadersNoOp;
+use Klein\Klein;
+use Klein\Request;
+use Klein\Response;
+use PHPUnit_Framework_TestCase;
 
 /**
  * AbstractKleinTest
  *
  * Base test class for PHP Unit testing
- * 
+ *
  * @uses PHPUnit_Framework_TestCase
  * @abstract
  * @package Klein\Tests
  */
 abstract class AbstractKleinTest extends PHPUnit_Framework_TestCase
 {
-
     /**
      * The automatically created test Klein instance
      * (for easy testing and less boilerplate)
-     * 
+     *
      * @var \Klein\Klein;
-     * @access protected
      */
     protected $klein_app;
-
 
     /**
      * Setup our test
      * (runs before each test)
-     * 
-     * @access protected
-     * @return void
      */
     protected function setUp()
     {
@@ -60,9 +52,8 @@ abstract class AbstractKleinTest extends PHPUnit_Framework_TestCase
      * This is mostly useful, since the tests would otherwise have to make a bunch of calls
      * concerning the argument order and constants. DRY, bitch. ;)
      *
-     * @param Request $request      Custom Klein "Request" object
-     * @param Response $response    Custom Klein "Response" object
-     * @access protected
+     * @param Request $request Custom Klein "Request" object
+     * @param Response $response Custom Klein "Response" object
      * @return mixed The output of the dispatch call
      */
     protected function dispatchAndReturnOutput($request = null, $response = null)
@@ -78,12 +69,10 @@ abstract class AbstractKleinTest extends PHPUnit_Framework_TestCase
     /**
      * Runs a callable and asserts that the output from the executed callable
      * matches the passed in expected output
-     * 
+     *
      * @param mixed $expected The expected output
      * @param callable $callback The callable function
      * @param string $message (optional) A message to display if the assertion fails
-     * @access protected
-     * @return void
      */
     protected function assertOutputSame($expected, $callback, $message = '')
     {
@@ -104,9 +93,8 @@ abstract class AbstractKleinTest extends PHPUnit_Framework_TestCase
 
     /**
      * Loads externally defined routes under the filename's namespace
-     * 
+     *
      * @param Klein $app_context The application context to attach the routes to
-     * @access protected
      * @return array
      */
     protected function loadExternalRoutes(Klein $app_context = null)
