@@ -1719,6 +1719,32 @@ class RoutingTest extends AbstractKleinTest
         );
         $this->klein_app->respond(
             function ($a, $b, $c, $d, $klein_app) {
+                $klein_app->abort();
+                echo '2,';
+            }
+        );
+        $this->klein_app->respond(
+            function ($a, $b, $c, $d, $klein_app) {
+                echo '3,';
+            }
+        );
+
+        $this->klein_app->dispatch();
+
+        $this->assertSame(404, $this->klein_app->response()->code());
+    }
+
+    public function testDispatchAbortWithCode()
+    {
+        $this->expectOutputString('1,');
+
+        $this->klein_app->respond(
+            function ($a, $b, $c, $d, $klein_app) {
+                echo '1,';
+            }
+        );
+        $this->klein_app->respond(
+            function ($a, $b, $c, $d, $klein_app) {
                 $klein_app->abort(404);
                 echo '2,';
             }
@@ -1769,7 +1795,7 @@ class RoutingTest extends AbstractKleinTest
     }
 
     /**
-     * @expectedException Klein\Exceptions\DispatchHaltedException
+     * @expectedException Klein\Exceptions\UnhandledException
      */
     public function testDispatchExceptionRethrowsUnknownCode()
     {
