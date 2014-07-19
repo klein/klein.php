@@ -15,11 +15,12 @@ use \Exception;
 use \OutOfBoundsException;
 
 use \Klein\DataCollection\RouteCollection;
-use \Klein\Exceptions\LockedResponseException;
-use \Klein\Exceptions\UnhandledException;
 use \Klein\Exceptions\DispatchHaltedException;
 use \Klein\Exceptions\HttpException;
 use \Klein\Exceptions\HttpExceptionInterface;
+use \Klein\Exceptions\LockedResponseException;
+use \Klein\Exceptions\RoutePathCompilationException;
+use \Klein\Exceptions\UnhandledException;
 
 /**
  * Klein
@@ -721,7 +722,44 @@ class Klein
             }
         }
 
-        return "`^$route$`";
+        $regex = "`^$route$`";
+
+        // Check if our regular expression is valid
+        $this->validateRegularExpression($regex);
+
+        return $regex;
+    }
+
+    /**
+     * Validate a regular expression
+     *
+     * This simply checks if the regular expression is able to be compiled
+     * and converts any warnings or notices in the compilation to an exception
+     *
+     * @param string $regex                  The regular expression to validate
+     * @throws RoutePathCompilationException If the expression can't be compiled
+     * @access private
+     * @return void
+     */
+    private function validateRegularExpression($regex)
+    {
+        $handled = false;
+
+        $error_handler = function ($errno, $errstr) use ($handled) {
+            $handled = true;
+
+            throw new RoutePathCompilationException($errstr, preg_last_error());
+        };
+
+        // Set an error handler temporarily
+        set_error_handler($error_handler, E_NOTICE | E_WARNING);
+
+        if (false === preg_match($regex, null) && true !== $handled) {
+            $error_handler(null, null);
+        }
+
+        // Remove our temporary error handler
+        restore_error_handler();
     }
 
     /**
