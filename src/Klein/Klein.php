@@ -611,6 +611,9 @@ class Klein
             if (!$locked) {
                 $this->response->unlock();
             }
+
+        } catch (Exception $e) {
+            $this->error($e);
         }
 
         try {
