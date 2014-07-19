@@ -2215,4 +2215,14 @@ class RoutingTest extends AbstractKleinTest
         $this->assertTrue($exception instanceof RoutePathCompilationException);
         $this->assertTrue($exception->getRoute() instanceof Route);
     }
+
+    public function testRoutePathCompilationFailureWithoutWarnings()
+    {
+        $old_error_val = error_reporting();
+        error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING);
+
+        $this->testRoutePathCompilationFailure();
+
+        error_reporting($old_error_val);
+    }
 }
