@@ -748,19 +748,24 @@ class Klein
      */
     private function validateRegularExpression($regex)
     {
-        $handled = false;
-
-        $error_handler = function ($errno, $errstr) use ($handled) {
-            $handled = true;
-
-            throw new RegularExpressionCompilationException($errstr, preg_last_error());
-        };
+        $error_string = null;
 
         // Set an error handler temporarily
-        set_error_handler($error_handler, E_NOTICE | E_WARNING);
+        set_error_handler(
+            function ($errno, $errstr) use (&$error_string) {
+                $error_string = $errstr;
+            },
+            E_NOTICE | E_WARNING
+        );
 
-        if (false === preg_match($regex, null) && true !== $handled) {
-            $error_handler(null, null);
+        if (false === preg_match($regex, null) || !empty($error_string)) {
+            // Remove our temporary error handler
+            restore_error_handler();
+
+            throw new RegularExpressionCompilationException(
+                $error_string,
+                preg_last_error()
+            );
         }
 
         // Remove our temporary error handler
