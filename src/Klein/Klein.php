@@ -19,6 +19,7 @@ use \Klein\Exceptions\DispatchHaltedException;
 use \Klein\Exceptions\HttpException;
 use \Klein\Exceptions\HttpExceptionInterface;
 use \Klein\Exceptions\LockedResponseException;
+use \Klein\Exceptions\RegularExpressionCompilationException;
 use \Klein\Exceptions\RoutePathCompilationException;
 use \Klein\Exceptions\UnhandledException;
 
@@ -529,15 +530,19 @@ class Klein
                         $expression .= $path[$i++];
                     }
 
-                    // Check if there's a cached regex string
-                    if (false !== $apc) {
-                        $regex = apc_fetch("route:$expression");
-                        if (false === $regex) {
+                    try {
+                        // Check if there's a cached regex string
+                        if (false !== $apc) {
+                            $regex = apc_fetch("route:$expression");
+                            if (false === $regex) {
+                                $regex = $this->compileRoute($expression);
+                                apc_store("route:$expression", $regex);
+                            }
+                        } else {
                             $regex = $this->compileRoute($expression);
-                            apc_store("route:$expression", $regex);
                         }
-                    } else {
-                        $regex = $this->compileRoute($expression);
+                    } catch (RegularExpressionCompilationException $e) {
+                        throw RoutePathCompilationException::createFromRoute($route, $e);
                     }
 
                     $match = preg_match($regex, $uri, $params);
@@ -736,10 +741,10 @@ class Klein
      * This simply checks if the regular expression is able to be compiled
      * and converts any warnings or notices in the compilation to an exception
      *
-     * @param string $regex                  The regular expression to validate
-     * @throws RoutePathCompilationException If the expression can't be compiled
+     * @param string $regex                          The regular expression to validate
+     * @throws RegularExpressionCompilationException If the expression can't be compiled
      * @access private
-     * @return void
+     * @return boolean
      */
     private function validateRegularExpression($regex)
     {
@@ -748,7 +753,7 @@ class Klein
         $error_handler = function ($errno, $errstr) use ($handled) {
             $handled = true;
 
-            throw new RoutePathCompilationException($errstr, preg_last_error());
+            throw new RegularExpressionCompilationException($errstr, preg_last_error());
         };
 
         // Set an error handler temporarily
@@ -760,6 +765,8 @@ class Klein
 
         // Remove our temporary error handler
         restore_error_handler();
+
+        return true;
     }
 
     /**
