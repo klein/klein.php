@@ -795,34 +795,26 @@ class Klein
     protected function handleRouteCallback(Route $route, RouteCollection $matched, $methods_matched)
     {
         // Handle the callback
-        try {
-            $returned = call_user_func(
-                $route->getCallback(), // Instead of relying on the slower "invoke" magic
-                $this->request,
-                $this->response,
-                $this->service,
-                $this->app,
-                $this, // Pass the Klein instance
-                $matched,
-                $methods_matched
-            );
+        $returned = call_user_func(
+            $route->getCallback(), // Instead of relying on the slower "invoke" magic
+            $this->request,
+            $this->response,
+            $this->service,
+            $this->app,
+            $this, // Pass the Klein instance
+            $matched,
+            $methods_matched
+        );
 
-            if ($returned instanceof AbstractResponse) {
-                $this->response = $returned;
-            } else {
-                // Otherwise, attempt to append the returned data
-                try {
-                    $this->response->append($returned);
-                } catch (LockedResponseException $e) {
-                    // Do nothing, since this is an automated behavior
-                }
+        if ($returned instanceof AbstractResponse) {
+            $this->response = $returned;
+        } else {
+            // Otherwise, attempt to append the returned data
+            try {
+                $this->response->append($returned);
+            } catch (LockedResponseException $e) {
+                // Do nothing, since this is an automated behavior
             }
-        } catch (DispatchHaltedException $e) {
-            throw $e;
-        } catch (HttpExceptionInterface $e) {
-            throw $e;
-        } catch (Exception $e) {
-            $this->error($e);
         }
     }
 
