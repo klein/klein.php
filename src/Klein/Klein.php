@@ -425,170 +425,170 @@ class Klein
 
         ob_start();
 
-        foreach ($this->routes as $route) {
-            // Are we skipping any matches?
-            if ($skip_num > 0) {
-                $skip_num--;
-                continue;
-            }
+        try {
+            foreach ($this->routes as $route) {
+                // Are we skipping any matches?
+                if ($skip_num > 0) {
+                    $skip_num--;
+                    continue;
+                }
 
-            // Grab the properties of the route handler
-            $method = $route->getMethod();
-            $path = $route->getPath();
-            $count_match = $route->getCountMatch();
+                // Grab the properties of the route handler
+                $method = $route->getMethod();
+                $path = $route->getPath();
+                $count_match = $route->getCountMatch();
 
-            // Keep track of whether this specific request method was matched
-            $method_match = null;
+                // Keep track of whether this specific request method was matched
+                $method_match = null;
 
-            // Was a method specified? If so, check it against the current request method
-            if (is_array($method)) {
-                foreach ($method as $test) {
-                    if (strcasecmp($req_method, $test) === 0) {
-                        $method_match = true;
-                    } elseif (strcasecmp($req_method, 'HEAD') === 0
-                          && (strcasecmp($test, 'HEAD') === 0 || strcasecmp($test, 'GET') === 0)) {
+                // Was a method specified? If so, check it against the current request method
+                if (is_array($method)) {
+                    foreach ($method as $test) {
+                        if (strcasecmp($req_method, $test) === 0) {
+                            $method_match = true;
+                        } elseif (strcasecmp($req_method, 'HEAD') === 0
+                              && (strcasecmp($test, 'HEAD') === 0 || strcasecmp($test, 'GET') === 0)) {
 
-                        // Test for HEAD request (like GET)
+                            // Test for HEAD request (like GET)
+                            $method_match = true;
+                        }
+                    }
+
+                    if (null === $method_match) {
+                        $method_match = false;
+                    }
+                } elseif (null !== $method && strcasecmp($req_method, $method) !== 0) {
+                    $method_match = false;
+
+                    // Test for HEAD request (like GET)
+                    if (strcasecmp($req_method, 'HEAD') === 0
+                        && (strcasecmp($method, 'HEAD') === 0 || strcasecmp($method, 'GET') === 0 )) {
+
                         $method_match = true;
                     }
-                }
-
-                if (null === $method_match) {
-                    $method_match = false;
-                }
-            } elseif (null !== $method && strcasecmp($req_method, $method) !== 0) {
-                $method_match = false;
-
-                // Test for HEAD request (like GET)
-                if (strcasecmp($req_method, 'HEAD') === 0
-                    && (strcasecmp($method, 'HEAD') === 0 || strcasecmp($method, 'GET') === 0 )) {
-
+                } elseif (null !== $method && strcasecmp($req_method, $method) === 0) {
                     $method_match = true;
                 }
-            } elseif (null !== $method && strcasecmp($req_method, $method) === 0) {
-                $method_match = true;
-            }
 
-            // If the method was matched or if it wasn't even passed (in the route callback)
-            $possible_match = (null === $method_match) || $method_match;
+                // If the method was matched or if it wasn't even passed (in the route callback)
+                $possible_match = (null === $method_match) || $method_match;
 
-            // ! is used to negate a match
-            if (isset($path[0]) && $path[0] === '!') {
-                $negate = true;
-                $i = 1;
-            } else {
-                $negate = false;
-                $i = 0;
-            }
-
-            // Check for a wildcard (match all)
-            if ($path === '*') {
-                $match = true;
-
-            } elseif (($path === '404' && $matched->isEmpty() && count($methods_matched) <= 0)
-                   || ($path === '405' && $matched->isEmpty() && count($methods_matched) > 0)) {
-
-                // Easily handle 40x's
-                // TODO: Possibly remove in future, here for backwards compatibility
-                $this->onHttpError($route);
-
-                continue;
-
-            } elseif (isset($path[$i]) && $path[$i] === '@') {
-                // @ is used to specify custom regex
-
-                $match = preg_match('`' . substr($path, $i + 1) . '`', $uri, $params);
-
-            } else {
-                // Compiling and matching regular expressions is relatively
-                // expensive, so try and match by a substring first
-
-                $expression = null;
-                $regex = false;
-                $j = 0;
-                $n = isset($path[$i]) ? $path[$i] : null;
-
-                // Find the longest non-regex substring and match it against the URI
-                while (true) {
-                    if (!isset($path[$i])) {
-                        break;
-                    } elseif (false === $regex) {
-                        $c = $n;
-                        $regex = $c === '[' || $c === '(' || $c === '.';
-                        if (false === $regex && false !== isset($path[$i+1])) {
-                            $n = $path[$i + 1];
-                            $regex = $n === '?' || $n === '+' || $n === '*' || $n === '{';
-                        }
-                        if (false === $regex && $c !== '/' && (!isset($uri[$j]) || $c !== $uri[$j])) {
-                            continue 2;
-                        }
-                        $j++;
-                    }
-                    $expression .= $path[$i++];
-                }
-
-                // Check if there's a cached regex string
-                if (false !== $apc) {
-                    $regex = apc_fetch("route:$expression");
-                    if (false === $regex) {
-                        $regex = $this->compileRoute($expression);
-                        apc_store("route:$expression", $regex);
-                    }
+                // ! is used to negate a match
+                if (isset($path[0]) && $path[0] === '!') {
+                    $negate = true;
+                    $i = 1;
                 } else {
-                    $regex = $this->compileRoute($expression);
+                    $negate = false;
+                    $i = 0;
                 }
 
-                $match = preg_match($regex, $uri, $params);
-            }
+                // Check for a wildcard (match all)
+                if ($path === '*') {
+                    $match = true;
 
-            if (isset($match) && $match ^ $negate) {
-                if ($possible_match) {
-                    if (!empty($params)) {
-                        /**
-                         * URL Decode the params according to RFC 3986
-                         * @link http://www.faqs.org/rfcs/rfc3986
-                         *
-                         * Decode here AFTER matching as per @chriso's suggestion
-                         * @link https://github.com/chriso/klein.php/issues/117#issuecomment-21093915
-                         */
-                        $params = array_map('rawurldecode', $params);
+                } elseif (($path === '404' && $matched->isEmpty() && count($methods_matched) <= 0)
+                       || ($path === '405' && $matched->isEmpty() && count($methods_matched) > 0)) {
 
-                        $this->request->paramsNamed()->merge($params);
+                    // Easily handle 40x's
+                    // TODO: Possibly remove in future, here for backwards compatibility
+                    $this->onHttpError($route);
+
+                    continue;
+
+                } elseif (isset($path[$i]) && $path[$i] === '@') {
+                    // @ is used to specify custom regex
+
+                    $match = preg_match('`' . substr($path, $i + 1) . '`', $uri, $params);
+
+                } else {
+                    // Compiling and matching regular expressions is relatively
+                    // expensive, so try and match by a substring first
+
+                    $expression = null;
+                    $regex = false;
+                    $j = 0;
+                    $n = isset($path[$i]) ? $path[$i] : null;
+
+                    // Find the longest non-regex substring and match it against the URI
+                    while (true) {
+                        if (!isset($path[$i])) {
+                            break;
+                        } elseif (false === $regex) {
+                            $c = $n;
+                            $regex = $c === '[' || $c === '(' || $c === '.';
+                            if (false === $regex && false !== isset($path[$i+1])) {
+                                $n = $path[$i + 1];
+                                $regex = $n === '?' || $n === '+' || $n === '*' || $n === '{';
+                            }
+                            if (false === $regex && $c !== '/' && (!isset($uri[$j]) || $c !== $uri[$j])) {
+                                continue 2;
+                            }
+                            $j++;
+                        }
+                        $expression .= $path[$i++];
                     }
 
-                    // Handle our response callback
-                    try {
-                        $this->handleRouteCallback($route, $matched, $methods_matched);
+                    // Check if there's a cached regex string
+                    if (false !== $apc) {
+                        $regex = apc_fetch("route:$expression");
+                        if (false === $regex) {
+                            $regex = $this->compileRoute($expression);
+                            apc_store("route:$expression", $regex);
+                        }
+                    } else {
+                        $regex = $this->compileRoute($expression);
+                    }
 
-                    } catch (DispatchHaltedException $e) {
-                        switch ($e->getCode()) {
-                            case DispatchHaltedException::SKIP_THIS:
-                                continue 2;
-                                break;
-                            case DispatchHaltedException::SKIP_NEXT:
-                                $skip_num = $e->getNumberOfSkips();
-                                break;
-                            case DispatchHaltedException::SKIP_REMAINING:
-                                break 2;
-                            default:
-                                throw $e;
+                    $match = preg_match($regex, $uri, $params);
+                }
+
+                if (isset($match) && $match ^ $negate) {
+                    if ($possible_match) {
+                        if (!empty($params)) {
+                            /**
+                             * URL Decode the params according to RFC 3986
+                             * @link http://www.faqs.org/rfcs/rfc3986
+                             *
+                             * Decode here AFTER matching as per @chriso's suggestion
+                             * @link https://github.com/chriso/klein.php/issues/117#issuecomment-21093915
+                             */
+                            $params = array_map('rawurldecode', $params);
+
+                            $this->request->paramsNamed()->merge($params);
+                        }
+
+                        // Handle our response callback
+                        try {
+                            $this->handleRouteCallback($route, $matched, $methods_matched);
+
+                        } catch (DispatchHaltedException $e) {
+                            switch ($e->getCode()) {
+                                case DispatchHaltedException::SKIP_THIS:
+                                    continue 2;
+                                    break;
+                                case DispatchHaltedException::SKIP_NEXT:
+                                    $skip_num = $e->getNumberOfSkips();
+                                    break;
+                                case DispatchHaltedException::SKIP_REMAINING:
+                                    break 2;
+                                default:
+                                    throw $e;
+                            }
+                        }
+
+                        if ($path !== '*') {
+                            $count_match && $matched->add($route);
                         }
                     }
 
-                    if ($path !== '*') {
-                        $count_match && $matched->add($route);
-                    }
+                    // Keep track of possibly matched methods
+                    $methods_matched = array_merge($methods_matched, (array) $method);
+                    $methods_matched = array_filter($methods_matched);
+                    $methods_matched = array_unique($methods_matched);
                 }
-
-                // Keep track of possibly matched methods
-                $methods_matched = array_merge($methods_matched, (array) $method);
-                $methods_matched = array_filter($methods_matched);
-                $methods_matched = array_unique($methods_matched);
             }
-        }
 
-        // Handle our 404/405 conditions
-        try {
+            // Handle our 404/405 conditions
             if ($matched->isEmpty() && count($methods_matched) > 0) {
                 // Add our methods to our allow header
                 $this->response->header('Allow', implode(', ', $methods_matched));
@@ -599,6 +599,7 @@ class Klein
             } elseif ($matched->isEmpty()) {
                 throw HttpException::createFromCode(404);
             }
+
         } catch (HttpExceptionInterface $e) {
             // Grab our original response lock state
             $locked = $this->response->isLocked();
@@ -816,10 +817,7 @@ class Klein
         } catch (DispatchHaltedException $e) {
             throw $e;
         } catch (HttpExceptionInterface $e) {
-            // Call our http error handlers
-            $this->httpError($e, $matched, $methods_matched);
-
-            throw new DispatchHaltedException();
+            throw $e;
         } catch (Exception $e) {
             $this->error($e);
         }
