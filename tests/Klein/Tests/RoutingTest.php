@@ -20,6 +20,7 @@ use Klein\Exceptions\RoutePathCompilationException;
 use Klein\Klein;
 use Klein\Request;
 use Klein\Response;
+use Klein\Route;
 use Klein\ServiceProvider;
 use Klein\Tests\Mocks\HeadersEcho;
 use Klein\Tests\Mocks\HeadersSave;
@@ -2201,14 +2202,17 @@ class RoutingTest extends AbstractKleinTest
             }
         );
 
+        $exception = null;
+
         try {
             $this->klein_app->dispatch(
                 MockRequestFactory::create('/users/1738197/friends/7828316')
             );
         } catch (\Exception $e) {
-            $this->assertTrue(
-                $e->getPrevious() instanceof RoutePathCompilationException
-            );
+            $exception = $e->getPrevious();
         }
+
+        $this->assertTrue($exception instanceof RoutePathCompilationException);
+        $this->assertTrue($exception->getRoute() instanceof Route);
     }
 }
