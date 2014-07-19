@@ -1769,7 +1769,7 @@ class RoutingTest extends AbstractKleinTest
     }
 
     /**
-     * @expectedException Klein\Exceptions\DispatchHaltedException
+     * @expectedException Klein\Exceptions\UnhandledException
      */
     public function testDispatchExceptionRethrowsUnknownCode()
     {
