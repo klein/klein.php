@@ -1033,11 +1033,8 @@ class Klein
     public function abort($code = null)
     {
         if (null !== $code) {
-            $this->response->code($code);
+            throw HttpException::createFromCode($code);
         }
-
-        // Disallow further response modification
-        $this->response->lock();
 
         throw new DispatchHaltedException();
     }
