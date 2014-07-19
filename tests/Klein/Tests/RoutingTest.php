@@ -16,6 +16,7 @@ use Klein\App;
 use Klein\DataCollection\RouteCollection;
 use Klein\Exceptions\DispatchHaltedException;
 use Klein\Exceptions\HttpException;
+use Klein\Exceptions\RoutePathCompilationException;
 use Klein\Klein;
 use Klein\Request;
 use Klein\Response;
@@ -2189,5 +2190,25 @@ class RoutingTest extends AbstractKleinTest
             MockRequestFactory::create('/test')
         );
         $this->assertSame(200, $this->klein_app->response()->code());
+    }
+
+    public function testRoutePathCompilationFailure()
+    {
+        $this->klein_app->respond(
+            '/users/[i:id]/friends/[i:id]/',
+            function () {
+                echo 'yup';
+            }
+        );
+
+        try {
+            $this->klein_app->dispatch(
+                MockRequestFactory::create('/users/1738197/friends/7828316')
+            );
+        } catch (\Exception $e) {
+            $this->assertTrue(
+                $e->getPrevious() instanceof RoutePathCompilationException
+            );
+        }
     }
 }
