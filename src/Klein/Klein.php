@@ -864,7 +864,7 @@ class Klein
             }
         } else {
             $this->response->code(500);
-            throw new UnhandledException($err);
+            throw new UnhandledException($msg, $err->getCode(), $err);
         }
 
         // Lock our response, since we probably don't want
