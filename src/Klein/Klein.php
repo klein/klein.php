@@ -491,7 +491,11 @@ class Klein
                 } elseif (($path === '404' && $matched->isEmpty() && count($methods_matched) <= 0)
                        || ($path === '405' && $matched->isEmpty() && count($methods_matched) > 0)) {
 
-                    // Easily handle 40x's
+                    // Warn user of deprecation
+                    trigger_error(
+                        'Use of 404/405 "routes" is deprecated. Use $klein->onHttpError() instead.',
+                        E_USER_DEPRECATED
+                    );
                     // TODO: Possibly remove in future, here for backwards compatibility
                     $this->onHttpError($route);
 
