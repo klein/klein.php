@@ -2176,7 +2176,7 @@ class RoutingTest extends AbstractKleinTest
         $this->assertSame(200, $this->klein_app->response()->code());
     }
 
-    public function testSendCallsFastCGIFinishRequest()
+    public function testApcDependencyFailsGracefully()
     {
         // Custom apc function
         implement_custom_apc_cache_functions();
