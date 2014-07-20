@@ -466,15 +466,17 @@ class RoutingTest extends AbstractKleinTest
     {
         $this->expectOutputString("b404\n");
 
+        $this->klein_app->onHttpError(
+            function ($code) {
+                if (404 === $code) {
+                    echo "404\n";
+                }
+            }
+        );
+
         $this->klein_app->respond(
             function () {
                 echo 'b';
-            }
-        );
-        $this->klein_app->respond(
-            404,
-            function () {
-                echo "404\n";
             }
         );
 
@@ -548,16 +550,18 @@ class RoutingTest extends AbstractKleinTest
     {
         $this->expectOutputString("404\n");
 
+        $this->klein_app->onHttpError(
+            function ($code) {
+                if (404 === $code) {
+                    echo "404\n";
+                }
+            }
+        );
+
         $this->klein_app->respond(
             '/',
             function () {
                 echo 'a';
-            }
-        );
-        $this->klein_app->respond(
-            404,
-            function () {
-                echo "404\n";
             }
         );
 
@@ -604,16 +608,18 @@ class RoutingTest extends AbstractKleinTest
     {
         $this->expectOutputString('404 Code');
 
+        $this->klein_app->onHttpError(
+            function ($code) {
+                if (404 === $code) {
+                    echo '404 Code';
+                }
+            }
+        );
+
         $this->klein_app->respond(
             '/[i:age]',
             function ($request) {
                 var_dump($request->param('age'));
-            }
-        );
-        $this->klein_app->respond(
-            '404',
-            function () {
-                echo '404 Code';
             }
         );
 
@@ -800,15 +806,17 @@ class RoutingTest extends AbstractKleinTest
     {
         $this->expectOutputString('d404 Code');
 
+        $this->klein_app->onHttpError(
+            function ($code) {
+                if (404 === $code) {
+                    echo '404 Code';
+                }
+            }
+        );
+
         $this->klein_app->respond(
             function () {
                 echo "d";
-            }
-        );
-        $this->klein_app->respond(
-            '404',
-            function () {
-                echo '404 Code';
             }
         );
 
@@ -838,9 +846,15 @@ class RoutingTest extends AbstractKleinTest
             }
         );
 
+        // Ignore our deprecation error
+        $old_error_val = error_reporting();
+        error_reporting(E_ALL ^ E_USER_DEPRECATED);
+
         $this->klein_app->dispatch(
             MockRequestFactory::create('/notroute')
         );
+
+        error_reporting($old_error_val);
     }
 
     public function testMethodCatchAll()
@@ -1126,10 +1140,12 @@ class RoutingTest extends AbstractKleinTest
                 );
             }
         );
-        $this->klein_app->respond(
-            404,
-            function ($request, $response) {
-                echo "404";
+
+        $this->klein_app->onHttpError(
+            function ($code) {
+                if (404 === $code) {
+                    echo "404";
+                }
             }
         );
 
@@ -1268,9 +1284,15 @@ class RoutingTest extends AbstractKleinTest
             }
         );
 
+        // Ignore our deprecation error
+        $old_error_val = error_reporting();
+        error_reporting(E_ALL ^ E_USER_DEPRECATED);
+
         $this->klein_app->dispatch(
             MockRequestFactory::create('/sure', 'DELETE')
         );
+
+        error_reporting($old_error_val);
 
         $this->assertCount(2, $resultArray);
         $this->assertContains('GET', $resultArray);
@@ -1683,6 +1705,14 @@ class RoutingTest extends AbstractKleinTest
     {
         $this->expectOutputString('404');
 
+        $this->klein_app->onHttpError(
+            function ($code) {
+                if (404 === $code) {
+                    echo '404';
+                }
+            }
+        );
+
         $this->klein_app->respond(
             'POST',
             '/steez',
@@ -1696,12 +1726,6 @@ class RoutingTest extends AbstractKleinTest
             '/nope',
             function ($a, $b, $c, $d, $klein_app) {
                 echo 'How did I get here?!';
-            }
-        );
-        $this->klein_app->respond(
-            '404',
-            function ($a, $b, $c, $d, $klein_app) {
-                echo '404';
             }
         );
 
