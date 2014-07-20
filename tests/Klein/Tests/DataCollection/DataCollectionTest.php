@@ -152,14 +152,14 @@ class DataCollectionTest extends AbstractKleinTest
 
         $this->assertArrayHasKey($mask[0], $data_collection->all($mask));
         $this->assertArrayHasKey($mask[1], $data_collection->all($mask));
-        $this->assertArrayNotHasKey("id", $data_collection->all($mask));
-        $this->assertArrayNotHasKey("name", $data_collection->all($mask));
+        $this->assertArrayNotHasKey('id', $data_collection->all($mask));
+        $this->assertArrayNotHasKey('name', $data_collection->all($mask));
 
         // Test more "magical" way of inputting mask
         $this->assertArrayHasKey($mask[0], $data_collection->all($mask[0], $mask[1]));
         $this->assertArrayHasKey($mask[1], $data_collection->all($mask[0], $mask[1]));
-        $this->assertArrayNotHasKey("id", $data_collection->all($mask[0], $mask[1]));
-        $this->assertArrayNotHasKey("name", $data_collection->all($mask[0], $mask[1]));
+        $this->assertArrayNotHasKey('id', $data_collection->all($mask[0], $mask[1]));
+        $this->assertArrayNotHasKey('name', $data_collection->all($mask[0], $mask[1]));
 
         // Test not filling will nulls
         $this->assertArrayHasKey($mask[0], $data_collection->all($mask, false));
@@ -261,9 +261,7 @@ class DataCollectionTest extends AbstractKleinTest
      */
     public function testExists($sample_data, $data_collection)
     {
-        $this->assertTrue($data_collection->exists("id"));
-        $this->assertTrue($data_collection->exists("name"));
-        $this->assertTrue($data_collection->exists("float"));
+        $this->assertTrue($data_collection->exists('id'));
         $this->assertFalse($data_collection->exists(static::$nonexistent_key));
     }
 
@@ -272,11 +270,11 @@ class DataCollectionTest extends AbstractKleinTest
      */
     public function testRemove($sample_data, $data_collection)
     {
-        $this->assertTrue($data_collection->exists("id"));
+        $this->assertTrue($data_collection->exists('id'));
 
-        $data_collection->remove("id");
+        $data_collection->remove('id');
 
-        $this->assertFalse($data_collection->exists("id"));
+        $this->assertFalse($data_collection->exists('id'));
     }
 
     /**
@@ -386,9 +384,7 @@ class DataCollectionTest extends AbstractKleinTest
      */
     public function testArrayAccessIsset($sample_data, $data_collection)
     {
-        $this->assertTrue(isset($data_collection["id"]));
-        $this->assertTrue(isset($data_collection["name"]));
-        $this->assertTrue(isset($data_collection["float"]));
+        $this->assertTrue(isset($data_collection['id']));
         $this->assertFalse(isset($data_collection[static::$nonexistent_key]));
     }
 
@@ -397,11 +393,11 @@ class DataCollectionTest extends AbstractKleinTest
      */
     public function testArrayAccessUnset($sample_data, $data_collection)
     {
-        $this->assertTrue(isset($data_collection["id"]));
+        $this->assertTrue(isset($data_collection['id']));
 
-        unset($data_collection["id"]);
+        unset($data_collection['id']);
 
-        $this->assertFalse(isset($data_collection["id"]));
+        $this->assertFalse(isset($data_collection['id']));
     }
 
     /**
