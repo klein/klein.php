@@ -18,7 +18,7 @@
 ## Composer Installation
 
 1. Get [Composer](http://getcomposer.org/)
-2. Require Klein with `php composer.phar require klein/klein v2.0.x`
+2. Require Klein with `php composer.phar require klein/klein v2.1.x`
 3. Install dependencies with `php composer.phar install`
 
 ## Example
