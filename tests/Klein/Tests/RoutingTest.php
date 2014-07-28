@@ -1238,7 +1238,7 @@ class RoutingTest extends AbstractKleinTest
     {
         $this->klein_app->respond(
             array('GET', 'POST'),
-            null,
+            '/',
             function () {
                 echo 'fail';
             }
@@ -1250,6 +1250,23 @@ class RoutingTest extends AbstractKleinTest
 
         $this->assertEquals('405 Method Not Allowed', $this->klein_app->response()->status()->getFormattedString());
         $this->assertEquals('GET, POST', $this->klein_app->response()->headers()->get('Allow'));
+    }
+
+    public function testNo405OnNonMatchRoutes()
+    {
+        $this->klein_app->respond(
+            array('GET', 'POST'),
+            null,
+            function () {
+                echo 'this shouldn\'t cause a 405 since this route doesn\'t count as a match anyway';
+            }
+        );
+
+        $this->klein_app->dispatch(
+            MockRequestFactory::create('/', 'DELETE')
+        );
+
+        $this->assertEquals(404, $this->klein_app->response()->code());
     }
 
     public function test405Routes()
