@@ -443,33 +443,36 @@ class Klein
                 // Keep track of whether this specific request method was matched
                 $method_match = null;
 
-                // Was a method specified? If so, check it against the current request method
-                if (is_array($method)) {
-                    foreach ($method as $test) {
-                        if (strcasecmp($req_method, $test) === 0) {
-                            $method_match = true;
-                        } elseif (strcasecmp($req_method, 'HEAD') === 0
-                              && (strcasecmp($test, 'HEAD') === 0 || strcasecmp($test, 'GET') === 0)) {
+                // Don't bother counting this as a method match if the route isn't supposed to match anyway
+                if ($count_match) {
+                    // Was a method specified? If so, check it against the current request method
+                    if (is_array($method)) {
+                        foreach ($method as $test) {
+                            if (strcasecmp($req_method, $test) === 0) {
+                                $method_match = true;
+                            } elseif (strcasecmp($req_method, 'HEAD') === 0
+                                  && (strcasecmp($test, 'HEAD') === 0 || strcasecmp($test, 'GET') === 0)) {
 
-                            // Test for HEAD request (like GET)
+                                // Test for HEAD request (like GET)
+                                $method_match = true;
+                            }
+                        }
+
+                        if (null === $method_match) {
+                            $method_match = false;
+                        }
+                    } elseif (null !== $method && strcasecmp($req_method, $method) !== 0) {
+                        $method_match = false;
+
+                        // Test for HEAD request (like GET)
+                        if (strcasecmp($req_method, 'HEAD') === 0
+                            && (strcasecmp($method, 'HEAD') === 0 || strcasecmp($method, 'GET') === 0 )) {
+
                             $method_match = true;
                         }
-                    }
-
-                    if (null === $method_match) {
-                        $method_match = false;
-                    }
-                } elseif (null !== $method && strcasecmp($req_method, $method) !== 0) {
-                    $method_match = false;
-
-                    // Test for HEAD request (like GET)
-                    if (strcasecmp($req_method, 'HEAD') === 0
-                        && (strcasecmp($method, 'HEAD') === 0 || strcasecmp($method, 'GET') === 0 )) {
-
+                    } elseif (null !== $method && strcasecmp($req_method, $method) === 0) {
                         $method_match = true;
                     }
-                } elseif (null !== $method && strcasecmp($req_method, $method) === 0) {
-                    $method_match = true;
                 }
 
                 // If the method was matched or if it wasn't even passed (in the route callback)
@@ -591,10 +594,13 @@ class Klein
                         }
                     }
 
-                    // Keep track of possibly matched methods
-                    $methods_matched = array_merge($methods_matched, (array) $method);
-                    $methods_matched = array_filter($methods_matched);
-                    $methods_matched = array_unique($methods_matched);
+                    // Don't bother counting this as a method match if the route isn't supposed to match anyway
+                    if ($count_match) {
+                        // Keep track of possibly matched methods
+                        $methods_matched = array_merge($methods_matched, (array) $method);
+                        $methods_matched = array_filter($methods_matched);
+                        $methods_matched = array_unique($methods_matched);
+                    }
                 }
             }
 
