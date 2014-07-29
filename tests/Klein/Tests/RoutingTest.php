@@ -1282,14 +1282,14 @@ class RoutingTest extends AbstractKleinTest
         );
         $this->klein_app->respond(
             'GET',
-            null,
+            '/sure',
             function () {
                 echo 'fail';
             }
         );
         $this->klein_app->respond(
             array('GET', 'POST'),
-            null,
+            '/sure',
             function () {
                 echo 'fail';
             }
@@ -1330,14 +1330,14 @@ class RoutingTest extends AbstractKleinTest
         );
         $this->klein_app->respond(
             'GET',
-            null,
+            '/sure',
             function () {
                 echo 'fail';
             }
         );
         $this->klein_app->respond(
             array('GET', 'POST'),
-            null,
+            '/sure',
             function () {
                 echo 'fail';
             }
@@ -1367,7 +1367,7 @@ class RoutingTest extends AbstractKleinTest
         );
         $this->klein_app->respond(
             array('GET', 'POST'),
-            null,
+            '/',
             function () {
                 echo 'fail';
             }
@@ -1396,14 +1396,14 @@ class RoutingTest extends AbstractKleinTest
 
         $this->klein_app->respond(
             'GET',
-            null,
+            '/',
             function () {
                 echo 'fail';
             }
         );
         $this->klein_app->respond(
             array('GET', 'POST'),
-            null,
+            '/',
             function () {
                 echo 'fail';
             }
@@ -1414,7 +1414,7 @@ class RoutingTest extends AbstractKleinTest
             function ($request, $response) use ($access_control_headers) {
                 // Add access control headers
                 foreach ($access_control_headers as $header) {
-                    $response->header($header[ 'key' ], $header[ 'val' ]);
+                    $response->header($header['key'], $header['val']);
                 }
             }
         );
@@ -1425,7 +1425,7 @@ class RoutingTest extends AbstractKleinTest
 
 
         // Assert headers were passed
-        $this->assertEquals('GET, POST, OPTIONS', $this->klein_app->response()->headers()->get('Allow'));
+        $this->assertEquals('GET, POST', $this->klein_app->response()->headers()->get('Allow'));
 
         foreach ($access_control_headers as $header) {
             $this->assertEquals($header['val'], $this->klein_app->response()->headers()->get($header['key']));
