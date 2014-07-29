@@ -591,10 +591,13 @@ class Klein
                         }
                     }
 
-                    // Keep track of possibly matched methods
-                    $methods_matched = array_merge($methods_matched, (array) $method);
-                    $methods_matched = array_filter($methods_matched);
-                    $methods_matched = array_unique($methods_matched);
+                    // Don't bother counting this as a method match if the route isn't supposed to match anyway
+                    if ($count_match) {
+                        // Keep track of possibly matched methods
+                        $methods_matched = array_merge($methods_matched, (array) $method);
+                        $methods_matched = array_filter($methods_matched);
+                        $methods_matched = array_unique($methods_matched);
+                    }
                 }
             }
 
