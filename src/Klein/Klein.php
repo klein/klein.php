@@ -385,7 +385,7 @@ class Klein
     }
 
     /**
-     * Dispatch the request to the approriate route(s)
+     * Dispatch the request to the appropriate route(s)
      *
      * Dispatch with optionally injected dependencies
      * This DI allows for easy testing, object mocking, or class extension
