@@ -53,7 +53,7 @@ class RouteFactoryTest extends AbstractKleinTest
         $should_match = true
     ) {
         // Test data
-        $test_path = $test_path ?: '/test';
+        $test_path = !is_string($test_path) ? '/test' : $test_path;
         $test_callable = $this->getTestCallable();
 
 
@@ -100,6 +100,15 @@ class RouteFactoryTest extends AbstractKleinTest
         $test_namespace = '/users';
 
         $this->testBuildBasic($test_namespace, null, false);
+    }
+
+    public function testBuildWithNamespacedEmptyPath()
+    {
+        // Test data
+        $test_namespace = '/users';
+        $test_path = '';
+
+        $this->testBuildBasic($test_namespace, $test_path, false, true);
     }
 
     public function testBuildWithCustomRegexPath()

@@ -81,7 +81,7 @@ class RouteFactory extends AbstractRouteFactory
         $path = (null === $path) ? static::NULL_PATH_VALUE : (string) $path;
 
         // If a custom regular expression (or negated custom regex)
-        if ($this->namespace && $path[0] === '@' || ($path[0] === '!' && $path[1] === '@')) {
+        if ($this->namespace && isset($path[0]) && ($path[0] === '@' || ($path[0] === '!' && $path[1] === '@'))) {
             // Is it negated?
             if ($path[0] === '!') {
                 $negate = true;
