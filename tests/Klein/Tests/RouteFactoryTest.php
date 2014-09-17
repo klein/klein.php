@@ -53,7 +53,7 @@ class RouteFactoryTest extends AbstractKleinTest
         $should_match = true
     ) {
         // Test data
-        $test_path = !is_string($test_path) ? '/test' : $test_path;
+        $test_path = is_string($test_path) ? $test_path : '/test';
         $test_callable = $this->getTestCallable();
 
 
