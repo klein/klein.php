@@ -6,3 +6,5 @@ docs/
 
 # Auto-generated code coverage report
 report/
+
+vendor/
