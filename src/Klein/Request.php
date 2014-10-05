@@ -17,7 +17,7 @@ use \Klein\DataCollection\HeaderDataCollection;
 
 /**
  * Request
- * 
+ *
  * @package     Klein
  */
 class Request
@@ -404,6 +404,18 @@ class Request
     }
 
     /**
+     * Is this an ajax request?
+     * @return boolean
+     */
+    public function isAjax()
+    {
+        return !strcasecmp(
+            $this->server->get('HTTP_X_REQUESTED_WITH'),
+            'XMLHttpRequest'
+        );
+    }
+
+    /**
      * Gets the request IP address
      *
      * @access public
@@ -461,7 +473,7 @@ class Request
      * $request->method('post') // returns true
      * $request->method('get') // returns false
      * </code>
-     * 
+     *
      * @param string $is				The method to check the current request method against
      * @param boolean $allow_override	Whether or not to allow HTTP method overriding via header or params
      * @access public
