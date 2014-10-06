@@ -16,7 +16,7 @@ use \Klein\Tests\Mocks\MockRequestFactory;
 
 /**
  * RequestTest
- * 
+ *
  * @uses AbstractKleinTest
  * @package Klein\Tests
  */
@@ -150,6 +150,16 @@ class RequestTest extends AbstractKleinTest
         $request->server()->set('HTTPS', true);
 
         $this->assertTrue($request->isSecure());
+    }
+
+    public function testAjax()
+    {
+        $request = new Request();
+
+        foreach(['XMLHttpRequest', 'XMLHTTPREQUEST', 'xmlhttprequest'] as $with) {
+            $request->server()->set('HTTP_X_REQUESTED_WITH', $with);
+            $this->assertTrue($request->isAjax());
+        }
     }
 
     public function testIp()
