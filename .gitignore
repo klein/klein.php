@@ -1,5 +1,6 @@
 # Composer
 composer.lock
+vendor/
 
 # Auto-generated documentation directory (phpDocumentor)
 docs/
@@ -7,4 +8,3 @@ docs/
 # Auto-generated code coverage report
 report/
 
-vendor/
