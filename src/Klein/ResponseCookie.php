@@ -11,6 +11,8 @@
 
 namespace Klein;
 
+use DateTime;
+
 /**
  * ResponseCookie
  *
@@ -44,10 +46,9 @@ class ResponseCookie
     /**
      * The date/time that the cookie should expire
      *
-     * Represented by a Unix "Timestamp"
+     * Represented by a Unix "Timestamp" or a DateTime object
      *
-     * @var int
-     * @access protected
+     * @var DateTime
      */
     protected $expire;
 
@@ -97,7 +98,7 @@ class ResponseCookie
      *
      * @param string  $name         The name of the cookie
      * @param string  $value        The value to set the cookie with
-     * @param int     $expire       The time that the cookie should expire
+     * @param int|DateTime $expire The time that the cookie should expire
      * @param string  $path         The path of which to restrict the cookie
      * @param string  $domain       The domain of which to restrict the cookie
      * @param boolean $secure       Flag of whether the cookie should only be sent over a HTTPS connection
@@ -180,8 +181,7 @@ class ResponseCookie
     /**
      * Gets the cookie's expire time
      *
-     * @access public
-     * @return int
+     * @return DateTime|int
      */
     public function getExpire()
     {
@@ -194,14 +194,15 @@ class ResponseCookie
      * The time should be an integer
      * representing a Unix timestamp
      *
-     * @param int $expire
-     * @access public
+     * @param int|DateTime $expire
      * @return ResponseCookie
      */
     public function setExpire($expire)
     {
-        if (null !== $expire) {
-            $this->expire = (int) $expire;
+        if ($expire instanceof DateTime) {
+            $this->expire = $expire;
+        } elseif (null !== $expire) {
+            $this->expire = (int)$expire;
         } else {
             $this->expire = $expire;
         }

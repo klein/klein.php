@@ -11,6 +11,7 @@
 
 namespace Klein;
 
+use DateTime;
 use Klein\DataCollection\HeaderDataCollection;
 use Klein\DataCollection\ResponseCookieDataCollection;
 use Klein\Exceptions\LockedResponseException;
@@ -386,11 +387,16 @@ abstract class AbstractResponse
 
         // Iterate through our Cookies data collection and set each cookie natively
         foreach ($this->cookies as $cookie) {
+            if ($cookie->getExpire() instanceof DateTime) {
+                $expire = $cookie->getExpire()->getTimestamp();
+            } else {
+                $expire = $cookie->getExpire();
+            }
             // Use the built-in PHP "setcookie" function
             setcookie(
                 $cookie->getName(),
                 $cookie->getValue(),
-                $cookie->getExpire(),
+                $expire,
                 $cookie->getPath(),
                 $cookie->getDomain(),
                 $cookie->getSecure(),
@@ -504,7 +510,7 @@ abstract class AbstractResponse
      *
      * @param string $key           The name of the cookie
      * @param string $value         The value to set the cookie with
-     * @param int $expiry           The time that the cookie should expire
+     * @param int|DateTime $expire The time that the cookie should expire
      * @param string $path          The path of which to restrict the cookie
      * @param string $domain        The domain of which to restrict the cookie
      * @param boolean $secure       Flag of whether the cookie should only be sent over a HTTPS connection
@@ -515,19 +521,19 @@ abstract class AbstractResponse
     public function cookie(
         $key,
         $value = '',
-        $expiry = null,
+        $expire = null,
         $path = '/',
         $domain = null,
         $secure = false,
         $httponly = false
     ) {
-        if (null === $expiry) {
-            $expiry = time() + (3600 * 24 * 30);
+        if (null === $expire) {
+            $expire = time() + (3600 * 24 * 30);
         }
 
         $this->cookies->set(
             $key,
-            new ResponseCookie($key, $value, $expiry, $path, $domain, $secure, $httponly)
+            new ResponseCookie($key, $value, $expire, $path, $domain, $secure, $httponly)
         );
 
         return $this;
