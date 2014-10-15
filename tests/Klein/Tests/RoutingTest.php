@@ -11,7 +11,7 @@
 
 namespace Klein\Tests;
 
-
+use Exception;
 use Klein\App;
 use Klein\DataCollection\RouteCollection;
 use Klein\Exceptions\DispatchHaltedException;
@@ -1838,7 +1838,7 @@ class RoutingTest extends AbstractKleinTest
     }
 
     /**
-     * @expectedException Klein\Exceptions\UnhandledException
+     * @expectedException Exception
      */
     public function testDispatchExceptionRethrowsUnknownCode()
     {

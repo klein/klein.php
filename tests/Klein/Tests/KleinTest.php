@@ -376,7 +376,7 @@ class KleinTest extends AbstractKleinTest
     }
 
     /**
-     * @expectedException Klein\Exceptions\UnhandledException
+     * @expectedException Exception
      */
     public function testAfterDispatchWithCallableThatThrowsException()
     {
@@ -395,7 +395,7 @@ class KleinTest extends AbstractKleinTest
     }
 
     /**
-     * @expectedException Klein\Exceptions\UnhandledException
+     * @expectedException Exception
      */
     public function testErrorsWithNoCallbacks()
     {

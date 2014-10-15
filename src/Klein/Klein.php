@@ -21,7 +21,6 @@ use \Klein\Exceptions\HttpExceptionInterface;
 use \Klein\Exceptions\LockedResponseException;
 use \Klein\Exceptions\RegularExpressionCompilationException;
 use \Klein\Exceptions\RoutePathCompilationException;
-use \Klein\Exceptions\UnhandledException;
 
 /**
  * Klein
@@ -891,7 +890,7 @@ class Klein
      * Routes an exception through the error callbacks
      *
      * @param Exception $err        The exception that occurred
-     * @throws UnhandledException   If the error/exception isn't handled by an error callback
+     * @throws Exception If the error/exception isn't handled by an error callback
      * @access protected
      * @return void
      */
@@ -921,7 +920,7 @@ class Klein
             }
         } else {
             $this->response->code(500);
-            throw new UnhandledException($msg, $err->getCode(), $err);
+            throw $err;
         }
 
         // Lock our response, since we probably don't want
