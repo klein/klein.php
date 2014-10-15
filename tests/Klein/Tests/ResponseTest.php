@@ -254,7 +254,7 @@ class ResponsesTest extends AbstractKleinTest
     }
 
     /**
-     * @expectedException Klein\Exceptions\ResponseAlreadySentException
+     * @expectedException \Klein\Exceptions\ResponseAlreadySentException
      */
     public function testSendWhenAlreadySent()
     {

@@ -103,7 +103,7 @@ abstract class AbstractRouteFactory
      * @param string $name          The name of the route
      * @abstract
      * @access public
-     * @return Klein\Route
+     * @return Route
      */
     abstract public function build($callback, $path = null, $method = null, $count_match = true, $name = null);
 }

@@ -11,6 +11,7 @@
 
 namespace Klein\Tests;
 
+use BadMethodCallException;
 use \Klein\Klein;
 use \Klein\Tests\Mocks\MockRequestFactory;
 use \Klein\Validator;
