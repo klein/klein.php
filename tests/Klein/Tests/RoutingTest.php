@@ -2254,7 +2254,7 @@ class RoutingTest extends AbstractKleinTest
         }
 
         $this->assertTrue($exception instanceof RoutePathCompilationException);
-        $this->assertTrue($exception->getRoute() instanceof Route);
+        $this->assertInstanceOf('Klein\\Route', $exception->getRoute());
     }
 
     public function testRoutePathCompilationFailureWithoutWarnings()
