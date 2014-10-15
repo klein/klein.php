@@ -12,13 +12,13 @@
 namespace Klein;
 
 /**
- * ResponseCookie
+ * Cookie
  *
  * Class to represent an HTTP response cookie
  *
  * @package     Klein
  */
-class ResponseCookie
+class Cookie
 {
 
     /**
