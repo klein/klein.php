@@ -97,6 +97,7 @@ class ResponseCookie
      * @param string $domain The domain of which to restrict the cookie
      * @param boolean $secure Flag of whether the cookie should only be sent over a HTTPS connection
      * @param boolean $http_only Flag of whether the cookie should only be accessible over the HTTP protocol
+     * @todo once the setExpire|getExpire methods are removed, we should type-hint the expiration
      */
     public function __construct(
         $name,
