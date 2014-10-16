@@ -22,7 +22,6 @@ use DateTime;
  */
 class ResponseCookie
 {
-
     /**
      * Class properties
      */
@@ -46,11 +45,9 @@ class ResponseCookie
     /**
      * The date/time that the cookie should expire
      *
-     * Represented by a Unix "Timestamp" or a DateTime object
-     *
      * @var DateTime
      */
-    protected $expire;
+    protected $expiration;
 
     /**
      * The path on the server that the cookie will
@@ -88,36 +85,31 @@ class ResponseCookie
      */
     protected $http_only;
 
-
     /**
      * Methods
      */
 
     /**
-     * Constructor
-     *
-     * @param string  $name         The name of the cookie
-     * @param string  $value        The value to set the cookie with
-     * @param int|DateTime $expire The time that the cookie should expire
-     * @param string  $path         The path of which to restrict the cookie
-     * @param string  $domain       The domain of which to restrict the cookie
-     * @param boolean $secure       Flag of whether the cookie should only be sent over a HTTPS connection
-     * @param boolean $http_only    Flag of whether the cookie should only be accessible over the HTTP protocol
-     * @access public
+     * @param string $name The name of the cookie
+     * @param string $value The value to set the cookie with
+     * @param DateTime $expiration The date/time that the cookie should expire
+     * @param string $path The path of which to restrict the cookie
+     * @param string $domain The domain of which to restrict the cookie
+     * @param boolean $secure Flag of whether the cookie should only be sent over a HTTPS connection
+     * @param boolean $http_only Flag of whether the cookie should only be accessible over the HTTP protocol
      */
     public function __construct(
         $name,
         $value = null,
-        $expire = null,
+        DateTime $expiration = null,
         $path = null,
         $domain = null,
         $secure = false,
         $http_only = false
     ) {
-        // Initialize our properties
         $this->setName($name);
         $this->setValue($value);
-        $this->setExpire($expire);
+        $this->setExpiration($expiration);
         $this->setPath($path);
         $this->setDomain($domain);
         $this->setSecure($secure);
@@ -179,34 +171,73 @@ class ResponseCookie
     }
 
     /**
-     * Gets the cookie's expire time
-     *
-     * @return DateTime|int
+     * @return int
+     * @deprecated
      */
     public function getExpire()
     {
-        return $this->expire;
+        // Warn user of deprecation
+        trigger_error(
+            'Use of ResponseCookie::getExpire() and ResponseCookie::setExpire() is deprecated. ' .
+            'Use ResponseCookie::getExpiration() and ResponseCookie::setExpiration() instead.',
+            E_USER_DEPRECATED
+        );
+        return $this->expiration->getTimestamp();
     }
-    
+
     /**
-     * Sets the cookie's expire time
+     * Gets the cookie's expire time
      *
-     * The time should be an integer
-     * representing a Unix timestamp
-     *
-     * @param int|DateTime $expire
-     * @return ResponseCookie
+     * @return DateTime
+     */
+    public function getExpiration()
+    {
+        return $this->expiration;
+    }
+
+    /**
+     * @param int $expire
+     * @return $this
+     * @deprecated
      */
     public function setExpire($expire)
     {
-        if ($expire instanceof DateTime) {
-            $this->expire = $expire;
-        } elseif (null !== $expire) {
-            $this->expire = (int)$expire;
+        // Warn user of deprecation
+        trigger_error(
+            'Use of ResponseCookie::getExpire() and ResponseCookie::setExpire() is deprecated. ' .
+            'Use ResponseCookie::getExpiration() and ResponseCookie::setExpiration() instead.',
+            E_USER_DEPRECATED
+        );
+
+        if (null !== $expire) {
+            $this->expiration = new DateTime((int)$expire);
         } else {
-            $this->expire = $expire;
+            $this->expiration = null;
         }
 
+        return $this;
+    }
+
+    /**
+     * Sets the cookie's expiration date/time
+     *
+     * @param DateTime $expiration
+     * @return $this
+     */
+    public function setExpiration(DateTime $expiration)
+    {
+        $this->expiration = $expiration;
+        return $this;
+    }
+
+    /**
+     * Removes the cookie's expiration date/time
+     *
+     * @return $this
+     */
+    public function removeExpiration()
+    {
+        $this->expiration = null;
         return $this;
     }
 
