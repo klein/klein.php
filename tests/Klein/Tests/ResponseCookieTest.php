@@ -108,21 +108,21 @@ class ResponseCookieTest extends AbstractKleinTest
      * @param array $sampleData
      * @param array $sampleDataOther
      */
-    public function testExpireGetSet($defaults, $sampleData, $sampleDataOther)
+    public function testExpirationGetSet($defaults, $sampleData, $sampleDataOther)
     {
         $responseCookie = new ResponseCookie(
             $defaults['name'],
             null,
-            $sampleData['expire']
+            $sampleData['expiration']
         );
 
-        $this->assertSame($sampleData['expire'], $responseCookie->getExpire());
-        $this->assertInternalType('int', $responseCookie->getExpire());
+        $this->assertSame($sampleData['expiration'], $responseCookie->getExpiration());
+        $this->assertInstanceOf('DateTime', $responseCookie->getExpiration());
 
-        $responseCookie->setExpire($sampleDataOther['expire']);
+        $responseCookie->setExpiration($sampleDataOther['expiration']);
 
-        $this->assertSame($sampleDataOther['expire'], $responseCookie->getExpire());
-        $this->assertInternalType('int', $responseCookie->getExpire());
+        $this->assertSame($sampleDataOther['expiration'], $responseCookie->getExpiration());
+        $this->assertInstanceOf('DateTime', $responseCookie->getExpiration());
     }
 
     /**
