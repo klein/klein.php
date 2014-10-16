@@ -11,12 +11,12 @@
 
 namespace Klein;
 
+use DateInterval;
 use DateTime;
 use Klein\DataCollection\HeaderDataCollection;
 use Klein\DataCollection\ResponseCookieDataCollection;
 use Klein\Exceptions\LockedResponseException;
 use Klein\Exceptions\ResponseAlreadySentException;
-use Klein\ResponseCookie;
 
 /**
  * AbstractResponse
@@ -26,7 +26,6 @@ use Klein\ResponseCookie;
  */
 abstract class AbstractResponse
 {
-
     /**
      * Properties
      */
@@ -75,8 +74,7 @@ abstract class AbstractResponse
     /**
      * HTTP response cookies
      *
-     * @var \Klein\DataCollection\ResponseCookieDataCollection
-     * @access protected
+     * @var \Klein\DataCollection\ResponseCookieDataCollection|ResponseCookie[]
      */
     protected $cookies;
 
@@ -104,7 +102,6 @@ abstract class AbstractResponse
      * @access public
      */
     public $chunked = false;
-
 
     /**
      * Methods
@@ -387,16 +384,12 @@ abstract class AbstractResponse
 
         // Iterate through our Cookies data collection and set each cookie natively
         foreach ($this->cookies as $cookie) {
-            if ($cookie->getExpire() instanceof DateTime) {
-                $expire = $cookie->getExpire()->getTimestamp();
-            } else {
-                $expire = $cookie->getExpire();
-            }
+            $expiration = $cookie->getExpiration();
             // Use the built-in PHP "setcookie" function
             setcookie(
                 $cookie->getName(),
                 $cookie->getValue(),
-                $expire,
+                $expiration instanceof DateTime ? $expiration->getTimestamp() : null,
                 $cookie->getPath(),
                 $cookie->getDomain(),
                 $cookie->getSecure(),
@@ -508,32 +501,35 @@ abstract class AbstractResponse
     /**
      * Sets a response cookie
      *
-     * @param string $key           The name of the cookie
-     * @param string $value         The value to set the cookie with
-     * @param int|DateTime $expire The time that the cookie should expire
-     * @param string $path          The path of which to restrict the cookie
-     * @param string $domain        The domain of which to restrict the cookie
-     * @param boolean $secure       Flag of whether the cookie should only be sent over a HTTPS connection
-     * @param boolean $httponly     Flag of whether the cookie should only be accessible over the HTTP protocol
-     * @access public
-     * @return AbstractResponse
+     * @param string $key The name of the cookie
+     * @param string $value The value to set the cookie with
+     * @param DateTime $expiration The time that the cookie should expire
+     * @param string $path The path of which to restrict the cookie
+     * @param string $domain The domain of which to restrict the cookie
+     * @param boolean $secure Flag of whether the cookie should only be sent over a HTTPS connection
+     * @param boolean $httponly Flag of whether the cookie should only be accessible over the HTTP protocol
+     * @return $this
+     * @deprecated use AbstractResponse::cookies()->set() instead
      */
     public function cookie(
         $key,
         $value = '',
-        $expire = null,
+        $expiration = null,
         $path = '/',
         $domain = null,
         $secure = false,
         $httponly = false
     ) {
-        if (null === $expire) {
-            $expire = time() + (3600 * 24 * 30);
+        if (null === $expiration) {
+            $expiration = new DateTime();
+            $expiration->add(new DateInterval('P1M'));
+        } elseif (!$expiration instanceof DateTime) {
+            $expiration = new DateTime((int)$expiration);
         }
 
         $this->cookies->set(
             $key,
-            new ResponseCookie($key, $value, $expire, $path, $domain, $secure, $httponly)
+            new ResponseCookie($key, $value, $expiration, $path, $domain, $secure, $httponly)
         );
 
         return $this;
