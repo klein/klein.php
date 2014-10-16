@@ -101,7 +101,7 @@ class ResponseCookie
     public function __construct(
         $name,
         $value = null,
-        DateTime $expiration = null,
+        $expiration = null,
         $path = null,
         $domain = null,
         $secure = false,
@@ -109,7 +109,11 @@ class ResponseCookie
     ) {
         $this->setName($name);
         $this->setValue($value);
-        $this->setExpiration($expiration);
+        if ($expiration instanceof DateTime) {
+            $this->setExpiration($expiration);
+        } elseif (null !== $expiration) {
+            $this->setExpire($expiration);
+        }
         $this->setPath($path);
         $this->setDomain($domain);
         $this->setSecure($secure);
