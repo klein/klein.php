@@ -395,7 +395,7 @@ class KleinTest extends AbstractKleinTest
     }
 
     /**
-     * @expectedException Klein\Exceptions\UnhandledException
+     * @expectedException \Klein\Exceptions\UnhandledException
      */
     public function testErrorsWithNoCallbacks()
     {

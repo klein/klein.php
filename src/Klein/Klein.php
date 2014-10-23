@@ -1093,7 +1093,7 @@ class Klein
      * OPTIONS alias for "respond()"
      *
      * @see Klein::respond()
-     * @param string $route
+     * @param string $path
      * @param callable $callback
      * @access public
      * @return Route
@@ -1133,7 +1133,7 @@ class Klein
      * GET alias for "respond()"
      *
      * @see Klein::respond()
-     * @param string $route
+     * @param string $path
      * @param callable $callback
      * @access public
      * @return Route

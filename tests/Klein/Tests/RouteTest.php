@@ -11,7 +11,7 @@
 
 namespace Klein\Tests;
 
-
+use InvalidArgumentException;
 use \Klein\Klein;
 use \Klein\Route;
 
