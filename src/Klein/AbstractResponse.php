@@ -26,6 +26,7 @@ use Klein\Exceptions\ResponseAlreadySentException;
  */
 abstract class AbstractResponse
 {
+
     /**
      * Properties
      */
