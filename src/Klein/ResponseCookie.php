@@ -48,6 +48,7 @@ class ResponseCookie
      * The date/time that the cookie should expire
      *
      * @var DateTime
+     * @access protected
      */
     protected $expiration;
 
@@ -87,6 +88,7 @@ class ResponseCookie
      */
     protected $http_only;
 
+
     /**
      * Methods
      */
@@ -99,6 +101,7 @@ class ResponseCookie
      * @param string $domain The domain of which to restrict the cookie
      * @param boolean $secure Flag of whether the cookie should only be sent over a HTTPS connection
      * @param boolean $http_only Flag of whether the cookie should only be accessible over the HTTP protocol
+     * @access public
      * @todo once the setExpire|getExpire methods are removed, we should type-hint the expiration
      */
     public function __construct(
@@ -178,17 +181,25 @@ class ResponseCookie
     }
 
     /**
+     * Gets the cookie's expire time
+     *
+     * @access public
      * @return int
      * @deprecated
      */
     public function getExpire()
     {
+        if (null === $this->expiration) {
+            return null;
+        }
+
         // Warn user of deprecation
         trigger_error(
             'Use of ResponseCookie::getExpire() and ResponseCookie::setExpire() is deprecated. ' .
             'Use ResponseCookie::getExpiration() and ResponseCookie::setExpiration() instead.',
             E_USER_DEPRECATED
         );
+
         return $this->expiration->getTimestamp();
     }
 
@@ -196,6 +207,7 @@ class ResponseCookie
      * Gets the cookie's expire time
      *
      * @return DateTime
+     * @access public
      */
     public function getExpiration()
     {
@@ -203,8 +215,11 @@ class ResponseCookie
     }
 
     /**
+     * Sets the cookie's expiration date/time
+     *
      * @param int $expire
-     * @return $this
+     * @return ResponseCookie
+     * @access public
      * @deprecated
      */
     public function setExpire($expire)
@@ -229,22 +244,12 @@ class ResponseCookie
      * Sets the cookie's expiration date/time
      *
      * @param DateTime $expiration
-     * @return $this
+     * @access public
+     * @return ResponseCookie
      */
-    public function setExpiration(DateTime $expiration)
+    public function setExpiration(DateTime $expiration = null)
     {
         $this->expiration = $expiration;
-        return $this;
-    }
-
-    /**
-     * Removes the cookie's expiration date/time
-     *
-     * @return $this
-     */
-    public function removeExpiration()
-    {
-        $this->expiration = null;
         return $this;
     }
 

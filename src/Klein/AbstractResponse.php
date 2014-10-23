@@ -76,6 +76,7 @@ abstract class AbstractResponse
      * HTTP response cookies
      *
      * @var \Klein\DataCollection\ResponseCookieDataCollection|ResponseCookie[]
+     * @access protected
      */
     protected $cookies;
 
