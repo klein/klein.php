@@ -504,7 +504,7 @@ abstract class AbstractResponse
      *
      * @param string $key The name of the cookie
      * @param string $value The value to set the cookie with
-     * @param DateTime $expiration The time that the cookie should expire
+     * @param int|DateTime $expiration The time that the cookie should expire
      * @param string $path The path of which to restrict the cookie
      * @param string $domain The domain of which to restrict the cookie
      * @param boolean $secure Flag of whether the cookie should only be sent over a HTTPS connection
@@ -523,7 +523,7 @@ abstract class AbstractResponse
     ) {
         if (null === $expiration) {
             $expiration = new DateTime();
-            $expiration->add(new DateInterval('P1M'));
+            $expiration->add(new DateInterval(ResponseCookie::DEFAULT_EXPIRATION));
         } elseif (!$expiration instanceof DateTime) {
             $expiration = new DateTime((int)$expiration);
         }

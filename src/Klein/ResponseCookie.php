@@ -22,6 +22,8 @@ use DateTime;
  */
 class ResponseCookie
 {
+    const DEFAULT_EXPIRATION = 'P1M';
+
     /**
      * Class properties
      */
