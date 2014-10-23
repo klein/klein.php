@@ -11,7 +11,8 @@
 
 namespace Klein\Tests;
 
-use \Klein\ResponseCookie;
+use DateTime;
+use Klein\ResponseCookie;
 
 /**
  * ResponseCookieTest
@@ -21,24 +22,17 @@ use \Klein\ResponseCookie;
  */
 class ResponseCookieTest extends AbstractKleinTest
 {
-
-    /*
-     * Data Providers and Methods
-     */
-
     /**
      * Sample data provider
      *
-     * @access public
      * @return array
      */
     public function sampleDataProvider()
     {
-        // Populate our sample data
-        $default_sample_data = array(
+        $defaults = array(
             'name' => '',
             'value' => '',
-            'expire' => 0,
+            'expiration' => null,
             'path' => '',
             'domain' => '',
             'secure' => false,
@@ -48,7 +42,7 @@ class ResponseCookieTest extends AbstractKleinTest
         $sample_data = array(
             'name' => 'Trevor',
             'value' => 'is a programmer',
-            'expire' => 3600,
+            'expiration' => new DateTime(time() + 3600),
             'path' => '/',
             'domain' => 'example.com',
             'secure' => false,
@@ -58,7 +52,7 @@ class ResponseCookieTest extends AbstractKleinTest
         $sample_data_other = array(
             'name' => 'Chris',
             'value' => 'is a boss',
-            'expire' => 60,
+            'expiration' => new DateTime(time() + 60),
             'path' => '/app/',
             'domain' => 'github.com',
             'secure' => true,
@@ -66,17 +60,15 @@ class ResponseCookieTest extends AbstractKleinTest
         );
 
         return array(
-            array($default_sample_data, $sample_data, $sample_data_other),
+            array($defaults, $sample_data, $sample_data_other),
         );
     }
 
-
-    /*
-     * Tests
-     */
-
     /**
      * @dataProvider sampleDataProvider
+     * @param array $defaults
+     * @param array $sample_data
+     * @param array $sample_data_other
      */
     public function testNameGetSet($defaults, $sample_data, $sample_data_other)
     {
@@ -93,6 +85,9 @@ class ResponseCookieTest extends AbstractKleinTest
 
     /**
      * @dataProvider sampleDataProvider
+     * @param array $defaults
+     * @param array $sample_data
+     * @param array $sample_data_other
      */
     public function testValueGetSet($defaults, $sample_data, $sample_data_other)
     {
@@ -109,26 +104,32 @@ class ResponseCookieTest extends AbstractKleinTest
 
     /**
      * @dataProvider sampleDataProvider
+     * @param array $defaults
+     * @param array $sample_data
+     * @param array $sample_data_other
      */
-    public function testExpireGetSet($defaults, $sample_data, $sample_data_other)
+    public function testExpirationGetSet($defaults, $sample_data, $sample_data_other)
     {
         $response_cookie = new ResponseCookie(
             $defaults['name'],
             null,
-            $sample_data['expire']
+            $sample_data['expiration']
         );
 
-        $this->assertSame($sample_data['expire'], $response_cookie->getExpire());
-        $this->assertInternalType('int', $response_cookie->getExpire());
+        $this->assertSame($sample_data['expiration'], $response_cookie->getExpiration());
+        $this->assertInstanceOf('DateTime', $response_cookie->getExpiration());
 
-        $response_cookie->setExpire($sample_data_other['expire']);
+        $response_cookie->setExpiration($sample_data_other['expiration']);
 
-        $this->assertSame($sample_data_other['expire'], $response_cookie->getExpire());
-        $this->assertInternalType('int', $response_cookie->getExpire());
+        $this->assertSame($sample_data_other['expiration'], $response_cookie->getExpiration());
+        $this->assertInstanceOf('DateTime', $response_cookie->getExpiration());
     }
 
     /**
      * @dataProvider sampleDataProvider
+     * @param array $defaults
+     * @param array $sample_data
+     * @param array $sample_data_other
      */
     public function testPathGetSet($defaults, $sample_data, $sample_data_other)
     {
@@ -150,6 +151,9 @@ class ResponseCookieTest extends AbstractKleinTest
 
     /**
      * @dataProvider sampleDataProvider
+     * @param array $defaults
+     * @param array $sample_data
+     * @param array $sample_data_other
      */
     public function testDomainGetSet($defaults, $sample_data, $sample_data_other)
     {
@@ -172,6 +176,9 @@ class ResponseCookieTest extends AbstractKleinTest
 
     /**
      * @dataProvider sampleDataProvider
+     * @param array $defaults
+     * @param array $sample_data
+     * @param array $sample_data_other
      */
     public function testSecureGetSet($defaults, $sample_data, $sample_data_other)
     {
@@ -195,6 +202,9 @@ class ResponseCookieTest extends AbstractKleinTest
 
     /**
      * @dataProvider sampleDataProvider
+     * @param array $defaults
+     * @param array $sample_data
+     * @param array $sample_data_other
      */
     public function testHttpOnlyGetSet($defaults, $sample_data, $sample_data_other)
     {

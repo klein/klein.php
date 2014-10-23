@@ -11,45 +11,40 @@
 
 namespace Klein\Tests\DataCollection;
 
-use \Klein\Tests\AbstractKleinTest;
-use \Klein\DataCollection\ResponseCookieDataCollection;
-use \Klein\ResponseCookie;
+use DateTime;
+use Klein\DataCollection\ResponseCookieDataCollection;
+use Klein\ResponseCookie;
+use Klein\Tests\AbstractKleinTest;
 
 /**
- * ResponseCookieDataCollectionTest 
+ * ResponseCookieDataCollectionTest
  *
  * @uses AbstractKleinTest
  * @package Klein\Tests\DataCollection
  */
 class ResponseCookieDataCollectionTest extends AbstractKleinTest
 {
-
-    /*
-     * Data Providers and Methods
-     */
-
     /**
      * Sample data provider
      *
-     * @access public
      * @return array
      */
     public function sampleDataProvider()
     {
-        $sample_cookie = new ResponseCookie(
+        $sampleCookie = new ResponseCookie(
             'Trevor',
             'is a programmer',
-            3600,
+            new DateTime(time() + 3600),
             '/',
             'example.com',
             false,
             false
         );
 
-        $sample_other_cookie = new ResponseCookie(
+        $sampleOtherCookie = new ResponseCookie(
             'Chris',
             'is a boss',
-            60,
+            new DateTime(time() + 60),
             '/app/',
             'github.com',
             true,
@@ -57,58 +52,56 @@ class ResponseCookieDataCollectionTest extends AbstractKleinTest
         );
 
         return array(
-            array($sample_cookie, $sample_other_cookie),
+            array($sampleCookie, $sampleOtherCookie),
         );
     }
 
-
-    /*
-     * Tests
-     */
-
     /**
      * @dataProvider sampleDataProvider
+     * @param array $sampleCookie
      */
-    public function testSet($sample_cookie, $sample_other_cookie)
+    public function testSet($sampleCookie)
     {
         // Create our collection with NO data
-        $data_collection = new ResponseCookieDataCollection();
+        $dataCollection = new ResponseCookieDataCollection();
 
         // Set our data from our test data
-        $data_collection->set('first', $sample_cookie);
+        $dataCollection->set('first', $sampleCookie);
 
-        $this->assertSame($sample_cookie, $data_collection->get('first'));
-        $this->assertTrue($data_collection->get('first') instanceof ResponseCookie);
+        $this->assertSame($sampleCookie, $dataCollection->get('first'));
+        $this->assertTrue($dataCollection->get('first') instanceof ResponseCookie);
     }
 
     public function testSetStringConvertsToCookie()
     {
         // Create our collection with NO data
-        $data_collection = new ResponseCookieDataCollection();
+        $dataCollection = new ResponseCookieDataCollection();
 
         // Set our data from our test data
-        $data_collection->set('first', 'value');
+        $dataCollection->set('first', 'value');
 
-        $this->assertNotSame('value', $data_collection->get('first'));
-        $this->assertTrue($data_collection->get('first') instanceof ResponseCookie);
+        $this->assertNotSame('value', $dataCollection->get('first'));
+        $this->assertTrue($dataCollection->get('first') instanceof ResponseCookie);
     }
 
     /**
      * @dataProvider sampleDataProvider
+     * @param array $sampleCookie
+     * @param array $sampleOtherCookie
      */
-    public function testConstructorRoutesThroughSet($sample_cookie, $sample_other_cookie)
+    public function testConstructorRoutesThroughSet($sampleCookie, $sampleOtherCookie)
     {
-        $array_of_cookie_instances = array(
-            $sample_cookie,
-            $sample_other_cookie,
+        $arrayOfCookieInstances = array(
+            $sampleCookie,
+            $sampleOtherCookie,
             new ResponseCookie('test'),
         );
 
         // Create our collection with NO data
-        $data_collection = new ResponseCookieDataCollection($array_of_cookie_instances);
-        $this->assertSame($array_of_cookie_instances, $data_collection->all());
+        $dataCollection = new ResponseCookieDataCollection($arrayOfCookieInstances);
+        $this->assertSame($arrayOfCookieInstances, $dataCollection->all());
 
-        foreach ($data_collection as $cookie) {
+        foreach ($dataCollection as $cookie) {
             $this->assertTrue($cookie instanceof ResponseCookie);
         }
     }

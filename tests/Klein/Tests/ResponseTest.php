@@ -340,24 +340,24 @@ class ResponsesTest extends AbstractKleinTest
     public function testCookie()
     {
         $test_cookie_data = array(
-            'name'      => 'name',
-            'value'    => 'value',
-            'expiry'   => null,
-            'path'     => '/path',
-            'domain'   => 'whatever.com',
-            'secure'   => true,
+            'name' => 'name',
+            'value' => 'value',
+            'expiration' => null,
+            'path' => '/path',
+            'domain' => 'whatever.com',
+            'secure' => true,
             'httponly' => true
         );
 
-        $test_cookie = new ResponseCookie(
+        /*$test_cookie = new ResponseCookie(
             $test_cookie_data['name'],
             $test_cookie_data['value'],
-            $test_cookie_data['expiry'],
+            $test_cookie_data['expiration'],
             $test_cookie_data['path'],
             $test_cookie_data['domain'],
             $test_cookie_data['secure'],
             $test_cookie_data['httponly']
-        );
+        );*/
 
         $response = new Response();
 
@@ -368,7 +368,7 @@ class ResponsesTest extends AbstractKleinTest
         $response->cookie(
             $test_cookie_data['name'],
             $test_cookie_data['value'],
-            $test_cookie_data['expiry'],
+            $test_cookie_data['expiration'],
             $test_cookie_data['path'],
             $test_cookie_data['domain'],
             $test_cookie_data['secure'],
@@ -377,6 +377,7 @@ class ResponsesTest extends AbstractKleinTest
 
         $this->assertNotEmpty($response->cookies()->all());
 
+        /** @var ResponseCookie $the_cookie */
         $the_cookie = $response->cookies()->get($test_cookie_data['name']);
 
         $this->assertNotNull($the_cookie);
@@ -387,7 +388,7 @@ class ResponsesTest extends AbstractKleinTest
         $this->assertSame($test_cookie_data['domain'], $the_cookie->getDomain());
         $this->assertSame($test_cookie_data['secure'], $the_cookie->getSecure());
         $this->assertSame($test_cookie_data['httponly'], $the_cookie->getHttpOnly());
-        $this->assertNotNull($the_cookie->getExpire());
+        $this->assertNotNull($the_cookie->getExpiration());
     }
 
     public function testNoCache()

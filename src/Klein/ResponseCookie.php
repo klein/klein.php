@@ -11,6 +11,8 @@
 
 namespace Klein;
 
+use DateTime;
+
 /**
  * ResponseCookie
  *
@@ -20,6 +22,7 @@ namespace Klein;
  */
 class ResponseCookie
 {
+    const DEFAULT_EXPIRATION = 'P1M';
 
     /**
      * Class properties
@@ -44,12 +47,10 @@ class ResponseCookie
     /**
      * The date/time that the cookie should expire
      *
-     * Represented by a Unix "Timestamp"
-     *
-     * @var int
+     * @var DateTime
      * @access protected
      */
-    protected $expire;
+    protected $expiration;
 
     /**
      * The path on the server that the cookie will
@@ -93,30 +94,32 @@ class ResponseCookie
      */
 
     /**
-     * Constructor
-     *
-     * @param string  $name         The name of the cookie
-     * @param string  $value        The value to set the cookie with
-     * @param int     $expire       The time that the cookie should expire
-     * @param string  $path         The path of which to restrict the cookie
-     * @param string  $domain       The domain of which to restrict the cookie
-     * @param boolean $secure       Flag of whether the cookie should only be sent over a HTTPS connection
-     * @param boolean $http_only    Flag of whether the cookie should only be accessible over the HTTP protocol
+     * @param string $name The name of the cookie
+     * @param string $value The value to set the cookie with
+     * @param DateTime $expiration The date/time that the cookie should expire
+     * @param string $path The path of which to restrict the cookie
+     * @param string $domain The domain of which to restrict the cookie
+     * @param boolean $secure Flag of whether the cookie should only be sent over a HTTPS connection
+     * @param boolean $http_only Flag of whether the cookie should only be accessible over the HTTP protocol
      * @access public
+     * @todo once the setExpire|getExpire methods are removed, we should type-hint the expiration
      */
     public function __construct(
         $name,
         $value = null,
-        $expire = null,
+        $expiration = null,
         $path = null,
         $domain = null,
         $secure = false,
         $http_only = false
     ) {
-        // Initialize our properties
         $this->setName($name);
         $this->setValue($value);
-        $this->setExpire($expire);
+        if ($expiration instanceof DateTime) {
+            $this->setExpiration($expiration);
+        } elseif (null !== $expiration) {
+            $this->setExpire($expiration);
+        }
         $this->setPath($path);
         $this->setDomain($domain);
         $this->setSecure($secure);
@@ -182,30 +185,71 @@ class ResponseCookie
      *
      * @access public
      * @return int
+     * @deprecated
      */
     public function getExpire()
     {
-        return $this->expire;
+        if (null === $this->expiration) {
+            return null;
+        }
+
+        // Warn user of deprecation
+        trigger_error(
+            'Use of ResponseCookie::getExpire() and ResponseCookie::setExpire() is deprecated. ' .
+            'Use ResponseCookie::getExpiration() and ResponseCookie::setExpiration() instead.',
+            E_USER_DEPRECATED
+        );
+
+        return $this->expiration->getTimestamp();
     }
-    
+
     /**
-     * Sets the cookie's expire time
+     * Gets the cookie's expire time
      *
-     * The time should be an integer
-     * representing a Unix timestamp
+     * @return DateTime
+     * @access public
+     */
+    public function getExpiration()
+    {
+        return $this->expiration;
+    }
+
+    /**
+     * Sets the cookie's expiration date/time
      *
      * @param int $expire
-     * @access public
      * @return ResponseCookie
+     * @access public
+     * @deprecated
      */
     public function setExpire($expire)
     {
+        // Warn user of deprecation
+        trigger_error(
+            'Use of ResponseCookie::getExpire() and ResponseCookie::setExpire() is deprecated. ' .
+            'Use ResponseCookie::getExpiration() and ResponseCookie::setExpiration() instead.',
+            E_USER_DEPRECATED
+        );
+
         if (null !== $expire) {
-            $this->expire = (int) $expire;
+            $this->expiration = new DateTime((int)$expire);
         } else {
-            $this->expire = $expire;
+            $this->expiration = null;
         }
 
+        return $this;
+    }
+
+    /**
+     * Sets the cookie's expiration date/time
+     *
+     * @param DateTime $expiration
+     * @access public
+     * @return ResponseCookie
+     */
+    public function setExpiration(DateTime $expiration = null)
+    {
+        $this->expiration = $expiration;
         return $this;
     }
 
