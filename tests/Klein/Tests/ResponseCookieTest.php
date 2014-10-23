@@ -39,7 +39,7 @@ class ResponseCookieTest extends AbstractKleinTest
             'http_only' => false,
         );
 
-        $sampleData = array(
+        $sample_data = array(
             'name' => 'Trevor',
             'value' => 'is a programmer',
             'expiration' => new DateTime(time() + 3600),
@@ -49,7 +49,7 @@ class ResponseCookieTest extends AbstractKleinTest
             'http_only' => false,
         );
 
-        $sampleDataOther = array(
+        $sample_data_other = array(
             'name' => 'Chris',
             'value' => 'is a boss',
             'expiration' => new DateTime(time() + 60),
@@ -60,170 +60,170 @@ class ResponseCookieTest extends AbstractKleinTest
         );
 
         return array(
-            array($defaults, $sampleData, $sampleDataOther),
+            array($defaults, $sample_data, $sample_data_other),
         );
     }
 
     /**
      * @dataProvider sampleDataProvider
      * @param array $defaults
-     * @param array $sampleData
-     * @param array $sampleDataOther
+     * @param array $sample_data
+     * @param array $sample_data_other
      */
-    public function testNameGetSet($defaults, $sampleData, $sampleDataOther)
+    public function testNameGetSet($defaults, $sample_data, $sample_data_other)
     {
-        $responseCookie = new ResponseCookie($sampleData['name']);
+        $response_cookie = new ResponseCookie($sample_data['name']);
 
-        $this->assertSame($sampleData['name'], $responseCookie->getName());
-        $this->assertInternalType('string', $responseCookie->getName());
+        $this->assertSame($sample_data['name'], $response_cookie->getName());
+        $this->assertInternalType('string', $response_cookie->getName());
 
-        $responseCookie->setName($sampleDataOther['name']);
+        $response_cookie->setName($sample_data_other['name']);
 
-        $this->assertSame($sampleDataOther['name'], $responseCookie->getName());
-        $this->assertInternalType('string', $responseCookie->getName());
+        $this->assertSame($sample_data_other['name'], $response_cookie->getName());
+        $this->assertInternalType('string', $response_cookie->getName());
     }
 
     /**
      * @dataProvider sampleDataProvider
      * @param array $defaults
-     * @param array $sampleData
-     * @param array $sampleDataOther
+     * @param array $sample_data
+     * @param array $sample_data_other
      */
-    public function testValueGetSet($defaults, $sampleData, $sampleDataOther)
+    public function testValueGetSet($defaults, $sample_data, $sample_data_other)
     {
-        $responseCookie = new ResponseCookie($defaults['name'], $sampleData['value']);
+        $response_cookie = new ResponseCookie($defaults['name'], $sample_data['value']);
 
-        $this->assertSame($sampleData['value'], $responseCookie->getValue());
-        $this->assertInternalType('string', $responseCookie->getValue());
+        $this->assertSame($sample_data['value'], $response_cookie->getValue());
+        $this->assertInternalType('string', $response_cookie->getValue());
 
-        $responseCookie->setValue($sampleDataOther['value']);
+        $response_cookie->setValue($sample_data_other['value']);
 
-        $this->assertSame($sampleDataOther['value'], $responseCookie->getValue());
-        $this->assertInternalType('string', $responseCookie->getValue());
+        $this->assertSame($sample_data_other['value'], $response_cookie->getValue());
+        $this->assertInternalType('string', $response_cookie->getValue());
     }
 
     /**
      * @dataProvider sampleDataProvider
      * @param array $defaults
-     * @param array $sampleData
-     * @param array $sampleDataOther
+     * @param array $sample_data
+     * @param array $sample_data_other
      */
-    public function testExpirationGetSet($defaults, $sampleData, $sampleDataOther)
+    public function testExpirationGetSet($defaults, $sample_data, $sample_data_other)
     {
-        $responseCookie = new ResponseCookie(
+        $response_cookie = new ResponseCookie(
             $defaults['name'],
             null,
-            $sampleData['expiration']
+            $sample_data['expiration']
         );
 
-        $this->assertSame($sampleData['expiration'], $responseCookie->getExpiration());
-        $this->assertInstanceOf('DateTime', $responseCookie->getExpiration());
+        $this->assertSame($sample_data['expiration'], $response_cookie->getExpiration());
+        $this->assertInstanceOf('DateTime', $response_cookie->getExpiration());
 
-        $responseCookie->setExpiration($sampleDataOther['expiration']);
+        $response_cookie->setExpiration($sample_data_other['expiration']);
 
-        $this->assertSame($sampleDataOther['expiration'], $responseCookie->getExpiration());
-        $this->assertInstanceOf('DateTime', $responseCookie->getExpiration());
+        $this->assertSame($sample_data_other['expiration'], $response_cookie->getExpiration());
+        $this->assertInstanceOf('DateTime', $response_cookie->getExpiration());
     }
 
     /**
      * @dataProvider sampleDataProvider
      * @param array $defaults
-     * @param array $sampleData
-     * @param array $sampleDataOther
+     * @param array $sample_data
+     * @param array $sample_data_other
      */
-    public function testPathGetSet($defaults, $sampleData, $sampleDataOther)
+    public function testPathGetSet($defaults, $sample_data, $sample_data_other)
     {
-        $responseCookie = new ResponseCookie(
-            $defaults['name'],
-            null,
-            null,
-            $sampleData['path']
-        );
-
-        $this->assertSame($sampleData['path'], $responseCookie->getPath());
-        $this->assertInternalType('string', $responseCookie->getPath());
-
-        $responseCookie->setPath($sampleDataOther['path']);
-
-        $this->assertSame($sampleDataOther['path'], $responseCookie->getPath());
-        $this->assertInternalType('string', $responseCookie->getPath());
-    }
-
-    /**
-     * @dataProvider sampleDataProvider
-     * @param array $defaults
-     * @param array $sampleData
-     * @param array $sampleDataOther
-     */
-    public function testDomainGetSet($defaults, $sampleData, $sampleDataOther)
-    {
-        $responseCookie = new ResponseCookie(
+        $response_cookie = new ResponseCookie(
             $defaults['name'],
             null,
             null,
-            null,
-            $sampleData['domain']
+            $sample_data['path']
         );
 
-        $this->assertSame($sampleData['domain'], $responseCookie->getDomain());
-        $this->assertInternalType('string', $responseCookie->getDomain());
+        $this->assertSame($sample_data['path'], $response_cookie->getPath());
+        $this->assertInternalType('string', $response_cookie->getPath());
 
-        $responseCookie->setDomain($sampleDataOther['domain']);
+        $response_cookie->setPath($sample_data_other['path']);
 
-        $this->assertSame($sampleDataOther['domain'], $responseCookie->getDomain());
-        $this->assertInternalType('string', $responseCookie->getDomain());
+        $this->assertSame($sample_data_other['path'], $response_cookie->getPath());
+        $this->assertInternalType('string', $response_cookie->getPath());
     }
 
     /**
      * @dataProvider sampleDataProvider
      * @param array $defaults
-     * @param array $sampleData
-     * @param array $sampleDataOther
+     * @param array $sample_data
+     * @param array $sample_data_other
      */
-    public function testSecureGetSet($defaults, $sampleData, $sampleDataOther)
+    public function testDomainGetSet($defaults, $sample_data, $sample_data_other)
     {
-        $responseCookie = new ResponseCookie(
+        $response_cookie = new ResponseCookie(
             $defaults['name'],
             null,
             null,
             null,
-            null,
-            $sampleData['secure']
+            $sample_data['domain']
         );
 
-        $this->assertSame($sampleData['secure'], $responseCookie->getSecure());
-        $this->assertInternalType('boolean', $responseCookie->getSecure());
+        $this->assertSame($sample_data['domain'], $response_cookie->getDomain());
+        $this->assertInternalType('string', $response_cookie->getDomain());
 
-        $responseCookie->setSecure($sampleDataOther['secure']);
+        $response_cookie->setDomain($sample_data_other['domain']);
 
-        $this->assertSame($sampleDataOther['secure'], $responseCookie->getSecure());
-        $this->assertInternalType('boolean', $responseCookie->getSecure());
+        $this->assertSame($sample_data_other['domain'], $response_cookie->getDomain());
+        $this->assertInternalType('string', $response_cookie->getDomain());
     }
 
     /**
      * @dataProvider sampleDataProvider
      * @param array $defaults
-     * @param array $sampleData
-     * @param array $sampleDataOther
+     * @param array $sample_data
+     * @param array $sample_data_other
      */
-    public function testHttpOnlyGetSet($defaults, $sampleData, $sampleDataOther)
+    public function testSecureGetSet($defaults, $sample_data, $sample_data_other)
     {
-        $responseCookie = new ResponseCookie(
+        $response_cookie = new ResponseCookie(
             $defaults['name'],
             null,
             null,
             null,
             null,
-            null,
-            $sampleData['http_only']
+            $sample_data['secure']
         );
 
-        $this->assertSame($sampleData['http_only'], $responseCookie->getHttpOnly());
-        $this->assertInternalType('boolean', $responseCookie->getHttpOnly());
+        $this->assertSame($sample_data['secure'], $response_cookie->getSecure());
+        $this->assertInternalType('boolean', $response_cookie->getSecure());
 
-        $responseCookie->setHttpOnly($sampleDataOther['http_only']);
+        $response_cookie->setSecure($sample_data_other['secure']);
 
-        $this->assertSame($sampleDataOther['http_only'], $responseCookie->getHttpOnly());
-        $this->assertInternalType('boolean', $responseCookie->getHttpOnly());
+        $this->assertSame($sample_data_other['secure'], $response_cookie->getSecure());
+        $this->assertInternalType('boolean', $response_cookie->getSecure());
+    }
+
+    /**
+     * @dataProvider sampleDataProvider
+     * @param array $defaults
+     * @param array $sample_data
+     * @param array $sample_data_other
+     */
+    public function testHttpOnlyGetSet($defaults, $sample_data, $sample_data_other)
+    {
+        $response_cookie = new ResponseCookie(
+            $defaults['name'],
+            null,
+            null,
+            null,
+            null,
+            null,
+            $sample_data['http_only']
+        );
+
+        $this->assertSame($sample_data['http_only'], $response_cookie->getHttpOnly());
+        $this->assertInternalType('boolean', $response_cookie->getHttpOnly());
+
+        $response_cookie->setHttpOnly($sample_data_other['http_only']);
+
+        $this->assertSame($sample_data_other['http_only'], $response_cookie->getHttpOnly());
+        $this->assertInternalType('boolean', $response_cookie->getHttpOnly());
     }
 }
