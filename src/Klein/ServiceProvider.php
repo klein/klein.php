@@ -11,7 +11,7 @@
 
 namespace Klein;
 
-use \Klein\DataCollection\DataCollection;
+use Klein\DataCollection\DataCollection;
 
 /**
  * ServiceProvider 

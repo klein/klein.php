@@ -11,9 +11,9 @@
 
 namespace Klein;
 
-use \Klein\DataCollection\DataCollection;
-use \Klein\DataCollection\ServerDataCollection;
-use \Klein\DataCollection\HeaderDataCollection;
+use Klein\DataCollection\DataCollection;
+use Klein\DataCollection\ServerDataCollection;
+use Klein\DataCollection\HeaderDataCollection;
 
 /**
  * Request

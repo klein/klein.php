@@ -11,7 +11,7 @@
 
 namespace Klein\Exceptions;
 
-use \OutOfBoundsException;
+use OutOfBoundsException;
 
 /**
  * UnknownServiceException
