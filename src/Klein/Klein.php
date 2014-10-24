@@ -12,7 +12,6 @@
 namespace Klein;
 
 use Exception;
-use OutOfBoundsException;
 use Klein\DataCollection\RouteCollection;
 use Klein\Exceptions\DispatchHaltedException;
 use Klein\Exceptions\HttpException;
@@ -21,6 +20,7 @@ use Klein\Exceptions\LockedResponseException;
 use Klein\Exceptions\RegularExpressionCompilationException;
 use Klein\Exceptions\RoutePathCompilationException;
 use Klein\Exceptions\UnhandledException;
+use OutOfBoundsException;
 
 /**
  * Klein

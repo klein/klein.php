@@ -12,8 +12,8 @@
 namespace Klein;
 
 use BadMethodCallException;
-use Klein\Exceptions\UnknownServiceException;
 use Klein\Exceptions\DuplicateServiceException;
+use Klein\Exceptions\UnknownServiceException;
 
 /**
  * App 
