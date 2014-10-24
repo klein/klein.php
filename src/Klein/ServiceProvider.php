@@ -179,19 +179,22 @@ class ServiceProvider
     public function flashes($type = null)
     {
         $this->startSession();
+
         if (!isset($_SESSION['__flashes'])) {
             return array();
         }
+
         if (null === $type) {
             $flashes = $_SESSION['__flashes'];
             unset($_SESSION['__flashes']);
-        } elseif (null !== $type) {
+        } else {
             $flashes = array();
             if (isset($_SESSION['__flashes'][$type])) {
                 $flashes = $_SESSION['__flashes'][$type];
                 unset($_SESSION['__flashes'][$type]);
             }
         }
+
         return $flashes;
     }
 
@@ -282,10 +285,10 @@ class ServiceProvider
         $referer = $this->request->server()->get('HTTP_REFERER');
 
         if (null !== $referer) {
-            return $this->response->redirect($referer);
+            $this->response->redirect($referer);
+        } else {
+            $this->refresh();
         }
-
-        $this->refresh();
 
         return $this;
     }
