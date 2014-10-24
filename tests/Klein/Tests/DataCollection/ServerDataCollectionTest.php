@@ -11,8 +11,8 @@
 
 namespace Klein\Tests\DataCollection;
 
-use \Klein\Tests\AbstractKleinTest;
-use \Klein\DataCollection\ServerDataCollection;
+use Klein\DataCollection\ServerDataCollection;
+use Klein\Tests\AbstractKleinTest;
 
 /**
  * ServerDataCollectionTest

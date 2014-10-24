@@ -11,9 +11,9 @@
 
 namespace Klein;
 
-use \Klein\DataCollection\DataCollection;
-use \Klein\DataCollection\ServerDataCollection;
-use \Klein\DataCollection\HeaderDataCollection;
+use Klein\DataCollection\DataCollection;
+use Klein\DataCollection\HeaderDataCollection;
+use Klein\DataCollection\ServerDataCollection;
 
 /**
  * Request
@@ -465,7 +465,7 @@ class Request
      * @param string $is				The method to check the current request method against
      * @param boolean $allow_override	Whether or not to allow HTTP method overriding via header or params
      * @access public
-     * @return string | boolean
+     * @return string|boolean
      */
     public function method($is = null, $allow_override = true)
     {

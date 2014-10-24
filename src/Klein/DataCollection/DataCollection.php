@@ -11,10 +11,10 @@
 
 namespace Klein\DataCollection;
 
-use \IteratorAggregate;
-use \ArrayAccess;
-use \Countable;
-use \ArrayIterator;
+use ArrayAccess;
+use ArrayIterator;
+use Countable;
+use IteratorAggregate;
 
 /**
  * DataCollection

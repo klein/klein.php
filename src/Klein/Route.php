@@ -178,7 +178,7 @@ class Route
     /**
      * Set the method
      *
-     * @param string|array $method
+     * @param string|array|null $method
      * @throws InvalidArgumentException If a non-string or non-array type is passed
      * @access public
      * @return Route

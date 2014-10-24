@@ -98,7 +98,7 @@ class RouteCollection extends DataCollection
      * will take a Route instance, string callable
      * or any other Route class compatible callback
      *
-     * @param mixed $route
+     * @param Route|callable $route
      * @access public
      * @return RouteCollection
      */

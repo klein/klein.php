@@ -11,7 +11,6 @@
 
 namespace Klein\Tests;
 
-
 use Klein\App;
 use Klein\DataCollection\RouteCollection;
 use Klein\Exceptions\DispatchHaltedException;

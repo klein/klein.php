@@ -11,9 +11,9 @@
 
 namespace Klein\Tests\DataCollection;
 
-use \stdClass;
-use \Klein\Tests\AbstractKleinTest;
-use \Klein\DataCollection\DataCollection;
+use Klein\DataCollection\DataCollection;
+use Klein\Tests\AbstractKleinTest;
+use stdClass;
 
 /**
  * DataCollectionTest

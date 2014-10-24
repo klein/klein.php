@@ -11,8 +11,8 @@
 
 namespace Klein\Tests;
 
-use Klein\RouteFactory;
 use Klein\Route;
+use Klein\RouteFactory;
 
 /**
  * RouteFactoryTest

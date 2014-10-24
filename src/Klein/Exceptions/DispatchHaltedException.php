@@ -11,7 +11,7 @@
 
 namespace Klein\Exceptions;
 
-use \RuntimeException;
+use RuntimeException;
 
 /**
  * DispatchHaltedException

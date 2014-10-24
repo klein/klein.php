@@ -11,9 +11,9 @@
 
 namespace Klein\Tests\DataCollection;
 
-use \Klein\Tests\AbstractKleinTest;
-use \Klein\DataCollection\ResponseCookieDataCollection;
-use \Klein\ResponseCookie;
+use Klein\DataCollection\ResponseCookieDataCollection;
+use Klein\ResponseCookie;
+use Klein\Tests\AbstractKleinTest;
 
 /**
  * ResponseCookieDataCollectionTest 

@@ -11,8 +11,8 @@
 
 namespace Klein\Tests;
 
-use \Klein\Request;
-use \Klein\Tests\Mocks\MockRequestFactory;
+use Klein\Request;
+use Klein\Tests\Mocks\MockRequestFactory;
 
 /**
  * RequestTest

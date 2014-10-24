@@ -11,8 +11,8 @@
 
 namespace Klein\Tests\DataCollection;
 
-use \Klein\Tests\AbstractKleinTest;
-use \Klein\DataCollection\HeaderDataCollection;
+use Klein\DataCollection\HeaderDataCollection;
+use Klein\Tests\AbstractKleinTest;
 
 /**
  * HeaderDataCollectionTest

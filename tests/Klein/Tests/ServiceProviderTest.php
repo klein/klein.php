@@ -11,13 +11,12 @@
 
 namespace Klein\Tests;
 
-
-use \Klein\Klein;
-use \Klein\Request;
-use \Klein\Response;
-use \Klein\Validator;
-use \Klein\ServiceProvider;
-use \Klein\DataCollection\DataCollection;
+use Klein\DataCollection\DataCollection;
+use Klein\Klein;
+use Klein\Request;
+use Klein\Response;
+use Klein\ServiceProvider;
+use Klein\Validator;
 
 /**
  * ServiceProviderTest
