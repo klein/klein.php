@@ -155,7 +155,7 @@ class Validator
      * Allows the ability to arbitrarily call a validator with an optional prefix
      * of "is" or "not" by simply calling an instance property like a callback
      *
-     * @param callable $method          The callable method to execute
+     * @param string $method            The callable method to execute
      * @param array $args               The argument array to pass to our callback
      * @throws BadMethodCallException   If an attempt was made to call a validator modifier that doesn't exist
      * @throws ValidationException      If the validation check returns false

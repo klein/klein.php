@@ -46,7 +46,7 @@ class ServerDataCollection extends DataCollection
      * reason aren't prefixed in PHP...
      *
      * @static
-     * @var string
+     * @var array
      * @access protected
      */
     protected static $http_nonprefixed_headers = array(

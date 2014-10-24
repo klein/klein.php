@@ -359,8 +359,8 @@ class Klein
      * $router->with('/cars', __DIR__ . '/routes/cars.php');
      * </code>
      *
-     * @param string $namespace                     The namespace under which to collect the routes
-     * @param callable|string[filename] $routes   The defined routes to collect under the namespace
+     * @param string $namespace         The namespace under which to collect the routes
+     * @param callable|string $routes   The defined routes callable or filename to collect under the namespace
      * @access public
      * @return void
      */
@@ -844,11 +844,11 @@ class Klein
      *
      * @param Route $route
      * @param RouteCollection $matched
-     * @param int $methods_matched
+     * @param array $methods_matched
      * @access protected
      * @return void
      */
-    protected function handleRouteCallback(Route $route, RouteCollection $matched, $methods_matched)
+    protected function handleRouteCallback(Route $route, RouteCollection $matched, array $methods_matched)
     {
         // Handle the callback
         $returned = call_user_func(

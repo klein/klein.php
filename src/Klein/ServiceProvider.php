@@ -47,7 +47,7 @@ class ServiceProvider
     /**
      * The id of the current PHP session
      *
-     * @var string
+     * @var string|boolean
      * @access protected
      */
     protected $session_id;
