@@ -157,7 +157,7 @@ class Klein
     /**
      * The Response object passed to each matched route
      *
-     * @var Response
+     * @var AbstractResponse
      * @access protected
      */
     protected $response;
@@ -317,7 +317,7 @@ class Klein
      * });
      * </code>
      *
-     * @param string | array $method    HTTP Method to match
+     * @param string|array $method    HTTP Method to match
      * @param string $path              Route URI path to match
      * @param callable $callback        Callable callback method to execute on route match
      * @access public
@@ -360,7 +360,7 @@ class Klein
      * </code>
      *
      * @param string $namespace                     The namespace under which to collect the routes
-     * @param callable | string[filename] $routes   The defined routes to collect under the namespace
+     * @param callable|string[filename] $routes   The defined routes to collect under the namespace
      * @access public
      * @return void
      */
@@ -691,7 +691,7 @@ class Klein
      *
      * @param string $route     The route string to compile
      * @access protected
-     * @return void
+     * @return string
      */
     protected function compileRoute($route)
     {

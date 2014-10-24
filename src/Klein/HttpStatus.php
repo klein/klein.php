@@ -206,7 +206,7 @@ class HttpStatus
      * @param int $int 
      * @static
      * @access public
-     * @return string | null
+     * @return string|null
      */
     public static function getMessageFromCode($int)
     {

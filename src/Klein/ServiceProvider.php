@@ -39,7 +39,7 @@ class ServiceProvider
     /**
      * The Response instance containing HTTP response data and behaviors
      *
-     * @var Response
+     * @var AbstractResponse
      * @access protected
      */
     protected $response;

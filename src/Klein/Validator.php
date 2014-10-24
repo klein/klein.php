@@ -160,7 +160,7 @@ class Validator
      * @throws BadMethodCallException   If an attempt was made to call a validator modifier that doesn't exist
      * @throws ValidationException      If the validation check returns false
      * @access public
-     * @return Validator
+     * @return Validator|boolean
      */
     public function __call($method, $args)
     {
