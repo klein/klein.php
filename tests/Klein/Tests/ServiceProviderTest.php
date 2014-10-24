@@ -11,7 +11,6 @@
 
 namespace Klein\Tests;
 
-
 use Klein\Klein;
 use Klein\Request;
 use Klein\Response;

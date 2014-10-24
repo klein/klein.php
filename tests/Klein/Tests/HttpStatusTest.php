@@ -11,7 +11,6 @@
 
 namespace Klein\Tests;
 
-
 use Klein\HttpStatus;
 
 /**
