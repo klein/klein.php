@@ -838,6 +838,7 @@ class Klein
 
         $path = $route->getPath();
 
+        // Use our compilation regex to reverse the path's compilation from its definition
         $reversed_path = preg_replace_callback(
             static::ROUTE_COMPILE_REGEX,
             function ($match) use ($params) {
@@ -854,6 +855,7 @@ class Klein
             $path
         );
 
+        // If the path and reversed_path are the same, the regex must have not matched/replaced
         if ($path === $reversed_path && $flatten_regex && strpos($path, '@') === 0) {
             // If the path is a custom regular expression and we're "flattening", just return a slash
             $path = '/';
