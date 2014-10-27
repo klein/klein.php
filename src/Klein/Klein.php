@@ -41,7 +41,7 @@ class Klein
      *
      * @const string
      */
-    const ROUTE_COMPILE_REGEX = '`(\\\?(?:/|\.|))(\[([^:\]]*+)(?::([^:\]]*+))?\])(\?|)`';
+    const ROUTE_COMPILE_REGEX = '`(\\\?(?:/|\.|))(?:\[([^:\]]*+)(?::([^:\]]*+))?\])(\?|)`';
 
     /**
      * The regular expression used to escape the non-named param section of a route URL
@@ -734,7 +734,7 @@ class Klein
         $route = preg_replace_callback(
             static::ROUTE_COMPILE_REGEX,
             function ($match) use ($match_types) {
-                list(, $pre, , $type, $param, $optional) = $match;
+                list(, $pre, $type, $param, $optional) = $match;
 
                 if (isset($match_types[$type])) {
                     $type = $match_types[$type];
@@ -842,7 +842,7 @@ class Klein
         $reversed_path = preg_replace_callback(
             static::ROUTE_COMPILE_REGEX,
             function ($match) use ($params) {
-                list($block, $pre, , , $param, $optional) = $match;
+                list($block, $pre, , $param, $optional) = $match;
 
                 if (isset($params[$param])) {
                     return $pre. $params[$param];
