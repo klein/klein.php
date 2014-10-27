@@ -101,6 +101,29 @@ class Klein
      */
 
     /**
+     * The types to detect in a defined match "block"
+     *
+     * Examples of these blocks are as follows:
+     *
+     * - integer:       '[i:id]'
+     * - alphanumeric:  '[a:username]'
+     * - hexadecimal:   '[h:color]'
+     * - slug:          '[s:article]'
+     *
+     * @var array
+     * @access protected
+     */
+    protected $match_types = array(
+        'i'  => '[0-9]++',
+        'a'  => '[0-9A-Za-z]++',
+        'h'  => '[0-9A-Fa-f]++',
+        's'  => '[0-9A-Za-z-_]++',
+        '*'  => '.+?',
+        '**' => '.++',
+        ''   => '[^/]+?'
+    );
+
+    /**
      * Collection of the routes to match on dispatch
      *
      * @var RouteCollection
@@ -704,20 +727,13 @@ class Klein
             $route
         );
 
+        // Get a local reference of the match types to pass into our closure
+        $match_types = $this->match_types;
+
         // Now let's actually compile the path
         $route = preg_replace_callback(
             static::ROUTE_COMPILE_REGEX,
-            function ($match) {
-                $match_types = array(
-                    'i'  => '[0-9]++',
-                    'a'  => '[0-9A-Za-z]++',
-                    'h'  => '[0-9A-Fa-f]++',
-                    's'  => '[0-9A-Za-z-_]++',
-                    '*'  => '.+?',
-                    '**' => '.++',
-                    ''   => '[^/]+?'
-                );
-
+            function ($match) use ($match_types) {
                 list($block, $pre, $inner_block, $type, $param, $optional) = $match;
 
                 if (isset($match_types[$type])) {
@@ -733,7 +749,6 @@ class Klein
                          . '))'
                          . ($optional !== '' ? '?' : null);
 
-                // $route = str_replace($block, $pattern, $route);
                 return $pattern;
             },
             $route
