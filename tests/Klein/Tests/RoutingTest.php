@@ -2167,6 +2167,20 @@ class RoutingTest extends AbstractKleinTest
         $this->assertSame(404, $this->klein_app->response()->code());
     }
 
+    public function testMultipleUnsafeCharactersArentOverQuoted()
+    {
+        $this->klein_app->respond(
+            '/[a:site].[:format]?/[:id].[:format2]?',
+            function () {
+            }
+        );
+
+        $this->klein_app->dispatch(
+            MockRequestFactory::create('/site.main/id.json')
+        );
+        $this->assertSame(200, $this->klein_app->response()->code());
+    }
+
     public function testMatchesLiteralPlusSignsInPaths()
     {
         $this->klein_app->respond(
