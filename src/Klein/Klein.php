@@ -838,20 +838,27 @@ class Klein
 
         $path = $route->getPath();
 
-        if (preg_match_all(static::ROUTE_COMPILE_REGEX, $path, $matches, PREG_SET_ORDER)) {
-            foreach ($matches as $match) {
+        $reversed_path = preg_replace_callback(
+            static::ROUTE_COMPILE_REGEX,
+            function ($match) use ($params) {
                 list($block, $pre, $inner_block, $type, $param, $optional) = $match;
 
                 if (isset($params[$param])) {
-                    $path = str_replace($block, $pre. $params[$param], $path);
+                    return $pre. $params[$param];
                 } elseif ($optional) {
-                    $path = str_replace($block, '', $path);
+                    return '';
                 }
-            }
 
-        } elseif ($flatten_regex && strpos($path, '@') === 0) {
+                return $block;
+            },
+            $path
+        );
+
+        if ($path === $reversed_path && $flatten_regex && strpos($path, '@') === 0) {
             // If the path is a custom regular expression and we're "flattening", just return a slash
             $path = '/';
+        } else {
+            $path = $reversed_path;
         }
 
         return $path;
