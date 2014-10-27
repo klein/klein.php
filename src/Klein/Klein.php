@@ -734,7 +734,7 @@ class Klein
         $route = preg_replace_callback(
             static::ROUTE_COMPILE_REGEX,
             function ($match) use ($match_types) {
-                list($block, $pre, $inner_block, $type, $param, $optional) = $match;
+                list(, $pre, , $type, $param, $optional) = $match;
 
                 if (isset($match_types[$type])) {
                     $type = $match_types[$type];
@@ -841,7 +841,7 @@ class Klein
         $reversed_path = preg_replace_callback(
             static::ROUTE_COMPILE_REGEX,
             function ($match) use ($params) {
-                list($block, $pre, $inner_block, $type, $param, $optional) = $match;
+                list($block, $pre, , , $param, $optional) = $match;
 
                 if (isset($params[$param])) {
                     return $pre. $params[$param];
