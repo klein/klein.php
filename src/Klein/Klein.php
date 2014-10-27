@@ -696,11 +696,13 @@ class Klein
     protected function compileRoute($route)
     {
         // First escape all of the non-named param (non [block]s) for regex-chars
-        if (preg_match_all(static::ROUTE_ESCAPE_REGEX, $route, $escape_locations, PREG_SET_ORDER)) {
-            foreach ($escape_locations as $locations) {
-                $route = str_replace($locations[0], preg_quote($locations[0]), $route);
-            }
-        }
+        $route = preg_replace_callback(
+            static::ROUTE_ESCAPE_REGEX,
+            function ($match) {
+                return preg_quote($match[0]);
+            },
+            $route
+        );
 
         // Now let's actually compile the path
         if (preg_match_all(static::ROUTE_COMPILE_REGEX, $route, $matches, PREG_SET_ORDER)) {
