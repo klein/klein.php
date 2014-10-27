@@ -705,23 +705,25 @@ class Klein
         );
 
         // Now let's actually compile the path
-        if (preg_match_all(static::ROUTE_COMPILE_REGEX, $route, $matches, PREG_SET_ORDER)) {
-            $match_types = array(
-                'i'  => '[0-9]++',
-                'a'  => '[0-9A-Za-z]++',
-                'h'  => '[0-9A-Fa-f]++',
-                's'  => '[0-9A-Za-z-_]++',
-                '*'  => '.+?',
-                '**' => '.++',
-                ''   => '[^/]+?'
-            );
+        $route = preg_replace_callback(
+            static::ROUTE_COMPILE_REGEX,
+            function ($match) {
+                $match_types = array(
+                    'i'  => '[0-9]++',
+                    'a'  => '[0-9A-Za-z]++',
+                    'h'  => '[0-9A-Fa-f]++',
+                    's'  => '[0-9A-Za-z-_]++',
+                    '*'  => '.+?',
+                    '**' => '.++',
+                    ''   => '[^/]+?'
+                );
 
-            foreach ($matches as $match) {
                 list($block, $pre, $inner_block, $type, $param, $optional) = $match;
 
                 if (isset($match_types[$type])) {
                     $type = $match_types[$type];
                 }
+
                 // Older versions of PCRE require the 'P' in (?P<named>)
                 $pattern = '(?:'
                          . ($pre !== '' ? $pre : null)
@@ -731,9 +733,11 @@ class Klein
                          . '))'
                          . ($optional !== '' ? '?' : null);
 
-                $route = str_replace($block, $pattern, $route);
-            }
-        }
+                // $route = str_replace($block, $pattern, $route);
+                return $pattern;
+            },
+            $route
+        );
 
         $regex = "`^$route$`";
 
