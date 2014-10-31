@@ -41,7 +41,7 @@ class Klein
      *
      * @const string
      */
-    const ROUTE_COMPILE_REGEX = '`(\\\?(?:/|\.|))(\[([^:\]]*+)(?::([^:\]]*+))?\])(\?|)`';
+    const ROUTE_COMPILE_REGEX = '`(\\\?(?:/|\.|))(?:\[([^:\]]*)(?::([^:\]]*))?\])(\?|)`';
 
     /**
      * The regular expression used to escape the non-named param section of a route URL
@@ -99,6 +99,29 @@ class Klein
     /**
      * Class properties
      */
+
+    /**
+     * The types to detect in a defined match "block"
+     *
+     * Examples of these blocks are as follows:
+     *
+     * - integer:       '[i:id]'
+     * - alphanumeric:  '[a:username]'
+     * - hexadecimal:   '[h:color]'
+     * - slug:          '[s:article]'
+     *
+     * @var array
+     * @access protected
+     */
+    protected $match_types = array(
+        'i'  => '[0-9]++',
+        'a'  => '[0-9A-Za-z]++',
+        'h'  => '[0-9A-Fa-f]++',
+        's'  => '[0-9A-Za-z-_]++',
+        '*'  => '.+?',
+        '**' => '.++',
+        ''   => '[^/]+?'
+    );
 
     /**
      * Collection of the routes to match on dispatch
@@ -696,30 +719,27 @@ class Klein
     protected function compileRoute($route)
     {
         // First escape all of the non-named param (non [block]s) for regex-chars
-        if (preg_match_all(static::ROUTE_ESCAPE_REGEX, $route, $escape_locations, PREG_SET_ORDER)) {
-            foreach ($escape_locations as $locations) {
-                $route = str_replace($locations[0], preg_quote($locations[0]), $route);
-            }
-        }
+        $route = preg_replace_callback(
+            static::ROUTE_ESCAPE_REGEX,
+            function ($match) {
+                return preg_quote($match[0]);
+            },
+            $route
+        );
+
+        // Get a local reference of the match types to pass into our closure
+        $match_types = $this->match_types;
 
         // Now let's actually compile the path
-        if (preg_match_all(static::ROUTE_COMPILE_REGEX, $route, $matches, PREG_SET_ORDER)) {
-            $match_types = array(
-                'i'  => '[0-9]++',
-                'a'  => '[0-9A-Za-z]++',
-                'h'  => '[0-9A-Fa-f]++',
-                's'  => '[0-9A-Za-z-_]++',
-                '*'  => '.+?',
-                '**' => '.++',
-                ''   => '[^/]+?'
-            );
-
-            foreach ($matches as $match) {
-                list($block, $pre, $inner_block, $type, $param, $optional) = $match;
+        $route = preg_replace_callback(
+            static::ROUTE_COMPILE_REGEX,
+            function ($match) use ($match_types) {
+                list(, $pre, $type, $param, $optional) = $match;
 
                 if (isset($match_types[$type])) {
                     $type = $match_types[$type];
                 }
+
                 // Older versions of PCRE require the 'P' in (?P<named>)
                 $pattern = '(?:'
                          . ($pre !== '' ? $pre : null)
@@ -729,9 +749,10 @@ class Klein
                          . '))'
                          . ($optional !== '' ? '?' : null);
 
-                $route = str_replace($block, $pattern, $route);
-            }
-        }
+                return $pattern;
+            },
+            $route
+        );
 
         $regex = "`^$route$`";
 
@@ -817,20 +838,29 @@ class Klein
 
         $path = $route->getPath();
 
-        if (preg_match_all(static::ROUTE_COMPILE_REGEX, $path, $matches, PREG_SET_ORDER)) {
-            foreach ($matches as $match) {
-                list($block, $pre, $inner_block, $type, $param, $optional) = $match;
+        // Use our compilation regex to reverse the path's compilation from its definition
+        $reversed_path = preg_replace_callback(
+            static::ROUTE_COMPILE_REGEX,
+            function ($match) use ($params) {
+                list($block, $pre, , $param, $optional) = $match;
 
                 if (isset($params[$param])) {
-                    $path = str_replace($block, $pre. $params[$param], $path);
+                    return $pre. $params[$param];
                 } elseif ($optional) {
-                    $path = str_replace($block, '', $path);
+                    return '';
                 }
-            }
 
-        } elseif ($flatten_regex && strpos($path, '@') === 0) {
+                return $block;
+            },
+            $path
+        );
+
+        // If the path and reversed_path are the same, the regex must have not matched/replaced
+        if ($path === $reversed_path && $flatten_regex && strpos($path, '@') === 0) {
             // If the path is a custom regular expression and we're "flattening", just return a slash
             $path = '/';
+        } else {
+            $path = $reversed_path;
         }
 
         return $path;
