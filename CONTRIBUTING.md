@@ -5,6 +5,7 @@ Contributing is absolutely encouraged, but a few things should be taken into acc
 - Always test any bug-fixes or changes with [unit testing][unit-testing]
 - When adding or changing a feature, make sure to write a **new** [unit test][unit-testing]
 - This project adheres to the [PSR-2][psr-2] standards. Please make sure your contributions [comply][code-sniffer].
+- Code and comment styles should be made as consistent as possible with the rest of the project
 - Make sure to document your code with the [PHPDoc syntax][php-doc]
 - Pull Requests and Issues should contain no more than **1** bug-fix, feature, or documentation change
 - Keep the number of lines changed in a pull request to a minimum necessary to complete the PR's subject
