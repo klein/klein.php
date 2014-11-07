@@ -18,8 +18,8 @@
 ## Composer Installation
 
 1. Get [Composer](http://getcomposer.org/)
-2. Require Klein with `php composer.phar require klein/klein v2.1.x`
-3. Install dependencies with `php composer.phar install`
+2. Require Klein with `php composer.phar require klein/klein`
+3. Add the following to your application's main PHP file: `require 'vendor/autoload.php';`
 
 ## Example
 
