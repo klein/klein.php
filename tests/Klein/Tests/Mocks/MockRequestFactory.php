@@ -19,7 +19,6 @@ use Klein\Request;
  * Allow for the simple creation of mock requests
  * (great for testing... ;))
  *
- * @package Klein\Tests\Mocks
  */
 class MockRequestFactory
 {
@@ -34,8 +33,6 @@ class MockRequestFactory
      * @param array $server
      * @param array $files
      * @param string $body
-     * @static
-     * @access public
      * @return void
      */
     public static function create(

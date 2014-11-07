@@ -18,8 +18,6 @@ use RuntimeException;
  *
  * Exception used for when a response is attempted to be sent after its already been sent
  * 
- * @uses       RuntimeException
- * @package    Klein\Exceptions
  */
 class ResponseAlreadySentException extends RuntimeException implements KleinExceptionInterface
 {

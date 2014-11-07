@@ -16,8 +16,6 @@ use Klein\HttpStatus;
 /**
  * HttpStatusTests 
  * 
- * @uses AbstractKleinTest
- * @package Klein\Tests
  */
 class HttpStatusTests extends AbstractKleinTest
 {

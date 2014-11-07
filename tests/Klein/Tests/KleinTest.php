@@ -27,8 +27,6 @@ use OutOfBoundsException;
 /**
  * KleinTest 
  *
- * @uses AbstractKleinTest
- * @package Klein\Tests
  */
 class KleinTest extends AbstractKleinTest
 {

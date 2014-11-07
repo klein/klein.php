@@ -21,8 +21,6 @@ use Klein\Validator;
 /**
  * ValidationsTest 
  * 
- * @uses AbstractKleinTest
- * @package Klein\Tests
  */
 class ValidationsTest extends AbstractKleinTest
 {

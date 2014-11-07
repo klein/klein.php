@@ -22,9 +22,6 @@ use PHPUnit_Framework_TestCase;
  *
  * Base test class for PHP Unit testing
  * 
- * @uses PHPUnit_Framework_TestCase
- * @abstract
- * @package Klein\Tests
  */
 abstract class AbstractKleinTest extends PHPUnit_Framework_TestCase
 {
@@ -34,7 +31,6 @@ abstract class AbstractKleinTest extends PHPUnit_Framework_TestCase
      * (for easy testing and less boilerplate)
      * 
      * @var \Klein\Klein;
-     * @access protected
      */
     protected $klein_app;
 
@@ -43,7 +39,6 @@ abstract class AbstractKleinTest extends PHPUnit_Framework_TestCase
      * Setup our test
      * (runs before each test)
      * 
-     * @access protected
      * @return void
      */
     protected function setUp()
@@ -61,7 +56,6 @@ abstract class AbstractKleinTest extends PHPUnit_Framework_TestCase
      *
      * @param Request $request      Custom Klein "Request" object
      * @param Response $response    Custom Klein "Response" object
-     * @access protected
      * @return mixed The output of the dispatch call
      */
     protected function dispatchAndReturnOutput($request = null, $response = null)
@@ -81,7 +75,6 @@ abstract class AbstractKleinTest extends PHPUnit_Framework_TestCase
      * @param mixed $expected The expected output
      * @param callable $callback The callable function
      * @param string $message (optional) A message to display if the assertion fails
-     * @access protected
      * @return void
      */
     protected function assertOutputSame($expected, $callback, $message = '')
@@ -105,7 +98,6 @@ abstract class AbstractKleinTest extends PHPUnit_Framework_TestCase
      * Loads externally defined routes under the filename's namespace
      * 
      * @param Klein $app_context The application context to attach the routes to
-     * @access protected
      * @return array
      */
     protected function loadExternalRoutes(Klein $app_context = null)

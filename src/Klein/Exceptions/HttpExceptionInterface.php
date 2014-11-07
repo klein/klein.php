@@ -16,7 +16,6 @@ namespace Klein\Exceptions;
  *
  * An interface for type-hinting generic HTTP errors
  *
- * @package    Klein\Exceptions
  */
 interface HttpExceptionInterface extends KleinExceptionInterface
 {

@@ -18,8 +18,6 @@ use RuntimeException;
  *
  * An HTTP error exception
  * 
- * @uses       RuntimeException
- * @package    Klein\Exceptions
  */
 class HttpException extends RuntimeException implements HttpExceptionInterface
 {
@@ -32,8 +30,6 @@ class HttpException extends RuntimeException implements HttpExceptionInterface
      * Create an HTTP exception from nothing but an HTTP code
      *
      * @param int $code
-     * @static
-     * @access public
      * @return HttpException
      */
     public static function createFromCode($code)

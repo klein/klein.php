@@ -28,8 +28,6 @@ use Klein\Tests\Mocks\MockRequestFactory;
 /**
  * RoutingTest
  * 
- * @uses AbstractKleinTest
- * @package Klein\Tests
  */
 class RoutingTest extends AbstractKleinTest
 {

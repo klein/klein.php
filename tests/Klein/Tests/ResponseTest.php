@@ -23,8 +23,6 @@ use Klein\Tests\Mocks\MockRequestFactory;
 /**
  * ResponsesTest 
  * 
- * @uses AbstractKleinTest
- * @package Klein\Tests
  */
 class ResponsesTest extends AbstractKleinTest
 {

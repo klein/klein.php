@@ -18,8 +18,6 @@ use Klein\Route;
  *
  * A DataCollection for Routes
  *
- * @uses        DataCollection
- * @package     Klein\DataCollection
  */
 class RouteCollection extends DataCollection
 {
@@ -33,7 +31,6 @@ class RouteCollection extends DataCollection
      *
      * @override (doesn't call our parent)
      * @param array $routes The routes of this collection
-     * @access public
      */
     public function __construct(array $routes = array())
     {
@@ -58,7 +55,6 @@ class RouteCollection extends DataCollection
      * @see DataCollection::set()
      * @param string $key                   The name of the route to set
      * @param Route|callable $value         The value of the route to set
-     * @access public
      * @return RouteCollection
      */
     public function set($key, $value)
@@ -76,7 +72,6 @@ class RouteCollection extends DataCollection
      * This will auto-generate a name
      *
      * @param Route $route
-     * @access public
      * @return RouteCollection
      */
     public function addRoute(Route $route)
@@ -99,7 +94,6 @@ class RouteCollection extends DataCollection
      * or any other Route class compatible callback
      *
      * @param Route|callable $route
-     * @access public
      * @return RouteCollection
      */
     public function add($route)
@@ -121,7 +115,6 @@ class RouteCollection extends DataCollection
      * Thankfully, because routes are all objects, this doesn't
      * take much memory as its simply moving references around
      *
-     * @access public
      * @return RouteCollection
      */
     public function prepareNamed()

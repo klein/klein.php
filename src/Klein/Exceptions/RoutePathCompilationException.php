@@ -20,8 +20,6 @@ use RuntimeException;
  *
  * Exception used for when a route's path fails to compile
  * 
- * @uses       Exception
- * @package    Klein\Exceptions
  */
 class RoutePathCompilationException extends RuntimeException implements KleinExceptionInterface
 {
@@ -53,7 +51,6 @@ class RoutePathCompilationException extends RuntimeException implements KleinExc
      * The route that failed to compile
      *
      * @var Route
-     * @access protected
      */
     protected $route;
 
@@ -68,8 +65,6 @@ class RoutePathCompilationException extends RuntimeException implements KleinExc
      *
      * @param Route $route          The route that failed to compile
      * @param Exception $previous   The previous exception
-     * @static
-     * @access public
      * @return RoutePathCompilationException
      */
     public static function createFromRoute(Route $route, Exception $previous = null)

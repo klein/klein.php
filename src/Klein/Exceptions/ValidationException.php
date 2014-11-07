@@ -18,8 +18,6 @@ use UnexpectedValueException;
  *
  * Exception used for Validation errors
  * 
- * @uses       Exception
- * @package    Klein\Exceptions
  */
 class ValidationException extends UnexpectedValueException implements KleinExceptionInterface
 {

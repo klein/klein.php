@@ -18,8 +18,6 @@ use stdClass;
 /**
  * DataCollectionTest
  *
- * @uses AbstractKleinTest
- * @package Klein\Tests\DataCollection
  */
 class DataCollectionTest extends AbstractKleinTest
 {
@@ -27,9 +25,7 @@ class DataCollectionTest extends AbstractKleinTest
     /**
      * Non existent key in the sample data
      *
-     * @static
      * @var string
-     * @access protected
      */
     protected static $nonexistent_key = 'key-name-doesnt-exist';
 
@@ -43,7 +39,6 @@ class DataCollectionTest extends AbstractKleinTest
      * have any keys that match the "nonexistent_key"
      *
      * @param array $sample_data
-     * @access protected
      * @return void
      */
     protected function prepareSampleData(&$sample_data)
@@ -62,7 +57,6 @@ class DataCollectionTest extends AbstractKleinTest
     /**
      * Sample data provider
      *
-     * @access public
      * @return array
      */
     public function sampleDataProvider()
@@ -90,7 +84,6 @@ class DataCollectionTest extends AbstractKleinTest
     /**
      * Totally different sample data provider
      *
-     * @access public
      * @return array
      */
     public function totallyDifferentSampleDataProvider()

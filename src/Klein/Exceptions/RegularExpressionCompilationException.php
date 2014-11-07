@@ -18,8 +18,6 @@ use RuntimeException;
  *
  * Exception used for when a regular expression fails to compile
  * 
- * @uses       Exception
- * @package    Klein\Exceptions
  */
 class RegularExpressionCompilationException extends RuntimeException implements KleinExceptionInterface
 {

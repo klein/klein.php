@@ -21,8 +21,6 @@ use Klein\Validator;
 /**
  * ServiceProviderTest
  *
- * @uses AbstractKleinTest
- * @package Klein\Tests
  */
 class ServiceProviderTest extends AbstractKleinTest
 {

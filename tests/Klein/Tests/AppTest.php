@@ -16,8 +16,6 @@ use Klein\App;
 /**
  * AppTest
  *
- * @uses AbstractKleinTest
- * @package Klein\Tests
  */
 class AppTest extends AbstractKleinTest
 {

@@ -18,8 +18,6 @@ use Klein\ResponseCookie;
  *
  * A DataCollection for HTTP response cookies
  *
- * @uses        DataCollection
- * @package     Klein\DataCollection
  */
 class ResponseCookieDataCollection extends DataCollection
 {
@@ -33,7 +31,6 @@ class ResponseCookieDataCollection extends DataCollection
      *
      * @override (doesn't call our parent)
      * @param array $cookies The cookies of this collection
-     * @access public
      */
     public function __construct(array $cookies = array())
     {
@@ -59,7 +56,6 @@ class ResponseCookieDataCollection extends DataCollection
      * @see DataCollection::set()
      * @param string $key                   The name of the cookie to set
      * @param ResponseCookie|string $value  The value of the cookie to set
-     * @access public
      * @return ResponseCookieDataCollection
      */
     public function set($key, $value)

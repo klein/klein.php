@@ -17,8 +17,6 @@ use Klein\Tests\AbstractKleinTest;
 /**
  * ServerDataCollectionTest
  *
- * @uses AbstractKleinTest
- * @package Klein\Tests\DataCollection
  */
 class ServerDataCollectionTest extends AbstractKleinTest
 {
@@ -30,7 +28,6 @@ class ServerDataCollectionTest extends AbstractKleinTest
     /**
      * Sample data provider
      *
-     * @access public
      * @return array
      */
     public function sampleDataProvider()

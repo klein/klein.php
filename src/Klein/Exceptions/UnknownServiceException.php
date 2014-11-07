@@ -18,8 +18,6 @@ use OutOfBoundsException;
  *
  * Exception used for when a service was called that doesn't exist
  * 
- * @uses       Exception
- * @package    Klein\Exceptions
  */
 class UnknownServiceException extends OutOfBoundsException implements KleinExceptionInterface
 {

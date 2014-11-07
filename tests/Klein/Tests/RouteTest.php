@@ -18,8 +18,6 @@ use Klein\Route;
 /**
  * RouteTest
  *
- * @uses AbstractKleinTest
- * @package Klein\Tests
  */
 class RouteTest extends AbstractKleinTest
 {

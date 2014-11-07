@@ -16,7 +16,6 @@ namespace Klein;
  *
  * HTTP status code and message translator
  * 
- * @package     Klein
  */
 class HttpStatus
 {
@@ -25,7 +24,6 @@ class HttpStatus
      * The HTTP status code
      *
      * @var int
-     * @access protected
      */
     protected $code;
 
@@ -33,7 +31,6 @@ class HttpStatus
      * The HTTP status message
      *
      * @var string
-     * @access protected
      */
     protected $message;
 
@@ -41,9 +38,7 @@ class HttpStatus
      * HTTP 1.1 status messages based on code
      *
      * @link http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html
-     * @static
      * @var array
-     * @access protected
      */
     protected static $http_messages = array(
         // Informational 1xx
@@ -104,7 +99,6 @@ class HttpStatus
      *
      * @param int $code The HTTP code
      * @param string $message (optional) HTTP message for the corresponding code
-     * @access public
      */
     public function __construct($code, $message = null)
     {
@@ -120,7 +114,6 @@ class HttpStatus
     /**
      * Get the HTTP status code
      *
-     * @access public
      * @return int
      */
     public function getCode()
@@ -131,7 +124,6 @@ class HttpStatus
     /**
      * Get the HTTP status message
      *
-     * @access public
      * @return string
      */
     public function getMessage()
@@ -143,7 +135,6 @@ class HttpStatus
      * Set the HTTP status code
      *
      * @param int $code 
-     * @access public
      * @return HttpStatus
      */
     public function setCode($code)
@@ -156,7 +147,6 @@ class HttpStatus
      * Set the HTTP status message
      *
      * @param string $message 
-     * @access public
      * @return HttpStatus
      */
     public function setMessage($message)
@@ -168,7 +158,6 @@ class HttpStatus
     /**
      * Get a string representation of our HTTP status
      * 
-     * @access public
      * @return string
      */
     public function getFormattedString()
@@ -189,7 +178,6 @@ class HttpStatus
      * This method will be automatically called, returning a string representation
      * of this instance
      *
-     * @access public
      * @return string
      */
     public function __toString()
@@ -204,8 +192,6 @@ class HttpStatus
      * found for the passed in code
      *
      * @param int $int 
-     * @static
-     * @access public
      * @return string|null
      */
     public static function getMessageFromCode($int)

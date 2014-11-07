@@ -18,8 +18,6 @@ use Klein\Tests\AbstractKleinTest;
 /**
  * RouteCollectionTest
  *
- * @uses AbstractKleinTest
- * @package Klein\Tests\DataCollection
  */
 class RouteCollectionTest extends AbstractKleinTest
 {
@@ -31,7 +29,6 @@ class RouteCollectionTest extends AbstractKleinTest
     /**
      * Sample data provider
      *
-     * @access public
      * @return array
      */
     public function sampleDataProvider()

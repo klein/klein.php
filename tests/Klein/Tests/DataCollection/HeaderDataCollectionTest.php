@@ -17,8 +17,6 @@ use Klein\Tests\AbstractKleinTest;
 /**
  * HeaderDataCollectionTest
  *
- * @uses AbstractKleinTest
- * @package Klein\Tests\DataCollection
  */
 class HeaderDataCollectionTest extends AbstractKleinTest
 {
@@ -26,9 +24,7 @@ class HeaderDataCollectionTest extends AbstractKleinTest
     /**
      * Non existent key in the sample data
      *
-     * @static
      * @var string
-     * @access protected
      */
     protected static $nonexistent_key = 'non-standard-header';
 
@@ -42,7 +38,6 @@ class HeaderDataCollectionTest extends AbstractKleinTest
      * have any keys that match the "nonexistent_key"
      *
      * @param array $sample_data
-     * @access protected
      * @return void
      */
     protected function prepareSampleData(&$sample_data)
@@ -61,7 +56,6 @@ class HeaderDataCollectionTest extends AbstractKleinTest
     /**
      * Sample data provider
      *
-     * @access public
      * @return array
      */
     public function sampleDataProvider()

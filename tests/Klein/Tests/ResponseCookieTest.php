@@ -16,8 +16,6 @@ use Klein\ResponseCookie;
 /**
  * ResponseCookieTest
  *
- * @uses AbstractKleinTest
- * @package Klein\Tests
  */
 class ResponseCookieTest extends AbstractKleinTest
 {
@@ -29,7 +27,6 @@ class ResponseCookieTest extends AbstractKleinTest
     /**
      * Sample data provider
      *
-     * @access public
      * @return array
      */
     public function sampleDataProvider()

@@ -17,8 +17,6 @@ use Klein\Route;
 /**
  * AbstractRouteFactoryTest
  *
- * @uses AbstractKleinTest
- * @package Klein\Tests
  */
 class AbstractRouteFactoryTest extends AbstractKleinTest
 {
