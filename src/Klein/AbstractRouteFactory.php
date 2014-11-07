@@ -15,7 +15,6 @@ namespace Klein;
  * AbstractRouteFactory
  *
  * Abstract class for a factory for building new Route instances
- *
  */
 abstract class AbstractRouteFactory
 {

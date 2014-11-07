@@ -18,7 +18,6 @@ use Klein\Request;
  *
  * Allow for the simple creation of mock requests
  * (great for testing... ;))
- *
  */
 class MockRequestFactory
 {

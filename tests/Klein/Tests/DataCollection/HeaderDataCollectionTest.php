@@ -16,7 +16,6 @@ use Klein\Tests\AbstractKleinTest;
 
 /**
  * HeaderDataCollectionTest
- *
  */
 class HeaderDataCollectionTest extends AbstractKleinTest
 {

@@ -17,7 +17,6 @@ use UnexpectedValueException;
  * ValidationException 
  *
  * Exception used for Validation errors
- * 
  */
 class ValidationException extends UnexpectedValueException implements KleinExceptionInterface
 {

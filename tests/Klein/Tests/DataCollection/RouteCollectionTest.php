@@ -17,7 +17,6 @@ use Klein\Tests\AbstractKleinTest;
 
 /**
  * RouteCollectionTest
- *
  */
 class RouteCollectionTest extends AbstractKleinTest
 {

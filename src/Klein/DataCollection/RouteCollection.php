@@ -17,7 +17,6 @@ use Klein\Route;
  * RouteCollection
  *
  * A DataCollection for Routes
- *
  */
 class RouteCollection extends DataCollection
 {

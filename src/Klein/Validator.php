@@ -16,7 +16,6 @@ use Klein\Exceptions\ValidationException;
 
 /**
  * Validator 
- * 
  */
 class Validator
 {

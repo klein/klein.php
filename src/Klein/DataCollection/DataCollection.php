@@ -24,7 +24,6 @@ use IteratorAggregate;
  *
  * Inspired by @fabpot's Symfony 2's HttpFoundation
  * @link https://github.com/symfony/HttpFoundation/blob/master/ParameterBag.php
- *
  */
 class DataCollection implements IteratorAggregate, ArrayAccess, Countable
 {

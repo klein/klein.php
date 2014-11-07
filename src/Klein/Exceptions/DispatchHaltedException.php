@@ -17,7 +17,6 @@ use RuntimeException;
  * DispatchHaltedException
  *
  * Exception used to halt a route callback from executing in a dispatch loop
- * 
  */
 class DispatchHaltedException extends RuntimeException implements KleinExceptionInterface
 {

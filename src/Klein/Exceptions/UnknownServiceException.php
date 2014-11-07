@@ -17,7 +17,6 @@ use OutOfBoundsException;
  * UnknownServiceException
  *
  * Exception used for when a service was called that doesn't exist
- * 
  */
 class UnknownServiceException extends OutOfBoundsException implements KleinExceptionInterface
 {

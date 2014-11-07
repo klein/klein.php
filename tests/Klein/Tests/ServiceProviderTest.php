@@ -20,7 +20,6 @@ use Klein\Validator;
 
 /**
  * ServiceProviderTest
- *
  */
 class ServiceProviderTest extends AbstractKleinTest
 {

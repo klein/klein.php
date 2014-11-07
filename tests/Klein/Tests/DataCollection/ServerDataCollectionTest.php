@@ -16,7 +16,6 @@ use Klein\Tests\AbstractKleinTest;
 
 /**
  * ServerDataCollectionTest
- *
  */
 class ServerDataCollectionTest extends AbstractKleinTest
 {

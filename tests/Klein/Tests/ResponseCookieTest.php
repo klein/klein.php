@@ -15,7 +15,6 @@ use Klein\ResponseCookie;
 
 /**
  * ResponseCookieTest
- *
  */
 class ResponseCookieTest extends AbstractKleinTest
 {

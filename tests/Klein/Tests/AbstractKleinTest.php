@@ -21,7 +21,6 @@ use PHPUnit_Framework_TestCase;
  * AbstractKleinTest
  *
  * Base test class for PHP Unit testing
- * 
  */
 abstract class AbstractKleinTest extends PHPUnit_Framework_TestCase
 {

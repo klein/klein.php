@@ -20,7 +20,6 @@ use Klein\Validator;
 
 /**
  * ValidationsTest 
- * 
  */
 class ValidationsTest extends AbstractKleinTest
 {

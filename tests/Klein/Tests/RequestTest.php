@@ -16,7 +16,6 @@ use Klein\Tests\Mocks\MockRequestFactory;
 
 /**
  * RequestTest
- * 
  */
 class RequestTest extends AbstractKleinTest
 {

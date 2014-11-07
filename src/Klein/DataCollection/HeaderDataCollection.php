@@ -15,7 +15,6 @@ namespace Klein\DataCollection;
  * HeaderDataCollection
  *
  * A DataCollection for HTTP headers
- *
  */
 class HeaderDataCollection extends DataCollection
 {

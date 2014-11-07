@@ -17,7 +17,6 @@ use RuntimeException;
  * UnhandledException
  *
  * Exception used for when a exception isn't correctly handled by the Klein error callbacks
- * 
  */
 class UnhandledException extends RuntimeException implements KleinExceptionInterface
 {

@@ -16,7 +16,6 @@ use Klein\RouteFactory;
 
 /**
  * RouteFactoryTest
- *
  */
 class RouteFactoryTest extends AbstractKleinTest
 {

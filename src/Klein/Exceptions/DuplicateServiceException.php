@@ -17,7 +17,6 @@ use OverflowException;
  * DuplicateServiceException
  *
  * Exception used for when a service is attempted to be registered that already exists
- * 
  */
 class DuplicateServiceException extends OverflowException implements KleinExceptionInterface
 {

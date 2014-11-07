@@ -20,7 +20,6 @@ namespace Klein\Exceptions;
  * that can be type-hinted/instance-checked against, therefore making it
  * easier to handle Klein exceptions while still allowing the different
  * exception classes to properly extend the corresponding SPL Exception type
- *
  */
 interface KleinExceptionInterface
 {

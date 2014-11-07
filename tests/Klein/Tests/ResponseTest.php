@@ -22,7 +22,6 @@ use Klein\Tests\Mocks\MockRequestFactory;
 
 /**
  * ResponsesTest 
- * 
  */
 class ResponsesTest extends AbstractKleinTest
 {

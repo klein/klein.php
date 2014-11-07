@@ -17,7 +17,6 @@ use Klein\DataCollection\ServerDataCollection;
 
 /**
  * Request
- * 
  */
 class Request
 {

@@ -19,7 +19,6 @@ use RuntimeException;
  * RoutePathCompilationException
  *
  * Exception used for when a route's path fails to compile
- * 
  */
 class RoutePathCompilationException extends RuntimeException implements KleinExceptionInterface
 {

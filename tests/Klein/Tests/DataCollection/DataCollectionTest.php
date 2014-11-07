@@ -17,7 +17,6 @@ use stdClass;
 
 /**
  * DataCollectionTest
- *
  */
 class DataCollectionTest extends AbstractKleinTest
 {

@@ -15,7 +15,6 @@ namespace Klein;
  * RouteFactory
  *
  * The default implementation of the AbstractRouteFactory
- *
  */
 class RouteFactory extends AbstractRouteFactory
 {

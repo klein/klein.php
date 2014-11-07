@@ -17,7 +17,6 @@ use RuntimeException;
  * HttpException
  *
  * An HTTP error exception
- * 
  */
 class HttpException extends RuntimeException implements HttpExceptionInterface
 {

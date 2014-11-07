@@ -17,7 +17,6 @@ use InvalidArgumentException;
  * Route
  *
  * Class to represent a route definition
- *
  */
 class Route
 {

@@ -26,7 +26,6 @@ use OutOfBoundsException;
  * Klein
  *
  * Main Klein router class
- * 
  */
 class Klein
 {

@@ -17,7 +17,6 @@ use Klein\ResponseCookie;
  * ResponseCookieDataCollection
  *
  * A DataCollection for HTTP response cookies
- *
  */
 class ResponseCookieDataCollection extends DataCollection
 {

@@ -19,7 +19,6 @@ use Klein\ResponseCookie;
 
 /**
  * AbstractResponse
- * 
  */
 abstract class AbstractResponse
 {

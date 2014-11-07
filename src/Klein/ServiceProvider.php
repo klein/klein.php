@@ -18,7 +18,6 @@ use Klein\DataCollection\DataCollection;
  *
  * Service provider class for handling logic extending between
  * a request's data and a response's behavior
- * 
  */
 class ServiceProvider
 {

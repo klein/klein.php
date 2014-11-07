@@ -17,7 +17,6 @@ use Klein\Route;
 
 /**
  * RouteTest
- *
  */
 class RouteTest extends AbstractKleinTest
 {

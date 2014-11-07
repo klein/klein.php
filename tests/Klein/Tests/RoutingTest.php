@@ -27,7 +27,6 @@ use Klein\Tests\Mocks\MockRequestFactory;
 
 /**
  * RoutingTest
- * 
  */
 class RoutingTest extends AbstractKleinTest
 {

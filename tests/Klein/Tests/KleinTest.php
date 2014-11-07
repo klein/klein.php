@@ -26,7 +26,6 @@ use OutOfBoundsException;
 
 /**
  * KleinTest 
- *
  */
 class KleinTest extends AbstractKleinTest
 {

@@ -17,7 +17,6 @@ use RuntimeException;
  * ResponseAlreadySentException
  *
  * Exception used for when a response is attempted to be sent after its already been sent
- * 
  */
 class ResponseAlreadySentException extends RuntimeException implements KleinExceptionInterface
 {

@@ -15,7 +15,6 @@ namespace Klein;
  * HttpStatus 
  *
  * HTTP status code and message translator
- * 
  */
 class HttpStatus
 {

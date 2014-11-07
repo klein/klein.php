@@ -15,7 +15,6 @@ namespace Klein;
  * ResponseCookie
  *
  * Class to represent an HTTP response cookie
- *
  */
 class ResponseCookie
 {

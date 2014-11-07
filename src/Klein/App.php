@@ -17,7 +17,6 @@ use Klein\Exceptions\UnknownServiceException;
 
 /**
  * App 
- * 
  */
 class App
 {
