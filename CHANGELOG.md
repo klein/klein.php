@@ -42,3 +42,4 @@
 - The methods matched counter (`$methods_matched`) is now much more accurate, not counting methods that shouldn't have been considered matches
 - Various PHPdoc inaccuracies and inconsistencies have been fixed
 - Regular expressions are now quoted during compilation in a much safer manner
+- The PHPdoc tags have been updated to use the more modern syntax
