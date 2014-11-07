@@ -1,6 +1,6 @@
 <?php
 /**
- * Klein (klein.php) - A lightning fast router for PHP
+ * Klein (klein.php) - A fast & flexible router for PHP
  *
  * @author      Chris O'Hara <cohara87@gmail.com>
  * @author      Trevor Suarez (Rican7) (contributor and v2 refactorer)
@@ -20,9 +20,6 @@ namespace Klein\DataCollection;
  *
  * Inspired by @fabpot's Symfony 2's HttpFoundation
  * @link https://github.com/symfony/HttpFoundation/blob/master/ServerBag.php
- *
- * @uses DataCollection
- * @package     Klein\DataCollection
  */
 class ServerDataCollection extends DataCollection
 {
@@ -35,9 +32,7 @@ class ServerDataCollection extends DataCollection
      * The prefix of HTTP headers normally
      * stored in the Server data
      *
-     * @static
-     * @var string
-     * @access protected
+     * @type string
      */
     protected static $http_header_prefix = 'HTTP_';
 
@@ -45,9 +40,7 @@ class ServerDataCollection extends DataCollection
      * The list of HTTP headers that for some
      * reason aren't prefixed in PHP...
      *
-     * @static
-     * @var array
-     * @access protected
+     * @type array
      */
     protected static $http_nonprefixed_headers = array(
         'CONTENT_LENGTH',
@@ -65,8 +58,6 @@ class ServerDataCollection extends DataCollection
      *
      * @param string $string    The string to check
      * @param string $prefix    The prefix to test
-     * @static
-     * @access public
      * @return boolean
      */
     public static function hasPrefix($string, $prefix)
@@ -84,7 +75,6 @@ class ServerDataCollection extends DataCollection
      * PHP is weird... it puts all of the HTTP request
      * headers in the $_SERVER array. This handles that
      *
-     * @access public
      * @return array
      */
     public function getHeaders()

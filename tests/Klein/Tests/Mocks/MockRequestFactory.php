@@ -1,6 +1,6 @@
 <?php
 /**
- * Klein (klein.php) - A lightning fast router for PHP
+ * Klein (klein.php) - A fast & flexible router for PHP
  *
  * @author      Chris O'Hara <cohara87@gmail.com>
  * @author      Trevor Suarez (Rican7) (contributor and v2 refactorer)
@@ -18,8 +18,6 @@ use Klein\Request;
  *
  * Allow for the simple creation of mock requests
  * (great for testing... ;))
- *
- * @package Klein\Tests\Mocks
  */
 class MockRequestFactory
 {
@@ -34,8 +32,6 @@ class MockRequestFactory
      * @param array $server
      * @param array $files
      * @param string $body
-     * @static
-     * @access public
      * @return void
      */
     public static function create(

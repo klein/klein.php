@@ -1,6 +1,6 @@
 <?php
 /**
- * Klein (klein.php) - A lightning fast router for PHP
+ * Klein (klein.php) - A fast & flexible router for PHP
  *
  * @author      Chris O'Hara <cohara87@gmail.com>
  * @author      Trevor Suarez (Rican7) (contributor and v2 refactorer)
@@ -17,8 +17,6 @@ use InvalidArgumentException;
  * Route
  *
  * Class to represent a route definition
- *
- * @package     Klein
  */
 class Route
 {
@@ -33,8 +31,7 @@ class Route
      * Any valid "callable" type is allowed
      *
      * @link http://php.net/manual/en/language.types.callable.php
-     * @var callable
-     * @access protected
+     * @type callable
      */
     protected $callback;
 
@@ -48,8 +45,7 @@ class Route
      * - '/posts/[:post_slug]'
      * - '/posts/[i:id]'
      *
-     * @var string
-     * @access protected
+     * @type string
      */
     protected $path;
 
@@ -62,16 +58,14 @@ class Route
      * - 'POST'
      * - array('GET', 'POST')
      *
-     * @var string|array
-     * @access protected
+     * @type string|array
      */
     protected $method;
 
     /**
      * Whether or not to count this route as a match when counting total matches
      *
-     * @var boolean
-     * @access protected
+     * @type boolean
      */
     protected $count_match;
 
@@ -80,8 +74,7 @@ class Route
      *
      * Mostly used for reverse routing
      *
-     * @var string
-     * @access protected
+     * @type string
      */
     protected $name;
 
@@ -97,7 +90,6 @@ class Route
      * @param string $path
      * @param string|array $method
      * @param boolean $count_match
-     * @access public
      */
     public function __construct($callback, $path = null, $method = null, $count_match = true, $name = null)
     {
@@ -112,7 +104,6 @@ class Route
     /**
      * Get the callback
      *
-     * @access public
      * @return callable
      */
     public function getCallback()
@@ -125,7 +116,6 @@ class Route
      *
      * @param callable $callback
      * @throws InvalidArgumentException If the callback isn't a callable
-     * @access public
      * @return Route
      */
     public function setCallback($callback)
@@ -142,7 +132,6 @@ class Route
     /**
      * Get the path
      *
-     * @access public
      * @return string
      */
     public function getPath()
@@ -154,7 +143,6 @@ class Route
      * Set the path
      *
      * @param string $path
-     * @access public
      * @return Route
      */
     public function setPath($path)
@@ -167,7 +155,6 @@ class Route
     /**
      * Get the method
      *
-     * @access public
      * @return string|array
      */
     public function getMethod()
@@ -180,7 +167,6 @@ class Route
      *
      * @param string|array|null $method
      * @throws InvalidArgumentException If a non-string or non-array type is passed
-     * @access public
      * @return Route
      */
     public function setMethod($method)
@@ -198,7 +184,6 @@ class Route
     /**
      * Get the count_match
      *
-     * @access public
      * @return boolean
      */
     public function getCountMatch()
@@ -210,7 +195,6 @@ class Route
      * Set the count_match
      *
      * @param boolean $count_match
-     * @access public
      * @return Route
      */
     public function setCountMatch($count_match)
@@ -223,7 +207,6 @@ class Route
     /**
      * Get the name
      *
-     * @access public
      * @return string
      */
     public function getName()
@@ -235,7 +218,6 @@ class Route
      * Set the name
      *
      * @param string $name
-     * @access public
      * @return Route
      */
     public function setName($name)
@@ -256,7 +238,6 @@ class Route
      * Allows the ability to arbitrarily call this instance like a function
      *
      * @param mixed $args Generic arguments, magically accepted
-     * @access public
      * @return mixed
      */
     public function __invoke($args = null)

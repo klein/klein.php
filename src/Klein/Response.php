@@ -1,6 +1,6 @@
 <?php
 /**
- * Klein (klein.php) - A lightning fast router for PHP
+ * Klein (klein.php) - A fast & flexible router for PHP
  *
  * @author      Chris O'Hara <cohara87@gmail.com>
  * @author      Trevor Suarez (Rican7) (contributor and v2 refactorer)
@@ -13,9 +13,6 @@ namespace Klein;
 
 /**
  * Response 
- * 
- * @uses        AbstractResponse
- * @package     Klein
  */
 class Response extends AbstractResponse
 {
@@ -30,7 +27,6 @@ class Response extends AbstractResponse
      * @link https://github.com/chriso/klein.php/wiki/Response-Chunking
      * @link http://bit.ly/hg3gHb
      * @param string $str   An optional string to send as a response "chunk"
-     * @access public
      * @return Response
      */
     public function chunk($str = null)
@@ -50,7 +46,6 @@ class Response extends AbstractResponse
      * Dump a variable
      *
      * @param mixed $obj    The variable to dump
-     * @access public
      * @return Response
      */
     public function dump($obj)
@@ -79,7 +74,6 @@ class Response extends AbstractResponse
      * @param string $path      The path of the file to send
      * @param string $filename  The file's name
      * @param string $mimetype  The MIME type of the file
-     * @access public
      * @return Response
      */
     public function file($path, $filename = null, $mimetype = null)
@@ -118,7 +112,6 @@ class Response extends AbstractResponse
      *
      * @param mixed $object         The data to encode as JSON
      * @param string $jsonp_prefix  The name of the JSON-P function prefix
-     * @access public
      * @return Response
      */
     public function json($object, $jsonp_prefix = null)

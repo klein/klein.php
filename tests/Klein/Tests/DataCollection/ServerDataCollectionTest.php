@@ -1,6 +1,6 @@
 <?php
 /**
- * Klein (klein.php) - A lightning fast router for PHP
+ * Klein (klein.php) - A fast & flexible router for PHP
  *
  * @author      Chris O'Hara <cohara87@gmail.com>
  * @author      Trevor Suarez (Rican7) (contributor and v2 refactorer)
@@ -16,9 +16,6 @@ use Klein\Tests\AbstractKleinTest;
 
 /**
  * ServerDataCollectionTest
- *
- * @uses AbstractKleinTest
- * @package Klein\Tests\DataCollection
  */
 class ServerDataCollectionTest extends AbstractKleinTest
 {
@@ -30,7 +27,6 @@ class ServerDataCollectionTest extends AbstractKleinTest
     /**
      * Sample data provider
      *
-     * @access public
      * @return array
      */
     public function sampleDataProvider()

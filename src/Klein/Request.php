@@ -1,6 +1,6 @@
 <?php
 /**
- * Klein (klein.php) - A lightning fast router for PHP
+ * Klein (klein.php) - A fast & flexible router for PHP
  *
  * @author      Chris O'Hara <cohara87@gmail.com>
  * @author      Trevor Suarez (Rican7) (contributor and v2 refactorer)
@@ -17,8 +17,6 @@ use Klein\DataCollection\ServerDataCollection;
 
 /**
  * Request
- * 
- * @package     Klein
  */
 class Request
 {
@@ -30,72 +28,63 @@ class Request
     /**
      * Unique identifier for the request
      *
-     * @var string
-     * @access protected
+     * @type string
      */
     protected $id;
 
     /**
      * GET (query) parameters
      *
-     * @var \Klein\DataCollection\DataCollection
-     * @access protected
+     * @type DataCollection
      */
     protected $params_get;
 
     /**
      * POST parameters
      *
-     * @var \Klein\DataCollection\DataCollection
-     * @access protected
+     * @type DataCollection
      */
     protected $params_post;
 
     /**
      * Named parameters
      *
-     * @var \Klein\DataCollection\DataCollection
-     * @access protected
+     * @type DataCollection
      */
     protected $params_named;
 
     /**
      * Client cookie data
      *
-     * @var \Klein\DataCollection\DataCollection
-     * @access protected
+     * @type DataCollection
      */
     protected $cookies;
 
     /**
      * Server created attributes
      *
-     * @var \Klein\DataCollection\ServerDataCollection
-     * @access protected
+     * @type ServerDataCollection
      */
     protected $server;
 
     /**
      * HTTP request headers
      *
-     * @var \Klein\DataCollection\HeaderDataCollection
-     * @access protected
+     * @type HeaderDataCollection
      */
     protected $headers;
 
     /**
      * Uploaded temporary files
      *
-     * @var \Klein\DataCollection\DataCollection
-     * @access protected
+     * @type DataCollection
      */
     protected $files;
 
     /**
      * The request body
      *
-     * @var string
-     * @access protected
+     * @type string
      */
     protected $body;
 
@@ -115,7 +104,6 @@ class Request
      * @param array  $server
      * @param array  $files
      * @param string $body
-     * @access public
      */
     public function __construct(
         array $params_get = array(),
@@ -142,8 +130,6 @@ class Request
      * Create a new request object using the built-in "superglobals"
      *
      * @link http://php.net/manual/en/language.variables.superglobals.php
-     * @static
-     * @access public
      * @return Request
      */
     public static function createFromGlobals()
@@ -165,7 +151,6 @@ class Request
      * Generates one on the first call
      *
      * @param boolean $hash     Whether or not to hash the ID on creation
-     * @access public
      * @return string
      */
     public function id($hash = true)
@@ -184,7 +169,6 @@ class Request
     /**
      * Returns the GET parameters collection
      *
-     * @access public
      * @return \Klein\DataCollection\DataCollection
      */
     public function paramsGet()
@@ -195,7 +179,6 @@ class Request
     /**
      * Returns the POST parameters collection
      *
-     * @access public
      * @return \Klein\DataCollection\DataCollection
      */
     public function paramsPost()
@@ -206,7 +189,6 @@ class Request
     /**
      * Returns the named parameters collection
      *
-     * @access public
      * @return \Klein\DataCollection\DataCollection
      */
     public function paramsNamed()
@@ -217,7 +199,6 @@ class Request
     /**
      * Returns the cookies collection
      *
-     * @access public
      * @return \Klein\DataCollection\DataCollection
      */
     public function cookies()
@@ -228,7 +209,6 @@ class Request
     /**
      * Returns the server collection
      *
-     * @access public
      * @return \Klein\DataCollection\DataCollection
      */
     public function server()
@@ -239,7 +219,6 @@ class Request
     /**
      * Returns the headers collection
      *
-     * @access public
      * @return \Klein\DataCollection\HeaderDataCollection
      */
     public function headers()
@@ -250,7 +229,6 @@ class Request
     /**
      * Returns the files collection
      *
-     * @access public
      * @return \Klein\DataCollection\DataCollection
      */
     public function files()
@@ -261,7 +239,6 @@ class Request
     /**
      * Gets the request body
      *
-     * @access public
      * @return string
      */
     public function body()
@@ -284,7 +261,6 @@ class Request
      * @param array $mask               The parameter mask array
      * @param boolean $fill_with_nulls  Whether or not to fill the returned array
      *  with null values to match the given mask
-     * @access public
      * @return array
      */
     public function params($mask = null, $fill_with_nulls = true)
@@ -314,7 +290,6 @@ class Request
      *
      * @param string $key       The name of the parameter to return
      * @param mixed $default    The default value of the parameter if it contains no value
-     * @access public
      * @return string
      */
     public function param($key, $default = null)
@@ -332,7 +307,6 @@ class Request
      * from this instance while treating it as an instance property
      *
      * @param string $param     The name of the parameter
-     * @access public
      * @return boolean
      */
     public function __isset($param)
@@ -350,7 +324,6 @@ class Request
      * while treating it as an instance property
      *
      * @param string $param     The name of the parameter
-     * @access public
      * @return string
      */
     public function __get($param)
@@ -369,7 +342,6 @@ class Request
      *
      * @param string $param     The name of the parameter
      * @param mixed $value      The value of the parameter
-     * @access public
      * @return void
      */
     public function __set($param, $value)
@@ -384,7 +356,6 @@ class Request
      * while treating it as an instance property
      *
      * @param string $param     The name of the parameter
-     * @access public
      * @return void
      */
     public function __unset($param)
@@ -395,7 +366,6 @@ class Request
     /**
      * Is the request secure?
      *
-     * @access public
      * @return boolean
      */
     public function isSecure()
@@ -406,7 +376,6 @@ class Request
     /**
      * Gets the request IP address
      *
-     * @access public
      * @return string
      */
     public function ip()
@@ -417,7 +386,6 @@ class Request
     /**
      * Gets the request user agent
      *
-     * @access public
      * @return string
      */
     public function userAgent()
@@ -428,7 +396,6 @@ class Request
     /**
      * Gets the request URI
      *
-     * @access public
      * @return string
      */
     public function uri()
@@ -439,7 +406,6 @@ class Request
     /**
      * Get the request's pathname
      *
-     * @access public
      * @return string
      */
     public function pathname()
@@ -464,7 +430,6 @@ class Request
      * 
      * @param string $is				The method to check the current request method against
      * @param boolean $allow_override	Whether or not to allow HTTP method overriding via header or params
-     * @access public
      * @return string|boolean
      */
     public function method($is = null, $allow_override = true)
@@ -496,7 +461,6 @@ class Request
      *
      * @param string $key   The name of the query param
      * @param mixed $value  The value of the query param
-     * @access public
      * @return string
      */
     public function query($key, $value = null)

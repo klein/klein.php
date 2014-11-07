@@ -1,6 +1,6 @@
 <?php
 /**
- * Klein (klein.php) - A lightning fast router for PHP
+ * Klein (klein.php) - A fast & flexible router for PHP
  *
  * @author      Chris O'Hara <cohara87@gmail.com>
  * @author      Trevor Suarez (Rican7) (contributor and v2 refactorer)
@@ -16,8 +16,6 @@ use Klein\Exceptions\ValidationException;
 
 /**
  * Validator 
- * 
- * @package    Klein
  */
 class Validator
 {
@@ -29,34 +27,28 @@ class Validator
     /**
      * The available validator methods
      *
-     * @static
-     * @var array
-     * @access protected
+     * @type array
      */
     public static $methods = array();
 
     /**
      * The string to validate
      *
-     * @var string
-     * @access protected
+     * @type string
      */
     protected $str;
 
     /**
      * The custom exception message to throw on validation failure
      *
-     * @var string
-     * @access protected
+     * @type string
      */
     protected $err;
 
     /**
      * Flag for whether the default validation methods have been added or not
      *
-     * @static
-     * @var boolean
-     * @access protected
+     * @type boolean
      */
     protected static $defaultAdded = false;
 
@@ -70,7 +62,6 @@ class Validator
      *
      * @param string $str   The string to validate
      * @param string $err   The optional custom exception message to throw on validation failure
-     * @access public
      */
     public function __construct($str, $err = null)
     {
@@ -85,8 +76,6 @@ class Validator
     /**
      * Adds default validators on first use
      *
-     * @static
-     * @access public
      * @return void
      */
     public static function addDefault()
@@ -140,8 +129,6 @@ class Validator
      *
      * @param string $method        The name of the validator method
      * @param callable $callback    The callback to perform on validation
-     * @static
-     * @access public
      * @return void
      */
     public static function addValidator($method, $callback)
@@ -159,7 +146,6 @@ class Validator
      * @param array $args               The argument array to pass to our callback
      * @throws BadMethodCallException   If an attempt was made to call a validator modifier that doesn't exist
      * @throws ValidationException      If the validation check returns false
-     * @access public
      * @return Validator|boolean
      */
     public function __call($method, $args)

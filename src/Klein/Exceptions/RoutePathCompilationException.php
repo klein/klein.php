@@ -1,6 +1,6 @@
 <?php
 /**
- * Klein (klein.php) - A lightning fast router for PHP
+ * Klein (klein.php) - A fast & flexible router for PHP
  *
  * @author      Chris O'Hara <cohara87@gmail.com>
  * @author      Trevor Suarez (Rican7) (contributor and v2 refactorer)
@@ -19,9 +19,6 @@ use RuntimeException;
  * RoutePathCompilationException
  *
  * Exception used for when a route's path fails to compile
- * 
- * @uses       Exception
- * @package    Klein\Exceptions
  */
 class RoutePathCompilationException extends RuntimeException implements KleinExceptionInterface
 {
@@ -33,14 +30,14 @@ class RoutePathCompilationException extends RuntimeException implements KleinExc
     /**
      * The exception message format
      *
-     * @const string
+     * @type string
      */
     const MESSAGE_FORMAT = 'Route failed to compile with path "%s".';
 
     /**
      * The extra failure message format
      *
-     * @const string
+     * @type string
      */
     const FAILURE_MESSAGE_TITLE_FORMAT = 'Failed with message: "%s"';
 
@@ -52,8 +49,7 @@ class RoutePathCompilationException extends RuntimeException implements KleinExc
     /**
      * The route that failed to compile
      *
-     * @var Route
-     * @access protected
+     * @type Route
      */
     protected $route;
 
@@ -68,8 +64,6 @@ class RoutePathCompilationException extends RuntimeException implements KleinExc
      *
      * @param Route $route          The route that failed to compile
      * @param Exception $previous   The previous exception
-     * @static
-     * @access public
      * @return RoutePathCompilationException
      */
     public static function createFromRoute(Route $route, Exception $previous = null)
