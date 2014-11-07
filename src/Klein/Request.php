@@ -29,63 +29,63 @@ class Request
     /**
      * Unique identifier for the request
      *
-     * @var string
+     * @type string
      */
     protected $id;
 
     /**
      * GET (query) parameters
      *
-     * @var \Klein\DataCollection\DataCollection
+     * @type \Klein\DataCollection\DataCollection
      */
     protected $params_get;
 
     /**
      * POST parameters
      *
-     * @var \Klein\DataCollection\DataCollection
+     * @type \Klein\DataCollection\DataCollection
      */
     protected $params_post;
 
     /**
      * Named parameters
      *
-     * @var \Klein\DataCollection\DataCollection
+     * @type \Klein\DataCollection\DataCollection
      */
     protected $params_named;
 
     /**
      * Client cookie data
      *
-     * @var \Klein\DataCollection\DataCollection
+     * @type \Klein\DataCollection\DataCollection
      */
     protected $cookies;
 
     /**
      * Server created attributes
      *
-     * @var \Klein\DataCollection\ServerDataCollection
+     * @type \Klein\DataCollection\ServerDataCollection
      */
     protected $server;
 
     /**
      * HTTP request headers
      *
-     * @var \Klein\DataCollection\HeaderDataCollection
+     * @type \Klein\DataCollection\HeaderDataCollection
      */
     protected $headers;
 
     /**
      * Uploaded temporary files
      *
-     * @var \Klein\DataCollection\DataCollection
+     * @type \Klein\DataCollection\DataCollection
      */
     protected $files;
 
     /**
      * The request body
      *
-     * @var string
+     * @type string
      */
     protected $body;
 

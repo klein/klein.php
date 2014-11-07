@@ -29,7 +29,7 @@ class App
     /**
      * The array of app services
      *
-     * @var array
+     * @type array
      */
     protected $services = array();
 

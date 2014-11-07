@@ -31,14 +31,14 @@ class RoutePathCompilationException extends RuntimeException implements KleinExc
     /**
      * The exception message format
      *
-     * @const string
+     * @type string
      */
     const MESSAGE_FORMAT = 'Route failed to compile with path "%s".';
 
     /**
      * The extra failure message format
      *
-     * @const string
+     * @type string
      */
     const FAILURE_MESSAGE_TITLE_FORMAT = 'Failed with message: "%s"';
 
@@ -50,7 +50,7 @@ class RoutePathCompilationException extends RuntimeException implements KleinExc
     /**
      * The route that failed to compile
      *
-     * @var Route
+     * @type Route
      */
     protected $route;
 

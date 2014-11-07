@@ -38,14 +38,14 @@ class Klein
     /**
      * The regular expression used to compile and match URL's
      *
-     * @const string
+     * @type string
      */
     const ROUTE_COMPILE_REGEX = '`(\\\?(?:/|\.|))(?:\[([^:\]]*)(?::([^:\]]*))?\])(\?|)`';
 
     /**
      * The regular expression used to escape the non-named param section of a route URL
      *
-     * @const string
+     * @type string
      */
     const ROUTE_ESCAPE_REGEX = '`(?<=^|\])[^\]\[\?]+?(?=\[|$)`';
 
@@ -54,7 +54,7 @@ class Klein
      *
      * Don't capture anything. Behave as normal.
      *
-     * @const int
+     * @type int
      */
     const DISPATCH_NO_CAPTURE = 0;
 
@@ -63,7 +63,7 @@ class Klein
      *
      * Capture all output and return it from dispatch
      *
-     * @const int
+     * @type int
      */
     const DISPATCH_CAPTURE_AND_RETURN = 1;
 
@@ -72,7 +72,7 @@ class Klein
      *
      * Capture all output and replace the response body with it
      *
-     * @const int
+     * @type int
      */
     const DISPATCH_CAPTURE_AND_REPLACE = 2;
 
@@ -81,7 +81,7 @@ class Klein
      *
      * Capture all output and prepend it to the response body
      *
-     * @const int
+     * @type int
      */
     const DISPATCH_CAPTURE_AND_PREPEND = 3;
 
@@ -90,7 +90,7 @@ class Klein
      *
      * Capture all output and append it to the response body
      *
-     * @const int
+     * @type int
      */
     const DISPATCH_CAPTURE_AND_APPEND = 4;
 
@@ -109,7 +109,7 @@ class Klein
      * - hexadecimal:   '[h:color]'
      * - slug:          '[s:article]'
      *
-     * @var array
+     * @type array
      */
     protected $match_types = array(
         'i'  => '[0-9]++',
@@ -124,28 +124,28 @@ class Klein
     /**
      * Collection of the routes to match on dispatch
      *
-     * @var RouteCollection
+     * @type RouteCollection
      */
     protected $routes;
 
     /**
      * The Route factory object responsible for creating Route instances
      *
-     * @var AbstractRouteFactory
+     * @type AbstractRouteFactory
      */
     protected $route_factory;
 
     /**
      * An array of error callback callables
      *
-     * @var array[callable]
+     * @type array[callable]
      */
     protected $errorCallbacks = array();
 
     /**
      * An array of HTTP error callback callables
      *
-     * @var array[callable]
+     * @type array[callable]
      */
     protected $httpErrorCallbacks = array();
 
@@ -153,7 +153,7 @@ class Klein
      * An array of callbacks to call after processing the dispatch loop
      * and before the response is sent
      *
-     * @var array[callable]
+     * @type array[callable]
      */
     protected $afterFilterCallbacks = array();
 
@@ -165,28 +165,28 @@ class Klein
     /**
      * The Request object passed to each matched route
      *
-     * @var Request
+     * @type Request
      */
     protected $request;
 
     /**
      * The Response object passed to each matched route
      *
-     * @var AbstractResponse
+     * @type AbstractResponse
      */
     protected $response;
 
     /**
      * The service provider object passed to each matched route
      *
-     * @var ServiceProvider
+     * @type ServiceProvider
      */
     protected $service;
 
     /**
      * A generic variable passed to each matched route
      *
-     * @var mixed
+     * @type mixed
      */
     protected $app;
 

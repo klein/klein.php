@@ -31,42 +31,42 @@ abstract class AbstractResponse
     /**
      * The default response HTTP status code
      *
-     * @var int
+     * @type int
      */
     protected static $default_status_code = 200;
 
     /**
      * The HTTP version of the response
      *
-     * @var string
+     * @type string
      */
     protected $protocol_version = '1.1';
 
     /**
      * The response body
      *
-     * @var string
+     * @type string
      */
     protected $body;
 
     /**
      * HTTP response status
      *
-     * @var \Klein\HttpStatus
+     * @type \Klein\HttpStatus
      */
     protected $status;
 
     /**
      * HTTP response headers
      *
-     * @var \Klein\DataCollection\HeaderDataCollection
+     * @type \Klein\DataCollection\HeaderDataCollection
      */
     protected $headers;
 
     /**
      * HTTP response cookies
      *
-     * @var \Klein\DataCollection\ResponseCookieDataCollection
+     * @type \Klein\DataCollection\ResponseCookieDataCollection
      */
     protected $cookies;
 
@@ -74,21 +74,21 @@ abstract class AbstractResponse
      * Whether or not the response is "locked" from
      * any further modification
      *
-     * @var boolean
+     * @type boolean
      */
     protected $locked = false;
 
     /**
      * Whether or not the response has been sent
      *
-     * @var boolean
+     * @type boolean
      */
     protected $sent = false;
 
     /**
      * Whether the response has been chunked or not
      *
-     * @var boolean
+     * @type boolean
      */
     public $chunked = false;
 

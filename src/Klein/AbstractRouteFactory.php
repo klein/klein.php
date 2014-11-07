@@ -29,7 +29,7 @@ abstract class AbstractRouteFactory
      * when matching, so you can define routes under a
      * common endpoint
      *
-     * @var string
+     * @type string
      */
     protected $namespace;
 

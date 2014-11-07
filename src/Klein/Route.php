@@ -32,7 +32,7 @@ class Route
      * Any valid "callable" type is allowed
      *
      * @link http://php.net/manual/en/language.types.callable.php
-     * @var callable
+     * @type callable
      */
     protected $callback;
 
@@ -46,7 +46,7 @@ class Route
      * - '/posts/[:post_slug]'
      * - '/posts/[i:id]'
      *
-     * @var string
+     * @type string
      */
     protected $path;
 
@@ -59,14 +59,14 @@ class Route
      * - 'POST'
      * - array('GET', 'POST')
      *
-     * @var string|array
+     * @type string|array
      */
     protected $method;
 
     /**
      * Whether or not to count this route as a match when counting total matches
      *
-     * @var boolean
+     * @type boolean
      */
     protected $count_match;
 
@@ -75,7 +75,7 @@ class Route
      *
      * Mostly used for reverse routing
      *
-     * @var string
+     * @type string
      */
     protected $name;
 

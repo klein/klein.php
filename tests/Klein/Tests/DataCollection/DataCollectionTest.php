@@ -25,7 +25,7 @@ class DataCollectionTest extends AbstractKleinTest
     /**
      * Non existent key in the sample data
      *
-     * @var string
+     * @type string
      */
     protected static $nonexistent_key = 'key-name-doesnt-exist';
 

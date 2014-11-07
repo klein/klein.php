@@ -28,28 +28,28 @@ class Validator
     /**
      * The available validator methods
      *
-     * @var array
+     * @type array
      */
     public static $methods = array();
 
     /**
      * The string to validate
      *
-     * @var string
+     * @type string
      */
     protected $str;
 
     /**
      * The custom exception message to throw on validation failure
      *
-     * @var string
+     * @type string
      */
     protected $err;
 
     /**
      * Flag for whether the default validation methods have been added or not
      *
-     * @var boolean
+     * @type boolean
      */
     protected static $defaultAdded = false;
 

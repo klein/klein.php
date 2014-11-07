@@ -29,21 +29,21 @@ class DispatchHaltedException extends RuntimeException implements KleinException
     /**
      * Skip this current match/callback
      *
-     * @const int
+     * @type int
      */
     const SKIP_THIS = 1;
 
     /**
      * Skip the next match/callback
      *
-     * @const int
+     * @type int
      */
     const SKIP_NEXT = 2;
 
     /**
      * Skip the rest of the matches
      *
-     * @const int
+     * @type int
      */
     const SKIP_REMAINING = 0;
 
@@ -55,7 +55,7 @@ class DispatchHaltedException extends RuntimeException implements KleinException
     /**
      * The number of next matches to skip on a "next" skip
      *
-     * @var int
+     * @type int
      */
     protected $number_of_skips = 1;
 
