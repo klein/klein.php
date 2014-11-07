@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/chriso/klein.php.png?branch=master)](https://travis-ci.org/chriso/klein.php)
 
-**klein.php** is a lightning fast router for PHP 5.3+
+**klein.php** is a fast & flexible router for PHP 5.3+
 
 * Flexible regular expression routing (inspired by [Sinatra](http://www.sinatrarb.com/))
 * A set of [boilerplate methods](#api) for rapidly building web apps
@@ -18,8 +18,8 @@
 ## Composer Installation
 
 1. Get [Composer](http://getcomposer.org/)
-2. Require Klein with `php composer.phar require klein/klein v2.0.x`
-3. Install dependencies with `php composer.phar install`
+2. Require Klein with `php composer.phar require klein/klein`
+3. Add the following to your application's main PHP file: `require 'vendor/autoload.php';`
 
 ## Example
 
