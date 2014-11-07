@@ -65,7 +65,7 @@ class ServiceProvider
     /**
      * Shared data collection
      *
-     * @type \Klein\DataCollection\DataCollection
+     * @type DataCollection
      */
     protected $shared_data;
 

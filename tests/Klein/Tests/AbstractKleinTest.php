@@ -30,7 +30,7 @@ abstract class AbstractKleinTest extends PHPUnit_Framework_TestCase
      * The automatically created test Klein instance
      * (for easy testing and less boilerplate)
      * 
-     * @type \Klein\Klein;
+     * @type Klein
      */
     protected $klein_app;
 

@@ -36,49 +36,49 @@ class Request
     /**
      * GET (query) parameters
      *
-     * @type \Klein\DataCollection\DataCollection
+     * @type DataCollection
      */
     protected $params_get;
 
     /**
      * POST parameters
      *
-     * @type \Klein\DataCollection\DataCollection
+     * @type DataCollection
      */
     protected $params_post;
 
     /**
      * Named parameters
      *
-     * @type \Klein\DataCollection\DataCollection
+     * @type DataCollection
      */
     protected $params_named;
 
     /**
      * Client cookie data
      *
-     * @type \Klein\DataCollection\DataCollection
+     * @type DataCollection
      */
     protected $cookies;
 
     /**
      * Server created attributes
      *
-     * @type \Klein\DataCollection\ServerDataCollection
+     * @type ServerDataCollection
      */
     protected $server;
 
     /**
      * HTTP request headers
      *
-     * @type \Klein\DataCollection\HeaderDataCollection
+     * @type HeaderDataCollection
      */
     protected $headers;
 
     /**
      * Uploaded temporary files
      *
-     * @type \Klein\DataCollection\DataCollection
+     * @type DataCollection
      */
     protected $files;
 

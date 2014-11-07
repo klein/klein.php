@@ -52,21 +52,21 @@ abstract class AbstractResponse
     /**
      * HTTP response status
      *
-     * @type \Klein\HttpStatus
+     * @type HttpStatus
      */
     protected $status;
 
     /**
      * HTTP response headers
      *
-     * @type \Klein\DataCollection\HeaderDataCollection
+     * @type HeaderDataCollection
      */
     protected $headers;
 
     /**
      * HTTP response cookies
      *
-     * @type \Klein\DataCollection\ResponseCookieDataCollection
+     * @type ResponseCookieDataCollection
      */
     protected $cookies;
 
@@ -178,7 +178,7 @@ abstract class AbstractResponse
     /**
      * Returns the headers collection
      *
-     * @return \Klein\DataCollection\HeaderDataCollection
+     * @return HeaderDataCollection
      */
     public function headers()
     {
@@ -188,7 +188,7 @@ abstract class AbstractResponse
     /**
      * Returns the cookies collection
      *
-     * @return \Klein\DataCollection\ResponseCookieDataCollection
+     * @return ResponseCookieDataCollection
      */
     public function cookies()
     {
