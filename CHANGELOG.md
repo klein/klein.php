@@ -23,6 +23,10 @@
 - New `patch()` alias method for matching PATCH requests
 - New HTTP error handling via exceptions and callback registration for a more direct (and less magical) API for controlling HTTP errors
 - The `escape()` method in the `ServiceProvider` class now allows for the passing of entity escaping flags
+- Route regular expressions are now validated and provide helpful errors upon a validation failure
+- Routes can now contain an empty string path
+- The composer autoloader is now compatible with the PSR-4 standard.
+- Regular expression compilation performance has been improved
 - 100% Code Coverage
 
 ### Bug fixes
@@ -35,3 +39,6 @@
 - More proper handling for 404's that also call the 404 error handlers
 - The `file()` and `json()` methods in the `Response` class no longer override system-configured time processing limits
 - Now checking if the output buffer is open before attempting to close it
+- The methods matched counter (`$methods_matched`) is now much more accurate, not counting methods that shouldn't have been considered matches
+- Various PHPdoc inaccuracies and inconsistencies have been fixed
+- Regular expressions are now quoted during compilation in a much safer manner
