@@ -424,16 +424,24 @@ class Klein
      *
      * Now on your console, you can call 'php rake.php' and see all your routes printed out
      *
-     * @author Karim Kawambwa
-     * @return void
+     * @return void|array
      */
-    public function rakeRoutes() {
+    public function rakeRoutes($print = true) 
+    {
+        $routeNames = array();
         foreach ($this->routes as $route) {
             list($method, $_route, $callback, $count_match) = $route;
 
-            echo '['.$method.'] '.$_route;
-            echo PHP_EOL;
+            if ($print) {
+                echo '['.$method.'] '.$_route;
+                echo PHP_EOL;
+            } else {
+                array_push($routeNames, '['.$method.'] '.$_route);
+            }
         }
+        
+        if (!$print)
+            return $routeNames;
     }
 
     /**
