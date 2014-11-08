@@ -426,7 +426,7 @@ class Klein
      *
      * @return void|array
      */
-    public function rakeRoutes($print = true) 
+    public function rakeRoutes($print = true)
     {
         $routeNames = array();
         foreach ($this->routes as $route) {
@@ -439,9 +439,9 @@ class Klein
                 array_push($routeNames, '['.$method.'] '.$_route);
             }
         }
-        
-        if (!$print)
+        if (!$print) {
             return $routeNames;
+        }
     }
 
     /**
