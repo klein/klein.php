@@ -100,6 +100,22 @@ class HeaderDataCollectionTest extends AbstractKleinTest
         $this->assertContains('localhost:8000', $data_collection->all());
     }
 
+    public function testGetSetNormalization()
+    {
+        $data_collection = new HeaderDataCollection();
+
+        $this->assertInternalType('int', $data_collection->getNormalization());
+
+        $data_collection->setNormalization(
+            HeaderDataCollection::NORMALIZE_TRIM & HeaderDataCollection::NORMALIZE_CASE
+        );
+
+        $this->assertSame(
+            HeaderDataCollection::NORMALIZE_TRIM & HeaderDataCollection::NORMALIZE_CASE,
+            $data_collection->getNormalization()
+        );
+    }
+
     /**
      * @dataProvider sampleDataProvider
      */
@@ -152,6 +168,18 @@ class HeaderDataCollectionTest extends AbstractKleinTest
         $data_collection->remove('HOST');
 
         $this->assertFalse($data_collection->exists('HOST'));
+    }
+
+    public function testNormalizeKeyDelimiters()
+    {
+        // Test data
+        $header = 'Access_Control Allow-Origin';
+
+        $canonicalized_key = HeaderDataCollection::normalizeKeyDelimiters($header);
+
+        $this->assertNotSame($header, $canonicalized_key);
+
+        $this->assertSame('Access-Control-Allow-Origin', $canonicalized_key);
     }
 
     public function testCanonicalizeKey()
