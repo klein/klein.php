@@ -268,13 +268,21 @@ class HeaderDataCollection extends DataCollection
      * This is useful since PHP automatically capitalizes and underscore
      * separates the words of headers
      *
+     * @todo Possibly remove in future, here for backwards compatibility
      * @link http://www.w3.org/Protocols/rfc2616/rfc2616-sec4.html#sec4.2
      * @param string $name              The name ("field") of the header
      * @param boolean $make_lowercase   Whether or not to lowercase the name
+     * @deprecated Use the normalization options and the other normalization methods instead
      * @return string
      */
     public static function normalizeName($name, $make_lowercase = true)
     {
+        // Warn user of deprecation
+        trigger_error(
+            'Use the normalization options and the other normalization methods instead.',
+            E_USER_DEPRECATED
+        );
+
         /**
          * Lowercasing header names allows for a more uniform appearance,
          * however header names are case-insensitive by specification
