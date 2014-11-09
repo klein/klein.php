@@ -21,6 +21,8 @@ use Klein\Exceptions\RegularExpressionCompilationException;
 use Klein\Exceptions\RoutePathCompilationException;
 use Klein\Exceptions\UnhandledException;
 use OutOfBoundsException;
+use SplQueue;
+use SplStack;
 
 /**
  * Klein
@@ -135,26 +137,26 @@ class Klein
     protected $route_factory;
 
     /**
-     * An array of error callback callables
+     * A stack of error callback callables
      *
-     * @type array[callable]
+     * @type SplStack
      */
-    protected $errorCallbacks = array();
+    protected $errorCallbacks;
 
     /**
-     * An array of HTTP error callback callables
+     * A stack of HTTP error callback callables
      *
-     * @type array[callable]
+     * @type SplStack
      */
-    protected $httpErrorCallbacks = array();
+    protected $httpErrorCallbacks;
 
     /**
-     * An array of callbacks to call after processing the dispatch loop
+     * A queue of callbacks to call after processing the dispatch loop
      * and before the response is sent
      *
-     * @type array[callable]
+     * @type SplQueue
      */
-    protected $afterFilterCallbacks = array();
+    protected $afterFilterCallbacks;
 
 
     /**
@@ -216,6 +218,10 @@ class Klein
         $this->app           = $app           ?: new App();
         $this->routes        = $routes        ?: new RouteCollection();
         $this->route_factory = $route_factory ?: new RouteFactory();
+
+        $this->errorCallbacks = new SplStack();
+        $this->httpErrorCallbacks = new SplStack();
+        $this->afterFilterCallbacks = new SplQueue();
     }
 
     /**
@@ -882,11 +888,11 @@ class Klein
      * Adds an error callback to the stack of error handlers
      *
      * @param callable $callback            The callable function to execute in the error handling chain
-     * @return boolean|void
+     * @return void
      */
     public function onError($callback)
     {
-        $this->errorCallbacks[] = $callback;
+        $this->errorCallbacks->push($callback);
     }
 
     /**
@@ -901,8 +907,8 @@ class Klein
         $type = get_class($err);
         $msg = $err->getMessage();
 
-        if (count($this->errorCallbacks) > 0) {
-            foreach (array_reverse($this->errorCallbacks) as $callback) {
+        if (!$this->errorCallbacks->isEmpty()) {
+            foreach ($this->errorCallbacks as $callback) {
                 if (is_callable($callback)) {
                     if (is_string($callback)) {
                         $callback($this, $msg, $type, $err);
@@ -938,7 +944,7 @@ class Klein
      */
     public function onHttpError($callback)
     {
-        $this->httpErrorCallbacks[] = $callback;
+        $this->httpErrorCallbacks->push($callback);
     }
 
     /**
@@ -955,8 +961,8 @@ class Klein
             $this->response->code($http_exception->getCode());
         }
 
-        if (count($this->httpErrorCallbacks) > 0) {
-            foreach (array_reverse($this->httpErrorCallbacks) as $callback) {
+        if (!$this->httpErrorCallbacks->isEmpty()) {
+            foreach ($this->httpErrorCallbacks as $callback) {
                 if ($callback instanceof Route) {
                     $this->handleRouteCallback($callback, $matched, $methods_matched);
                 } elseif (is_callable($callback)) {
@@ -997,7 +1003,7 @@ class Klein
      */
     public function afterDispatch($callback)
     {
-        $this->afterFilterCallbacks[] = $callback;
+        $this->afterFilterCallbacks->enqueue($callback);
     }
 
     /**
