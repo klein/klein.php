@@ -1003,7 +1003,7 @@ class Klein
      */
     public function afterDispatch($callback)
     {
-        $this->afterFilterCallbacks->push($callback);
+        $this->afterFilterCallbacks->enqueue($callback);
     }
 
     /**
