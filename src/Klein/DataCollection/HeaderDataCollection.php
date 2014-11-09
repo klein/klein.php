@@ -206,7 +206,7 @@ class HeaderDataCollection extends DataCollection
      * @param string $key The ("field") key of the header
      * @return string
      */
-    public function normalizeKey($key)
+    protected function normalizeKey($key)
     {
         if ($this->normalization & static::NORMALIZE_TRIM) {
             $key = trim($key);
