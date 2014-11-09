@@ -154,26 +154,29 @@ class HeaderDataCollectionTest extends AbstractKleinTest
         $this->assertFalse($data_collection->exists('HOST'));
     }
 
+    public function testCanonicalizeKey()
+    {
+        // Test data
+        $header = 'content-TYPE';
+
+        $canonicalized_key = HeaderDataCollection::canonicalizeKey($header);
+
+        $this->assertNotSame($header, $canonicalized_key);
+
+        $this->assertSame('Content-Type', $canonicalized_key);
+    }
+
     public function testNameNormalizing()
     {
         // Test data
-        $data = array(
-            'DOG_NAME' => 'cooper',
-        );
+        $header = 'content_TYPE';
 
-        // Create our collection with NO data
-        $normalized_key = HeaderDataCollection::normalizeName(key($data));
-        $normalized_val = HeaderDataCollection::normalizeName(current($data));
+        $normalized_key = HeaderDataCollection::normalizeName($header);
+        $normalized_key_without_canonicalization = HeaderDataCollection::normalizeName($header, false);
 
-        $this->assertNotSame(key($data), $normalized_key);
-        $this->assertSame(current($data), $normalized_val);
+        $this->assertNotSame($header, $normalized_key);
 
-        $normalized_key_without_case_change = HeaderDataCollection::normalizeName(key($data), false);
-
-        $this->assertTrue(strpos($normalized_key_without_case_change, 'D') !== false);
-        $this->assertTrue(strpos($normalized_key_without_case_change, 'd') === false);
-
-        $this->assertTrue(strpos($normalized_key, 'd') !== false);
-        $this->assertTrue(strpos($normalized_key, 'D') === false);
+        $this->assertSame('content-type', $normalized_key);
+        $this->assertSame('content-TYPE', $normalized_key_without_canonicalization);
     }
 }
