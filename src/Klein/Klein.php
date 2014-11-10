@@ -141,14 +141,14 @@ class Klein
      *
      * @type SplStack
      */
-    protected $errorCallbacks;
+    protected $error_callbacks;
 
     /**
      * A stack of HTTP error callback callables
      *
      * @type SplStack
      */
-    protected $httpErrorCallbacks;
+    protected $http_error_callbacks;
 
     /**
      * A queue of callbacks to call after processing the dispatch loop
@@ -156,7 +156,7 @@ class Klein
      *
      * @type SplQueue
      */
-    protected $afterFilterCallbacks;
+    protected $after_filter_callbacks;
 
 
     /**
@@ -219,9 +219,9 @@ class Klein
         $this->routes        = $routes        ?: new RouteCollection();
         $this->route_factory = $route_factory ?: new RouteFactory();
 
-        $this->errorCallbacks = new SplStack();
-        $this->httpErrorCallbacks = new SplStack();
-        $this->afterFilterCallbacks = new SplQueue();
+        $this->error_callbacks = new SplStack();
+        $this->http_error_callbacks = new SplStack();
+        $this->after_filter_callbacks = new SplQueue();
     }
 
     /**
@@ -892,7 +892,7 @@ class Klein
      */
     public function onError($callback)
     {
-        $this->errorCallbacks->push($callback);
+        $this->error_callbacks->push($callback);
     }
 
     /**
@@ -907,8 +907,8 @@ class Klein
         $type = get_class($err);
         $msg = $err->getMessage();
 
-        if (!$this->errorCallbacks->isEmpty()) {
-            foreach ($this->errorCallbacks as $callback) {
+        if (!$this->error_callbacks->isEmpty()) {
+            foreach ($this->error_callbacks as $callback) {
                 if (is_callable($callback)) {
                     if (is_string($callback)) {
                         $callback($this, $msg, $type, $err);
@@ -944,7 +944,7 @@ class Klein
      */
     public function onHttpError($callback)
     {
-        $this->httpErrorCallbacks->push($callback);
+        $this->http_error_callbacks->push($callback);
     }
 
     /**
@@ -961,8 +961,8 @@ class Klein
             $this->response->code($http_exception->getCode());
         }
 
-        if (!$this->httpErrorCallbacks->isEmpty()) {
-            foreach ($this->httpErrorCallbacks as $callback) {
+        if (!$this->http_error_callbacks->isEmpty()) {
+            foreach ($this->http_error_callbacks as $callback) {
                 if ($callback instanceof Route) {
                     $this->handleRouteCallback($callback, $matched, $methods_matched);
                 } elseif (is_callable($callback)) {
@@ -1003,7 +1003,7 @@ class Klein
      */
     public function afterDispatch($callback)
     {
-        $this->afterFilterCallbacks->enqueue($callback);
+        $this->after_filter_callbacks->enqueue($callback);
     }
 
     /**
@@ -1014,7 +1014,7 @@ class Klein
     protected function callAfterDispatchCallbacks()
     {
         try {
-            foreach ($this->afterFilterCallbacks as $callback) {
+            foreach ($this->after_filter_callbacks as $callback) {
                 if (is_callable($callback)) {
                     if (is_string($callback)) {
                         $callback($this);
