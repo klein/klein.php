@@ -122,7 +122,7 @@ class ResponseCookie
     {
         return $this->name;
     }
-    
+
     /**
      * Sets the cookie's name
      *
@@ -145,7 +145,7 @@ class ResponseCookie
     {
         return $this->value;
     }
-    
+
     /**
      * Sets the cookie's value
      *
@@ -172,7 +172,7 @@ class ResponseCookie
     {
         return $this->expire;
     }
-    
+
     /**
      * Sets the cookie's expire time
      *
@@ -202,7 +202,7 @@ class ResponseCookie
     {
         return $this->path;
     }
-    
+
     /**
      * Sets the cookie's path
      *
@@ -229,7 +229,7 @@ class ResponseCookie
     {
         return $this->domain;
     }
-    
+
     /**
      * Sets the cookie's domain
      *
@@ -256,7 +256,7 @@ class ResponseCookie
     {
         return $this->secure;
     }
-    
+
     /**
      * Sets the cookie's secure only flag
      *
@@ -279,7 +279,7 @@ class ResponseCookie
     {
         return $this->http_only;
     }
-    
+
     /**
      * Sets the cookie's HTTP only flag
      *

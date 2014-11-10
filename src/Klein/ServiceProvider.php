@@ -14,7 +14,7 @@ namespace Klein;
 use Klein\DataCollection\DataCollection;
 
 /**
- * ServiceProvider 
+ * ServiceProvider
  *
  * Service provider class for handling logic extending between
  * a request's data and a response's behavior

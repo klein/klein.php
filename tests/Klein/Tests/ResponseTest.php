@@ -21,7 +21,7 @@ use Klein\ResponseCookie;
 use Klein\Tests\Mocks\MockRequestFactory;
 
 /**
- * ResponsesTest 
+ * ResponsesTest
  */
 class ResponsesTest extends AbstractKleinTest
 {

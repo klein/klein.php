@@ -110,7 +110,7 @@ class Route
     {
         return $this->callback;
     }
-    
+
     /**
      * Set the callback
      *
@@ -138,7 +138,7 @@ class Route
     {
         return $this->path;
     }
-    
+
     /**
      * Set the path
      *
@@ -161,7 +161,7 @@ class Route
     {
         return $this->method;
     }
-    
+
     /**
      * Set the method
      *
@@ -190,7 +190,7 @@ class Route
     {
         return $this->count_match;
     }
-    
+
     /**
      * Set the count_match
      *
@@ -213,7 +213,7 @@ class Route
     {
         return $this->name;
     }
-    
+
     /**
      * Set the name
      *

@@ -25,7 +25,7 @@ use Klein\ServiceProvider;
 use OutOfBoundsException;
 
 /**
- * KleinTest 
+ * KleinTest
  */
 class KleinTest extends AbstractKleinTest
 {

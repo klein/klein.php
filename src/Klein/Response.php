@@ -12,7 +12,7 @@
 namespace Klein;
 
 /**
- * Response 
+ * Response
  */
 class Response extends AbstractResponse
 {
