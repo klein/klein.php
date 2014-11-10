@@ -72,7 +72,7 @@ class DispatchHaltedException extends RuntimeException implements KleinException
     {
         return $this->number_of_skips;
     }
-    
+
     /**
      * Sets the number of matches to skip on a "next" skip
      *

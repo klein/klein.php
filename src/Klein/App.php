@@ -16,7 +16,7 @@ use Klein\Exceptions\DuplicateServiceException;
 use Klein\Exceptions\UnknownServiceException;
 
 /**
- * App 
+ * App
  */
 class App
 {

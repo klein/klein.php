@@ -427,7 +427,7 @@ class Request
      * $request->method('post') // returns true
      * $request->method('get') // returns false
      * </code>
-     * 
+     *
      * @param string $is				The method to check the current request method against
      * @param boolean $allow_override	Whether or not to allow HTTP method overriding via header or params
      * @return string|boolean

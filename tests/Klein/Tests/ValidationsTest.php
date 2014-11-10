@@ -19,7 +19,7 @@ use Klein\Tests\Mocks\MockRequestFactory;
 use Klein\Validator;
 
 /**
- * ValidationsTest 
+ * ValidationsTest
  */
 class ValidationsTest extends AbstractKleinTest
 {
