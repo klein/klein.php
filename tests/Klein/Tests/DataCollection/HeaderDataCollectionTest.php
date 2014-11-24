@@ -50,6 +50,7 @@ class HeaderDataCollectionTest extends AbstractKleinTest
                 $this->prepareSampleData($data);
             }
         }
+        reset($sample_data);
     }
 
     /**

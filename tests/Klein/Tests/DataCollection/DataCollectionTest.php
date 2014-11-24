@@ -51,6 +51,7 @@ class DataCollectionTest extends AbstractKleinTest
                 $this->prepareSampleData($data);
             }
         }
+        reset($sample_data);
     }
 
     /**
