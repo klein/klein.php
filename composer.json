@@ -22,8 +22,8 @@
       "php": ">=5.3.0"
    },
    "require-dev": {
-      "phpunit/phpunit": "3.7.x",
-      "phpunit/php-code-coverage": "1.2.x",
+      "phpunit/phpunit": "4.1.x",
+      "phpunit/php-code-coverage": "2.x",
       "squizlabs/php_codesniffer": "1.4.8"
    },
    "autoload": {
