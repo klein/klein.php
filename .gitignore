@@ -7,3 +7,6 @@ docs/
 
 # Auto-generated code coverage report
 report/
+
+# PHPUnit
+phpunit.xml
