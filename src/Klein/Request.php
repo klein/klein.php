@@ -326,7 +326,7 @@ class Request
      * @param string $param     The name of the parameter
      * @return string
      */
-    public function __get($param)
+    public function &__get($param)
     {
         return $this->param($param);
     }
