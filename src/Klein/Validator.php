@@ -90,6 +90,9 @@ class Validator
         static::$methods['int'] = function ($str) {
             return (string)$str === ((string)(int)$str);
         };
+        static::$methods['between'] = function ($str, $min, $max) {
+            return (real)$str >= $min && (real)$str <= $max;
+        };
         static::$methods['float'] = function ($str) {
             return (string)$str === ((string)(float)$str);
         };

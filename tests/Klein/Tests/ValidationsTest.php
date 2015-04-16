@@ -217,6 +217,64 @@ class ValidationsTest extends AbstractKleinTest
         );
     }
 
+    public function testBetween()
+    {
+        $this->klein_app->respond(
+            '/[:test_param]',
+            function ($request, $response, $service) {
+                $service->validateParam('test_param')
+                    ->notNull()
+                    ->isBetween(0, 5);
+
+                // We should only get here if we passed our validations
+                echo 'yup!';
+            }
+        );
+
+        $this->assertSame(
+            'fail',
+            $this->dispatchAndReturnOutput(
+                MockRequestFactory::create('/-1')
+            )
+        );
+        $this->assertSame(
+            'yup!',
+            $this->dispatchAndReturnOutput(
+                MockRequestFactory::create('/0')
+            )
+        );
+        $this->assertSame(
+            'yup!',
+            $this->dispatchAndReturnOutput(
+                MockRequestFactory::create('/3')
+            )
+        );
+        $this->assertSame(
+            'yup!',
+            $this->dispatchAndReturnOutput(
+                MockRequestFactory::create('/5')
+            )
+        );
+        $this->assertSame(
+            'yup!',
+            $this->dispatchAndReturnOutput(
+                MockRequestFactory::create('/3.0')
+            )
+        );
+        $this->assertSame(
+            'yup!',
+            $this->dispatchAndReturnOutput(
+                MockRequestFactory::create('/2e0')
+            )
+        );
+        $this->assertSame(
+            'fail',
+            $this->dispatchAndReturnOutput(
+                MockRequestFactory::create('/10,000')
+            )
+        );
+    }
+
     public function testFloat()
     {
         $this->klein_app->respond(
