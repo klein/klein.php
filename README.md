@@ -297,6 +297,22 @@ $this->sharedData()->get('myvar')       // Access stored service variables
 echo $this->query(array('page' => 2))   // Modify the current query string
 ```
 
+## Headers Integration With Logging Services
+
+Logging services that send info to the browser console may fail when used with
+Klein. They use HTTP headers for their data and need to send them ahead of when
+Klein does. Klein provides a method to help with this: `$klein->afterDispatch($callable)`.
+
+Here is an example for the `BrowserConsoleHandler` from [Monolog](https://github.com/Seldaek/monolog),
+though a similar pattern should work its `ChromePHPHandler` or `PHPConsoleHandler`.
+
+```php
+$log = new Monolog\Logger('debug');
+$log->pushHandler(new Monolog\Handler\BrowserConsoleHandler());
+
+$klein->afterDispatch(['\Monolog\Handler\BrowserConsoleHandler', 'send']);
+```
+
 ## API
 
 Below is a list of the public methods in the common classes you will most likely use. For a more formal source
