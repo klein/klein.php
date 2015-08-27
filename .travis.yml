@@ -4,6 +4,7 @@ php:
   - 5.4
   - 5.5
   - hhvm
+  - 7
 
 before_script:
   - composer install --prefer-dist --dev
@@ -15,4 +16,6 @@ script:
 matrix:
   allow_failures:
     - php: hhvm
+    - php: 7
+
   fast_finish: true
