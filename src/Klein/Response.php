@@ -112,14 +112,15 @@ class Response extends AbstractResponse
      *
      * @param mixed $object         The data to encode as JSON
      * @param string $jsonp_prefix  The name of the JSON-P function prefix
+     * @param int $options          JSON encode options
      * @return Response
      */
-    public function json($object, $jsonp_prefix = null)
+    public function json($object, $jsonp_prefix = null, $options = 0)
     {
         $this->body('');
         $this->noCache();
 
-        $json = json_encode($object);
+        $json = json_encode($object, $options);
 
         if (null !== $jsonp_prefix) {
             // Should ideally be application/json-p once adopted
