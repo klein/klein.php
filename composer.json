@@ -1,5 +1,5 @@
 {
-   "name": "coffeetalkh/klein",
+   "name": "klein/klein",
    "description": "A lightning fast router for PHP",
    "keywords": ["router", "routing", "sinatra", "boilerplate"],
    "homepage": "https://github.com/chriso/klein.php",
