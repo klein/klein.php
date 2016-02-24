@@ -348,6 +348,44 @@ class Klein
     }
 
     /**
+     * Middleware alternative for respond() that doesn't count as a
+     * matched route.
+     *
+     * <code>
+     * $router = new Klein();
+     *
+     * $router->filter( function() {
+     *     echo 'this works';
+     * });
+     * $router->filter( '/endpoint', function() {
+     *     echo 'this also works';
+     * });
+     * $router->filter( 'POST', '/endpoint', function() {
+     *     echo 'this also works!!!!';
+     * });
+     * </code>
+     *
+     * @param string $method
+     * @param string $path
+     * @param callable $callback
+     * @return Route
+     */
+    public function filter($method, $path = '*', $callback = null)
+    {
+        // Get the arguments in a very loose format
+        extract(
+            $this->parseLooseArgumentOrder(func_get_args()),
+            EXTR_OVERWRITE
+        );
+
+        $route = $this->route_factory->build($callback, $path, $method, false);
+
+        $this->routes->add($route);
+
+        return $route;
+    }
+
+    /**
      * Collect a set of routes under a common namespace
      *
      * The routes may be passed in as either a callable (which holds the route definitions),

@@ -2,6 +2,9 @@
 composer.lock
 vendor/
 
+# Mac OS
+.DS_Store
+
 # Auto-generated documentation directory (phpDocumentor)
 docs/
 
