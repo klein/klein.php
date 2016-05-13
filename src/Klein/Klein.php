@@ -385,10 +385,17 @@ class Klein
                 call_user_func($routes, $this);
             }
         } else {
-            require $routes;
+            if (file_exists($routes)) {
+                require $routes;
+            } else {
+                return false;
+            }
+            
         }
 
         $this->route_factory->setNamespace($previous);
+        
+        return true;
     }
 
     /**
