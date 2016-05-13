@@ -391,7 +391,7 @@ abstract class AbstractResponse
      * @throws ResponseAlreadySentException If the response has already been sent
      * @return AbstractResponse
      */
-    public function send($override = false)
+    public function send($override = false, $noMoreData = true)
     {
         if ($this->sent && !$override) {
             throw new ResponseAlreadySentException('Response has already been sent');
@@ -408,7 +408,7 @@ abstract class AbstractResponse
         $this->sent = true;
 
         // If there running FPM, tell the process manager to finish the server request/response handling
-        if (function_exists('fastcgi_finish_request')) {
+        if (function_exists('fastcgi_finish_request') && $noMoreData) {
             fastcgi_finish_request();
         }
 

@@ -12,7 +12,7 @@
 namespace Klein;
 
 /**
- * Response
+ * Response 
  */
 class Response extends AbstractResponse
 {
@@ -92,7 +92,7 @@ class Response extends AbstractResponse
         $this->header('Content-length', filesize($path));
         $this->header('Content-Disposition', 'attachment; filename="'.$filename.'"');
 
-        $this->send();
+        $this->send(false, false);
 
         readfile($path);
 
