@@ -300,7 +300,7 @@ echo $this->query(array('page' => 2))   // Modify the current query string
 ## API
 
 Below is a list of the public methods in the common classes you will most likely use. For a more formal source
-of class/method documentation, please see the [PHPdoc generated documentation](http://chriso.github.io/klein.php/docs/).
+of class/method documentation, please see the [PHPdoc generated documentation](http://klein.github.io/klein.php/docs/).
 
 ```php
 $request->
@@ -420,7 +420,7 @@ See the [contributing guide](CONTRIBUTING.md) for more info
 
 ## More information
 
-See the [wiki](https://github.com/chriso/klein.php/wiki) for more information
+See the [wiki](https://github.com/klein/klein.php/wiki) for more information
 
 ## Contributors
 
