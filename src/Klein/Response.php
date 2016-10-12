@@ -92,9 +92,9 @@ class Response extends AbstractResponse
         $this->header('Content-length', filesize($path));
         $this->header('Content-Disposition', 'attachment; filename="'.$filename.'"');
 
-        $this->send();
-
         readfile($path);
+
+        $this->send();
 
         return $this;
     }
