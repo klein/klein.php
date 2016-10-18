@@ -11,6 +11,8 @@
 
 namespace Klein;
 
+use RuntimeException;
+
 /**
  * Response
  */
@@ -75,6 +77,7 @@ class Response extends AbstractResponse
      * @param string $filename  The file's name
      * @param string $mimetype  The MIME type of the file
      * @return Response
+     * @throws RuntimeException Thrown if the file could not be read
      */
     public function file($path, $filename = null, $mimetype = null)
     {
@@ -92,7 +95,11 @@ class Response extends AbstractResponse
         $this->header('Content-length', filesize($path));
         $this->header('Content-Disposition', 'attachment; filename="'.$filename.'"');
 
-        readfile($path);
+        $bytes_read = readfile($path);
+
+        if (false === $bytes_read) {
+            throw new RuntimeException('The file could not be read');
+        }
 
         $this->send();
 
