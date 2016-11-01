@@ -273,10 +273,10 @@ class ResponsesTest extends AbstractKleinTest
         // Custom fastcgi function
         implement_custom_fastcgi_function();
 
+        $this->expectOutputString('fastcgi_finish_request');
+
         $response = new Response();
         $response->send();
-
-        $this->expectOutputString('fastcgi_finish_request');
     }
 
     public function testChunk()
@@ -446,7 +446,7 @@ class ResponsesTest extends AbstractKleinTest
 
         $this->klein_app->dispatch();
 
-        // Expect our output to match our json encoded test object
+        // Expect our output to match our file
         $this->expectOutputString(
             file_get_contents(__FILE__)
         );
@@ -476,7 +476,7 @@ class ResponsesTest extends AbstractKleinTest
 
         $this->klein_app->dispatch();
 
-        // Expect our output to match our json encoded test object
+        // Expect our output to match our file
         $this->expectOutputString(
             file_get_contents(__FILE__)
         );
@@ -492,6 +492,60 @@ class ResponsesTest extends AbstractKleinTest
         $this->assertNotNull(
             $this->klein_app->response()->headers()->get('Content-Disposition')
         );
+    }
+
+    /**
+     * @expectedException \Klein\Exceptions\ResponseAlreadySentException
+     */
+    public function testFileSendWhenAlreadySent()
+    {
+        // Expect our output to match our file
+        $this->expectOutputString(
+            file_get_contents(__FILE__)
+        );
+
+        $response = new Response();
+        $response->file(__FILE__);
+
+        $this->assertTrue($response->isLocked());
+
+        $response->file(__FILE__);
+    }
+
+    /**
+     * @expectedException RuntimeException
+     */
+    public function testFileSendWithNonExistentFile()
+    {
+        // Ignore the file warning
+        $old_error_val = error_reporting();
+        error_reporting(E_ALL ^ E_WARNING);
+
+        $response = new Response();
+        $response->file(__DIR__ . '/some/bogus/path/that/does/not/exist');
+
+        error_reporting($old_error_val);
+    }
+
+    /**
+     * This uses some crazy exploitation to make sure that the
+     * `fastcgi_finish_request()` function gets called.
+     * Because of this, this MUST be run in a separate process
+     *
+     * @runInSeparateProcess
+     */
+    public function testFileSendCallsFastCGIFinishRequest()
+    {
+        // Custom fastcgi function
+        implement_custom_fastcgi_function();
+
+        // Expect our output to match our file
+        $this->expectOutputString(
+            file_get_contents(__FILE__) . 'fastcgi_finish_request'
+        );
+
+        $response = new Response();
+        $response->file(__FILE__);
     }
 
     public function testJSON()
