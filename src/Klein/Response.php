@@ -11,6 +11,7 @@
 
 namespace Klein;
 
+use Klein\Exceptions\ResponseAlreadySentException;
 use RuntimeException;
 
 /**
