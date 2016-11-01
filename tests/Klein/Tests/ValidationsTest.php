@@ -805,10 +805,7 @@ class ValidationsTest extends AbstractKleinTest
 
                 foreach ($args as $arg) {
                     if (null !== $previous) {
-                        if ((bool) $arg != (bool) $previous) {
-                            echo 'nope';
-                            var_dump($arg, $previous);
-                            var_dump((bool) $arg, (bool) $previous);
+                        if ((bool) $arg !== (bool) $previous) {
                             return false;
                         }
                     } else {
