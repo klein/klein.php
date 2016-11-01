@@ -918,33 +918,42 @@ class Klein
         $type = get_class($err);
         $msg = $err->getMessage();
 
-        if (!$this->error_callbacks->isEmpty()) {
-            foreach ($this->error_callbacks as $callback) {
-                if (is_callable($callback)) {
-                    if (is_string($callback)) {
-                        $callback($this, $msg, $type, $err);
+        try {
+            if (!$this->error_callbacks->isEmpty()) {
+                foreach ($this->error_callbacks as $callback) {
+                    if (is_callable($callback)) {
+                        if (is_string($callback)) {
+                            $callback($this, $msg, $type, $err);
 
-                        return;
+                            return;
+                        } else {
+                            call_user_func($callback, $this, $msg, $type, $err);
+
+                            return;
+                        }
                     } else {
-                        call_user_func($callback, $this, $msg, $type, $err);
-
-                        return;
-                    }
-                } else {
-                    if (null !== $this->service && null !== $this->response) {
-                        $this->service->flash($err);
-                        $this->response->redirect($callback);
+                        if (null !== $this->service && null !== $this->response) {
+                            $this->service->flash($err);
+                            $this->response->redirect($callback);
+                        }
                     }
                 }
-            }
-        } else {
-            $this->response->code(500);
+            } else {
+                $this->response->code(500);
 
+                while (ob_get_level() >= $this->output_buffer_level) {
+                    ob_end_clean();
+                }
+
+                throw new UnhandledException($msg, $err->getCode(), $err);
+            }
+        } catch (Exception $e) {
+            // Make sure to clean the output buffer before bailing
             while (ob_get_level() >= $this->output_buffer_level) {
                 ob_end_clean();
             }
 
-            throw new UnhandledException($msg, $err->getCode(), $err);
+            throw $e;
         }
 
         // Lock our response, since we probably don't want
