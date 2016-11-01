@@ -1,5 +1,28 @@
 # CHANGELOG
 
+
+## 2.1.1
+
+### Features
+
+- Header keys are now normalized, by default, to their canonical MIME format for consistency
+- Header key normalization is now customizable
+- Internal callback data-structures were moved from arrays to more appropriate SplQueue and SplStack instances, providing performance and memory footprint improvements
+- The PHPUnit version used for tests has been updated for HHVM compatibility
+- PHP 7.0 and HHVM compatibility!
+
+### Bug fixes
+
+- A few internal property/attribute names have been updated for consistency
+- An iteration bug effecting tests run under certain HHVM runtime versions has been fixed
+- The README document has been updated to fix a few errors
+- The `file()` method in the `Response` class has been updated to fix an issue found when run under PHP-FPM
+- The `file()` method in the `Response` class will no longer send the `Content-Length` header when the response has been chunked, to comply with the HTTP requirements defined in RFC 2616
+- References to the old https://github.com/chriso/klein.php repository URL have been updated to the new repository URL home of Klein: https://github.com/klein/klein.php
+- Tests were updated to pass under an expanded number of PHP runtime versions and configurations
+- A potential output buffer stack miss-handling in the dispatch process has been fixed
+
+
 ## 2.1.0
 
 ### Features
