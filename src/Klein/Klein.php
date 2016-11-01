@@ -158,6 +158,13 @@ class Klein
      */
     protected $after_filter_callbacks;
 
+    /**
+     * The output buffer level used by the dispatch process
+     *
+     * @type int
+     */
+    private $output_buffer_level;
+
 
     /**
      * Route objects
@@ -431,7 +438,9 @@ class Klein
         $params = array();
         $apc = function_exists('apc_fetch');
 
+        // Start output buffering
         ob_start();
+        $this->output_buffer_level = ob_get_level();
 
         try {
             foreach ($this->routes as $route) {
@@ -644,31 +653,29 @@ class Klein
                 switch($capture) {
                     case self::DISPATCH_CAPTURE_AND_RETURN:
                         $buffed_content = null;
-                        if (ob_get_level()) {
+                        while (ob_get_level() >= $this->output_buffer_level) {
                             $buffed_content = ob_get_clean();
                         }
                         return $buffed_content;
                         break;
                     case self::DISPATCH_CAPTURE_AND_REPLACE:
-                        if (ob_get_level()) {
+                        while (ob_get_level() >= $this->output_buffer_level) {
                             $this->response->body(ob_get_clean());
                         }
                         break;
                     case self::DISPATCH_CAPTURE_AND_PREPEND:
-                        if (ob_get_level()) {
+                        while (ob_get_level() >= $this->output_buffer_level) {
                             $this->response->prepend(ob_get_clean());
                         }
                         break;
                     case self::DISPATCH_CAPTURE_AND_APPEND:
-                        if (ob_get_level()) {
+                        while (ob_get_level() >= $this->output_buffer_level) {
                             $this->response->append(ob_get_clean());
                         }
                         break;
-                    case self::DISPATCH_NO_CAPTURE:
                     default:
-                        if (ob_get_level()) {
-                            ob_end_flush();
-                        }
+                        // If not a handled capture strategy, default to no capture
+                        $capture = self::DISPATCH_NO_CAPTURE;
                 }
             }
 
@@ -677,8 +684,12 @@ class Klein
                 // HEAD requests shouldn't return a body
                 $this->response->body('');
 
-                if (ob_get_level()) {
-                    ob_clean();
+                while (ob_get_level() >= $this->output_buffer_level) {
+                    ob_end_clean();
+                }
+            } elseif (self::DISPATCH_NO_CAPTURE === $capture) {
+                while (ob_get_level() >= $this->output_buffer_level) {
+                    ob_end_flush();
                 }
             }
         } catch (LockedResponseException $e) {
@@ -928,6 +939,11 @@ class Klein
             }
         } else {
             $this->response->code(500);
+
+            while (ob_get_level() >= $this->output_buffer_level) {
+                ob_end_clean();
+            }
+
             throw new UnhandledException($msg, $err->getCode(), $err);
         }
 
