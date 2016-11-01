@@ -1,5 +1,21 @@
 # Klein Upgrade Guide
 
+
+## 2.1.0 to 2.1.1
+
+### Deprecations
+
+- The `HeaderDataCollection::normalizeName()` method has been deprecated in favor of using new normalization options (via constant switches) and other more specific methods on the same class
+
+### Interface Changes
+
+- Three of the Klein internal callback attributes have changed both name and data structure. These attributes are protected, so the effect will only be felt by users that have extended and/or overwritten Klein's internal behaviors. The following changes were made:
+    - `Klein#errorCallbacks` was renamed to `Klein#error_callbacks` and it's array data-structure was changed to use an `SplStack`
+    - `Klein#httpErrorCallbacks` was renamed to `Klein#http_error_callbacks` and it's array data-structure was changed to use an `SplStack`
+    - `Klein#afterFilterCallbacks` was renamed to `Klein#after_filter_callbacks` and it's array data-structure was changed to use an `SplQueue`
+- `Validator#defaultAdded` was renamed to `Validator#default_added`
+
+
 ## 2.0.x to 2.1.0
 
 ### Deprecations
