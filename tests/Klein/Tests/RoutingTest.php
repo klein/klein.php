@@ -586,12 +586,14 @@ class RoutingTest extends AbstractKleinTest
 
     public function testParamsIntegerSuccess()
     {
-        $this->expectOutputString("string(3) \"987\"\n");
+        $this->expectOutputString("string(3) \"987\"");
 
         $this->klein_app->respond(
             '/[i:age]',
             function ($request) {
-                var_dump($request->param('age'));
+                $age = $request->param('age');
+
+                printf('%s(%d) "%s"', gettype($age), strlen($age), $age);
             }
         );
 
@@ -615,7 +617,7 @@ class RoutingTest extends AbstractKleinTest
         $this->klein_app->respond(
             '/[i:age]',
             function ($request) {
-                var_dump($request->param('age'));
+                echo $request->param('age');
             }
         );
 
