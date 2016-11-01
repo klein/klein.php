@@ -5,7 +5,7 @@
  * @author      Chris O'Hara <cohara87@gmail.com>
  * @author      Trevor Suarez (Rican7) (contributor and v2 refactorer)
  * @copyright   (c) Chris O'Hara
- * @link        https://github.com/chriso/klein.php
+ * @link        https://github.com/klein/klein.php
  * @license     MIT
  */
 
@@ -27,7 +27,7 @@ class Response extends AbstractResponse
     /**
      * Enable response chunking
      *
-     * @link https://github.com/chriso/klein.php/wiki/Response-Chunking
+     * @link https://github.com/klein/klein.php/wiki/Response-Chunking
      * @link http://bit.ly/hg3gHb
      * @param string $str   An optional string to send as a response "chunk"
      * @return Response

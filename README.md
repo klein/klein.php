@@ -1,6 +1,6 @@
 # Klein.php
 
-[![Build Status](https://travis-ci.org/chriso/klein.php.png?branch=master)](https://travis-ci.org/chriso/klein.php)
+[![Build Status](https://travis-ci.org/klein/klein.php.png?branch=master)](https://travis-ci.org/klein/klein.php)
 
 **klein.php** is a fast & flexible router for PHP 5.3+
 
@@ -420,7 +420,7 @@ See the [contributing guide](CONTRIBUTING.md) for more info
 
 ## More information
 
-See the [wiki](https://github.com/chriso/klein.php/wiki) for more information
+See the [wiki](https://github.com/klein/klein.php/wiki) for more information
 
 ## Contributors
 

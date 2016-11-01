@@ -5,7 +5,7 @@
  * @author      Chris O'Hara <cohara87@gmail.com>
  * @author      Trevor Suarez (Rican7) (contributor and v2 refactorer)
  * @copyright   (c) Chris O'Hara
- * @link        https://github.com/chriso/klein.php
+ * @link        https://github.com/klein/klein.php
  * @license     MIT
  */
 
@@ -575,7 +575,7 @@ class Klein
                              * @link http://www.faqs.org/rfcs/rfc3986
                              *
                              * Decode here AFTER matching as per @chriso's suggestion
-                             * @link https://github.com/chriso/klein.php/issues/117#issuecomment-21093915
+                             * @link https://github.com/klein/klein.php/issues/117#issuecomment-21093915
                              */
                             $params = array_map('rawurldecode', $params);
 
