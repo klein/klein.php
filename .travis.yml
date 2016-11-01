@@ -18,7 +18,7 @@ matrix:
   fast_finish: true
 
 before_script:
-  - composer install --prefer-dist --dev
+  - composer install --prefer-dist
 
 script:
   - composer validate
