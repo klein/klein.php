@@ -113,20 +113,20 @@ class RoutingTest extends AbstractKleinTest
 
         $this->klein_app->respond(
             '/',
-            function ($r, $r, $s, $a) {
-                $a->state = 'a';
+            function ($request, $response, $service, $app) {
+                $app->state = 'a';
             }
         );
         $this->klein_app->respond(
             '/',
-            function ($r, $r, $s, $a) {
-                $a->state .= 'b';
+            function ($request, $response, $service, $app) {
+                $app->state .= 'b';
             }
         );
         $this->klein_app->respond(
             '/',
-            function ($r, $r, $s, $a) {
-                print $a->state;
+            function ($request, $response, $service, $app) {
+                print $app->state;
             }
         );
 
