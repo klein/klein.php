@@ -401,7 +401,7 @@ class Request
      *
      * @return string
      */
-    public function Seturi($uri)
+    public function set_uri($uri)
     {
         $this->uri = $uri ;
         return $this;
