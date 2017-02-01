@@ -11,6 +11,7 @@
 
 namespace Klein\Tests;
 
+use Exception;
 use Klein\App;
 use Klein\DataCollection\RouteCollection;
 use Klein\Exceptions\DispatchHaltedException;
@@ -2261,7 +2262,7 @@ class RoutingTest extends AbstractKleinTest
             $this->klein_app->dispatch(
                 MockRequestFactory::create('/users/1738197/friends/7828316')
             );
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $exception = $e->getPrevious();
         }
 
