@@ -1,6 +1,18 @@
 # CHANGELOG
 
 
+## 2.1.2
+
+### Features
+
+- PHP 7 `Throwable`s will now properly be caught and sent up the exception handling chain.
+- Expanded compatibility with other exception types in some method signatures
+
+### Bug fixes
+
+- Broad exception catch statements will now properly handle PHP 7 `Throwable` types
+
+
 ## 2.1.1
 
 ### Features
