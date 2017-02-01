@@ -1,6 +1,14 @@
 # Klein Upgrade Guide
 
 
+## 2.1.1 to 2.1.2
+
+### Interface Changes
+
+- The `RoutePathCompilationException::createFromRoute()` method signature has changed to allow both `Exception` and `Throwable` types with dual support for PHP 5 and PHP 7
+- The 4th parameter to the callbacks supported by `Klein#onError` will now be able to receive `Throwable` types under PHP 7
+
+
 ## 2.1.0 to 2.1.1
 
 ### Deprecations
