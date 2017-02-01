@@ -23,6 +23,7 @@ use Klein\Exceptions\UnhandledException;
 use OutOfBoundsException;
 use SplQueue;
 use SplStack;
+use Throwable;
 
 /**
  * Klein
@@ -640,7 +641,9 @@ class Klein
                 $this->response->unlock();
             }
 
-        } catch (Exception $e) {
+        } catch (Throwable $e) { // PHP 7 compatibility
+            $this->error($e);
+        } catch (Exception $e) { // TODO: Remove this catch block once PHP 5.x support is no longer necessary.
             $this->error($e);
         }
 
@@ -909,11 +912,14 @@ class Klein
     /**
      * Routes an exception through the error callbacks
      *
-     * @param Exception $err        The exception that occurred
-     * @throws UnhandledException   If the error/exception isn't handled by an error callback
+     * TODO: Change the `$err` parameter to type-hint against `Throwable` once
+     * PHP 5.x support is no longer necessary.
+     *
+     * @param Exception|Throwable $err The exception that occurred
+     * @throws UnhandledException      If the error/exception isn't handled by an error callback
      * @return void
      */
-    protected function error(Exception $err)
+    protected function error($err)
     {
         $type = get_class($err);
         $msg = $err->getMessage();
@@ -947,7 +953,14 @@ class Klein
 
                 throw new UnhandledException($msg, $err->getCode(), $err);
             }
-        } catch (Exception $e) {
+        } catch (Throwable $e) { // PHP 7 compatibility
+            // Make sure to clean the output buffer before bailing
+            while (ob_get_level() >= $this->output_buffer_level) {
+                ob_end_clean();
+            }
+
+            throw $e;
+        } catch (Exception $e) { // TODO: Remove this catch block once PHP 5.x support is no longer necessary.
             // Make sure to clean the output buffer before bailing
             while (ob_get_level() >= $this->output_buffer_level) {
                 ob_end_clean();
@@ -1050,7 +1063,9 @@ class Klein
                     }
                 }
             }
-        } catch (Exception $e) {
+        } catch (Throwable $e) { // PHP 7 compatibility
+            $this->error($e);
+        } catch (Exception $e) { // TODO: Remove this catch block once PHP 5.x support is no longer necessary.
             $this->error($e);
         }
     }
