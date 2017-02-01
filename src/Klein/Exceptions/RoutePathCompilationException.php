@@ -14,6 +14,7 @@ namespace Klein\Exceptions;
 use Exception;
 use Klein\Route;
 use RuntimeException;
+use Throwable;
 
 /**
  * RoutePathCompilationException
@@ -62,11 +63,14 @@ class RoutePathCompilationException extends RuntimeException implements KleinExc
      * Create a RoutePathCompilationException from a route
      * and an optional previous exception
      *
+     * TODO: Change the `$previous` parameter to type-hint against `Throwable`
+     * once PHP 5.x support is no longer necessary.
+     *
      * @param Route $route          The route that failed to compile
-     * @param Exception $previous   The previous exception
+     * @param Exception|Throwable $previous   The previous exception
      * @return RoutePathCompilationException
      */
-    public static function createFromRoute(Route $route, Exception $previous = null)
+    public static function createFromRoute(Route $route, $previous = null)
     {
         $error = (null !== $previous) ? $previous->getMessage() : null;
         $code  = (null !== $previous) ? $previous->getCode() : null;
