@@ -400,7 +400,7 @@ class Request
      */
     public function uri()
     {
-        return $this->server->get('REQUEST_URI', '/');
+        return urldecode($this->server->get('REQUEST_URI', '/'));
     }
 
     /**
