@@ -383,6 +383,7 @@ $validator->
     isLen($length)                      // The string must be the exact length
     isLen($min, $max)                   // The string must be between $min and $max length (inclusive)
     isInt()                             // Check for a valid integer
+    isBetween($min, $max)               // The number must be between $min and $max (inclusive)
     isFloat()                           // Check for a valid float/decimal
     isEmail()                           // Check for a valid email
     isUrl()                             // Check for a valid URL
