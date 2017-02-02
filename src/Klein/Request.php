@@ -400,7 +400,12 @@ class Request
      */
     public function uri()
     {
-        return $this->server->get('REQUEST_URI', '/');
+        $uri = $this->server->get('PATH_INFO');
+        if (!empty($uri))
+        {
+            $uri = $this->server->get('REQUEST_URI', '/');
+        }
+        return $uri;
     }
 
     /**
