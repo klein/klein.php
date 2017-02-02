@@ -89,7 +89,7 @@ $klein->respond(function ($request, $response, $service) {
 $klein->respond('/report.[xml|csv|json:format]?', function ($request, $response, $service) {
     // Get the format or fallback to JSON as the default
     $send = $request->param('format', 'json');
-    $response->$send($report);
+    $response->send($report);
 });
 
 $klein->respond('/report/latest', function ($request, $response, $service) {
