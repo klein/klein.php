@@ -128,7 +128,7 @@ class RouteFactory extends AbstractRouteFactory
             $callback,
             $this->preprocessPathString($path),
             $method,
-            $this->shouldPathStringCauseRouteMatch($path) // Ignore the $count_match boolean that they passed
+            ($this->shouldPathStringCauseRouteMatch($path) && $count_match) // actually pass in the count_match flag
         );
     }
 }
