@@ -88,7 +88,10 @@ class Request
      */
     protected $body;
 
-
+    /**
+    * Request uri Environment for Dynamic Routing
+    */
+    protected $uri = "REQUEST_URI";
     /**
      * Methods
      */
@@ -392,7 +395,18 @@ class Request
     {
         return $this->headers->get('USER_AGENT');
     }
-
+    
+    /**
+     * Set the request URI
+     *
+     * @return string
+     */
+    public function seturi($uri)
+    {
+        $this->uri = $uri ;
+        return $this;
+    }
+    
     /**
      * Gets the request URI
      *
@@ -400,7 +414,7 @@ class Request
      */
     public function uri()
     {
-        return $this->server->get('REQUEST_URI', '/');
+        return $this->server->get($this->uri, '/');
     }
 
     /**
