@@ -324,7 +324,7 @@ class Request
      * while treating it as an instance property
      *
      * @param string $param     The name of the parameter
-     * @return string
+     * @return mixed
      */
     public function __get($param)
     {
