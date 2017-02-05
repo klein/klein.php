@@ -26,6 +26,27 @@ use SplStack;
 use Throwable;
 
 /**
+ * Determine the OS console EOL
+ */
+if (!defined('PHP_EOL')) {
+    switch (strtoupper(substr(PHP_OS, 0, 3))) {
+        // Windows
+        case 'WIN':
+            define('PHP_EOL', "\r\n");
+            break;
+
+        // Mac
+        case 'DAR':
+            define('PHP_EOL', "\r");
+            break;
+
+        // Unix
+        default:
+            define('PHP_EOL', "\n");
+    }
+}
+
+/**
  * Klein
  *
  * Main Klein router class
@@ -397,6 +418,44 @@ class Klein
         }
 
         $this->route_factory->setNamespace($previous);
+    }
+
+    /**
+     * Prints out all the routes that you have made.
+     *
+     * @example <br>
+     *
+     * Your project should have this structure
+     * vendor/
+     * etc/
+     *    app.php
+     * index.php
+     * rake.php
+     *
+     * Inside etc/app.php have all your code with routes e.t.c "except!" for $klein->dispatch();
+     * Inside index.php, include require '/etc/app.php' and call $klein->dispatch();
+     * Inside rake.php, include require '/etc/app.php' and call $klein->rakeRoutes();
+     *
+     * Now on your console, you can call 'php rake.php' and see all your routes printed out
+     *
+     * @return void|array
+     */
+    public function rakeRoutes($print = true)
+    {
+        $routeNames = array();
+        foreach ($this->routes as $route) {
+            list($method, $_route, $callback, $count_match) = $route;
+
+            if ($print) {
+                echo '['.$method.'] '.$_route;
+                echo PHP_EOL;
+            } else {
+                array_push($routeNames, '['.$method.'] '.$_route);
+            }
+        }
+        if (!$print) {
+            return $routeNames;
+        }
     }
 
     /**
