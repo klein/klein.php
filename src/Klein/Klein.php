@@ -985,6 +985,26 @@ class Klein
         $this->http_error_callbacks->push($callback);
     }
 
+   /**
+    * Trigger and HTTP error from external
+    *
+    * @param integer $code                             The HTTP Status code
+    * @access public
+    * return void
+    */
+    public function triggerHttpError($code){
+        try {
+	    throw HttpException::createFromCode($code);
+	} catch (HttpExceptionInterface $e) {
+            $locked = $this->response()->isLocked();
+            $this->httpError($e, new RouteCollection(), array());
+            if (!$locked) {
+                $this->response()->unlock();
+            }
+        }
+       
+    }
+
     /**
      * Handles an HTTP error exception through our HTTP error callbacks
      *
