@@ -400,6 +400,70 @@ class Klein
     }
 
     /**
+     * Collect a set of routes under a common namespace
+     *
+     * The routes may be passed in as either a callable (which holds the route definitions),
+     * or as a string of a filename, of which to "include" under the Klein router scope with
+     * flexible ability to split route from controller name.
+     *
+     * <code>
+     * $router = new Klein();
+     *
+     * $router->withFlex( 'user', '/users', function($router) {
+     *     $router->respond( '/', function() {
+     *         // do something interesting
+     *     });
+     *     $router->respond( '/[i:id]', function() {
+     *         // do something different
+     *     });
+     * });
+     *
+     *  $router->withFlex( array( 'UserController', 'TestController' ), '/home', function($router) {
+     *     $router->respond( '/users', function() {
+     *         return $app->UserController->index();
+     *     });
+     *     $router->respond( '/tests', function() {
+     *         return $app->TestController->index();
+     *     });
+     * });
+     *
+     * $router->withFlex( 'car', '/cars', __DIR__ . '/routes/cars.php');
+     * </code>
+     *
+     * @param $class 					The Controller class name
+     * @param string $namespace         The namespace under which to collect the routes
+     * @param callable|string $routes   The defined routes callable or filename to collect under the namespace
+     * @return void
+     */
+    public function withFlex( $class, $namespace, $routes ) {
+
+    	if ( is_array( $class ) ) {
+
+    		foreach ( $class as $key => $c ) {
+
+    			if ( class_exists( $c ) ) {
+
+    				$this->app->{$c} = new $c;
+
+    			}
+
+    		}
+
+    	} else {
+
+    		if ( class_exists( $class ) ) {
+
+    			$this->app->{$class} = new $class;
+
+    		}
+
+    	}
+
+    	return $this->with( $namespace, $routes );
+      
+    }
+
+    /**
      * Dispatch the request to the appropriate route(s)
      *
      * Dispatch with optionally injected dependencies
