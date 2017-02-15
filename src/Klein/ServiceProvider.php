@@ -238,7 +238,7 @@ class ServiceProvider
      */
     public static function escape($str, $flags = ENT_QUOTES)
     {
-        return htmlentities($str, $flags, 'UTF-8');
+        return htmlspecialchars($str, $flags, 'UTF-8');
     }
 
     /**
