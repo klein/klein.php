@@ -170,25 +170,7 @@ class Validator
         $validator = static::$methods[$validator];
         array_unshift($args, $this->str);
 
-        switch (count($args)) {
-            case 1:
-                $result = $validator($args[0]);
-                break;
-            case 2:
-                $result = $validator($args[0], $args[1]);
-                break;
-            case 3:
-                $result = $validator($args[0], $args[1], $args[2]);
-                break;
-            case 4:
-                $result = $validator($args[0], $args[1], $args[2], $args[3]);
-                break;
-            default:
-                $result = call_user_func_array($validator, $args);
-                break;
-        }
-
-        $result = (bool)($result ^ $reverse);
+        $result = (bool)(call_user_func_array($validator, $args) ^ $reverse);
 
         if (false === $this->err) {
             return $result;
