@@ -569,6 +569,10 @@ class Klein
                 }
 
                 if (isset($match) && $match ^ $negate) {
+
+                    // Check if need break the loop
+                    $break = false;
+
                     if ($possible_match) {
                         if (!empty($params)) {
                             /**
@@ -596,7 +600,8 @@ class Klein
                                     $skip_num = $e->getNumberOfSkips();
                                     break;
                                 case DispatchHaltedException::SKIP_REMAINING:
-                                    break 2;
+                                    $break = true;
+                                    break;
                                 default:
                                     throw $e;
                             }
@@ -613,6 +618,14 @@ class Klein
                         $methods_matched = array_merge($methods_matched, (array) $method);
                         $methods_matched = array_filter($methods_matched);
                         $methods_matched = array_unique($methods_matched);
+                    }
+
+                    /**
+                     * Only break after add route to $mathed collection to avoid
+                     * onHttpError call if throw a SKIP_REMAINING exception
+                     */
+                    if ($break) {
+                        break;
                     }
                 }
             }
