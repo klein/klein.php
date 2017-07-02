@@ -1088,7 +1088,7 @@ class RoutingTest extends AbstractKleinTest
                 echo 'keep1';
             }
         );
-
+        
         $this->klein_app->respond(
             'GET',
             '/keepNextRequest',
@@ -1097,7 +1097,7 @@ class RoutingTest extends AbstractKleinTest
             }
         );
 
-         $this->klein_app->respond(
+        $this->klein_app->respond(
             'GET',
             '/stopNextRequest',
             function ($request, $response, $service, $app, $klein) {

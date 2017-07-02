@@ -570,7 +570,7 @@ class Klein
 
                 if (isset($match) && $match ^ $negate) {
 
-                    // Check if need break the loop 
+                    // Check if need break the loop
                     $break = false;
 
                     if ($possible_match) {
@@ -620,8 +620,11 @@ class Klein
                         $methods_matched = array_unique($methods_matched);
                     }
 
-                    // Only break after add route to $mathed collection to avoid onHttpError call if throw a SKIP_REMAINING exception 
-                    if($break){
+                    /**
+                     * Only break after add route to $mathed collection to avoid
+                     * onHttpError call if throw a SKIP_REMAINING exception
+                     */
+                    if ($break) {
                         break;
                     }
                 }
