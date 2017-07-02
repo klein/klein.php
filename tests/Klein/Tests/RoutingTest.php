@@ -1079,6 +1079,62 @@ class RoutingTest extends AbstractKleinTest
         );
     }
 
+    public function testSkipRemainingException()
+    {
+        $this->klein_app->respond(
+            'GET',
+            '/keepNextRequest',
+            function () {
+                echo 'keep1';
+            }
+        );
+
+        $this->klein_app->respond(
+            'GET',
+            '/keepNextRequest',
+            function () {
+                echo 'keep2';
+            }
+        );
+
+         $this->klein_app->respond(
+            'GET',
+            '/stopNextRequest',
+            function ($request, $response, $service, $app, $klein) {
+                echo 'stop1';
+                $klein->skipRemaining();
+            }
+        );
+
+        $this->klein_app->respond(
+            'GET',
+            '/stopNextRequest',
+            function ($request, $response, $service, $app, $klein) {
+                echo 'stop2';
+                $klein->skipRemaining();
+            }
+        );
+
+        $this->klein_app->onHttpError(
+            function ($code, $klein, $matched, $methods, $exception) use (&$result_array) {
+                echo 'httperror';
+            }
+        );
+
+        $this->assertEquals('keep1keep2', $this->dispatchAndReturnOutput(
+            MockRequestFactory::create('/keepNextRequest', 'GET')
+        ));
+
+        $this->assertEquals('stop1', $this->dispatchAndReturnOutput(
+            MockRequestFactory::create('/stopNextRequest', 'GET')
+        ));
+
+        $this->assertEquals('httperror', $this->dispatchAndReturnOutput(
+            MockRequestFactory::create('/stopNextRequest/error', 'GET')
+        ));
+
+    }
+
     public function testTrailingPossessiveMatch()
     {
         $this->klein_app->respond(
