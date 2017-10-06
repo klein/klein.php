@@ -74,20 +74,24 @@ class Response extends AbstractResponse
      * currently in the response body and replaces it with
      * the file's data
      *
-     * @param string $path      The path of the file to send
-     * @param string $filename  The file's name
-     * @param string $mimetype  The MIME type of the file
+     * @param string $path            The path of the file to send
+     * @param string $filename        The file's name
+     * @param string $mimetype        The MIME type of the file
+     * @param boolean $allow_caching  Wether or not to allow response caching
      * @throws RuntimeException Thrown if the file could not be read
      * @return Response
      */
-    public function file($path, $filename = null, $mimetype = null)
+    public function file($path, $filename = null, $mimetype = null, $allow_caching = false)
     {
         if ($this->sent) {
             throw new ResponseAlreadySentException('Response has already been sent');
         }
 
         $this->body('');
-        $this->noCache();
+
+        if (false === $allow_caching) {
+            $this->noCache();
+        }
 
         if (null === $filename) {
             $filename = basename($path);
@@ -141,14 +145,18 @@ class Response extends AbstractResponse
      * currently in the response body and replaces it with
      * the passed json encoded object
      *
-     * @param mixed $object         The data to encode as JSON
-     * @param string $jsonp_prefix  The name of the JSON-P function prefix
+     * @param mixed $object           The data to encode as JSON
+     * @param string $jsonp_prefix    The name of the JSON-P function prefix
+     * @param boolean $allow_caching  Wether or not to allow response caching
      * @return Response
      */
-    public function json($object, $jsonp_prefix = null)
+    public function json($object, $jsonp_prefix = null, $allow_caching = false)
     {
         $this->body('');
-        $this->noCache();
+
+        if (false === $allow_caching) {
+            $this->noCache();
+        }
 
         $json = json_encode($object);
 

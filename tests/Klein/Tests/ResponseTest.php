@@ -464,6 +464,14 @@ class ResponsesTest extends AbstractKleinTest
             $file_name,
             $this->klein_app->response()->headers()->get('Content-Disposition')
         );
+        $this->assertEquals(
+            'no-cache',
+            $this->klein_app->response()->headers()->get('Pragma')
+        );
+        $this->assertEquals(
+            'no-store, no-cache',
+            $this->klein_app->response()->headers()->get('Cache-Control')
+        );
     }
 
     public function testFileSendLooseArgs()
@@ -548,6 +556,47 @@ class ResponsesTest extends AbstractKleinTest
         $response->file(__FILE__);
     }
 
+    public function testFileCacheable()
+    {
+        $file_name = 'testing';
+        $file_mime = 'text/plain';
+
+        $this->klein_app->respond(
+            function ($request, $response, $service) use ($file_name, $file_mime) {
+                $response->file(__FILE__, $file_name, $file_mime, true);
+            }
+        );
+
+        $this->klein_app->dispatch();
+
+        // Expect our output to match our file
+        $this->expectOutputString(
+            file_get_contents(__FILE__)
+        );
+
+        // Assert headers were passed
+        $this->assertEquals(
+            $file_mime,
+            $this->klein_app->response()->headers()->get('Content-Type')
+        );
+        $this->assertEquals(
+            filesize(__FILE__),
+            $this->klein_app->response()->headers()->get('Content-Length')
+        );
+        $this->assertContains(
+            $file_name,
+            $this->klein_app->response()->headers()->get('Content-Disposition')
+        );
+        $this->assertEquals(
+            null,
+            $this->klein_app->response()->headers()->get('Pragma')
+        );
+        $this->assertEquals(
+            null,
+            $this->klein_app->response()->headers()->get('Cache-Control')
+        );
+    }
+
     public function testJSON()
     {
         // Create a test object to be JSON encoded/decoded
@@ -621,6 +670,41 @@ class ResponsesTest extends AbstractKleinTest
         );
         $this->assertEquals(
             'text/javascript',
+            $this->klein_app->response()->headers()->get('Content-Type')
+        );
+    }
+
+    public function testJSONCacheable()
+    {
+        // Create a test object to be JSON encoded/decoded
+        $test_object = array(
+            'cheese',
+        );
+
+        $this->klein_app->respond(
+            function ($request, $response, $service) use ($test_object) {
+                $response->json($test_object, null, true);
+            }
+        );
+
+        $this->klein_app->dispatch();
+
+        // Expect our output to match our json encoded test object
+        $this->expectOutputString(
+            json_encode($test_object)
+        );
+
+        // Assert headers were passed
+        $this->assertEquals(
+            null,
+            $this->klein_app->response()->headers()->get('Pragma')
+        );
+        $this->assertEquals(
+            null,
+            $this->klein_app->response()->headers()->get('Cache-Control')
+        );
+        $this->assertEquals(
+            'application/json',
             $this->klein_app->response()->headers()->get('Content-Type')
         );
     }

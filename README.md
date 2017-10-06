@@ -351,8 +351,10 @@ $response->
     noCache()                                       // Tell the browser not to cache the response
     redirect($url, $code = 302)                     // Redirect to the specified URL
     dump($obj)                                      // Dump an object
-    file($path, $filename = null)                   // Send a file
-    json($object, $jsonp_prefix = null)             // Send an object as JSON or JSONP by providing padding prefix
+    file($path, $filename = null, $allow_caching = false)
+                                                    // Send a file
+    json($object, $jsonp_prefix = null, $allow_caching = false)
+                                                    // Send an object as JSON or JSONP by providing padding prefix
 
 $service->
     sharedData()                                    // Return the shared data collection
