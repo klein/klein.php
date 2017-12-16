@@ -6,7 +6,7 @@
 
 * Flexible regular expression routing (inspired by [Sinatra](http://www.sinatrarb.com/))
 * A set of [boilerplate methods](#api) for rapidly building web apps
-* Almost no overhead => [2500+ requests/second](https://gist.github.com/878833)
+* Almost no overhead => [2500+ requests/second](https://gist.github.com/910325)
 
 ## Getting started
 
