@@ -392,7 +392,7 @@ class Klein
             } else {
                 call_user_func($routes, $this);
             }
-        } else {
+        } elseif (file_exists($routes)) {
             require $routes;
         }
 
