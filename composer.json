@@ -23,7 +23,6 @@
    },
    "require-dev": {
       "phpunit/phpunit": "^4.8",
-      "phpunit/php-code-coverage": "^2.2",
       "squizlabs/php_codesniffer": "1.4.8"
    },
    "autoload": {

@@ -15,14 +15,14 @@ use Klein\Klein;
 use Klein\Request;
 use Klein\Response;
 use Klein\Tests\Mocks\HeadersNoOp;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
 /**
  * AbstractKleinTest
  *
  * Base test class for PHP Unit testing
  */
-abstract class AbstractKleinTest extends PHPUnit_Framework_TestCase
+abstract class AbstractKleinTest extends TestCase
 {
 
     /**
