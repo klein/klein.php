@@ -363,7 +363,7 @@ class KleinTest extends AbstractKleinTest
         );
     }
 
-    public function testAfterDispatchWithBadCallables()
+    public function afterDispatchWithBadCallablesTest()
     {
         $this->klein_app->afterDispatch('this_function_doesnt_exist');
 

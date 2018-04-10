@@ -50,10 +50,18 @@ class AppTest extends AbstractKleinTest
 
         $app->register($func_name, $this->getTestCallable());
 
-        return array(
+        $result = array(
             'app' => $app,
             'func_name' => $func_name,
         );
+
+        $this->assertInstanceOf('Klein\App', $app);
+        $this->assertSame(array(
+            'app' => $app,
+            'func_name' => $func_name,
+        ), $result);
+
+        return $result;
     }
 
     /**
