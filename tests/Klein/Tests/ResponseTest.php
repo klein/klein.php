@@ -189,7 +189,7 @@ class ResponsesTest extends AbstractKleinTest
      * Attempt to run in a separate process so we can
      * at least call our internal methods
      */
-    public function testSendHeaders()
+    public function sendHeaders()
     {
         $response = new Response('woot!');
         $response->headers()->set('test', 'sure');
@@ -203,7 +203,7 @@ class ResponsesTest extends AbstractKleinTest
     /**
      * @runInSeparateProcess
      */
-    public function testSendHeadersInIsolateProcess()
+    public function sendHeadersInIsolateProcessTest()
     {
         $this->testSendHeaders();
     }
@@ -212,7 +212,7 @@ class ResponsesTest extends AbstractKleinTest
      * Testing cookies is exactly like testing headers
      * ... So, yea.
      */
-    public function testSendCookies()
+    public function sendCookiesTest()
     {
         $response = new Response();
         $response->cookies()->set('test', 'woot!');
@@ -226,7 +226,7 @@ class ResponsesTest extends AbstractKleinTest
     /**
      * @runInSeparateProcess
      */
-    public function testSendCookiesInIsolateProcess()
+    public function sendCookiesInIsolateProcessTest()
     {
         $this->testSendCookies();
     }

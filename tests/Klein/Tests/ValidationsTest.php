@@ -327,7 +327,7 @@ class ValidationsTest extends AbstractKleinTest
         );
     }
 
-    public function testUrl()
+    public function urlTest()
     {
         // Is
         $this->validator('http://www.test.com/path/file.ext?query=param#anchor')->isUrl();
@@ -346,7 +346,7 @@ class ValidationsTest extends AbstractKleinTest
         $this->validator('www.com')->notUrl();
     }
 
-    public function testIp()
+    public function ipTest()
     {
         // Is
         $this->validator('0000:0000:0000:0000:0000:0000:0000:0001')->isIp();
@@ -368,7 +368,7 @@ class ValidationsTest extends AbstractKleinTest
         $this->validator('string')->notIp();
     }
 
-    public function testRemoteIp()
+    public function remoteIpTest()
     {
         // Is
         $this->validator('2001:0db5:86a3:0000:0000:8a2e:0370:7335')->isRemoteIp();
@@ -791,7 +791,7 @@ class ValidationsTest extends AbstractKleinTest
         );
     }
 
-    public function testCustomValidatorWithManyArgs()
+    public function customValidatorWithManyArgsTest()
     {
         // Add our custom validator
         $this->klein_app->service()->addValidator(
