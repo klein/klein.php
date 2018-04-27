@@ -20,4 +20,4 @@ Klein is an open library designed for a specific purpose. You may find that a ce
  [unit-testing]: README.md#unit-testing
  [psr-2]: https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-2-coding-style-guide.md
  [code-sniffer]: https://github.com/squizlabs/PHP_CodeSniffer
- [php-doc]: http://www.phpdoc.org/docs/latest/for-users/phpdoc-reference.html
+ [php-doc]: https://docs.phpdoc.org/references/phpdoc/index.html
