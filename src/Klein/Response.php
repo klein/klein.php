@@ -165,4 +165,23 @@ class Response extends AbstractResponse
 
         return $this;
     }
+    
+    public function jsonPretty($object, $jsonp_prefix = null)
+    {
+        $this->body('');
+        $this->noCache();
+        
+        $json = json_encode($object, JSON_PRETTY_PRINT);
+        if (null !== $jsonp_prefix) {
+            $this->header('Content-Type', 'text/javascript');
+            $this->body("$jsonp_prefox($json);");
+        } else {
+            $this->header('Content-Type', 'application/json');
+            $this->body($json);
+        }
+        
+        $this->send();
+        
+        return $this;
+    }
 }
