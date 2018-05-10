@@ -1,25 +1,26 @@
 sudo: false
 
 language: php
-php:
-  - 5.3
-  - 5.4
-  - 5.5
-  - 5.6
-  - 7.0
-  - nightly
+php:  
+  - 5.4  
+  - 5.5  
+  - 5.6  
+  - 7.0  
+  - nightly  
   - hhvm
-
-matrix:
-  allow_failures:
-    - php: nightly
-    - php: hhvm
+  
+matrix:  
+  include:    
+    - php: 5.3      
+      dist: precise  
+  allow_failures:    
+    - php: nightly    
+    - php: hhvm  
   fast_finish: true
-
-before_script:
+  
+before_script:  
   - composer install --prefer-dist
-
-script:
-  - composer validate
   - ./vendor/bin/phpunit
-  - ./vendor/bin/phpcs --standard=PSR2 --encoding=utf-8 -p src/ tests/
+  - ./vendor/bin/phpcs --standard=PSR2 --encoding=utf-8 -p src/ tests/  
+  
+  
