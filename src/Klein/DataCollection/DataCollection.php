@@ -71,6 +71,12 @@ class DataCollection implements IteratorAggregate, ArrayAccess, Countable
             // Support a more "magical" call
             if (!is_array($mask)) {
                 $mask = func_get_args();
+                $arglen=count($mask);
+                if($mask[$arglen-1]===false || $mask[$arglen-1]===true)
+                  {
+                    $fill_with_nulls=$mask[$arglen-1];
+                    array_pop($mask);
+                  }
             }
 
             /*
@@ -113,6 +119,12 @@ class DataCollection implements IteratorAggregate, ArrayAccess, Countable
             // Support a more "magical" call
             if (!is_array($mask)) {
                 $mask = func_get_args();
+                $arglen=count($mask);
+                if($mask[$arglen-1]===false || $mask[$arglen-1]===true)
+                  {
+                    $fill_with_nulls=$mask[$arglen-1];
+                    array_pop($mask);
+                  }
             }
 
             /*
