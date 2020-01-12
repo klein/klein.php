@@ -690,10 +690,6 @@ class Klein
                 while (ob_get_level() >= $this->output_buffer_level) {
                     ob_end_clean();
                 }
-            } elseif (self::DISPATCH_NO_CAPTURE === $capture) {
-                while (ob_get_level() >= $this->output_buffer_level) {
-                    ob_end_flush();
-                }
             }
         } catch (LockedResponseException $e) {
             // Do nothing, since this is an automated behavior
@@ -704,6 +700,12 @@ class Klein
 
         if ($send_response && !$this->response->isSent()) {
             $this->response->send();
+        }
+        
+        if (self::DISPATCH_NO_CAPTURE === $capture) {
+            while (ob_get_level() >= $this->output_buffer_level) {
+                ob_end_flush();
+            }
         }
     }
 
