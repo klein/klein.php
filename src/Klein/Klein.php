@@ -201,6 +201,15 @@ class Klein
 
 
     /**
+     * Skip Counter
+     *
+     * @type int
+     */
+    protected $skips = 0;
+
+
+
+    /**
      * Methods
      */
 
@@ -585,6 +594,13 @@ class Klein
 
                         // Handle our response callback
                         try {
+
+							if($this->skips == -1) break;
+							if($this->skips > 0) {
+								$this->skips--;
+								continue;
+							}
+
                             $this->handleRouteCallback($route, $matched, $methods_matched);
 
                         } catch (DispatchHaltedException $e) {
@@ -592,11 +608,15 @@ class Klein
                                 case DispatchHaltedException::SKIP_THIS:
                                     continue 2;
                                     break;
+
+								/*
                                 case DispatchHaltedException::SKIP_NEXT:
                                     $skip_num = $e->getNumberOfSkips();
                                     break;
                                 case DispatchHaltedException::SKIP_REMAINING:
                                     break 2;
+								*/
+
                                 default:
                                     throw $e;
                             }
@@ -1095,10 +1115,11 @@ class Klein
      */
     public function skipNext($num = 1)
     {
-        $skip = new DispatchHaltedException(null, DispatchHaltedException::SKIP_NEXT);
-        $skip->setNumberOfSkips($num);
+        //$skip = new DispatchHaltedException(null, DispatchHaltedException::SKIP_NEXT);
+        //$skip->setNumberOfSkips($num);
 
-        throw $skip;
+        //throw $skip;
+		$this->skips = $num;
     }
 
     /**
@@ -1109,7 +1130,8 @@ class Klein
      */
     public function skipRemaining()
     {
-        throw new DispatchHaltedException(null, DispatchHaltedException::SKIP_REMAINING);
+        //throw new DispatchHaltedException(null, DispatchHaltedException::SKIP_REMAINING);
+		$this->skips = -1; //Remaining
     }
 
     /**
