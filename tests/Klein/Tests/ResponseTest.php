@@ -14,6 +14,7 @@ namespace Klein\Tests;
 use Klein\DataCollection\HeaderDataCollection;
 use Klein\DataCollection\ResponseCookieDataCollection;
 use Klein\Exceptions\LockedResponseException;
+use Klein\Exceptions\ResponseAlreadySentException;
 use Klein\HttpStatus;
 use Klein\Klein;
 use Klein\Response;
@@ -34,8 +35,8 @@ class ResponsesTest extends AbstractKleinTest
         $response = new Response();
 
         $this->assertNotNull($response->protocolVersion());
-        $this->assertInternalType('string', $response->protocolVersion());
-        $this->assertRegExp($version_reg_ex, $response->protocolVersion());
+        $this->assertIsString($response->protocolVersion());
+        $this->assertMatchesRegularExpression($version_reg_ex, $response->protocolVersion());
 
         // Set in method
         $response = new Response();
@@ -69,7 +70,7 @@ class ResponsesTest extends AbstractKleinTest
         $response = new Response();
 
         $this->assertNotNull($response->code());
-        $this->assertInternalType('int', $response->code());
+        $this->assertIsInt($response->code());
 
         // Code set in constructor
         $response = new Response(null, 503);
@@ -87,7 +88,7 @@ class ResponsesTest extends AbstractKleinTest
     {
         $response = new Response();
 
-        $this->assertInternalType('object', $response->status());
+        $this->assertIsObject($response->status());
         $this->assertTrue($response->status() instanceof HttpStatus);
     }
 
@@ -95,7 +96,7 @@ class ResponsesTest extends AbstractKleinTest
     {
         $response = new Response();
 
-        $this->assertInternalType('object', $response->headers());
+        $this->assertIsObject($response->headers());
         $this->assertTrue($response->headers() instanceof HeaderDataCollection);
     }
 
@@ -103,7 +104,7 @@ class ResponsesTest extends AbstractKleinTest
     {
         $response = new Response();
 
-        $this->assertInternalType('object', $response->cookies());
+        $this->assertIsObject($response->cookies());
         $this->assertTrue($response->cookies() instanceof ResponseCookieDataCollection);
     }
 
@@ -197,7 +198,7 @@ class ResponsesTest extends AbstractKleinTest
 
         $response->sendHeaders();
 
-        $this->expectOutputString(null);
+        $this->expectOutputString('');
     }
 
     /**
@@ -220,7 +221,7 @@ class ResponsesTest extends AbstractKleinTest
 
         $response->sendCookies();
 
-        $this->expectOutputString(null);
+        $this->expectOutputString('');
     }
 
     /**
@@ -253,6 +254,8 @@ class ResponsesTest extends AbstractKleinTest
      */
     public function testSendWhenAlreadySent()
     {
+        $this->expectException(ResponseAlreadySentException::class);
+
         $response = new Response();
         $response->send();
 
@@ -418,7 +421,7 @@ class ResponsesTest extends AbstractKleinTest
 
         $response->dump('test');
 
-        $this->assertContains('test', $response->body());
+        $this->assertStringContainsString('test', $response->body());
     }
 
     public function testDumpArray()
@@ -460,7 +463,7 @@ class ResponsesTest extends AbstractKleinTest
             filesize(__FILE__),
             $this->klein_app->response()->headers()->get('Content-Length')
         );
-        $this->assertContains(
+        $this->assertStringContainsString(
             $file_name,
             $this->klein_app->response()->headers()->get('Content-Disposition')
         );
@@ -499,6 +502,8 @@ class ResponsesTest extends AbstractKleinTest
      */
     public function testFileSendWhenAlreadySent()
     {
+        $this->expectException(ResponseAlreadySentException::class);
+
         // Expect our output to match our file
         $this->expectOutputString(
             file_get_contents(__FILE__)
@@ -517,6 +522,8 @@ class ResponsesTest extends AbstractKleinTest
      */
     public function testFileSendWithNonExistentFile()
     {
+        $this->expectException(\RuntimeException::class);
+
         // Ignore the file warning
         $old_error_val = error_reporting();
         error_reporting(E_ALL ^ E_WARNING);
@@ -554,11 +561,15 @@ class ResponsesTest extends AbstractKleinTest
         $test_object = (object) array(
             'cheese',
             'dog' => 'bacon',
-            1.5 => 'should be 1 (thanks PHP casting...)',
             'integer' => 1,
             'double' => 1.5,
             '_weird' => true,
             'uniqid' => uniqid(),
+        );
+
+        // Expect our output to match our json encoded test
+        $this->expectOutputString(
+            json_encode($test_object)
         );
 
         $this->klein_app->respond(
@@ -568,11 +579,6 @@ class ResponsesTest extends AbstractKleinTest
         );
 
         $this->klein_app->dispatch();
-
-        // Expect our output to match our json encoded test object
-        $this->expectOutputString(
-            json_encode($test_object)
-        );
 
         // Assert headers were passed
         $this->assertEquals(

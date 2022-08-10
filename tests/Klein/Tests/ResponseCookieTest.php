@@ -79,12 +79,12 @@ class ResponseCookieTest extends AbstractKleinTest
         $response_cookie = new ResponseCookie($sample_data['name']);
 
         $this->assertSame($sample_data['name'], $response_cookie->getName());
-        $this->assertInternalType('string', $response_cookie->getName());
+        $this->assertIsString($response_cookie->getName());
 
         $response_cookie->setName($sample_data_other['name']);
 
         $this->assertSame($sample_data_other['name'], $response_cookie->getName());
-        $this->assertInternalType('string', $response_cookie->getName());
+        $this->assertIsString($response_cookie->getName());
     }
 
     /**
@@ -95,12 +95,12 @@ class ResponseCookieTest extends AbstractKleinTest
         $response_cookie = new ResponseCookie($defaults['name'], $sample_data['value']);
 
         $this->assertSame($sample_data['value'], $response_cookie->getValue());
-        $this->assertInternalType('string', $response_cookie->getValue());
+        $this->assertIsString($response_cookie->getValue());
 
         $response_cookie->setValue($sample_data_other['value']);
 
         $this->assertSame($sample_data_other['value'], $response_cookie->getValue());
-        $this->assertInternalType('string', $response_cookie->getValue());
+        $this->assertIsString($response_cookie->getValue());
     }
 
     /**
@@ -115,12 +115,12 @@ class ResponseCookieTest extends AbstractKleinTest
         );
 
         $this->assertSame($sample_data['expire'], $response_cookie->getExpire());
-        $this->assertInternalType('int', $response_cookie->getExpire());
+        $this->assertIsInt($response_cookie->getExpire());
 
         $response_cookie->setExpire($sample_data_other['expire']);
 
         $this->assertSame($sample_data_other['expire'], $response_cookie->getExpire());
-        $this->assertInternalType('int', $response_cookie->getExpire());
+        $this->assertIsInt($response_cookie->getExpire());
     }
 
     /**
@@ -136,12 +136,12 @@ class ResponseCookieTest extends AbstractKleinTest
         );
 
         $this->assertSame($sample_data['path'], $response_cookie->getPath());
-        $this->assertInternalType('string', $response_cookie->getPath());
+        $this->assertIsString($response_cookie->getPath());
 
         $response_cookie->setPath($sample_data_other['path']);
 
         $this->assertSame($sample_data_other['path'], $response_cookie->getPath());
-        $this->assertInternalType('string', $response_cookie->getPath());
+        $this->assertIsString($response_cookie->getPath());
     }
 
     /**
@@ -158,12 +158,12 @@ class ResponseCookieTest extends AbstractKleinTest
         );
 
         $this->assertSame($sample_data['domain'], $response_cookie->getDomain());
-        $this->assertInternalType('string', $response_cookie->getDomain());
+        $this->assertIsString($response_cookie->getDomain());
 
         $response_cookie->setDomain($sample_data_other['domain']);
 
         $this->assertSame($sample_data_other['domain'], $response_cookie->getDomain());
-        $this->assertInternalType('string', $response_cookie->getDomain());
+        $this->assertIsString($response_cookie->getDomain());
     }
 
     /**
@@ -181,12 +181,12 @@ class ResponseCookieTest extends AbstractKleinTest
         );
 
         $this->assertSame($sample_data['secure'], $response_cookie->getSecure());
-        $this->assertInternalType('boolean', $response_cookie->getSecure());
+        $this->assertIsBool($response_cookie->getSecure());
 
         $response_cookie->setSecure($sample_data_other['secure']);
 
         $this->assertSame($sample_data_other['secure'], $response_cookie->getSecure());
-        $this->assertInternalType('boolean', $response_cookie->getSecure());
+        $this->assertIsBool($response_cookie->getSecure());
     }
 
     /**
@@ -205,11 +205,11 @@ class ResponseCookieTest extends AbstractKleinTest
         );
 
         $this->assertSame($sample_data['http_only'], $response_cookie->getHttpOnly());
-        $this->assertInternalType('boolean', $response_cookie->getHttpOnly());
+        $this->assertIsBool($response_cookie->getHttpOnly());
 
         $response_cookie->setHttpOnly($sample_data_other['http_only']);
 
         $this->assertSame($sample_data_other['http_only'], $response_cookie->getHttpOnly());
-        $this->assertInternalType('boolean', $response_cookie->getHttpOnly());
+        $this->assertIsBool($response_cookie->getHttpOnly());
     }
 }

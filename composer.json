@@ -19,12 +19,12 @@
       }
    ],
    "require": {
-      "php": ">=5.3.0"
+      "php": "^8.0"
    },
    "require-dev": {
-      "phpunit/phpunit": "^4.8",
-      "phpunit/php-code-coverage": "^2.2",
-      "squizlabs/php_codesniffer": "1.4.8"
+      "phpunit/phpunit": "^9.5",
+      "phpunit/php-code-coverage": "^9.2",
+      "squizlabs/php_codesniffer": "^3.7"
    },
    "autoload": {
       "psr-4": {
