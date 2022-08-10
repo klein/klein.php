@@ -1,8 +1,8 @@
 {
-   "name": "klein/klein",
+   "name": "optimacros/klein",
    "description": "A lightning fast router for PHP",
    "keywords": ["router", "routing", "sinatra", "boilerplate"],
-   "homepage": "https://github.com/klein/klein.php",
+   "homepage": "https://github.com/optimacros/klein.php",
    "license": "MIT",
    "authors": [
       {
