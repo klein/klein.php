@@ -241,7 +241,7 @@ class ResponseCookie
         if (null !== $domain) {
             $this->domain = (string) $domain;
         } else {
-            $this->domain = $domain;
+            $this->domain = '';
         }
 
         return $this;
