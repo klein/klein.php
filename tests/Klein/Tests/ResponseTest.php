@@ -397,7 +397,7 @@ class ResponsesTest extends AbstractKleinTest
 
         $response->noCache();
 
-        $this->assertStringContainsString('no-cache', $response->headers()->all());
+        $this->assertContains('no-cache', $response->headers()->all());
     }
 
     public function testRedirect()
@@ -522,7 +522,7 @@ class ResponsesTest extends AbstractKleinTest
      */
     public function testFileSendWithNonExistentFile()
     {
-        this->expectException(\RuntimeException::class);
+        $this->expectException(\RuntimeException::class);
 
         // Ignore the file warning
         $old_error_val = error_reporting();

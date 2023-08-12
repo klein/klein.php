@@ -349,6 +349,9 @@ class ValidationsTest extends AbstractKleinTest
         $this->validator('www.com')->notUrl();
     }
 
+    /**
+     * @doesNotPerformAssertions
+     */
     public function testIp()
     {
         // Is

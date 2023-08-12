@@ -1312,8 +1312,8 @@ class RoutingTest extends AbstractKleinTest
         error_reporting($old_error_val);
 
         $this->assertCount(2, $result_array);
-        $this->assertStringContainsString('GET', $result_array);
-        $this->assertStringContainsString('POST', $result_array);
+        $this->assertContains('GET', $result_array);
+        $this->assertContains('POST', $result_array);
         $this->assertSame(405, $this->klein_app->response()->code());
     }
 
@@ -1353,8 +1353,8 @@ class RoutingTest extends AbstractKleinTest
         );
 
         $this->assertCount(2, $result_array);
-        $this->assertStringContainsString('GET', $result_array);
-        $this->assertStringContainsString('POST', $result_array);
+        $this->assertContains('GET', $result_array);
+        $this->assertContains('POST', $result_array);
         $this->assertSame(405, $this->klein_app->response()->code());
     }
 

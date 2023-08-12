@@ -353,7 +353,7 @@ class DataCollection implements IteratorAggregate, ArrayAccess, Countable
      * @see \IteratorAggregate::getIterator()
      * @return ArrayIterator
      */
-    public function getIterator(): \ArrayInterator
+    public function getIterator(): ArrayIterator
     {
         return new ArrayIterator($this->attributes);
     }

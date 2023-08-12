@@ -459,7 +459,7 @@ class ServiceProviderTest extends AbstractKleinTest
 
         $this->assertNotEmpty(Validator::$methods);
         $this->assertArrayHasKey('awesome', Validator::$methods);
-        $this->assertStringContainsString($test_callback, Validator::$methods);
+        $this->assertContains($test_callback, Validator::$methods);
     }
 
     /**
