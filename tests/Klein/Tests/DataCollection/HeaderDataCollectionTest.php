@@ -98,14 +98,14 @@ class HeaderDataCollectionTest extends AbstractKleinTest
     {
         $this->assertNotSame($sample_data, $data_collection->all());
         $this->assertArrayNotHasKey('HOST', $data_collection->all());
-        $this->assertContains('localhost:8000', $data_collection->all());
+        $this->assertStringContainsString('localhost:8000', $data_collection->all());
     }
 
     public function testGetSetNormalization()
     {
         $data_collection = new HeaderDataCollection();
 
-        $this->assertInternalType('int', $data_collection->getNormalization());
+        $this->assertIsInt($data_collection->getNormalization());
 
         $data_collection->setNormalization(
             HeaderDataCollection::NORMALIZE_TRIM & HeaderDataCollection::NORMALIZE_CASE

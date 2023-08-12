@@ -193,7 +193,7 @@ class Validator
         if (false === $this->err) {
             return $result;
         } elseif (false === $result) {
-            throw new ValidationException($this->err);
+            throw new ValidationException($this->err ?? '');
         }
 
         return $this;

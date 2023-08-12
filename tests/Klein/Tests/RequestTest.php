@@ -342,8 +342,8 @@ class RequestTest extends AbstractKleinTest
         $this->assertSame(array(), $request->paramsPost()->all());
         $this->assertSame(array(), $request->paramsNamed()->all());
         $this->assertSame($cookies, $request->cookies()->all());
-        $this->assertContains($cookies[0], $request->params());
-        $this->assertContains($server[0], $request->server()->all());
+        $this->assertStringContainsString($cookies[0], $request->params());
+        $this->assertStringContainsString($server[0], $request->server()->all());
         $this->assertSame($files, $request->files()->all());
         $this->assertSame($body, $request->body());
     }

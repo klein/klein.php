@@ -118,17 +118,17 @@ class DataCollectionTest extends AbstractKleinTest
         // Create mask
         $mask = array('float', static::$nonexistent_key);
 
-        $this->assertContains($mask[0], $data_collection->keys($mask));
-        $this->assertContains($mask[1], $data_collection->keys($mask));
+        $this->assertStringContainsString($mask[0], $data_collection->keys($mask));
+        $this->assertStringContainsString($mask[1], $data_collection->keys($mask));
         $this->assertNotContains(key($sample_data), $data_collection->keys($mask));
 
         // Test more "magical" way of inputting mask
-        $this->assertContains($mask[0], $data_collection->keys($mask[0], $mask[1]));
-        $this->assertContains($mask[1], $data_collection->keys($mask[0], $mask[1]));
+        $this->assertStringContainsString($mask[0], $data_collection->keys($mask[0], $mask[1]));
+        $this->assertStringContainsString($mask[1], $data_collection->keys($mask[0], $mask[1]));
         $this->assertNotContains(key($sample_data), $data_collection->keys($mask[0], $mask[1]));
 
         // Test not filling will nulls
-        $this->assertContains($mask[0], $data_collection->keys($mask, false));
+        $this->assertStringContainsString($mask[0], $data_collection->keys($mask, false));
         $this->assertNotContains($mask[1], $data_collection->keys($mask, false));
     }
 

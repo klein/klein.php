@@ -38,14 +38,14 @@ class RouteTest extends AbstractKleinTest
         $route = new Route($test_callable);
 
         $this->assertSame($test_callable, $route->getCallback());
-        $this->assertInternalType('callable', $route->getCallback());
+        $this->assertIsCallable($route->getCallback());
 
         // Callback set in method
         $route = new Route($test_callable);
         $route->setCallback($test_class_callable);
 
         $this->assertSame($test_class_callable, $route->getCallback());
-        $this->assertInternalType('callable', $route->getCallback());
+        $this->assertIsCallable($route->getCallback());
     }
 
     public function testPathGetSet()
@@ -58,7 +58,7 @@ class RouteTest extends AbstractKleinTest
         $route = new Route($test_callable);
 
         $this->assertNotNull($route->getPath());
-        $this->assertInternalType('string', $route->getPath());
+        $this->assertIsString($route->getPath());
 
         // Set in constructor
         $route = new Route($test_callable, $test_path);
@@ -167,6 +167,8 @@ class RouteTest extends AbstractKleinTest
      */
     public function testCallbackSetWithIncorrectType()
     {
+        $this->expectException(\InvalidArgumentException::class);
+
         $route = new Route($this->getTestCallable());
 
         // Test setting with the WRONG type
@@ -178,6 +180,8 @@ class RouteTest extends AbstractKleinTest
      */
     public function testMethodSetWithIncorrectType()
     {
+        $this->expectException(\InvalidArgumentException::class);
+
         $route = new Route($this->getTestCallable());
 
         // Test setting with the WRONG type

@@ -218,7 +218,7 @@ class ServiceProvider
 
         // Encode our args so we can insert them into an HTML string
         foreach ($args as &$arg) {
-            $arg = htmlentities($arg, ENT_QUOTES, 'UTF-8');
+            $arg = htmlentities($arg ?? '', ENT_QUOTES, 'UTF-8');
         }
 
         // Actually do our markdown conversion
@@ -385,6 +385,25 @@ class ServiceProvider
         return $this->validate($this->request->param($param), $err);
     }
 
+    /**
+     * Returns the request object
+     *
+     * @return Request|null
+     */
+    public function getRequest(): ?Request
+    {
+        return $this->request;
+    }
+
+    /**
+     * Returns the response object
+     *
+     * @return Response|null
+     */
+    public function getResponse(): ?Response
+    {
+        return $this->response;
+    }
 
     /**
      * Magic "__isset" method

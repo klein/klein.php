@@ -11,7 +11,7 @@
 
 namespace Klein\Tests;
 
-use BadMethodCallException;
+use \BadMethodCallException;
 use Klein\Klein;
 use Klein\Request;
 use Klein\Response;
@@ -24,7 +24,7 @@ use Klein\Validator;
 class ValidationsTest extends AbstractKleinTest
 {
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -327,6 +327,9 @@ class ValidationsTest extends AbstractKleinTest
         );
     }
 
+    /**
+     * @doesNotPerformAssertions
+     */
     public function testUrl()
     {
         // Is
@@ -368,6 +371,9 @@ class ValidationsTest extends AbstractKleinTest
         $this->validator('string')->notIp();
     }
 
+     /**
+     * @doesNotPerformAssertions
+     */
     public function testRemoteIp()
     {
         // Is
@@ -791,6 +797,9 @@ class ValidationsTest extends AbstractKleinTest
         );
     }
 
+     /**
+     * @doesNotPerformAssertions
+     */
     public function testCustomValidatorWithManyArgs()
     {
         // Add our custom validator
@@ -838,6 +847,8 @@ class ValidationsTest extends AbstractKleinTest
      */
     public function testValidatorThatDoesntExist()
     {
+        $this->expectException(BadMethodCallException::class);
+
         $result = $this->klein_app->service()->validateParam('12')
             ->isALongNameOfAThingThatDoesntExist();
     }
