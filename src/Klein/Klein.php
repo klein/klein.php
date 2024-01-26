@@ -434,6 +434,9 @@ class Klein
 
         // Set up some variables for matching
         $skip_num = 0;
+        /**
+         * @var RouteCollection
+         */
         $matched = $this->routes->cloneEmpty(); // Get a clone of the routes collection, as it may have been injected
         $methods_matched = array();
         $params = array();
@@ -781,12 +784,12 @@ class Klein
             E_NOTICE | E_WARNING
         );
 
-        if (false === preg_match($regex, null) || !empty($error_string)) {
+        if (false === preg_match($regex, '') || !empty($error_string)) {
             // Remove our temporary error handler
             restore_error_handler();
 
             throw new RegularExpressionCompilationException(
-                $error_string,
+                $error_string ?? '',
                 preg_last_error()
             );
         }
@@ -988,7 +991,7 @@ class Klein
     /**
      * Handles an HTTP error exception through our HTTP error callbacks
      *
-     * @param HttpExceptionInterface $http_exception    The exception that occurred
+     * @param HttpExceptionInterface|HttpException $http_exception    The exception that occurred
      * @param RouteCollection $matched                  The collection of routes that were matched in dispatch
      * @param array $methods_matched                    The HTTP methods that were matched in dispatch
      * @return void
@@ -1083,7 +1086,7 @@ class Klein
      */
     public function skipThis()
     {
-        throw new DispatchHaltedException(null, DispatchHaltedException::SKIP_THIS);
+        throw new DispatchHaltedException('', DispatchHaltedException::SKIP_THIS);
     }
 
     /**
@@ -1095,7 +1098,7 @@ class Klein
      */
     public function skipNext($num = 1)
     {
-        $skip = new DispatchHaltedException(null, DispatchHaltedException::SKIP_NEXT);
+        $skip = new DispatchHaltedException('', DispatchHaltedException::SKIP_NEXT);
         $skip->setNumberOfSkips($num);
 
         throw $skip;
@@ -1109,7 +1112,7 @@ class Klein
      */
     public function skipRemaining()
     {
-        throw new DispatchHaltedException(null, DispatchHaltedException::SKIP_REMAINING);
+        throw new DispatchHaltedException('', DispatchHaltedException::SKIP_REMAINING);
     }
 
     /**
