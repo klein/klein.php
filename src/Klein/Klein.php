@@ -434,14 +434,16 @@ class Klein
 
         // Set up some variables for matching
         $skip_num = 0;
+        /**
+         * @var RouteCollection
+         */
         $matched = $this->routes->cloneEmpty(); // Get a clone of the routes collection, as it may have been injected
         $methods_matched = array();
         $params = array();
         $apc = function_exists('apc_fetch');
 
-        // Start output buffering
-        ob_start();
-        $this->output_buffer_level = ob_get_level();
+        // Do not buffering
+        $this->output_buffer_level = 0;
 
         try {
             foreach ($this->routes as $route) {
@@ -686,14 +688,6 @@ class Klein
             if (strcasecmp($req_method, 'HEAD') === 0) {
                 // HEAD requests shouldn't return a body
                 $this->response->body('');
-
-                while (ob_get_level() >= $this->output_buffer_level) {
-                    ob_end_clean();
-                }
-            } elseif (self::DISPATCH_NO_CAPTURE === $capture) {
-                while (ob_get_level() >= $this->output_buffer_level) {
-                    ob_end_flush();
-                }
             }
         } catch (LockedResponseException $e) {
             // Do nothing, since this is an automated behavior
@@ -781,12 +775,12 @@ class Klein
             E_NOTICE | E_WARNING
         );
 
-        if (false === preg_match($regex, null) || !empty($error_string)) {
+        if (false === preg_match($regex, '') || !empty($error_string)) {
             // Remove our temporary error handler
             restore_error_handler();
 
             throw new RegularExpressionCompilationException(
-                $error_string,
+                $error_string ?? '',
                 preg_last_error()
             );
         }
@@ -947,24 +941,12 @@ class Klein
             } else {
                 $this->response->code(500);
 
-                while (ob_get_level() >= $this->output_buffer_level) {
-                    ob_end_clean();
-                }
-
                 throw new UnhandledException($msg, $err->getCode(), $err);
             }
         } catch (Throwable $e) { // PHP 7 compatibility
-            // Make sure to clean the output buffer before bailing
-            while (ob_get_level() >= $this->output_buffer_level) {
-                ob_end_clean();
-            }
 
             throw $e;
         } catch (Exception $e) { // TODO: Remove this catch block once PHP 5.x support is no longer necessary.
-            // Make sure to clean the output buffer before bailing
-            while (ob_get_level() >= $this->output_buffer_level) {
-                ob_end_clean();
-            }
 
             throw $e;
         }
@@ -988,7 +970,7 @@ class Klein
     /**
      * Handles an HTTP error exception through our HTTP error callbacks
      *
-     * @param HttpExceptionInterface $http_exception    The exception that occurred
+     * @param HttpExceptionInterface|HttpException $http_exception    The exception that occurred
      * @param RouteCollection $matched                  The collection of routes that were matched in dispatch
      * @param array $methods_matched                    The HTTP methods that were matched in dispatch
      * @return void
@@ -1083,7 +1065,7 @@ class Klein
      */
     public function skipThis()
     {
-        throw new DispatchHaltedException(null, DispatchHaltedException::SKIP_THIS);
+        throw new DispatchHaltedException('', DispatchHaltedException::SKIP_THIS);
     }
 
     /**
@@ -1095,7 +1077,7 @@ class Klein
      */
     public function skipNext($num = 1)
     {
-        $skip = new DispatchHaltedException(null, DispatchHaltedException::SKIP_NEXT);
+        $skip = new DispatchHaltedException('', DispatchHaltedException::SKIP_NEXT);
         $skip->setNumberOfSkips($num);
 
         throw $skip;
@@ -1109,7 +1091,7 @@ class Klein
      */
     public function skipRemaining()
     {
-        throw new DispatchHaltedException(null, DispatchHaltedException::SKIP_REMAINING);
+        throw new DispatchHaltedException('', DispatchHaltedException::SKIP_REMAINING);
     }
 
     /**

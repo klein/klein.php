@@ -12,6 +12,7 @@
 namespace Klein\Tests;
 
 use Klein\DataCollection\DataCollection;
+use \Klein\Exceptions\ValidationException;
 use Klein\Klein;
 use Klein\Request;
 use Klein\Response;
@@ -37,8 +38,8 @@ class ServiceProviderTest extends AbstractKleinTest
         $service = new ServiceProvider();
 
         // Make sure our attributes are first null
-        $this->assertAttributeEquals(null, 'request', $service);
-        $this->assertAttributeEquals(null, 'response', $service);
+        $this->assertEquals(null, $service->getRequest());
+        $this->assertEquals(null, $service->getResponse());
 
         // New service with injected dependencies
         $service = new ServiceProvider(
@@ -47,8 +48,8 @@ class ServiceProviderTest extends AbstractKleinTest
         );
 
         // Make sure our attributes are set
-        $this->assertAttributeEquals($request, 'request', $service);
-        $this->assertAttributeEquals($response, 'response', $service);
+        $this->assertEquals($request, $service->getRequest());
+        $this->assertEquals($response, $service->getResponse());
     }
 
     public function testBinder()
@@ -56,8 +57,8 @@ class ServiceProviderTest extends AbstractKleinTest
         $service = new ServiceProvider();
 
         // Make sure our attributes are first null
-        $this->assertAttributeEquals(null, 'request', $service);
-        $this->assertAttributeEquals(null, 'response', $service);
+        $this->assertEquals(null, $service->getRequest());
+        $this->assertEquals(null, $service->getResponse());
 
         // New service with injected dependencies
         $return_val = $service->bind(
@@ -66,8 +67,8 @@ class ServiceProviderTest extends AbstractKleinTest
         );
 
         // Make sure our attributes are set
-        $this->assertAttributeEquals($request, 'request', $service);
-        $this->assertAttributeEquals($response, 'response', $service);
+        $this->assertEquals($request, $service->getRequest());
+        $this->assertEquals($response, $service->getResponse());
 
         // Make sure we're chainable
         $this->assertEquals($service, $return_val);
@@ -78,7 +79,7 @@ class ServiceProviderTest extends AbstractKleinTest
     {
         $service = new ServiceProvider();
 
-        $this->assertInternalType('object', $service->sharedData());
+        $this->assertIsObject($service->sharedData());
         $this->assertTrue($service->sharedData() instanceof DataCollection);
     }
 
@@ -107,7 +108,7 @@ class ServiceProviderTest extends AbstractKleinTest
 
         $returned = $service->startSession();
 
-        $this->assertFalse($returned);
+        $this->assertNull($returned);
 
         // Clean up
         session_destroy();
@@ -466,6 +467,8 @@ class ServiceProviderTest extends AbstractKleinTest
      */
     public function testValidate()
     {
+        $this->expectException(ValidationException::class);
+
         $this->klein_app->onError(
             function ($a, $b, $c, $exception) {
                 throw $exception;
@@ -486,6 +489,8 @@ class ServiceProviderTest extends AbstractKleinTest
      */
     public function testValidateParam()
     {
+        $this->expectException(ValidationException::class);
+
         $this->klein_app->onError(
             function ($a, $b, $c, $exception) {
                 throw $exception;

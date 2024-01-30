@@ -17,6 +17,7 @@ use Klein\DataCollection\RouteCollection;
 use Klein\Exceptions\DispatchHaltedException;
 use Klein\Exceptions\HttpException;
 use Klein\Exceptions\RoutePathCompilationException;
+use Klein\Exceptions\UnhandledException;
 use Klein\Klein;
 use Klein\Request;
 use Klein\Response;
@@ -1841,6 +1842,8 @@ class RoutingTest extends AbstractKleinTest
      */
     public function testDispatchExceptionRethrowsUnknownCode()
     {
+        $this->expectException(UnhandledException::class);
+
         $this->expectOutputString('');
 
         $test_message = 'whatever';

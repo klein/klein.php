@@ -482,7 +482,7 @@ abstract class AbstractResponse
         $value = '',
         $expiry = null,
         $path = '/',
-        $domain = null,
+        $domain = '',
         $secure = false,
         $httponly = false
     ) {

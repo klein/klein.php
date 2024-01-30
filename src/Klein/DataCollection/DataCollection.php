@@ -353,7 +353,7 @@ class DataCollection implements IteratorAggregate, ArrayAccess, Countable
      * @see \IteratorAggregate::getIterator()
      * @return ArrayIterator
      */
-    public function getIterator()
+    public function getIterator(): ArrayIterator
     {
         return new ArrayIterator($this->attributes);
     }
@@ -368,7 +368,7 @@ class DataCollection implements IteratorAggregate, ArrayAccess, Countable
      * @param string $key   The name of the parameter to return
      * @return mixed
      */
-    public function offsetGet($key)
+    public function offsetGet($key): mixed
     {
         return $this->get($key);
     }
@@ -384,7 +384,7 @@ class DataCollection implements IteratorAggregate, ArrayAccess, Countable
      * @param mixed  $value The value of the parameter to set
      * @return void
      */
-    public function offsetSet($key, $value)
+    public function offsetSet($key, $value): void
     {
         $this->set($key, $value);
     }
@@ -399,7 +399,7 @@ class DataCollection implements IteratorAggregate, ArrayAccess, Countable
      * @param string $key   The name of the parameter
      * @return boolean
      */
-    public function offsetExists($key)
+    public function offsetExists($key): bool
     {
         return $this->exists($key);
     }
@@ -414,7 +414,7 @@ class DataCollection implements IteratorAggregate, ArrayAccess, Countable
      * @param string $key   The name of the parameter
      * @return void
      */
-    public function offsetUnset($key)
+    public function offsetUnset($key): void
     {
         $this->remove($key);
     }
@@ -428,7 +428,7 @@ class DataCollection implements IteratorAggregate, ArrayAccess, Countable
      * @see \Countable::count()
      * @return int
      */
-    public function count()
+    public function count(): int
     {
         return count($this->attributes);
     }
