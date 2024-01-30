@@ -442,9 +442,8 @@ class Klein
         $params = array();
         $apc = function_exists('apc_fetch');
 
-        // Start output buffering
-        ob_start();
-        $this->output_buffer_level = ob_get_level();
+        // Do not buffering
+        $this->output_buffer_level = 0;
 
         try {
             foreach ($this->routes as $route) {
@@ -689,14 +688,6 @@ class Klein
             if (strcasecmp($req_method, 'HEAD') === 0) {
                 // HEAD requests shouldn't return a body
                 $this->response->body('');
-
-                while (ob_get_level() >= $this->output_buffer_level) {
-                    ob_end_clean();
-                }
-            } elseif (self::DISPATCH_NO_CAPTURE === $capture) {
-                while (ob_get_level() >= $this->output_buffer_level) {
-                    ob_end_flush();
-                }
             }
         } catch (LockedResponseException $e) {
             // Do nothing, since this is an automated behavior
@@ -950,24 +941,12 @@ class Klein
             } else {
                 $this->response->code(500);
 
-                while (ob_get_level() >= $this->output_buffer_level) {
-                    ob_end_clean();
-                }
-
                 throw new UnhandledException($msg, $err->getCode(), $err);
             }
         } catch (Throwable $e) { // PHP 7 compatibility
-            // Make sure to clean the output buffer before bailing
-            while (ob_get_level() >= $this->output_buffer_level) {
-                ob_end_clean();
-            }
 
             throw $e;
         } catch (Exception $e) { // TODO: Remove this catch block once PHP 5.x support is no longer necessary.
-            // Make sure to clean the output buffer before bailing
-            while (ob_get_level() >= $this->output_buffer_level) {
-                ob_end_clean();
-            }
 
             throw $e;
         }
